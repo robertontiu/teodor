@@ -50,5 +50,5 @@ Save each reading verbatim to `critique_N.md` with a header such as `# Critique 
    - `scenes/` (scene JSON and overlay SVGs) or `schemas/` (schema SVGs for abstract work)
 3. **`docs/experiments.md`:** a section "## Round NN: *Title* (Teodor, v7; theme: …)" with setup, run (episodes, scene/schema versions), feeling, the person's reaction, critics' readings and lessons.
 4. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`. That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
-5. **Gallery artifact** (only in Claude sessions that own it): the public multi-file artifact "Teodor: Paintings" (`index.html` + `img/rN.jpg`). Add the image and its slide, and republish with `shared_live: "public"` and the artifact's title. The person has approved updating it whenever a painting is added.
+5. **Gallery artifact** (only in Claude sessions that own it): the public multi-file artifact "Teodor: Paintings" (`index.html` + `img/rN.jpg`). Upload the image with `publish_files` (the file must sit under `/home/claude`, not `/tmp`), add its entry to the `works` list in `index.html` with `edit_version`, and pass `shared_live: "public"` and the artifact's title each time. The person has approved updating it whenever a painting is added.
 6. **Commit and push** everything above in one commit.
