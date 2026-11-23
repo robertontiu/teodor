@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+<defs>
+<filter id="b" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="28"/></filter>
+<filter id="b2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="60"/></filter>
+</defs>
+<ellipse cx="560" cy="770" rx="160" ry="70" fill="#8e8a84" opacity="0.85" filter="url(#b2)"/>
+<path d="M820 800 C 800 700, 860 600, 830 480 C 810 400, 880 330, 950 260 L 1040 290 C 960 360, 930 430, 950 520 C 970 620, 900 700, 900 800 Z" fill="#5e5a58" opacity="0.45" filter="url(#b)"/>
+<path d="M330 800 C 320 740, 350 680, 330 610 C 320 560, 360 520, 400 480 L 440 500 C 400 540, 380 580, 395 640 C 410 700, 380 750, 385 800 Z" fill="#605c5a" opacity="0.3" filter="url(#b)"/>
+<rect x="0" y="760" width="1200" height="60" fill="#7a766e" opacity="0.35" filter="url(#b)"/>
+</svg>

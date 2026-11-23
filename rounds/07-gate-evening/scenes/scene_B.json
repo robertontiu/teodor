@@ -1,0 +1,19 @@
+{"camera":{"pos":[-1.2,1.7,6],"look_at":[0.6,1.3,-20],"fov":48},
+"sun":{"azimuth":175,"elevation":2,"color":"#c99a70","intensity":0.8,"softness":6},
+"sky":{"zenith":"#2a3247","horizon":"#b59a7c","sun_glow":0.7,"disc":0},
+"ambient":{"sky":"#46506a","ground":"#2a2620","intensity":0.55},
+"fog":{"color":"#8d8578","density":0.035},
+"ground":{"color":"#4a4436","color2":"#3a3a30"},
+"lights":[{"pos":[-2.6,1.2,3.2],"color":"#ffb060","intensity":2.5,"radius":4}],
+"exposure":1.1,
+"objects":[
+ {"type":"house","pos":[-5,0,3],"size":[5,3,6],"rot":90,"roof_h":2,"color":"#5a5650","roof_color":"#2e2a28","chimney":true,
+  "door":{"x":0,"w":1.0,"h":2.1,"emit":1.8,"color":"#ffb35a"}},
+ {"type":"figure","pos":[0.4,0,1.5],"facing":180,"height":1.62,"pose":"stand","dress":true,"shawl":true,"color":"#26262c","joints":{"arm_l":[20,5,110],"arm_r":[20,-5,110],"head":8}},
+ {"type":"fence","a":[-3,0,1],"b":[0,0,1],"h":1.0,"color":"#3a3028"},
+ {"type":"fence","a":[0.9,0,1],"b":[6,0,1],"h":1.0,"color":"#3a3028"},
+ {"type":"box","pos":[0.6,0.01,-30],"size":[2.2,0.02,60],"color":"#7a7060"},
+ {"type":"tree","pos":[3.5,0,-10],"h":6,"bare":true,"color":"#2a2622","trunk":"#2a2622"},
+ {"type":"tree","pos":[-2,0,-22],"h":5,"bare":true,"color":"#2a2622","trunk":"#2a2622"},
+ {"type":"tree","pos":[3,0,-35],"h":5,"bare":true,"color":"#2a2622","trunk":"#2a2622"}
+]}
