@@ -639,7 +639,7 @@ if __name__ == "__main__":
         ov = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3].endswith(".svg") else None
         q = sys.argv[-1] if sys.argv[-1] in ("draft", "final") else "draft"
         rw, rh = (300, 400) if q == "draft" else (450, 600)
-        k = len([f for f in os.listdir(D) if f.startswith(f"{NAME}_scene_v")]) + 1
+        k = len([f for f in os.listdir(D) if f.startswith(f"{NAME}_scene_v") and f.endswith(".png")]) + 1
         out = P(f"scene_v{k}.png")
         sc.render_file(sys.argv[2], out, rw, rh, ov, (cv.W, cv.H))
         import shutil; shutil.copy(sys.argv[2], P(f"scene_v{k}.json"))

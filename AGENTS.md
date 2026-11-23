@@ -39,6 +39,10 @@ Key internals:
 Performance (2 vCPU): a full-canvas match with a 60–90 brush takes ~17 s, a 24–40 brush ~8 s, small brushes in regions 1–6 s.
 
 ## How to run a round
+
+**Current protocol: phase-based, see `docs/orchestration.md`.** Each phase is a fresh painter sub-agent with all state on disk (`handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.
+
+Older single-session flow:
 1. Copy `studio/v6/studio.py` to a work dir (the brief assumes `/home/claude/v6/`).
 2. Draw the emotion: `python3 -c "import random; ..."` from the lists in `docs/experiments.md`; write the chosen line to `.secret`. Do **not** print it.
 3. Launch a sub-agent with `docs/prompts/v6-painter-brief.md` (general-purpose agent).
@@ -56,6 +60,11 @@ Performance (2 vCPU): a full-canvas match with a 60–90 brush takes ~17 s, a 24
 - Blocky grid from matching → jittered start points, minimum stroke length, ceil-padded grid so edges are covered.
 - Strokes faded after ~25% of their length → pickup was per dab (self-contamination with the dark edge) and depletion was per dab; both are now per distance.
 - Felt states looked identical → stronger tremor, jagged control-point insertion for tension, speed-driven dry-brush.
+
+## Known hiccups (fixed)
+- Round 7: the in-painting critic could not run (no Agent tool inside the painter session, and `claude -p` was unauthenticated). The orchestrator now runs critics.
+- Round 8: the painter stopped at checkpoint 2 and could not be resumed. Phases now replace pause/resume.
+- `scene` version numbers skipped (v1, v3, …) because the counter counted .json and .png files. It now counts .png only.
 
 ## Open directions
 - A learned motor vocabulary instead of parametric strokes; fatigue and session-level physiology.
