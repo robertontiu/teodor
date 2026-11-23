@@ -56,6 +56,22 @@ Each painting comes with Teodor's journal (every decision, in his own voice), th
 
 More on how each idea shaped the studio is in [`docs/research.md`](docs/research.md).
 
+## Paint your own
+
+1. **Fork** this repository (or clone it).
+2. **Open it in an AI coding agent session**, such as [Claude Code](https://claude.com/claude-code). The agent reads [`AGENTS.md`](AGENTS.md), which teaches it how to set up the studio and run a painting.
+3. **Ask it to paint**, giving it either a theme or a feeling:
+   - *"Paint something on the theme 'the last day of summer'."* Teodor picks the feeling he wants to say about it, and keeps it to himself until you've looked at the painting.
+   - *"Paint the feeling of homesickness mixed with relief."* Teodor paints exactly that feeling.
+
+   You can add a style too, for example *"abstract"* or *"a figure in a landscape"*.
+
+A painting takes an hour or two of agent time. The agent installs what it needs (Python with numpy, scipy and pillow, plus ffmpeg and librsvg). Teodor draws first, paints in stages, and gets a fresh critic's reading between them. You get back:
+
+- the signed painting and its title
+- Teodor's journal of the whole session
+- a time-lapse of the painting being made
+
 ## Want to know more?
 
 - [`docs/experiments.md`](docs/experiments.md): how the studio evolved from the first stroke to now, and what each painting taught

@@ -8,6 +8,19 @@ Roles:
 - **Orchestrator agent:** builds and tunes the studio, draws the hidden emotion, writes the painter brief, launches the painter as a sub-agent, and reveals results only after the human guesses.
 - **Painter agent:** the persona that paints. It never sees the human, and never writes the emotion.
 
+## Quick start: someone asked you to paint
+
+If a person who forked this repo asks you to paint a theme or a feeling, run one round with the **current studio, `studio/v7/`**, and the phase protocol in `docs/orchestration.md`:
+
+1. Make a work dir outside the repo (for example `../teodor-work/r01/`). Copy `studio/v7/*.py` into it (`studio.py`, `scene.py`, `signature.py`). Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
+2. Write `brief.md` from `docs/prompts/v9-phased-brief.md`. Replace its `/home/claude/v9/` paths with your work dir, and the commission line with what the person asked for:
+   - **Theme** (and maybe a style): keep the "you choose the feeling yourself" paragraph. The painter writes the feeling to `.secret`. Don't reveal it until the person has looked and said what they feel, or asks for it.
+   - **Feeling**: give the painter that feeling directly. Drop the `.secret` and guessing parts, because there's nothing to hide.
+3. Run the phases as fresh general-purpose sub-agents, with a fresh blind critic between them (`docs/orchestration.md`). The last act is `studio.py sign`.
+4. Show the person the final painting and its title, then the journal highlights and the time-lapse (`studio.py timelapse`). If they want to keep it, add it to `rounds/NN-title/` like the existing rounds.
+
+The rest of this file is the history and internals of the original experiment.
+
 ## Repository map
 ```
 studio/
