@@ -1,0 +1,49 @@
+/* VOICE: hushed, a gallery after closing time.
+   IDEA: a dark gallery wall, one painting lit at a time.
+   PICTURE: the painting itself, as large as the screen allows, with its own colour glowing faintly on the wall.
+   COLOUR and TYPE: near-black warm wall, ivory title, Cormorant Garamond.
+   LAYOUT: full-bleed horizontal snap track; one shallow bar at the bottom holding only the title. */
+:root {
+  color-scheme: dark;
+  --wall: #0d0b09;
+  --ink: #ece4d6;
+  --bar: rgba(13, 11, 9, 0.72);
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --barh: calc(44px + var(--sab));
+}
+* { box-sizing: border-box; min-width: 0; }
+html, body { margin: 0; height: 100%; background: var(--wall); color: var(--ink); overflow: hidden; }
+body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, serif; }
+
+.track { position: fixed; inset: 0 0 var(--barh) 0; display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain; }
+.track::-webkit-scrollbar { display: none; }
+.slide { position: relative; flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: center; overflow: hidden; }
+.glow { position: absolute; inset: -10%; background-size: cover; background-position: center; filter: blur(60px) saturate(1.1); opacity: 0.28; transform: scale(1.05); }
+.slide img { position: relative; max-width: min(92vw, 100%); max-height: calc(100% - 4vh); width: auto; height: auto; object-fit: contain; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04); opacity: 0; transition: opacity 0.9s ease; }
+.slide.on img { opacity: 1; }
+
+.bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--barh); display: flex; align-items: center; justify-content: center; background: var(--bar); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid rgba(236, 228, 214, 0.08); padding: 0 calc(16px + var(--sar)) var(--sab) calc(16px + var(--sal)); }
+.bar h1 { margin: 0; font-weight: 500; font-style: italic; font-size: 19px; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
+
+.nav { position: fixed; z-index: 1; top: 0; bottom: var(--barh); width: 22vw; max-width: 220px; background: none; border: 0; padding: 0; cursor: pointer; opacity: 0; }
+.nav:focus-visible { opacity: 1; outline: 2px solid var(--ink); outline-offset: -6px; }
+.prev { left: 0; cursor: w-resize; }
+.next { right: 0; cursor: e-resize; }
+
+/* GitHub link: a quiet pill in the top right, above the click zones, inside the safe area. */
+.gh { position: fixed; z-index: 2; top: calc(6px + var(--sat)); right: calc(6px + var(--sar)); min-width: 44px; min-height: 44px; display: grid; place-items: center; padding: 6px; color: var(--ink); text-decoration: none; opacity: 0.62; transition: opacity 0.25s ease; -webkit-tap-highlight-color: transparent; }
+.gh .pill { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 15px; background: rgba(13, 11, 9, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(236, 228, 214, 0.1); font-size: 15px; letter-spacing: 0.02em; line-height: 1; }
+.gh svg { display: block; flex: none; }
+.gh:hover, .gh:focus-visible { opacity: 1; }
+.gh:focus-visible { outline: none; }
+.gh:focus-visible .pill { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (max-width: 480px) {
+  .gh .label { display: none; }
+  .gh .pill { width: 32px; height: 32px; padding: 0; justify-content: center; border-radius: 50%; }
+}
+
+@media (hover: none) { .nav { display: none; } }
+@media (prefers-reduced-motion: reduce) { .slide img, .bar h1, .gh { transition: none; } .track { scroll-behavior: auto; } }
