@@ -82,3 +82,7 @@ The painter's full brief is in [`docs/prompts/v6-painter-brief.md`](docs/prompts
 ## Credits
 
 An experiment by [Robert Ontiu](https://github.com/robertontiu), built with Claude (Anthropic). The paintings, journals and titles are by the painter agents; the studio code was written by Claude.
+
+## License
+
+[MIT](LICENSE) © 2026 Robert Ontiu
