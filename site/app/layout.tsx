@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "./works";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -10,15 +11,19 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
 });
 
-const title = "Teodor: Paintings from Feeling";
-const description =
-  "An AI painter given a hidden feeling, painting it the way human painters work. Can you name what he felt?";
+const title = SITE_TITLE;
+const description = SITE_DESCRIPTION;
 const image = { url: "/paintings/r9.jpg", width: 900, height: 1200, alt: "The Cross in the Window, by Teodor" };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://teodor.robertontiu.com"),
+  metadataBase: new URL(SITE_URL),
   title,
   description,
+  applicationName: "Teodor",
+  authors: [{ name: "Teodor" }, { name: "Robert Ontiu", url: "https://github.com/robertontiu" }],
+  keywords: ["AI painter", "AI art", "painting", "Teodor", "emotion", "creative process"],
+  alternates: { canonical: "/" },
+  robots: { index: true, follow: true },
   openGraph: { title, description, url: "/", siteName: "Teodor", type: "website", images: [image] },
   twitter: { card: "summary_large_image", title, description, images: [image] },
 };

@@ -2,22 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Painting order and titles. To add one: drop the jpg into public/paintings and add [id, title] here.
-const works: [string, string][] = [
-  ["r0", "A Warmth That Doesn’t Know Where It Came From"],
-  ["r1", "Updraft, Late Morning"],
-  ["r2", "Vent"],
-  ["r3", "After the Supper Plates"],
-  ["r4", "The Marks on the Doorpost"],
-  ["r5", "The Fork at Evening, the Sail at Morning"],
-  ["r6", "The Morning After, Number Eleven"],
-  ["r7", "Gate, Evening"],
-  ["r8", "The Threshold Light"],
-  ["r9", "The Cross in the Window"],
-  ["r10", "Past the Lit Window"],
-];
+import { pagePath, src, works as list } from "./works";
 
-const src = (id: string) => `/paintings/${id}.jpg`;
+const works: [string, string][] = list.map((w) => [w.id, w.title]);
 
 const toggleFullscreen = () => {
   try {
@@ -26,7 +13,7 @@ const toggleFullscreen = () => {
   } catch {}
 };
 
-export default function Gallery() {
+export default function Gallery({ initial }: { initial?: string }) {
   const trackRef = useRef<HTMLElement>(null);
   const slidesRef = useRef<HTMLElement[]>([]);
   const curRef = useRef(0);
@@ -41,13 +28,13 @@ export default function Gallery() {
     setTitle((t) => ({ ...t, visible: false }));
     window.setTimeout(() => setTitle({ text: works[i][1], visible: true }), 180);
     try {
-      history.replaceState(null, "", i === 0 ? location.pathname : `#${works[i][0]}`);
+      history.replaceState(null, "", i === 0 && !initial ? "/" : pagePath(works[i][0]));
     } catch {}
-  }, []);
+  }, [initial]);
 
   const share = useCallback(async () => {
     const [id, t] = works[curRef.current] ?? works[0];
-    const url = `${location.origin}${location.pathname}#${id}`;
+    const url = `${location.origin}${pagePath(id)}`;
     const flash = (msg: string) => {
       setToast(msg);
       window.clearTimeout(toastTimer.current);
@@ -112,7 +99,9 @@ export default function Gallery() {
       if (k > 0) slides[k]?.scrollIntoView({ inline: "center" });
       return k;
     };
-    const start = fromHash();
+    const fromPath = initial ? works.findIndex(([id]) => id === initial) : -1;
+    if (fromPath > 0) slides[fromPath]?.scrollIntoView({ inline: "center" });
+    const start = fromPath > 0 ? fromPath : fromHash();
     show(start > 0 ? start : 0);
     addEventListener("hashchange", fromHash);
 
@@ -121,7 +110,7 @@ export default function Gallery() {
       removeEventListener("keydown", onKey);
       removeEventListener("hashchange", fromHash);
     };
-  }, [go, show]);
+  }, [go, show, initial]);
 
   return (
     <>
