@@ -1,25 +1,21 @@
 # AGENTS.md: guide for agents continuing this project
 
 ## What this project is
-An experiment in **emotion-driven painting by AI agents**. A painter agent ("Teodor") is given a hidden emotion, paints with a simulated oil-paint studio in a human-like perceive → feel → act loop, and a human tries to guess the emotion from the finished painting. The aim is to make the process as analogous as possible to how human painters work (see `docs/research.md`), and the output as close to professional quality as possible.
+An experiment in whether an AI can **paint the way a human painter does**. A painter agent ("Teodor") paints a feeling with a simulated oil-paint studio, in a human-like perceive → feel → act loop: he builds a drawing (a 3D blockout), paints over it in many short look-and-correct episodes, and gets a fresh critic's reading between stages. The aim is a process as analogous as possible to how human painters work (see `docs/research.md`), and output as close to professional quality as possible.
 
 Roles:
-- **Human (Robert Ontiu):** directs the experiment and guesses the emotions.
-- **Orchestrator agent:** builds and tunes the studio, draws the hidden emotion, writes the painter brief, launches the painter as a sub-agent, and reveals results only after the human guesses.
-- **Painter agent:** the persona that paints. It never sees the human, and never writes the emotion.
+- **Person:** asks for a painting, giving a theme or a feeling (and optionally a style).
+- **Orchestrator agent (you):** sets up the studio, writes the painter's brief, runs the painter's phases and the critics, and shows the result.
+- **Painter agent:** Teodor, the persona that paints. It never talks to the person directly.
 
 ## Quick start: someone asked you to paint
 
-If a person who forked this repo asks you to paint a theme or a feeling, run one round with the **current studio, `studio/v7/`**, and the phase protocol in `docs/orchestration.md`:
+Run one painting with the **current studio, `studio/v7/`**, the brief in `docs/prompts/painter-brief.md`, and the phase protocol in `docs/orchestration.md`:
 
-1. Make a work dir outside the repo (for example `../teodor-work/r01/`). Copy `studio/v7/*.py` into it (`studio.py`, `scene.py`, `signature.py`). Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
-2. Write `brief.md` from `docs/prompts/v9-phased-brief.md`. Replace its `/home/claude/v9/` paths with your work dir, and the commission line with what the person asked for:
-   - **Theme** (and maybe a style): keep the "you choose the feeling yourself" paragraph. The painter writes the feeling to `.secret`. Don't reveal it until the person has looked and said what they feel, or asks for it.
-   - **Feeling**: give the painter that feeling directly. Drop the `.secret` and guessing parts, because there's nothing to hide.
-3. Run the phases as fresh general-purpose sub-agents, with a fresh blind critic between them (`docs/orchestration.md`). The last act is `studio.py sign`.
-4. Show the person the final painting and its title, then the journal highlights and the time-lapse (`studio.py timelapse`). If they want to keep it, add it to `rounds/NN-title/` like the existing rounds.
-
-The rest of this file is the history and internals of the original experiment.
+1. Make a work dir outside the repo (for example `../teodor-work/01/`). Copy `studio/v7/*.py` into it (`studio.py`, `scene.py`, `signature.py`). Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
+2. Copy the brief to `brief.md` in the work dir and fill in its placeholders (the comment at its top explains them): the work dir path, the commission, and the feeling paragraph. Given a **theme**, Teodor chooses his own feeling inside it; given a **feeling**, he paints that one.
+3. Run the three phases as fresh general-purpose sub-agents, each told to read `brief.md` and do its phase, with a fresh critic between them. The painter's last acts are `studio.py sign` and `studio.py timelapse`.
+4. Show the person the final painting and its title, then Teodor's feeling, the visitor critic's reading, journal highlights and the time-lapse. If they want to keep it, add it to `rounds/NN-title/` like the existing rounds and to `site/` (see `site/README.md`).
 
 ## Repository map
 ```
@@ -30,14 +26,18 @@ studio/
   v3/studio.py            v2 + "clip" (marks stay inside a region), used for rounds 3 and 4
   v4/studio.py            identical engine to v3 (copied per round)
   v5-levels/studio.py     NCM-style parallel coarse-to-fine levels, layer snapshots
-  v6/studio.py            CURRENT: research-informed studio (see below)
+  v6/studio.py            research-informed studio (see below)
+  v7/                     CURRENT: v6 plus 3D blockouts (scene.py), the liner brush, adaptive matching and signing
+  signature.py            Teodor's signature, for any image
 rounds/NN-title/          painting.jpg, journal.md, intentions/levels logs, sketches, layers
-docs/experiments.md       round-by-round log: setup, emotion, guess, lessons
+docs/experiments.md       round-by-round history of the experiment and what each painting taught
+docs/orchestration.md     how a painting runs: phases, handoffs, critics
 docs/research.md          the research behind v6 and the known gaps
-docs/prompts/             exact painter briefs (v6 in full)
+docs/prompts/painter-brief.md   the current painter brief (template)
+docs/prompts/v6–v9        historical briefs from earlier rounds, kept as records
 ```
 
-## The v6 studio (current)
+## The v6 studio (the engine v7 builds on)
 Single file, `studio/v6/studio.py`; dependencies: `numpy scipy pillow`, plus `rsvg-convert` (librsvg) for SVG schemas and `ffmpeg` for time-lapses. State lives next to the script as `{CANVAS}_col.npy`, `_wet.npy`, `_ht.npy`, `_ref.npy` (float16); `CANVAS` env var selects a named canvas (default `main`).
 
 Commands: `new`, `ref <svg|png>`, `transfer`, `act '<episode json>'`, `dry`, `look full|thumb|gray|crop|ref|diff|compare`, `timelapse`. The full interface spec is in `docs/prompts/v6-painter-brief.md`.
@@ -54,21 +54,12 @@ Performance (2 vCPU): a full-canvas match with a 60–90 brush takes ~17 s, a 24
 ## The signature
 Every painting is signed "Teodor" (`studio/signature.py`): a handwritten mark with an underline flourish, laid as tapered brush strokes in the calmer bottom corner, colored from the paint under it. In the studio it's the painter's last act (`studio.py sign`). To sign any image: `python3 studio/signature.py in.png out.png`.
 
-## How to run a round
-
-**Current protocol: phase-based, see `docs/orchestration.md`.** Each phase is a fresh painter sub-agent with all state on disk (`handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.
-
-Older single-session flow:
-1. Copy `studio/v6/studio.py` to a work dir (the brief assumes `/home/claude/v6/`).
-2. Draw the emotion: `python3 -c "import random; ..."` from the lists in `docs/experiments.md`; write the chosen line to `.secret`. Do **not** print it.
-3. Launch a sub-agent with `docs/prompts/v6-painter-brief.md` (general-purpose agent).
-4. Show the human only `main_full.png` and the title, plus the 8 options. Wait for the guess.
-5. Reveal: read `.secret`, show the journal highlights, schema versions and time-lapse. Then add the round to `rounds/` and `docs/experiments.md`.
+## How to run a painting
+Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agent with all state on disk (`feeling.md`, `journal.md`, `handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.
 
 ## Conventions and rules
-- **Never commit or reveal `.secret`, and never reveal an emotion before the human has guessed** (`.gitignore` excludes it). The answer for round 5 is still unrevealed.
-- Painter agents must not name the emotion. They've slipped before (near-synonyms; "stranger" contains "anger"), so grep the journal before revealing.
-- Titles: the brief forbids emotion-pointing titles (*Vent* was too revealing).
+- Titles are a painter's titles, not labels for the feeling.
+- Critics see only the canvas and the commission, never the feeling, journal or handoff.
 - The painter persona is called **Teodor** (first name only). Until round 10 it was "Teodor Lisk" and signed "T. Lisk"; the name was shortened on Robert's request and every painting was re-signed "Teodor".
 - Keep persona names fictional. "Elias Varga" collided with a real painter (Elias Vargas), and "Teodor" is the current persona.
 
@@ -86,5 +77,5 @@ Older single-session flow:
 ## Open directions
 - A learned motor vocabulary instead of parametric strokes; fatigue and session-level physiology.
 - Separate K and S pigments (true two-constant Kubelka–Munk, or Mixbox).
-- A test panel larger than one human; harder pairs (longing vs. tenderness, grief vs. serenity).
+- More viewers than one person and one critic, to see how widely a painting's feeling is shared.
 - A painter that keeps memory across paintings (style development).

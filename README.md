@@ -61,7 +61,7 @@ More on how each idea shaped the studio is in [`docs/research.md`](docs/research
 1. **Fork** this repository (or clone it).
 2. **Open it in an AI coding agent session**, such as [Claude Code](https://claude.com/claude-code). The agent reads [`AGENTS.md`](AGENTS.md), which teaches it how to set up the studio and run a painting.
 3. **Ask it to paint**, giving it either a theme or a feeling:
-   - *"Paint something on the theme 'the last day of summer'."* Teodor picks the feeling he wants to say about it, and keeps it to himself until you've looked at the painting.
+   - *"Paint something on the theme 'the last day of summer'."* Teodor finds the feeling he wants to say about it.
    - *"Paint the feeling of homesickness mixed with relief."* Teodor paints exactly that feeling.
 
    You can add a style too, for example *"abstract"* or *"a figure in a landscape"*.

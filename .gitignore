@@ -5,5 +5,5 @@
 *_view.png
 *_frames/
 __pycache__/
-# the hidden emotion for a round is never committed until it has been guessed
+# a private note from earlier rounds
 .secret
