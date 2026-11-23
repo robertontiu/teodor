@@ -42,10 +42,14 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 .nav:focus-visible .arrow { opacity: 1; outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* GitHub link: a quiet pill in the top right, above the click zones, inside the safe area. */
-.gh { position: fixed; z-index: 2; top: calc(6px + var(--sat)); right: calc(6px + var(--sar)); min-width: 44px; min-height: 44px; display: grid; place-items: center; padding: 6px; color: var(--ink); text-decoration: none; opacity: 0.62; transition: opacity 0.25s ease; -webkit-tap-highlight-color: transparent; }
+.top { position: fixed; z-index: 2; top: calc(6px + var(--sat)); right: calc(6px + var(--sar)); display: flex; align-items: center; }
+.gh { position: relative; min-width: 44px; min-height: 44px; display: grid; place-items: center; padding: 6px; color: var(--ink); text-decoration: none; opacity: 0.62; transition: opacity 0.25s ease; -webkit-tap-highlight-color: transparent; }
 .gh .pill { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 12px; border-radius: 15px; background: rgba(13, 11, 9, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(236, 228, 214, 0.1); font-size: 15px; letter-spacing: 0.02em; line-height: 1; }
 .gh svg { display: block; flex: none; }
 .gh:hover, .gh:focus-visible { opacity: 1; }
+button.gh { background: none; border: 0; font: inherit; cursor: pointer; }
+.toast { position: fixed; z-index: 3; left: 50%; bottom: calc(var(--barh) + 16px); transform: translate(-50%, 8px); max-width: calc(100vw - 32px); padding: 8px 16px; border-radius: 18px; background: rgba(13, 11, 9, 0.85); border: 1px solid rgba(236, 228, 214, 0.14); color: var(--ink); font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
 .gh:focus-visible { outline: none; }
 .gh:focus-visible .pill { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (max-width: 480px) {
@@ -54,4 +58,4 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 }
 
 @media (hover: none) { .nav { display: none; } }
-@media (prefers-reduced-motion: reduce) { .slide img, .bar h1, .gh, .arrow { transition: none; } .track { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { .slide img, .bar h1, .gh, .arrow, .toast { transition: none; } .track { scroll-behavior: auto; } }
