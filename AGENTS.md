@@ -1,7 +1,7 @@
 # AGENTS.md: guide for agents continuing this project
 
 ## What this project is
-An experiment in **emotion-driven painting by AI agents**. A painter agent ("Teodor Lisk") is given a hidden emotion, paints with a simulated oil-paint studio in a human-like perceive → feel → act loop, and a human tries to guess the emotion from the finished painting. The aim is to make the process as analogous as possible to how human painters work (see `docs/research.md`), and the output as close to professional quality as possible.
+An experiment in **emotion-driven painting by AI agents**. A painter agent ("Teodor") is given a hidden emotion, paints with a simulated oil-paint studio in a human-like perceive → feel → act loop, and a human tries to guess the emotion from the finished painting. The aim is to make the process as analogous as possible to how human painters work (see `docs/research.md`), and the output as close to professional quality as possible.
 
 Roles:
 - **Human (Robert Ontiu):** directs the experiment and guesses the emotions.
@@ -39,7 +39,7 @@ Key internals:
 Performance (2 vCPU): a full-canvas match with a 60–90 brush takes ~17 s, a 24–40 brush ~8 s, small brushes in regions 1–6 s.
 
 ## The signature
-Every painting is signed "T. Lisk" (`studio/signature.py`): a handwritten mark with an underline flourish, laid as tapered brush strokes in the calmer bottom corner, colored from the paint under it. In the studio it's the painter's last act (`studio.py sign`). To sign any image: `python3 studio/signature.py in.png out.png`.
+Every painting is signed "Teodor" (`studio/signature.py`): a handwritten mark with an underline flourish, laid as tapered brush strokes in the calmer bottom corner, colored from the paint under it. In the studio it's the painter's last act (`studio.py sign`). To sign any image: `python3 studio/signature.py in.png out.png`.
 
 ## How to run a round
 
@@ -56,7 +56,8 @@ Older single-session flow:
 - **Never commit or reveal `.secret`, and never reveal an emotion before the human has guessed** (`.gitignore` excludes it). The answer for round 5 is still unrevealed.
 - Painter agents must not name the emotion. They've slipped before (near-synonyms; "stranger" contains "anger"), so grep the journal before revealing.
 - Titles: the brief forbids emotion-pointing titles (*Vent* was too revealing).
-- Keep persona names fictional. "Elias Varga" collided with a real painter (Elias Vargas), and "Teodor Lisk" is the current persona.
+- The painter persona is called **Teodor** (first name only). Until round 10 it was "Teodor Lisk" and signed "T. Lisk"; the name was shortened on Robert's request and every painting was re-signed "Teodor".
+- Keep persona names fictional. "Elias Varga" collided with a real painter (Elias Vargas), and "Teodor" is the current persona.
 
 ## History of fixes worth knowing (v6 tuning)
 - Impasto looked like bubbles → smaller height deposit (`m**1.5 * 0.045`), gentler raking light.

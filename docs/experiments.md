@@ -24,7 +24,7 @@ Complex emotions (rounds 4+): bittersweet nostalgia, relief mixed with guilt, pr
 - **Emotion:** joy. **Guess:** "joy or wonder… joy." ✅
 - **Learned:** the journal showed the agent steering *away* from cousin feelings (sunset/sleepy → serenity). Joy is an easy target (warm, bright, upward).
 
-## Round 2: *Vent* (Teodor Lisk, v2)
+## Round 2: *Vent* (Teodor, v2)
 - **Setup:** `studio/v2`: numpy wet-paint engine (pigment-like mixing, impasto lighting, brush types flat/round/fan/knife/smudge/glaze), a "hand" that turns one intention into many varied marks (mind/hand split), stages (sketchbook → block-in → develop → refine), views (thumb, gray, crop). Abstract only.
 - **Emotion:** anger. **Guess:** anger ✅
 - **Learned:** structure carried the feeling more than color (a black lid pressing down, red forced through a throat). The title was a giveaway.

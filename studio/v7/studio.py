@@ -18,7 +18,7 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   act '<json>'                  one episode: {"felt": {...}, "do": [intention, ...up to 4]}
   dry [0-1]                     let time pass
   look full|thumb|gray|crop X Y W H|ref|diff|compare
-  sign [auto|br|bl]             sign the finished painting ("T. Lisk"), the very last brush act
+  sign [auto|br|bl]             sign the finished painting ("Teodor"), the very last brush act
   timelapse                     build the time-lapse video from recorded frames
 """
 import numpy as np, json, sys, math, os, subprocess

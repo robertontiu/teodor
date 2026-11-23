@@ -2,7 +2,7 @@
 
 **Can an AI paint a feeling well enough that a person can name it?**
 
-Teodor is an experiment in emotion-driven painting. An AI painter (the persona *Teodor Lisk*) is secretly given an emotion. He paints it in a simulated oil-paint studio the way human painters work: looking, feeling, making a mark, looking again. Then a human looks at the finished painting and tries to guess the emotion from eight options.
+Teodor is an experiment in emotion-driven painting. An AI painter (the persona *Teodor*) is secretly given an emotion. He paints it in a simulated oil-paint studio the way human painters work: looking, feeling, making a mark, looking again. Then a human looks at the finished painting and tries to guess the emotion from eight options.
 
 It started at 2 a.m. with a simple question, *"Can you paint?"*, and turned into six versions of a painting studio in one night and day.
 
@@ -89,4 +89,4 @@ An experiment by [Robert Ontiu](https://github.com/robertontiu), built with Clau
 
 [MIT](LICENSE) © 2026 Robert Ontiu
 
-Every painting is signed **T. Lisk** by the painter as his last act ([`studio/signature.py`](studio/signature.py)).
+Every painting is signed **Teodor** by the painter as his last act ([`studio/signature.py`](studio/signature.py)).
