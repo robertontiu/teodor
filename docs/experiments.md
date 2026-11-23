@@ -44,10 +44,12 @@ Complex emotions (rounds 4+): bittersweet nostalgia, relief mixed with guilt, pr
 - **Emotion:** *withheld: the human has not guessed yet.* (Answer to be added here after the guess.)
 - **Learned:** 7 decisions instead of ~50 produced a coherent image in ~4 minutes; the big emotional decision (warm half vs. cool half) happened at level 2. The human noted it resembled Claude's very first inline sketch (two lights, something between), although the agent never saw it.
 
-## Round 6: v6, research-informed (in progress)
+## Round 6: *The Morning After, Number Eleven* (Teodor, v6)
 - **Setup:** `studio/v6`: see `docs/research.md` for the reasoning and `docs/prompts/v6-painter-brief.md` for the exact brief.
   - Kubelka–Munk-style pigment mixing, blend brush (sfumato), edge control (hard/soft/lost), glazing, 1200×1600.
   - A **schema** (SVG drawing the painter designs and may revise) + a **making-and-matching** hand that places strokes where canvas and schema differ most, following form.
   - A **felt state** (arousal, tension, valence, care) per episode that drives the hand's kinematics (minimum-jerk speed profile, pressure, width, tremor, angularity, dry-brush at speed, landing hesitation).
   - Many short episodes (≤4 intentions) with a look between each; global/local views; stages from Mace & Ward; time-lapse recording.
-- **Emotion:** hidden until the guess.
+- **Run:** 3 conception ideas, 5 distinct schema drawings (6 versions), 59 episodes, ~16 minutes. Two houses the morning after a fire: one spared and lit with a family in the doorway, its identical twin a black shell with a woman kneeling before it; a man at the fence between, head sunk, his shadow across their ash.
+- **Emotion:** relief mixed with guilt. **Guess:** "5 or 7" (quiet resignation / hope after grief) ❌
+- **Learned:** by far the most professional-looking result (real drawing underneath, form-following strokes, light and space). But the guilt half read as grief (sunk head, hand on post = mourning posture) and the relief half as returning hope (warm light beside dark). The painter predicted "plain grief" as the risk himself. Feelings defined by a *relationship* (my luck, their cost) need the viewer to feel the causal link, e.g. one fire, one wind, one fence with heat on only one side, or the man's gesture directed at the other house rather than inward.

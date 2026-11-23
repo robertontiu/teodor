@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="1" y2="0.3">
+  <stop offset="0" stop-color="#f3dcae"/><stop offset="0.45" stop-color="#e2b982"/><stop offset="0.75" stop-color="#7d7068"/><stop offset="1" stop-color="#3f3a3b"/></linearGradient>
+ <radialGradient id="sun" cx="0.05" cy="0.42" r="0.55"><stop offset="0" stop-color="#fff4d6" stop-opacity="0.95"/><stop offset="1" stop-color="#f3d39c" stop-opacity="0"/></radialGradient>
+ <linearGradient id="groundL" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a88a52"/><stop offset="0.5" stop-color="#8a7448"/><stop offset="1" stop-color="#6a5f4c"/></linearGradient>
+ <linearGradient id="groundR" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4c4846"/><stop offset="1" stop-color="#2c2a2b"/></linearGradient>
+ <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#1d1915" stop-opacity="0.55"/></linearGradient>
+ <linearGradient id="smoke" x1="0" y1="1" x2="0.4" y2="0"><stop offset="0" stop-color="#3a3434"/><stop offset="0.6" stop-color="#5a5250"/><stop offset="1" stop-color="#6e6560"/></linearGradient>
+ <filter id="b30"><feGaussianBlur stdDeviation="30"/></filter>
+ <filter id="b12"><feGaussianBlur stdDeviation="12"/></filter>
+ <filter id="b4"><feGaussianBlur stdDeviation="4"/></filter>
+ <filter id="b2"><feGaussianBlur stdDeviation="1.5"/></filter>
+</defs>
+<rect width="1200" height="1040" fill="url(#sky)"/>
+<rect width="1200" height="1040" fill="url(#sun)"/>
+<!-- smoke -->
+<path d="M900 860 C860 700 960 600 930 480 C900 350 1010 260 1000 120 C995 40 1050 -20 1100 -40 L1260 -40 L1260 700 C1180 640 1080 700 1040 760 Z" fill="url(#smoke)" filter="url(#b30)" opacity="0.9"/>
+<path d="M915 820 C890 700 960 610 940 500 C920 400 990 320 990 220" stroke="#c9a57a" stroke-width="26" fill="none" opacity="0.35" filter="url(#b12)"/>
+<!-- distant trees on horizon -->
+<path d="M0 1000 C60 960 120 985 180 970 C240 950 260 990 330 985 L330 1040 L0 1040Z" fill="#8f7a58" filter="url(#b4)"/>
+<path d="M560 1015 C600 990 650 1005 700 998 L720 1040 L560 1040Z" fill="#7c7066" filter="url(#b4)"/>
+<!-- ground -->
+<polygon points="0,1030 640,1020 760,1600 0,1600" fill="url(#groundL)"/>
+<path d="M640 1020 L1200 1030 L1200 1600 L770 1600 C740 1500 700 1450 690 1380 C670 1300 690 1200 660 1120 Z" fill="url(#groundR)" filter="url(#b4)"/>
+<rect y="1020" width="1200" height="580" fill="url(#fg)"/>
+<!-- puddles on the ash side reflecting the pale sky -->
+<ellipse cx="960" cy="1250" rx="120" ry="16" fill="#b8a48a" opacity="0.55" filter="url(#b4)"/>
+<ellipse cx="1080" cy="1420" rx="90" ry="14" fill="#9d8c78" opacity="0.45" filter="url(#b4)"/>
+<!-- SAVED HOUSE -->
+<polygon points="60,700 230,540 400,700 400,1050 60,1050" fill="#c99a68"/><polygon points="60,700 230,540 240,552 72,708 72,1050 60,1050" fill="#f6dcaa"/>
+<polygon points="400,700 230,540 300,520 470,690" fill="#9b5a3c"/>
+<polygon points="400,700 470,690 470,1035 400,1050" fill="#7e6048"/>
+<polygon points="40,712 230,528 420,712 400,700 230,545 60,700" fill="#5a3426"/>
+<rect x="180" y="860" width="88" height="190" fill="#4a3022"/>
+<rect x="92" y="760" width="62" height="78" fill="#3a2c26"/><rect x="96" y="764" width="54" height="70" fill="#f6d88e" opacity="0.85"/>
+<rect x="300" y="760" width="62" height="78" fill="#3a2c26"/><rect x="304" y="764" width="54" height="70" fill="#d9b27a" opacity="0.6"/>
+<rect x="208" y="600" width="44" height="50" fill="#3a2c26"/>
+<!-- warm light spill on left ground -->
+<ellipse cx="240" cy="1150" rx="330" ry="70" fill="#d8b679" opacity="0.5" filter="url(#b30)"/>
+<!-- RUIN: a burned house, gable wall standing with empty windows -->
+<path d="M730 1035 L730 790 L800 720 L840 760 L840 1035 Z" fill="#221e1c"/>
+<path d="M840 1035 L840 860 L880 840 L910 880 L960 850 L990 900 L990 1035 Z" fill="#1c1918"/>
+<rect x="990" y="630" width="50" height="405" fill="#1a1716"/>
+<rect x="985" y="622" width="60" height="16" fill="#141211"/>
+<path d="M1040 1035 L1040 800 L1100 740 L1170 810 L1170 1040 Z" fill="#221e1c"/>
+<rect x="1070" y="830" width="40" height="56" fill="#6a605a"/>
+<rect x="1124" y="830" width="30" height="56" fill="#5e5550"/>
+<rect x="762" y="820" width="38" height="54" fill="#6e645c"/>
+<rect x="762" y="920" width="38" height="70" fill="#3c3533"/>
+<path d="M1100 740 L1170 810" stroke="#c07a48" stroke-width="3" opacity="0.5"/>
+<line x1="800" y1="720" x2="960" y2="860" stroke="#151312" stroke-width="11"/>
+<line x1="840" y1="760" x2="1000" y2="700" stroke="#151312" stroke-width="9"/>
+<line x1="1040" y1="800" x2="930" y2="760" stroke="#151312" stroke-width="8"/>
+<!-- embers -->
+<ellipse cx="900" cy="1010" rx="60" ry="14" fill="#b04a20" opacity="0.6" filter="url(#b12)"/>
+<!-- KNEELING NEIGHBOUR -->
+<g fill="#1a1716">
+ <ellipse cx="884" cy="1068" rx="13" ry="15"/>
+ <path d="M868 1078 C858 1100 862 1130 872 1150 L846 1160 C846 1172 900 1172 920 1166 L908 1148 C912 1120 906 1092 898 1080 Z"/>
+ <path d="M874 1092 C864 1104 870 1118 884 1110" stroke="#1a1716" stroke-width="7" fill="none"/>
+</g>
+<ellipse cx="885" cy="1170" rx="50" ry="6" fill="#141212" opacity="0.6"/>
+<!-- FENCE (dividing the plots, receding to vanishing point ~640,1020) -->
+<g stroke="#5a4636" stroke-linecap="round">
+ <line x1="742" y1="1600" x2="645" y2="1030" stroke-width="5" opacity="0.0"/>
+ <line x1="725" y1="1470" x2="650" y2="1050" stroke-width="6"/>
+ <line x1="736" y1="1400" x2="652" y2="1036" stroke-width="5"/>
+</g>
+<g fill="#4e3c2e">
+ <rect x="716" y="1250" width="16" height="230"/>
+ <rect x="690" y="1180" width="12" height="130"/>
+ <rect x="674" y="1130" width="9" height="88"/>
+ <rect x="664" y="1094" width="7" height="60"/>
+ <rect x="657" y="1068" width="5" height="40"/>
+</g>
+<!-- long shadow of the man, thrown across onto their ground -->
+<polygon points="470,1400 560,1392 1060,1470 1080,1500 600,1420" fill="#1a1614" opacity="0.55" filter="url(#b4)"/>
+<!-- THE MAN, from behind, slumped, head sunk and turned toward the ruin -->
+<g>
+ <path d="M480 1215 L472 1395 L496 1398 L512 1240 L526 1398 L550 1394 L546 1215 Z" fill="#2a221d"/>
+ <path d="M458 1078 C446 1110 444 1150 450 1190 L456 1256 L562 1256 L566 1180 C570 1130 568 1090 560 1066 C548 1050 530 1046 514 1048 C490 1050 468 1060 458 1078 Z" fill="#3b2c22"/>
+ <path d="M458 1078 C446 1110 444 1150 450 1190 L456 1256 L472 1256 C464 1190 462 1120 474 1072 Z" fill="#c08a50"/>
+ <path d="M474 1062 C490 1052 506 1050 520 1052" stroke="#d49a5c" stroke-width="5" fill="none"/>
+ <path d="M554 1072 C582 1110 604 1146 628 1170 L640 1184 L628 1194 C600 1172 572 1140 546 1108 Z" fill="#33271f"/>
+ <ellipse cx="640" cy="1186" rx="13" ry="9" fill="#7a5640"/>
+ <path d="M462 1080 C452 1120 452 1166 458 1210 L474 1210 C472 1166 474 1120 482 1086 Z" fill="#2f241c"/>
+ <ellipse cx="466" cy="1216" rx="9" ry="13" fill="#b88a68"/>
+ <ellipse cx="530" cy="1052" rx="25" ry="27" fill="#3e2c22" transform="rotate(20 530 1052)"/>
+ <path d="M508 1040 C512 1028 526 1024 534 1028 C522 1034 514 1044 512 1056 Z" fill="#cf9e6c"/>
+</g>
+<!-- feet shadow -->
+<ellipse cx="510" cy="1398" rx="58" ry="8" fill="#1d1713" opacity="0.7"/>
+<!-- fence post where he grips, catches light -->
+<rect x="640" y="1150" width="12" height="210" fill="#5c4533"/>
+<rect x="640" y="1150" width="4" height="210" fill="#c4975e"/>
+</svg>

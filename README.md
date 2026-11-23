@@ -7,7 +7,7 @@ Teodor is an experiment in emotion-driven painting. An AI painter (the persona *
 It started at 2 a.m. with a simple question, *"Can you paint?"*, and turned into six versions of a painting studio in one night and day.
 
 <p align="center">
-  <img src="rounds/03-after-the-supper-plates/painting.jpg" width="30%" alt="After the Supper Plates">
+  <img src="rounds/06-the-morning-after-number-eleven/painting.jpg" width="30%" alt="The Morning After, Number Eleven">
   <img src="rounds/04-the-marks-on-the-doorpost/painting.jpg" width="30%" alt="The Marks on the Doorpost">
   <img src="rounds/05-the-fork-at-evening/painting.jpg" width="30%" alt="The Fork at Evening, the Sail at Morning">
 </p>
@@ -33,7 +33,9 @@ Rounds 1–3 used basic emotions (grief, joy, longing, anxiety, serenity, anger,
 | 3 | <img src="rounds/03-after-the-supper-plates/painting.jpg" width="120"><br>*After the Supper Plates* | v3, human symbolism required | anger | anger ✅ |
 | 4 | <img src="rounds/04-the-marks-on-the-doorpost/painting.jpg" width="120"><br>*The Marks on the Doorpost* | v3, complex emotions | pride tinged with loss | nostalgia or hope after grief ❌ |
 | 5 | <img src="rounds/05-the-fork-at-evening/painting.jpg" width="120"><br>*The Fork at Evening, the Sail at Morning* | v5, parallel coarse-to-fine levels | 🔒 not yet guessed | … |
-| 6 | *in progress* | v6, research-informed studio | 🔒 | … |
+| 6 | <img src="rounds/06-the-morning-after-number-eleven/painting.jpg" width="120"><br>*The Morning After, Number Eleven* | v6, research-informed studio | relief mixed with guilt | quiet resignation or hope after grief ❌ |
+
+Round 6 is the first painting from the research-informed studio: 59 episodes, five drawings, a [time-lapse](rounds/06-the-morning-after-number-eleven/timelapse.mp4). Its miss showed the next frontier: feelings that depend on a *relationship* (my luck, their cost) read as plain grief unless the painting makes the viewer feel the connection.
 
 The miss in round 4 taught the painter its most important lesson: in a mixed emotion, **each half has to live in the paint itself**, not only in a clue (the height marks on the doorpost carried all of the pride, and they were too small to see).
 
