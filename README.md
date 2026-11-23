@@ -88,3 +88,5 @@ An experiment by [Robert Ontiu](https://github.com/robertontiu), built with Clau
 ## License
 
 [MIT](LICENSE) © 2026 Robert Ontiu
+
+Every painting is signed **T. Lisk** by the painter as his last act ([`studio/signature.py`](studio/signature.py)).

@@ -38,6 +38,9 @@ Key internals:
 
 Performance (2 vCPU): a full-canvas match with a 60–90 brush takes ~17 s, a 24–40 brush ~8 s, small brushes in regions 1–6 s.
 
+## The signature
+Every painting is signed "T. Lisk" (`studio/signature.py`): a handwritten mark with an underline flourish, laid as tapered brush strokes in the calmer bottom corner, colored from the paint under it. In the studio it's the painter's last act (`studio.py sign`). To sign any image: `python3 studio/signature.py in.png out.png`.
+
 ## How to run a round
 
 **Current protocol: phase-based, see `docs/orchestration.md`.** Each phase is a fresh painter sub-agent with all state on disk (`handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.

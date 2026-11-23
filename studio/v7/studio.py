@@ -18,6 +18,7 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   act '<json>'                  one episode: {"felt": {...}, "do": [intention, ...up to 4]}
   dry [0-1]                     let time pass
   look full|thumb|gray|crop X Y W H|ref|diff|compare
+  sign [auto|br|bl]             sign the finished painting ("T. Lisk"), the very last brush act
   timelapse                     build the time-lapse video from recorded frames
 """
 import numpy as np, json, sys, math, os, subprocess
@@ -648,6 +649,11 @@ if __name__ == "__main__":
         look(cv, sys.argv[2], sys.argv[3:]); sys.exit()
     if cmd == "transfer":
         transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35)
+    elif cmd == "sign":
+        sys.path.insert(0, os.path.join(D, "..")); sys.path.insert(0, D)
+        from signature import sign_array
+        sign_array(cv.col, sys.argv[2] if len(sys.argv) > 2 else "auto")
+        cv.ht *= 1.0
     elif cmd == "dry":
         cv.wet *= (1 - (float(sys.argv[2]) if len(sys.argv) > 2 else 0.9))
     elif cmd == "act":

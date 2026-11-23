@@ -18,7 +18,7 @@ Long painter sessions can't be paused and resumed reliably: a sub-agent that sto
 2. **Orchestrator:** run a fresh blind critic on `crit_1.png` (it knows only the theme), save the reading verbatim to `critique_1.md`.
 3. **Phase 2, development** (~30–40 episodes). A new painter session reads `brief.md`, `.secret`, `journal.md`, `handoff.md` and `critique_1.md`, then looks at the canvas. End: `crit_2.png`, updated `handoff.md`, reply `PHASE 2 DONE`.
 4. **Orchestrator:** a fresh critic on `crit_2.png` → `critique_2.md`.
-5. **Phase 3, finalization** (~15–25 episodes). A new session reads the same files plus `critique_2.md`, finishes, runs `timelapse`, writes `final.png`, and replies with `FINISHED`, the title and its notes.
+5. **Phase 3, finalization** (~15–25 episodes). A new session reads the same files plus `critique_2.md`, finishes, **signs** (`studio.py sign`), runs `timelapse`, writes `final.png`, and replies with `FINISHED`, the title and its notes.
 6. **Orchestrator:** a third blind critic on `final.png` (the "visitor" reading), then the human guesses, then reveal and commit.
 
 Use a fresh critic every time, so no critic sees an earlier state. Never give a critic `.secret`, the journal or the handoff.
