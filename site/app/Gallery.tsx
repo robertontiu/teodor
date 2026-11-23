@@ -109,8 +109,16 @@ export default function Gallery() {
           </section>
         ))}
       </main>
-      <button className="nav prev" aria-label="Previous painting" onClick={() => go(-1)} />
-      <button className="nav next" aria-label="Next painting" onClick={() => go(1)} />
+      <button className="nav prev" aria-label="Previous painting" onClick={() => go(-1)} hidden={cur <= 0}>
+        <span className="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </span>
+      </button>
+      <button className="nav next" aria-label="Next painting" onClick={() => go(1)} hidden={cur >= works.length - 1}>
+        <span className="arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </span>
+      </button>
       <a className="gh" href="https://github.com/robertontiu/teodor" target="_blank" rel="noopener noreferrer" aria-label="Teodor on GitHub">
         <span className="pill">
           <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">

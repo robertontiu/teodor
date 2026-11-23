@@ -28,10 +28,18 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 .bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--barh); display: flex; align-items: center; justify-content: center; background: var(--bar); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid rgba(236, 228, 214, 0.08); padding: 0 calc(16px + var(--sar)) var(--sab) calc(16px + var(--sal)); }
 .bar h1 { margin: 0; font-weight: 500; font-style: italic; font-size: 19px; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
 
-.nav { position: fixed; z-index: 1; top: 0; bottom: var(--barh); width: 22vw; max-width: 220px; background: none; border: 0; padding: 0; cursor: pointer; opacity: 0; }
-.nav:focus-visible { opacity: 1; outline: 2px solid var(--ink); outline-offset: -6px; }
-.prev { left: 0; cursor: w-resize; }
-.next { right: 0; cursor: e-resize; }
+/* Prev/next: wide invisible click zones with a visible arrow at the edge (mouse devices only). */
+.nav { position: fixed; z-index: 1; top: 0; bottom: var(--barh); width: 22vw; max-width: 220px; background: none; border: 0; padding: 0; cursor: pointer; color: var(--ink); display: flex; align-items: center; -webkit-tap-highlight-color: transparent; }
+.nav[hidden] { display: none; }
+.prev { left: 0; justify-content: flex-start; padding-left: calc(20px + var(--sal)); }
+.next { right: 0; justify-content: flex-end; padding-right: calc(20px + var(--sar)); }
+.arrow { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: rgba(13, 11, 9, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(236, 228, 214, 0.12); opacity: 0.55; transition: opacity 0.25s ease, transform 0.25s ease, background 0.25s ease; }
+.arrow svg { display: block; }
+.nav:hover .arrow { opacity: 1; background: rgba(13, 11, 9, 0.7); }
+.prev:hover .arrow { transform: translateX(-2px); }
+.next:hover .arrow { transform: translateX(2px); }
+.nav:focus-visible { outline: none; }
+.nav:focus-visible .arrow { opacity: 1; outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* GitHub link: a quiet pill in the top right, above the click zones, inside the safe area. */
 .gh { position: fixed; z-index: 2; top: calc(6px + var(--sat)); right: calc(6px + var(--sar)); min-width: 44px; min-height: 44px; display: grid; place-items: center; padding: 6px; color: var(--ink); text-decoration: none; opacity: 0.62; transition: opacity 0.25s ease; -webkit-tap-highlight-color: transparent; }
@@ -46,4 +54,4 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 }
 
 @media (hover: none) { .nav { display: none; } }
-@media (prefers-reduced-motion: reduce) { .slide img, .bar h1, .gh { transition: none; } .track { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { .slide img, .bar h1, .gh, .arrow { transition: none; } .track { scroll-behavior: auto; } }
