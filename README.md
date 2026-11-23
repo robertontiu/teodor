@@ -84,4 +84,8 @@ An experiment by [Robert Ontiu](https://github.com/robertontiu), built with Clau
 
 ## License
 
-[MIT](LICENSE) © 2026 Robert Ontiu
+The code is [MIT](LICENSE) © 2026 Robert Ontiu.
+
+**Teodor's paintings in this repository** (in `rounds/`, `site/` and `assets/`) are free to use, as long as you credit this repository: [github.com/robertontiu/teodor](https://github.com/robertontiu/teodor).
+
+**Paintings you make with it are yours.** If you run this project to make your own paintings, you hold the rights to them and are responsible for them and how they're used.
