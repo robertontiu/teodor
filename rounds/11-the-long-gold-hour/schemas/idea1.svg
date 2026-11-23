@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+<defs>
+<radialGradient id="g" cx="0.52" cy="0.40" r="0.6"><stop offset="0" stop-color="#fff4cf"/><stop offset="0.25" stop-color="#ffd36b"/><stop offset="0.55" stop-color="#f08a3c"/><stop offset="0.85" stop-color="#b8566a"/><stop offset="1" stop-color="#5a4a8a"/></radialGradient>
+<linearGradient id="c" x1="0" y1="1" x2="0.3" y2="0"><stop offset="0" stop-color="#1f3168"/><stop offset="0.6" stop-color="#4a5f9e" stop-opacity="0.7"/><stop offset="1" stop-color="#6e86c0" stop-opacity="0"/></linearGradient>
+<filter id="b"><feGaussianBlur stdDeviation="40"/></filter><filter id="s"><feGaussianBlur stdDeviation="6"/></filter>
+</defs>
+<rect width="1200" height="1600" fill="url(#g)"/>
+<path d="M0 1600 L0 900 C200 1000 300 1250 700 1350 C900 1400 1100 1500 1200 1600Z" fill="url(#c)" filter="url(#b)"/>
+<g filter="url(#s)" fill="none" stroke-linecap="round">
+<path d="M380 900 C450 700 520 600 640 420" stroke="#fffbe8" stroke-width="28"/>
+<path d="M600 960 C700 760 780 650 900 560" stroke="#ffe08a" stroke-width="20"/>
+<path d="M500 820 C560 640 700 500 760 300" stroke="#fff" stroke-width="14"/>
+<path d="M300 1150 C420 1100 520 1180 640 1120" stroke="#e46a52" stroke-width="22"/>
+</g>
+</svg>

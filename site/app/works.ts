@@ -13,6 +13,7 @@ export const works: Work[] = [
   { id: "r8", title: "The Threshold Light" },
   { id: "r9", title: "The Cross in the Window" },
   { id: "r10", title: "Past the Lit Window" },
+  { id: "r11", title: "The Long Gold Hour" },
 ];
 
 export const SITE_URL = "https://teodor.robertontiu.com";

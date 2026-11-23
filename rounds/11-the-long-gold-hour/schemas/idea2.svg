@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+<defs><filter id="b"><feGaussianBlur stdDeviation="20"/></filter><filter id="s"><feGaussianBlur stdDeviation="4"/></filter></defs>
+<rect width="1200" height="1600" fill="#f3ead6"/>
+<g filter="url(#b)">
+<ellipse cx="480" cy="700" rx="380" ry="420" fill="#ffc93c"/>
+<ellipse cx="420" cy="620" rx="200" ry="220" fill="#ff8a2a"/>
+<ellipse cx="900" cy="1150" rx="260" ry="380" fill="#4f78b8" opacity="0.8"/>
+</g>
+<g filter="url(#s)" fill="none" stroke-linecap="round">
+<path d="M300 900 L520 380" stroke="#e0461f" stroke-width="30"/>
+<path d="M420 980 L700 420" stroke="#f9a21b" stroke-width="26"/>
+<path d="M560 900 C640 700 760 600 820 460" stroke="#d13b6a" stroke-width="18"/>
+<path d="M820 900 C860 1100 900 1250 960 1450" stroke="#27477f" stroke-width="24"/>
+<path d="M940 860 C960 1050 1040 1250 1060 1420" stroke="#5c86c6" stroke-width="16"/>
+</g>
+</svg>

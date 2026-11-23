@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+<defs>
+<radialGradient id="warm" cx="0.54" cy="0.34" r="0.75">
+ <stop offset="0" stop-color="#fffaf0"/><stop offset="0.12" stop-color="#ffefb8"/>
+ <stop offset="0.30" stop-color="#ffcf5e"/><stop offset="0.50" stop-color="#f7983a"/>
+ <stop offset="0.70" stop-color="#e0603e"/><stop offset="0.88" stop-color="#b8435a"/><stop offset="1" stop-color="#8a3a5e"/></radialGradient>
+<linearGradient id="tide" x1="0" y1="1" x2="0.55" y2="0.25">
+ <stop offset="0" stop-color="#16224f"/><stop offset="0.45" stop-color="#25397a"/><stop offset="0.8" stop-color="#4d5aa3"/><stop offset="1" stop-color="#7a64a8"/></linearGradient>
+<filter id="b60"><feGaussianBlur stdDeviation="60"/></filter>
+<filter id="b25"><feGaussianBlur stdDeviation="25"/></filter>
+<filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+<filter id="b3"><feGaussianBlur stdDeviation="2.5"/></filter>
+</defs>
+<rect width="1200" height="1600" fill="url(#warm)"/>
+<!-- rose dusk band where cool meets warm -->
+<path d="M-50 860 C250 900 520 1120 820 1230 C1000 1300 1150 1330 1260 1420 L1260 1650 L-50 1650Z" fill="#c2456e" filter="url(#b60)" opacity="0.85"/>
+<!-- the cool tide, reaching in from lower left -->
+<path d="M-50 980 C200 1010 420 1200 700 1310 C900 1390 1080 1440 1260 1560 L1260 1650 L-50 1650Z" fill="url(#tide)" filter="url(#b25)"/>
+<!-- a cool tongue reaching furthest into the light, firm edge -->
+<path d="M-20 1040 C160 1030 330 1090 470 1160 C560 1205 600 1240 560 1260 C470 1250 300 1220 -20 1250Z" fill="#2c3f86" filter="url(#b8)" opacity="0.9"/>
+<!-- rising gestures: a lift from the dusk zone up into the core -->
+<g fill="none" stroke-linecap="round" filter="url(#b3)">
+ <path d="M430 1060 C470 880 540 740 620 600" stroke="#fffdf4" stroke-width="30"/>
+ <path d="M560 1110 C610 930 680 800 770 690" stroke="#ffe7a0" stroke-width="24"/>
+ <path d="M520 960 C560 790 640 640 700 470" stroke="#ffffff" stroke-width="12"/>
+ <path d="M660 1000 C720 880 800 790 900 740" stroke="#ffd06a" stroke-width="18"/>
+ <path d="M340 980 C380 860 420 790 480 720" stroke="#ff9f6a" stroke-width="14"/>
+ <!-- arcs of the embrace around the core -->
+ <path d="M330 460 C420 300 640 250 820 330" stroke="#fff3c8" stroke-width="16" opacity="0.8"/>
+ <path d="M880 420 C960 540 950 680 880 790" stroke="#ffbf55" stroke-width="20" opacity="0.8"/>
+ <!-- cool strokes touching into the warmth (the evening already here) -->
+ <path d="M160 1000 C260 960 340 940 420 960" stroke="#3a4f9c" stroke-width="12"/>
+ <path d="M900 1240 C960 1180 1040 1150 1120 1150" stroke="#5b5fae" stroke-width="10"/>
+ <!-- warm embers left inside the tide -->
+ <path d="M220 1380 C260 1350 300 1345 340 1360" stroke="#f2a64a" stroke-width="10"/>
+ <path d="M620 1480 C660 1460 700 1462 730 1475" stroke="#e8784a" stroke-width="8"/>
+</g>
+<!-- deepen the upper corners slightly so the light is held -->
+<ellipse cx="60" cy="80" rx="320" ry="260" fill="#9e3d55" opacity="0.45" filter="url(#b60)"/>
+<ellipse cx="1180" cy="140" rx="300" ry="300" fill="#b8504e" opacity="0.4" filter="url(#b60)"/>
+</svg>
