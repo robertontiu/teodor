@@ -169,6 +169,7 @@ export default function Gallery({ initial }: { initial?: string }) {
       <div className={toast ? "toast on" : "toast"} role="status" aria-live="polite">{toast}</div>
       <footer className="bar">
         <h1 style={{ opacity: title.visible ? 1 : 0 }}>{title.text}</h1>
+        <small className="copy">© 2026 Robert Ontiu</small>
       </footer>
     </>
   );

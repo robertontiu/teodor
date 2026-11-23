@@ -26,6 +26,7 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 .slide.on img { opacity: 1; }
 
 .bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--barh); display: flex; align-items: center; justify-content: center; background: var(--bar); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid rgba(236, 228, 214, 0.08); padding: 0 calc(16px + var(--sar)) var(--sab) calc(16px + var(--sal)); }
+.copy { position: absolute; right: calc(18px + var(--sar)); top: 0; height: 44px; display: flex; align-items: center; font-size: 13px; letter-spacing: 0.04em; opacity: 0.45; white-space: nowrap; }
 .bar h1 { margin: 0; font-weight: 500; font-style: italic; font-size: 19px; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
 
 /* Prev/next: wide invisible click zones with a visible arrow at the edge (mouse devices only). */
@@ -52,6 +53,13 @@ button.gh { background: none; border: 0; font: inherit; cursor: pointer; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 .gh:focus-visible { outline: none; }
 .gh:focus-visible .pill { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (min-width: 721px) { .bar h1 { max-width: calc(100% - 340px); } }
+@media (max-width: 720px) {
+  :root { --barh: calc(60px + var(--sab)); }
+  .bar { flex-direction: column; justify-content: center; gap: 1px; }
+  .bar h1 { max-width: 100%; font-size: 18px; line-height: 1.2; }
+  .copy { position: static; height: auto; font-size: 11.5px; }
+}
 @media (max-width: 480px) {
   .gh .label { display: none; }
   .gh .pill { width: 32px; height: 32px; padding: 0; justify-content: center; border-radius: 50%; }
