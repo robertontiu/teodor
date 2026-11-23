@@ -1,0 +1,23 @@
+{
+ "camera": {"pos":[0.6,1.35,5.5], "look_at":[0,1.3,-3], "fov": 45},
+ "sun": {"azimuth": 178, "elevation": 14, "color":"#ffd9a0", "intensity": 2.6, "softness": 10},
+ "sky": {"zenith":"#8fa6c0", "horizon":"#f6dcb0", "sun_glow": 1.0, "disc": 0},
+ "ambient": {"sky":"#4a5060", "ground":"#2a2018", "intensity": 0.25},
+ "fog": {"color":"#e8d2ac", "density": 0.01},
+ "ground": {"color":"#5a4a3a", "color2":"#463a2e"},
+ "exposure": 1.0,
+ "objects": [
+  {"type":"box","pos":[0,2.0,-3],"size":[9,4,0.3],"color":"#4a3e34","cuts":[{"pos":[0.4,-0.7,0],"size":[1.4,2.6,1]}]},
+  {"type":"box","pos":[-4.3,2.0,1],"size":[0.3,4,8],"color":"#3e342c"},
+  {"type":"box","pos":[4.3,2.0,1],"size":[0.3,4,8],"color":"#3e342c"},
+  {"type":"box","pos":[0,4.1,1],"size":[9,0.2,8.5],"color":"#2e2620"},
+  {"type":"figure","pos":[0.45,0,-3.1],"facing":200,"height":1.85,"pose":"walk","color":"#cfcac0","skin":"#dcd8d0","hair":"#cfcac0","joints":{"head_yaw":-40,"arm_l":[-20,10,10]}},
+  {"type":"box","pos":[-2.0,0.25,0.4],"size":[0.45,0.5,0.45],"color":"#3a2c22"},
+  {"type":"figure","pos":[-2.0,0,0.6],"facing":160,"height":1.72,"pose":"sit_ground","coat":true,"color":"#3c342c","skin":"#b88e70","hair":"#c8c8c8","joints":{"spine":18,"head":15,"head_yaw":10}},
+  {"type":"box","pos":[2.6,0.9,-1.0],"size":[2.2,0.1,1.0],"color":"#5a4430"},
+  {"type":"box","pos":[2.6,0.45,-1.0],"size":[2.0,0.9,0.9],"color":"#3a2c22"},
+  {"type":"sphere","pos":[2.2,1.1,-1.1],"r":0.14,"color":"#b8b4aa"},
+  {"type":"capsule","a":[2.7,0.98,-0.9],"b":[3.3,1.0,-1.2],"r":0.06,"color":"#a8a49a"},
+  {"type":"cylinder","pos":[3.1,0.95,-0.8],"r":0.08,"h":0.3,"color":"#8a8478"}
+ ]
+}

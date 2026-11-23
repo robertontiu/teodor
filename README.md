@@ -33,6 +33,7 @@ Rounds 1–3 used basic emotions (grief, joy, longing, anxiety, serenity, anger,
 | 3 | <img src="rounds/03-after-the-supper-plates/painting.jpg" width="120"><br>*After the Supper Plates* | v3, human symbolism required | anger | anger ✅ |
 | 4 | <img src="rounds/04-the-marks-on-the-doorpost/painting.jpg" width="120"><br>*The Marks on the Doorpost* | v3, complex emotions | pride tinged with loss | nostalgia or hope after grief ❌ |
 | 5 | <img src="rounds/05-the-fork-at-evening/painting.jpg" width="120"><br>*The Fork at Evening, the Sail at Morning* | v5, parallel coarse-to-fine levels | 🔒 not yet guessed | … |
+| 8 | <img src="rounds/08-the-threshold-light/painting.jpg" width="120"><br>*The Threshold Light* | v7 + two mid-painting blind critiques; theme "Emergence: the rise of machines" | tender pride and grief: being outgrown by what we made | Robert: "anxiety" ❌ · visitor critic: "dread mixed with tender welcome" (half) |
 | 7 | <img src="rounds/07-gate-evening/painting.jpg" width="120"><br>*Gate, Evening* | v7, 3D blockout + blind critic; **theme "war", the painter chose his own feeling** | waiting: hope that will not let go, held together with dread | Robert: "loss" (close) · blind critic: "dread while waiting… a vigil for someone who may not come back" ✅ |
 | 6 | <img src="rounds/06-the-morning-after-number-eleven/painting.jpg" width="120"><br>*The Morning After, Number Eleven* | v6, research-informed studio | relief mixed with guilt | quiet resignation or hope after grief ❌ |
 
