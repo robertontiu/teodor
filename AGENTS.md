@@ -57,6 +57,20 @@ Every painting is signed "Teodor" (`studio/signature.py`): a handwritten mark wi
 ## How to run a painting
 Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agent with all state on disk (`feeling.md`, `journal.md`, `handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.
 
+## Operating notes (for a new session)
+- **Running a painting:** `docs/orchestration.md` has the phase prompts, the critic prompt, how to recover an interrupted phase, and the publishing checklist (round folder, experiments log, site, gallery, commit).
+- **Never resume a painter sub-agent:** always start a fresh session that reads the files. Run critics yourself, because painters can't spawn agents.
+- **Re-signing:** `python3 studio/signature.py in.png out.png` signs any image "Teodor". To re-sign, start from an unsigned image.
+- **Site build without network access:** the build fetches Google Fonts. In a sandbox without it, mock the font: put `module.exports = new Proxy({}, { get: (_, url) => typeof url === "string" ? "@font-face { font-family: 'Cormorant Garamond'; font-style: normal; font-weight: 500; src: local('Georgia'); }" : undefined, has: () => true });` in `/tmp/fontmock.cjs`, then run `NEXT_FONT_GOOGLE_MOCKED_RESPONSES=/tmp/fontmock.cjs npx next build --webpack` in `site/` (Turbopack ignores the mock). Delete `node_modules`, `.next` and `out` afterwards. Vercel builds normally.
+- **Images for chat:** the studio's PNGs can be rejected by chat uploads; send a JPEG export instead.
+- **Commits:** author "Robert Ontiu <robertontiu@users.noreply.github.com>", pushed straight to `main`.
+- **The person:** Robert Ontiu directs the project. What he has decided so far:
+  - The painter is called "Teodor" everywhere.
+  - Every painting is signed.
+  - The guessing game from the early rounds is retired: feelings are shared openly with the painting.
+  - Public text should be plain and non-technical, with the research cited.
+  - The code is MIT; Teodor's paintings are CC BY 4.0.
+
 ## Conventions and rules
 - Titles are a painter's titles, not labels for the feeling.
 - Critics see only the canvas and the commission, never the feeling, journal or handoff.
