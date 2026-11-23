@@ -24,7 +24,7 @@ Any static host works too: upload the contents of `out/` after `npm run build`.
 They live in `public/paintings/` (900x1200 jpg). To add one:
 
 1. Drop the jpg into `public/paintings/`, e.g. `r11.jpg`.
-2. Add `["r11", "Its Title"]` to the `works` list in `app/Gallery.tsx`, where you want it in the order.
+2. Add `{ id: "r11", title: "Its Title" }` to the list in `app/works.ts`, where you want it in the order.
 
 The Open Graph / Twitter image is `/paintings/r9.jpg`, set in `app/layout.tsx`.
 
