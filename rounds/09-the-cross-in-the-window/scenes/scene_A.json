@@ -1,0 +1,32 @@
+{
+ "camera": {"pos":[0.6,1.1,5.2], "look_at":[0,1.0,0], "fov": 42},
+ "sun": {"azimuth": 70, "elevation": 20, "color":"#9fb4d0", "intensity": 0.5, "softness": 8},
+ "sky": {"zenith":"#1a1d26", "horizon":"#2a2d36", "sun_glow": 0, "disc": 0},
+ "ambient": {"sky":"#2a2a34", "ground":"#1c1410", "intensity": 0.25},
+ "fog": {"color":"#2b2420", "density": 0.02},
+ "ground": {"color":"#5a3c26", "color2":"#4a301e"},
+ "lights": [{"pos":[0.2,2.3,0.3], "color":"#ffb060", "intensity": 3.5, "radius": 4}],
+ "exposure": 1.2,
+ "objects": [
+  {"type":"box","pos":[0,1.5,-1.6],"size":[6,3,0.1],"color":"#6b5a48"},
+  {"type":"box","pos":[-2.6,1.5,0],"size":[0.1,3,4],"color":"#5e4e3e"},
+  {"type":"box","pos":[1.3,1.6,-1.54],"size":[0.9,1.1,0.04],"color":"#3a4a66","emit":0.4},
+  {"type":"capsule","a":[0.2,2.95,0.3],"b":[0.35,2.3,0.3],"r":0.008,"color":"#222222"},
+  {"type":"sphere","pos":[0.35,2.28,0.3],"r":0.07,"color":"#ffd090","emit":2},
+  {"type":"figure","pos":[0.1,0,0.2],"facing":-20,"height":1.8,"pose":"stand",
+   "joints":{"spine":14,"head":42,"head_yaw":-15,"shoulders":0.03,
+     "arm_r":[-8,14,25],"arm_l":[10,4,20],"leg_l":[8,4],"leg_r":[-6,2]},
+   "color":"#3a3530","skin":"#c08a6a","hair":"#2a2018"},
+  {"type":"box","pos":[-1.1,0.4,0.6],"size":[1.4,0.06,0.8],"rot":30,"color":"#7a5030"},
+  {"type":"box","pos":[-1.1,0.4,0.6],"size":[1.3,0.06,0.75],"rot":30,"color":"#7a5030"},
+  {"type":"box","pos":[-1.3,0.38,0.2],"size":[0.06,0.75,0.75],"rot":75,"color":"#6e4a2c"},
+  {"type":"box","pos":[-1.3,0.4,0.25],"size":[1.5,0.05,0.85],"rot":20,"color":"#7a5030"},
+  {"type":"box","pos":[1.1,0.22,0.9],"size":[0.45,0.04,0.45],"rot":50,"color":"#6e4a2c"},
+  {"type":"box","pos":[1.3,0.45,0.75],"size":[0.45,0.5,0.04],"rot":50,"color":"#6e4a2c"},
+  {"type":"ellipsoid","pos":[0.5,0.01,1.4],"radii":[0.1,0.01,0.07],"rot":20,"color":"#e8e2d6"},
+  {"type":"ellipsoid","pos":[0.8,0.01,1.6],"radii":[0.08,0.01,0.05],"rot":70,"color":"#e8e2d6"},
+  {"type":"ellipsoid","pos":[0.3,0.01,1.8],"radii":[0.06,0.01,0.04],"rot":10,"color":"#e8e2d6"},
+  {"type":"ellipsoid","pos":[-0.3,0.01,1.3],"radii":[0.09,0.01,0.05],"rot":120,"color":"#e8e2d6"},
+  {"type":"ellipsoid","pos":[0.1,0.01,1.1],"radii":[0.05,0.01,0.03],"rot":80,"color":"#e8e2d6"}
+ ]
+}

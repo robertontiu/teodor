@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <radialGradient id="h" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffb060" stop-opacity="0.55"/><stop offset="0.4" stop-color="#e0602a" stop-opacity="0.25"/><stop offset="1" stop-color="#c04020" stop-opacity="0"/></radialGradient>
+  <radialGradient id="c" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#e8f0ff" stop-opacity="0.35"/><stop offset="1" stop-color="#e8f0ff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="f" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#8fa6cc" stop-opacity="0.35"/><stop offset="1" stop-color="#8fa6cc" stop-opacity="0"/></radialGradient>
+ </defs>
+ <ellipse cx="560" cy="600" rx="150" ry="130" fill="url(#c)"/>
+ <g stroke="#f4f8ff" fill="none" stroke-linecap="round" stroke-linejoin="miter">
+  <polyline stroke-width="3" points="540,548 566,512 580,470 612,430 630,372 676,330 716,300"/>
+  <polyline stroke-width="2.6" points="548,560 600,562 650,570 690,566 720,580"/>
+  <polyline stroke-width="2.2" points="530,545 536,500 528,452 540,400 530,340 538,290"/>
+  <polyline stroke-width="2" points="612,430 660,440 718,420"/>
+  <polyline stroke-width="2" points="462,545 430,520 400,470 352,430 300,402 252,396"/>
+  <polyline stroke-width="1.8" points="462,568 410,600 380,660 330,700 290,780"/>
+  <polyline stroke-width="1.4" points="400,470 380,500 336,510"/>
+  <polyline stroke-width="1.4" points="566,512 600,500"/>
+ </g>
+ <g fill="#0c1018">
+  <polygon points="528,540 548,532 556,552 536,566 522,556"/>
+  <polygon points="556,540 572,528 566,552"/>
+  <polygon points="520,566 540,576 532,596"/>
+ </g>
+ <ellipse cx="528" cy="556" rx="46" ry="40" fill="url(#h)"/>
+ <g fill="#ffd2a0">
+  <polygon points="578,598 600,590 584,606"/>
+  <polygon points="470,610 476,596 486,616 478,620"/>
+  <polygon points="430,660 452,648 438,668"/>
+  <polygon points="372,742 380,730 386,752"/>
+  <polygon points="300,860 322,852 308,866"/>
+ </g>
+ <ellipse cx="420" cy="1330" rx="260" ry="60" fill="url(#f)"/>
+</svg>

@@ -66,3 +66,10 @@ Complex emotions (rounds 4+): bittersweet nostalgia, relief mixed with guilt, pr
 - **Run:** 3 idea blockouts, 15 scene versions, 95 episodes.
 - **Feeling:** tender pride and grief at being outgrown (machines as our children walking out into the light). **Robert:** "anxiety" ❌. **Critics:** dread/unease each time; the final critic adds "tender welcome".
 - **Learned:** direction of travel is decisive. Figures framed in a doorway read as *arriving* even when drawn from behind; arriving plus a dark room reads as dread, so pride never had a chance. Left to choose, the painter returned to the same feeling family as round 4 (parents and children leaving). Craft: the strongest light so far; weaknesses are the anatomy of the key gesture (an arm with no elbow), generic mannequin robots, and a muddy floor.
+
+## Round 9: *The Cross in the Window* (Teodor, v7; theme: Exploding rage)
+- **Setup:** the first fully **phase-based** round (`docs/orchestration.md`): three fresh painter sessions with `handoff.md` between them, and blind critiques run by the orchestrator after phases 1 and 2 (`critiques/`). No stuck sessions.
+- **Run:** 17 scene versions, 84 episodes.
+- **Feeling:** 🔒 withheld until the human guesses.
+- **Robert:** "This one is the best one so far."
+- **Critics:** all three read held-in, cooling anger and dread rather than an explosion. Their shared craft notes: boxy square strokes look like a digital filter, the figure dissolves into brown, and the umber palette damps the heat. Strongest: the cold window against the warm dark room, with the cracks radiating from the fist.

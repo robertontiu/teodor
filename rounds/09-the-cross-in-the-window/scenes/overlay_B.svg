@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <radialGradient id="g" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#e4edff" stop-opacity="0.45"/><stop offset="1" stop-color="#e4edff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="f" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#9fb6dc" stop-opacity="0.3"/><stop offset="1" stop-color="#9fb6dc" stop-opacity="0"/></radialGradient>
+ </defs>
+ <ellipse cx="462" cy="570" rx="110" ry="100" fill="url(#g)"/>
+ <g transform="translate(-6,40)" stroke="#f2f6ff" fill="none" stroke-linecap="round" stroke-linejoin="bevel">
+  <polyline stroke-width="3" points="462,512 448,470 420,430 402,372 360,318 330,300"/>
+  <polyline stroke-width="2.5" points="498,520 530,480 552,428 600,380"/>
+  <polyline stroke-width="2.2" points="476,512 482,440 470,380 478,300 472,262"/>
+  <polyline stroke-width="2" points="440,548 392,556 340,540 285,548"/>
+  <polyline stroke-width="1.8" points="420,430 380,452 330,458 290,470"/>
+  <polyline stroke-width="1.6" points="510,556 560,548 612,566"/>
+  <polyline stroke-width="1.5" points="442,560 400,600 370,650 330,700 300,760"/>
+  <polyline stroke-width="1.2" points="552,428 520,392"/>
+  <polyline stroke-width="1.2" points="370,650 320,640"/>
+ </g>
+ <ellipse cx="380" cy="1360" rx="240" ry="60" fill="url(#f)"/>
+</svg>
