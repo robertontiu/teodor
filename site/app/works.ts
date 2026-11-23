@@ -1,7 +1,8 @@
-// Painting order and titles. To add one: drop the jpg into public/paintings and add an entry here.
+// Paintings in the order they were made. To add one: drop the jpg into public/paintings and add an entry at the end.
+// The gallery shows them newest first.
 export type Work = { id: string; title: string };
 
-export const works: Work[] = [
+const inOrderMade: Work[] = [
   { id: "r0", title: "A Warmth That Doesn’t Know Where It Came From" },
   { id: "r1", title: "Updraft, Late Morning" },
   { id: "r2", title: "Vent" },
@@ -15,6 +16,8 @@ export const works: Work[] = [
   { id: "r10", title: "Past the Lit Window" },
   { id: "r11", title: "The Long Gold Hour" },
 ];
+
+export const works: Work[] = [...inOrderMade].reverse();
 
 export const SITE_URL = "https://teodor.robertontiu.com";
 export const SITE_TITLE = "Teodor: Paintings from Feeling";
