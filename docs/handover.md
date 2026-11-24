@@ -7,7 +7,8 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 - **Sixteen paintings**, rounds 0–14, with round 14 painted twice (`14-…` by Opus 5.5 and `14b-…` by Fable 5.2). Every round folder has `painting.jpg` and, where one exists, `feeling.md`, `journal.md`, `brief.md`, `handoff.md`, critiques, scenes or schemas, helper scripts and `timelapse.mp4`.
 - **Site:** live at https://teodor.robertontiu.com, deployed by Vercel from `site/` on every push that touches it. Newest painting first; each painting has its own page `/rN/` with a share preview; the model that painted it is shown next to the title.
 - **Process:** the phase protocol (`docs/orchestration.md`), the current brief template (`docs/prompts/painter-brief.md`) and Teodor's habit list (`docs/habits.md`) are up to date. The studio is `studio/v7/`.
-- **Nothing is in progress.** The old studio work dirs from the chat session (`/home/claude/vN/`) are not needed: everything worth keeping was copied into `rounds/`.
+- **Round 15** ("Love, now and in the afterlife", read as neverending love; Opus 5.5) was started at the end of the chat session; if its round folder is missing, it didn't finish there.
+- **Nothing else is in progress.** The old studio work dirs from the chat session (`/home/claude/vN/`) are not needed: everything worth keeping was copied into `rounds/`.
 
 ## How Robert works with this project
 
@@ -17,6 +18,7 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 - **He wants Teodor to keep surprising:** break the habits in `docs/habits.md`, research painters he hasn't used, and don't let critics' advice drag him back into old habits (the studio manager's note under each critique is where you push back).
 - **"Shocking" is welcome, gore is not.** Death, drugs and satire are all fine as themes, painted from the inside, without graphic injury, instructions or glamorizing.
 - **No likeness of real people.** When a theme pointed at a real politician (round 12, "The Orange Buffoon"), the ruler became Teodor's own invented archetype, with the theme's color living in the world around him, not in a recognizable face. Robert agreed to that.
+- **It must look and feel like a painting.** He accepted round 14b, but felt Fable's compositing and flat tile fills "cheated a bit": it didn't feel like a painting. The rule is now in the brief and `AGENTS.md`. He also prefers Opus 5.5 as the painter for now.
 - **Model comparisons:** he's curious how different models paint the same brief. Run them in parallel (see "Comparing models" in `docs/orchestration.md`) and record the model in `works.ts` and the round folder.
 - **Public text stays plain:** the README and site are for people, not engineers; cite the research with links; keep technical detail in `AGENTS.md` and `docs/`.
 - **Licensing:** code MIT, Teodor's paintings CC BY 4.0 (credit the repo); paintings other people make with the project are theirs and their responsibility.

@@ -74,6 +74,9 @@ Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agen
   - Public text should be plain and non-technical, with the research cited.
   - The code is MIT; Teodor's paintings are CC BY 4.0.
 
+## It must be a painting
+Every mark on the canvas goes through the studio's brushes. Schemas, blockouts and references can be built with any script, but nothing is pasted, composited, traced or flat-filled onto the canvas. Round 14b (Fable 5.2) leaned on its own compositing and figure rig and on machine-perfect tile fills, and Robert felt it "doesn't really feel much like a painting". The brief says so; when you check a checkpoint, flag anything that reads as a rendered graphic in the studio manager's note.
+
 ## Keep it fresh
 Teodor drifts into one look: a lone figure from behind, a lit doorway in a dark warm room, a hushed bittersweet mood. Every painting should be a departure. `docs/habits.md` lists the habits; the brief makes him study his past work, research painters he hasn't used, and break at least three habits on purpose. The orchestrator checks the first checkpoint against the contact sheet and updates `docs/habits.md` after every painting. If the person asks for a specific style or mood, that request wins over any habit.
 
