@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+ <defs>
+  <linearGradient id="robe" x1="0" y1="0" x2="1" y2="0">
+   <stop offset="0" stop-color="#c2384a"/><stop offset="0.3" stop-color="#9a1c32"/><stop offset="0.75" stop-color="#6a0e22"/><stop offset="1" stop-color="#480816"/>
+  </linearGradient>
+  <linearGradient id="mantle" x1="0" y1="0" x2="1" y2="0">
+   <stop offset="0" stop-color="#5a0c1c"/><stop offset="1" stop-color="#32060e"/>
+  </linearGradient>
+  <radialGradient id="belly" cx="0.32" cy="0.3" r="0.8">
+   <stop offset="0" stop-color="#e2606a"/><stop offset="0.3" stop-color="#b42c40"/><stop offset="0.7" stop-color="#7a1226"/><stop offset="1" stop-color="#4a0816"/>
+  </radialGradient>
+  <linearGradient id="sleeveR" x1="0" y1="0" x2="1" y2="0.3">
+   <stop offset="0" stop-color="#d4505c"/><stop offset="1" stop-color="#7a1226"/>
+  </linearGradient>
+  <radialGradient id="skin" cx="0.35" cy="0.3" r="0.8">
+   <stop offset="0" stop-color="#fbe6d2"/><stop offset="0.6" stop-color="#e0b49a"/><stop offset="1" stop-color="#a87462"/>
+  </radialGradient>
+  <linearGradient id="sash" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#ffd070"/><stop offset="0.5" stop-color="#ec9a2e"/><stop offset="1" stop-color="#a85a18"/>
+  </linearGradient>
+ <radialGradient id="patch" cx="0.5" cy="0.45" r="0.5">
+   <stop offset="0" stop-color="#f4dca0" stop-opacity="1"/><stop offset="0.55" stop-color="#eac17a" stop-opacity="1"/><stop offset="0.8" stop-color="#d89a52" stop-opacity="0.8"/><stop offset="1" stop-color="#b8743a" stop-opacity="0"/>
+  </radialGradient>
+ <clipPath id="above"><rect x="0" y="0" width="1200" height="1146"/></clipPath>
+ </defs>
+ <ellipse cx="612" cy="930" rx="230" ry="330" fill="url(#patch)" clip-path="url(#above)"/>
+ <rect x="440" y="1150" width="360" height="110" fill="#c08440" opacity="0.0"/>
+ <!-- mantle falling behind, our right -->
+ <path d="M650,846 C700,850 720,900 726,980 C734,1080 748,1180 766,1246 L640,1250 C660,1150 668,1050 664,960 Z" fill="url(#mantle)"/>
+ <!-- robe -->
+ <path d="M556,990 C552,1080 546,1170 538,1244 L700,1246 C694,1170 688,1080 682,990 Z" fill="url(#robe)"/>
+ <!-- shoes -->
+ <ellipse cx="584" cy="1248" rx="22" ry="9" fill="#24080c"/><ellipse cx="646" cy="1252" rx="24" ry="9" fill="#2a0a0e"/>
+ <!-- chest -->
+ <path d="M548,860 C560,842 660,842 680,858 C690,900 680,940 650,960 L540,960 C534,920 538,880 548,860 Z" fill="#8e1a2e"/>
+ <!-- belly, pushed forward -->
+ <ellipse cx="586" cy="966" rx="80" ry="72" fill="url(#belly)"/>
+ <!-- gold sash across the belly -->
+ <path d="M668,868 C640,900 580,950 522,990 L534,1010 C590,970 650,920 682,884 Z" fill="url(#sash)"/>
+ <!-- hip arm: elbow out to our right, fist on hip -->
+ <path d="M664,858 L748,930 L686,1006 L668,994 L716,932 L654,882 Z" fill="#6e1024"/>
+ <path d="M664,858 L748,930 L742,940 L660,872 Z" fill="#a42a3c"/>
+ <circle cx="672" cy="1004" r="14" fill="url(#skin)"/>
+ <!-- raised arm to heaven -->
+ <path d="M548,866 L512,790 L486,728 L506,720 L532,782 L576,852 Z" fill="url(#sleeveR)"/>
+ <path d="M548,866 L512,790 L486,728 L494,724 L522,790 L560,860 Z" fill="#e06a6a" opacity="0.7"/>
+ <!-- cuff -->
+ <path d="M484,732 L510,722 L506,712 L482,720 Z" fill="#f2e8d8"/>
+ <ellipse cx="492" cy="704" rx="15" ry="17" fill="url(#skin)"/>
+ <!-- head, chin up, turned toward the raised fist -->
+ <ellipse cx="606" cy="796" rx="26" ry="31" transform="rotate(-14 606 796)" fill="url(#skin)"/>
+ <path d="M584,808 C590,826 612,834 628,820 L622,836 C606,842 588,832 584,808 Z" fill="#c48c76"/>
+ <!-- ermine collar -->
+ <ellipse cx="612" cy="848" rx="74" ry="15" fill="#f4ecdc"/>
+ <ellipse cx="616" cy="854" rx="66" ry="7" fill="#c8bca8"/>
+ <circle cx="570" cy="846" r="2.5" fill="#1a1010"/><circle cx="600" cy="850" r="2.5" fill="#1a1010"/><circle cx="632" cy="846" r="2.5" fill="#1a1010"/><circle cx="660" cy="850" r="2.5" fill="#1a1010"/>
+ <!-- tiny crown, askew -->
+ <g transform="rotate(-16 610 770)">
+  <path d="M594,774 L594,758 L601,766 L609,752 L617,766 L624,758 L624,774 Z" fill="#f4c850"/>
+  <rect x="594" y="770" width="30" height="5" fill="#c08a28"/>
+ </g>
+</svg>

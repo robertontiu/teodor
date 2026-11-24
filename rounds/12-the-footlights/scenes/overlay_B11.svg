@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+ <defs>
+  <radialGradient id="vig" cx="0.52" cy="0.6" r="0.75">
+   <stop offset="0.35" stop-color="#0a0404" stop-opacity="0"/>
+   <stop offset="1" stop-color="#0a0404" stop-opacity="0.72"/>
+  </radialGradient>
+  <linearGradient id="beam" x1="0" y1="0" x2="0.7" y2="1">
+   <stop offset="0" stop-color="#fff0c8" stop-opacity="0.02"/>
+   <stop offset="0.6" stop-color="#ffe0a0" stop-opacity="0.10"/>
+   <stop offset="1" stop-color="#ffd890" stop-opacity="0.16"/>
+  </linearGradient>
+  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#fff0c0" stop-opacity="0.5"/>
+   <stop offset="0.35" stop-color="#ffc860" stop-opacity="0.45"/>
+   <stop offset="0.7" stop-color="#d87828" stop-opacity="0.15"/>
+   <stop offset="1" stop-color="#a04010" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#ffe0a0" stop-opacity="0.45"/>
+   <stop offset="1" stop-color="#ffa040" stop-opacity="0"/>
+  </radialGradient>
+  <mask id="nofig"><rect width="1200" height="1600" fill="white"/>
+   <path d="M470,690 L515,688 L585,795 L600,738 L652,738 L690,810 L745,900 L745,965 L705,1000 L715,1245 L555,1262 L560,1020 L508,1000 L512,915 L540,840 Z" fill="black"/></mask>
+ </defs>
+ <rect width="1200" height="1600" fill="url(#vig)"/>
+ <ellipse cx="610" cy="860" rx="330" ry="380" fill="url(#halo)"/>
+ <polygon points="60,-40 360,-40 820,1230 430,1230" fill="url(#beam)"/>
+ <ellipse cx="640" cy="1250" rx="300" ry="55" fill="url(#pool)"/>
+</svg>

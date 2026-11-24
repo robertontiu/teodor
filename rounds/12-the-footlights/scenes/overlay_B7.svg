@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+ <defs>
+  <linearGradient id="beam" x1="0" y1="0" x2="0.6" y2="1">
+   <stop offset="0" stop-color="#ffe0a0" stop-opacity="0.0"/>
+   <stop offset="0.5" stop-color="#ffd890" stop-opacity="0.08"/>
+   <stop offset="1" stop-color="#ffd080" stop-opacity="0.14"/>
+  </linearGradient>
+  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#ffd27a" stop-opacity="0.55"/>
+   <stop offset="0.45" stop-color="#e8902e" stop-opacity="0.25"/>
+   <stop offset="1" stop-color="#a04010" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#ffc060" stop-opacity="0.35"/>
+   <stop offset="1" stop-color="#ffa040" stop-opacity="0"/>
+  </radialGradient>
+  <mask id="nofig"><rect width="1200" height="1600" fill="white"/>
+   <path d="M600,600 L660,600 L690,740 L735,830 L760,1070 L500,1070 L520,830 L545,740 Z" fill="black"/></mask>
+ </defs>
+ <ellipse cx="625" cy="760" rx="340" ry="360" fill="url(#halo)" mask="url(#nofig)"/>
+ <polygon points="120,-40 330,-40 860,1110 420,1110" fill="url(#beam)"/>
+ <ellipse cx="630" cy="1100" rx="360" ry="70" fill="url(#pool)"/>
+</svg>

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+<defs><filter id="b"><feGaussianBlur stdDeviation="4"/></filter>
+<clipPath id="in"><rect x="222" y="206" width="760" height="924"/></clipPath>
+<linearGradient id="fade" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#1a0806" stop-opacity="0.82"/><stop offset="1" stop-color="#1a0806" stop-opacity="0.6"/></linearGradient>
+<mask id="m"><g transform="translate(300,1400) scale(1.5) translate(-300,-1400)" fill="#fff" filter="url(#b)">
+ <!-- mantle falling behind, our right -->
+ <path d="M650,846 C700,850 720,900 726,980 C734,1080 748,1180 766,1246 L640,1250 C660,1150 668,1050 664,960 Z" fill="#fff"/>
+ <!-- robe -->
+ <path d="M556,990 C552,1080 546,1170 538,1244 L700,1246 C694,1170 688,1080 682,990 Z" fill="#fff"/>
+ <!-- shoes -->
+ <ellipse cx="584" cy="1248" rx="22" ry="9" fill="#fff"/><ellipse cx="646" cy="1252" rx="24" ry="9" fill="#fff"/>
+ <!-- chest -->
+ <path d="M548,860 C560,842 660,842 680,858 C690,900 680,940 650,960 L540,960 C534,920 538,880 548,860 Z" fill="#fff"/>
+ <!-- belly, pushed forward -->
+ <ellipse cx="586" cy="966" rx="80" ry="72" fill="#fff"/>
+ <!-- gold sash across the belly -->
+ <path d="M668,868 C640,900 580,950 522,990 L534,1010 C590,970 650,920 682,884 Z" fill="#fff"/>
+ <!-- hip arm: elbow out to our right, fist on hip -->
+ <path d="M664,858 L748,930 L686,1006 L668,994 L716,932 L654,882 Z" fill="#fff"/>
+ <path d="M664,858 L748,930 L742,940 L660,872 Z" fill="#fff"/>
+ <circle cx="672" cy="1004" r="14" fill="#fff"/>
+ <!-- raised arm to heaven -->
+ <path d="M548,866 L512,790 L486,728 L506,720 L532,782 L576,852 Z" fill="#fff"/>
+ <path d="M548,866 L512,790 L486,728 L494,724 L522,790 L560,860 Z" fill="#fff"/>
+ <!-- cuff -->
+ <path d="M484,732 L510,722 L506,712 L482,720 Z" fill="#fff"/>
+ <ellipse cx="492" cy="704" rx="15" ry="17" fill="#fff"/>
+ <!-- head, chin up, turned toward the raised fist -->
+ <ellipse cx="606" cy="796" rx="26" ry="31" transform="rotate(-14 606 796)" fill="#fff"/>
+ <path d="M584,808 C590,826 612,834 628,820 L622,836 C606,842 588,832 584,808 Z" fill="#fff"/>
+ <!-- ermine collar -->
+ <ellipse cx="612" cy="848" rx="74" ry="15" fill="#fff"/>
+ <ellipse cx="616" cy="854" rx="66" ry="7" fill="#fff"/>
+ <circle cx="570" cy="846" r="2.5" fill="#fff"/><circle cx="600" cy="850" r="2.5" fill="#fff"/><circle cx="632" cy="846" r="2.5" fill="#fff"/><circle cx="660" cy="850" r="2.5" fill="#fff"/>
+ <!-- tiny crown, askew -->
+ <g transform="rotate(-16 610 770)">
+  <path d="M594,774 L594,758 L601,766 L609,752 L617,766 L624,758 L624,774 Z" fill="#fff"/>
+  <rect x="594" y="770" width="30" height="5" fill="#fff"/>
+ </g>
+
+</g></mask></defs>
+<rect x="0" y="0" width="1200" height="1600" fill="url(#fade)" mask="url(#m)" clip-path="url(#in)"/>
+</svg>

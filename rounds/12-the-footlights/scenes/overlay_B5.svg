@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+ <defs>
+  <linearGradient id="beam" x1="0" y1="0" x2="0.6" y2="1">
+   <stop offset="0" stop-color="#ffd890" stop-opacity="0.0"/>
+   <stop offset="0.5" stop-color="#ffc870" stop-opacity="0.10"/>
+   <stop offset="1" stop-color="#ffb850" stop-opacity="0.20"/>
+  </linearGradient>
+  <radialGradient id="halo" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#ffb24a" stop-opacity="0.45"/>
+   <stop offset="0.5" stop-color="#e07a2a" stop-opacity="0.18"/>
+   <stop offset="1" stop-color="#a04010" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="pool" cx="0.5" cy="0.5" r="0.5">
+   <stop offset="0" stop-color="#ffc060" stop-opacity="0.35"/>
+   <stop offset="1" stop-color="#ffa040" stop-opacity="0"/>
+  </radialGradient>
+ </defs>
+ <ellipse cx="625" cy="800" rx="330" ry="380" fill="url(#halo)"/>
+ <polygon points="120,-40 330,-40 860,1110 420,1110" fill="url(#beam)"/>
+ <ellipse cx="630" cy="1100" rx="360" ry="70" fill="url(#pool)"/>
+</svg>
