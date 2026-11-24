@@ -2,7 +2,7 @@
 
 A running list of what Teodor's paintings keep doing. Every new painting starts by reading this file and looking at the contact sheet of past work (`studio/contact_sheet.py`), and then deliberately breaking at least three of these habits. After each painting, the orchestrator updates this list (add new habits, note which ones were broken).
 
-Last updated after round 14.
+Last updated after round 15.
 
 ## Recurring habits
 
@@ -19,6 +19,8 @@ Last updated after round 14.
 - **Red and black as the code for drama.** Rounds 2, 3, 12 and 13.
 - **One figure in a field, pulled toward a centre.** Even after palette and mood changed in round 14, both versions kept a single central figure with a radial or tunnel pull around it. Critics called it "the same staging formula".
 - **A dark double or silhouette.** Shadows and silhouettes stand in for people: rounds 3, 7, 8, 12, 14b.
+- **Frontal, stiff bodies.** Even two people side by side (round 15) face front and don't lean toward each other; the feeling ends up only in the hands or faces.
+- **A big empty block.** A large field of one color with nothing in it (the quilt in round 15, the audience band in round 12).
 - **Portrait 3:4 every time.** (The canvas format is fixed by the studio; work against it with composition: a crop, a horizon, a figure too big for the frame.)
 
 ## Broken so far
@@ -26,4 +28,11 @@ Last updated after round 14.
 - Round 1 (*Updraft*) and round 2 (*Vent*): pure abstraction, bright full-field color, no figure. Nothing since has been that loud.
 - Round 11: abstract again, but it fell back into a sunset.
 - Round 13 (*Black Noon*): broke the lone figure from behind (a crowd facing us), the dark warm room (glaring noon outdoors), eye level (worm's-eye, cropped hard), amber against violet, and the hushed mood (confronting). A first start that repeated the old pattern was thrown away.
+- Round 15: two people instead of one, a high-key pale interior, and a feeling that was not bittersweet. Kept: frontal figures, disc faces, round-dab stamping.
 - Round 14 (both models): broke the dark room, the amber palette and the hushed mood completely (high-key acid color, open daylight, rapture). Kept: one central figure, a radial pull, mannequin drawing.
+
+## Craft notes from the painters
+
+- Faces and hands work best from a drawn tonal study (an SVG study set as the reference), matched with small brushes. Flesh built from hand-placed strokes comes out as tubes.
+- Painting inside a clipped region leaves a hard, pasted-looking edge; break it with loose strokes across the boundary.
+- `match` and `free` left alone fall back into square dabs and blob faces.

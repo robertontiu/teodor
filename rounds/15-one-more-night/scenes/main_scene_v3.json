@@ -1,0 +1,227 @@
+{
+ "camera": {
+  "pos": [
+   0.1,
+   1.17,
+   2.45
+  ],
+  "look_at": [
+   0.1,
+   1.17,
+   0
+  ],
+  "fov": 30
+ },
+ "sun": {
+  "azimuth": -50,
+  "elevation": 38,
+  "color": "#fff6e6",
+  "intensity": 1.6,
+  "softness": 7
+ },
+ "sky": {
+  "zenith": "#cfd8e6",
+  "horizon": "#eef0f2",
+  "sun_glow": 0.1,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#b4b0dc",
+  "ground": "#f0d8d0",
+  "intensity": 0.9
+ },
+ "fog": {
+  "color": "#e8ecf0",
+  "density": 0.002
+ },
+ "exposure": 1.25,
+ "objects": [
+  {
+   "type": "box",
+   "pos": [
+    0,
+    1.2,
+    -0.32
+   ],
+   "size": [
+    4,
+    3.2,
+    0.2
+   ],
+   "color": "#f1eee6"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.22,
+    1.56,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f6f3ec"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.29,
+    1.47,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f6f3ec"
+  },
+  {
+   "type": "figure",
+   "name": "him",
+   "pos": [
+    -0.2,
+    0,
+    0
+   ],
+   "facing": 35,
+   "height": 1.74,
+   "pose": "stand",
+   "joints": {
+    "head": -8,
+    "head_yaw": 55,
+    "arm_l": [
+     35,
+     -10,
+     15
+    ],
+    "arm_r": [
+     0,
+     5,
+     10
+    ]
+   },
+   "color": "#86a9d6",
+   "skin": "#e2a582"
+  },
+  {
+   "type": "figure",
+   "name": "her",
+   "pos": [
+    0.27,
+    0,
+    0
+   ],
+   "facing": 0,
+   "height": 1.62,
+   "pose": "stand",
+   "joints": {
+    "head_yaw": -50,
+    "head": -8,
+    "arm_r": [
+     -5,
+     -10,
+     80
+    ],
+    "arm_l": [
+     0,
+     7,
+     10
+    ]
+   },
+   "dress": true,
+   "color": "#f2ddd6",
+   "skin": "#ebb79a"
+  },
+  {
+   "type": "box",
+   "pos": [
+    0,
+    1.8,
+    -0.05
+   ],
+   "size": [
+    4,
+    0.1,
+    0.35
+   ],
+   "color": "#a9b6a6",
+   "round": 0.03
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.22,
+    0.84,
+    0.06
+   ],
+   "radii": [
+    0.34,
+    0.44,
+    0.16
+   ],
+   "color": "#33539c"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.31,
+    0.78,
+    0.06
+   ],
+   "radii": [
+    0.31,
+    0.4,
+    0.15
+   ],
+   "color": "#33539c"
+  },
+  {
+   "type": "box",
+   "pos": [
+    0.1,
+    0.52,
+    0.03
+   ],
+   "size": [
+    1.6,
+    0.5,
+    0.24
+   ],
+   "color": "#33539c",
+   "round": 0.08
+  },
+  {
+   "type": "capsule",
+   "a": [
+    -0.5,
+    1.22,
+    0.11
+   ],
+   "b": [
+    -0.02,
+    1.24,
+    0.12
+   ],
+   "r": 0.035,
+   "color": "#f2efe6"
+  },
+  {
+   "type": "capsule",
+   "a": [
+    0.06,
+    1.13,
+    0.12
+   ],
+   "b": [
+    0.6,
+    1.16,
+    0.11
+   ],
+   "r": 0.035,
+   "color": "#f2efe6"
+  }
+ ]
+}

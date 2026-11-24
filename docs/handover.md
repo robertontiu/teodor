@@ -4,11 +4,11 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 
 ## State (Nov 24, 2026)
 
-- **Sixteen paintings**, rounds 0–14, with round 14 painted twice (`14-…` by Opus 5.5 and `14b-…` by Fable 5.2). Every round folder has `painting.jpg` and, where one exists, `feeling.md`, `journal.md`, `brief.md`, `handoff.md`, critiques, scenes or schemas, helper scripts and `timelapse.mp4`.
+- **Seventeen paintings**, rounds 0–15, with round 14 painted twice (`14-…` by Opus 5.5 and `14b-…` by Fable 5.2). Every round folder has `painting.jpg` and, where one exists, `feeling.md`, `journal.md`, `brief.md`, `handoff.md`, critiques, scenes or schemas, helper scripts and `timelapse.mp4`.
 - **Site:** live at https://teodor.robertontiu.com, deployed by Vercel from `site/` on every push that touches it. Newest painting first; each painting has its own page `/rN/` with a share preview; the model that painted it is shown next to the title.
 - **Process:** the phase protocol (`docs/orchestration.md`), the current brief template (`docs/prompts/painter-brief.md`) and Teodor's habit list (`docs/habits.md`) are up to date. The studio is `studio/v7/`.
-- **Round 15** ("Love, now and in the afterlife", read as neverending love; Opus 5.5) was started at the end of the chat session; if its round folder is missing, it didn't finish there.
-- **Nothing else is in progress.** The old studio work dirs from the chat session (`/home/claude/vN/`) are not needed: everything worth keeping was copied into `rounds/`.
+- **Round 15** (*One More Night*, Opus 5.5) is finished and published.
+- **Nothing is in progress.** The old studio work dirs from the chat session (`/home/claude/vN/`) are not needed: everything worth keeping was copied into `rounds/`.
 
 ## How Robert works with this project
 

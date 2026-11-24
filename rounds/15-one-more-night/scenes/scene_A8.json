@@ -1,0 +1,238 @@
+{
+ "camera": {
+  "pos": [
+   0.1,
+   1.17,
+   2.45
+  ],
+  "look_at": [
+   0.1,
+   1.17,
+   0
+  ],
+  "fov": 30
+ },
+ "sun": {
+  "azimuth": -50,
+  "elevation": 38,
+  "color": "#fff6e6",
+  "intensity": 1.4,
+  "softness": 7
+ },
+ "sky": {
+  "zenith": "#cfd8e6",
+  "horizon": "#eef0f2",
+  "sun_glow": 0.1,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#c4bce6",
+  "ground": "#f4e2da",
+  "intensity": 1.25
+ },
+ "fog": {
+  "color": "#e8ecf0",
+  "density": 0.002
+ },
+ "exposure": 1.3,
+ "objects": [
+  {
+   "type": "box",
+   "pos": [
+    0,
+    1.2,
+    -0.32
+   ],
+   "size": [
+    4,
+    3.2,
+    0.2
+   ],
+   "color": "#f1eee6"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.22,
+    1.56,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f6f3ec"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.29,
+    1.47,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f6f3ec"
+  },
+  {
+   "type": "figure",
+   "name": "him",
+   "pos": [
+    -0.2,
+    0,
+    0
+   ],
+   "facing": 35,
+   "height": 1.74,
+   "pose": "stand",
+   "joints": {
+    "head": -8,
+    "head_yaw": 55,
+    "arm_l": [
+     40,
+     -15,
+     15
+    ],
+    "arm_r": [
+     0,
+     5,
+     10
+    ]
+   },
+   "color": "#86a9d6",
+   "skin": "#e2a582"
+  },
+  {
+   "type": "figure",
+   "name": "her",
+   "pos": [
+    0.27,
+    0,
+    0
+   ],
+   "facing": 0,
+   "height": 1.62,
+   "pose": "stand",
+   "joints": {
+    "head_yaw": -50,
+    "head": -8,
+    "arm_r": [
+     10,
+     -10,
+     65
+    ],
+    "arm_l": [
+     0,
+     7,
+     10
+    ]
+   },
+   "dress": true,
+   "color": "#f2ddd6",
+   "skin": "#ebb79a"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.24,
+    0.7100000000000001,
+    0.14
+   ],
+   "radii": [
+    0.5,
+    0.45499999999999996,
+    0.09
+   ],
+   "color": "#f2efe6"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.24,
+    0.67,
+    0.15000000000000002
+   ],
+   "radii": [
+    0.5,
+    0.47,
+    0.09
+   ],
+   "color": "#34539c"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.36,
+    0.61,
+    0.14
+   ],
+   "radii": [
+    0.46,
+    0.45499999999999996,
+    0.09
+   ],
+   "color": "#f2efe6"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.36,
+    0.5700000000000001,
+    0.15000000000000002
+   ],
+   "radii": [
+    0.46,
+    0.47,
+    0.09
+   ],
+   "color": "#34539c"
+  },
+  {
+   "type": "box",
+   "pos": [
+    0.1,
+    0.26999999999999996,
+    0.12
+   ],
+   "size": [
+    1.8,
+    0.5,
+    0.2
+   ],
+   "color": "#34539c",
+   "round": 0.05
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.24,
+    0.5,
+    0.19
+   ],
+   "radii": [
+    0.17,
+    0.55,
+    0.07
+   ],
+   "color": "#34539c"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.36,
+    0.45,
+    0.19
+   ],
+   "radii": [
+    0.16,
+    0.55,
+    0.07
+   ],
+   "color": "#34539c"
+  }
+ ]
+}

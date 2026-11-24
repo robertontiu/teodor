@@ -1,0 +1,15 @@
+{
+ "camera": {"pos":[0.3,5.2,1.6], "look_at":[0.0,0,0], "fov": 34},
+ "sun": {"azimuth": -70, "elevation": 22, "color":"#fff8ec", "intensity": 1.8, "softness": 9},
+ "sky": {"zenith":"#cfe0f0", "horizon":"#f4f2ea", "sun_glow": 0.1, "disc": 0},
+ "ambient": {"sky":"#cfe0f4", "ground":"#f0e8dc", "intensity": 0.6},
+ "ground": {"color":"#e8e4da", "color2":"#cfd8de"},
+ "exposure": 1.2,
+ "objects": [
+  {"type":"figure", "pos":[-0.17,0,0], "facing":75, "height":1.74, "pose":"stand",
+   "joints":{"head":10, "arm_l":[70,10,60], "arm_r":[40,-30,80], "leg_l":[10,5]}, "color":"#3c4f7a", "skin":"#c79a80"},
+  {"type":"figure", "pos":[0.19,0,0.02], "facing":-105, "height":1.62, "pose":"stand",
+   "joints":{"head":-12, "arm_r":[80,-15,40], "arm_l":[50,30,70], "leg_r":[-10,8]}, "dress":true, "color":"#e9c94c", "skin":"#d6a890"},
+  {"type":"box", "pos":[-1.2,0.45,-0.9], "size":[0.9,0.9,0.6], "color":"#9ab0a8"}
+ ]
+}

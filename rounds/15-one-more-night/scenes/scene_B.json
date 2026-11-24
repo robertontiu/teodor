@@ -1,0 +1,17 @@
+{
+ "camera": {"pos":[0.0,-0.6,1.0], "look_at":[0.0,1.6,-0.6], "fov": 55},
+ "sun": {"azimuth": 120, "elevation": 60, "color":"#fffbe8", "intensity": 1.8, "softness": 10},
+ "sky": {"zenith":"#8fb8e8", "horizon":"#f4f2ea", "sun_glow": 0.3, "disc": 0},
+ "ambient": {"sky":"#bcd0ea", "ground":"#7a5a40", "intensity": 0.6},
+ "ground": {"enabled": false},
+ "exposure": 1.2,
+ "objects": [
+  {"type":"box", "pos":[-1.6,-0.5,0], "size":[2.0,1.4,4], "color":"#6b4a33"},
+  {"type":"box", "pos":[1.6,-0.5,0], "size":[2.0,1.4,4], "color":"#6b4a33"},
+  {"type":"box", "pos":[0,-0.5,-2.0], "size":[1.4,1.4,1.0], "color":"#5e4230"},
+  {"type":"figure", "pos":[0,0.2,-0.9], "facing":0, "height":1.62, "pose":"kneel",
+   "joints":{"spine":45, "head":10, "arm_r":[95,-5,10], "arm_l":[60,20,40]},
+   "dress":true, "color":"#e8c64a", "skin":"#d6a890"},
+  {"type":"capsule", "a":[0.15,-1.0,0.6], "b":[0.02,0.35,-0.45], "r":0.05, "color":"#c08a70"}
+ ]
+}

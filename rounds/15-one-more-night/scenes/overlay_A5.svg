@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <!-- her silver hair spread on the pillow, a loose braid toward him -->
+ <path d="M690,360 C700,270 790,250 880,280 C960,310 990,380 960,440 C1000,470 1040,520 1010,560 C960,520 920,470 900,420 C880,330 760,300 700,380 Z" fill="#dcdbe2"/>
+ <path d="M700,380 C660,430 640,500 620,560 C610,600 600,640 610,680" stroke="#cfcdd8" stroke-width="34" fill="none" stroke-linecap="round"/>
+ <!-- his short white hair, cropped near the top edge -->
+ <path d="M140,260 C150,180 230,150 300,175 C350,195 370,240 360,280 C330,230 270,210 220,220 C180,230 160,250 140,260 Z" fill="#f0efea"/>
+ <!-- quilt -->
+ <path d="M0,1390 C300,1350 700,1260 1200,1150 L1200,1600 L0,1600 Z" fill="#2c4fa0"/>
+ <path d="M0,1390 C300,1350 700,1260 1200,1150" stroke="#f2efe6" stroke-width="26" fill="none"/>
+ <g fill="#e8c84a"><rect x="120" y="1440" width="110" height="110" transform="rotate(-10 175 1495)"/><rect x="520" y="1380" width="110" height="110" transform="rotate(-10 575 1435)"/><rect x="920" y="1300" width="110" height="110" transform="rotate(-10 975 1355)"/></g>
+ <g fill="#f2efe6"><circle cx="380" cy="1500" r="38"/><circle cx="780" cy="1440" r="38"/><circle cx="1120" cy="1420" r="38"/></g>
+ <g fill="#d98a8a"><circle cx="300" cy="1560" r="16"/><circle cx="700" cy="1540" r="16"/><circle cx="1050" cy="1520" r="16"/></g>
+</svg>

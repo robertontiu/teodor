@@ -1,0 +1,154 @@
+{
+ "camera": {
+  "pos": [
+   0.12,
+   1.15,
+   2.6
+  ],
+  "look_at": [
+   0.12,
+   1.15,
+   0
+  ],
+  "fov": 30
+ },
+ "sun": {
+  "azimuth": -55,
+  "elevation": 35,
+  "color": "#f4f6ff",
+  "intensity": 1.7,
+  "softness": 8
+ },
+ "sky": {
+  "zenith": "#cfd8e6",
+  "horizon": "#eef0f2",
+  "sun_glow": 0.1,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#c8d4ea",
+  "ground": "#e8e0d0",
+  "intensity": 0.65
+ },
+ "fog": {
+  "color": "#e8ecf0",
+  "density": 0.002
+ },
+ "exposure": 1.2,
+ "objects": [
+  {
+   "type": "box",
+   "pos": [
+    0,
+    1.2,
+    -0.32
+   ],
+   "size": [
+    4,
+    3.2,
+    0.2
+   ],
+   "color": "#e9e7e0"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.3,
+    1.56,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f1efe9"
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    0.32,
+    1.47,
+    -0.16
+   ],
+   "radii": [
+    0.36,
+    0.2,
+    0.12
+   ],
+   "color": "#f1efe9"
+  },
+  {
+   "type": "figure",
+   "name": "him",
+   "pos": [
+    -0.26,
+    0,
+    0
+   ],
+   "facing": 35,
+   "height": 1.74,
+   "pose": "stand",
+   "joints": {
+    "head": -5,
+    "head_yaw": 25,
+    "arm_l": [
+     35,
+     15,
+     25
+    ],
+    "arm_r": [
+     10,
+     -10,
+     90
+    ]
+   },
+   "color": "#c9d3e3",
+   "skin": "#c79a80"
+  },
+  {
+   "type": "figure",
+   "name": "her",
+   "pos": [
+    0.32,
+    0,
+    0
+   ],
+   "facing": 0,
+   "height": 1.62,
+   "pose": "stand",
+   "joints": {
+    "head_yaw": -45,
+    "head": -5,
+    "arm_r": [
+     0,
+     -10,
+     80
+    ],
+    "arm_l": [
+     0,
+     7,
+     10
+    ]
+   },
+   "dress": true,
+   "color": "#ecdcd2",
+   "skin": "#d6a890"
+  },
+  {
+   "type": "box",
+   "pos": [
+    0.1,
+    0.38,
+    0.22
+   ],
+   "size": [
+    3.0,
+    0.9,
+    0.06
+   ],
+   "color": "#2f56a8",
+   "round": 0.03
+  }
+ ]
+}
