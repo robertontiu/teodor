@@ -28,6 +28,15 @@ Run each critic as a fresh general-purpose sub-agent:
 
 > You are a thoughtful museum visitor and an experienced painting critic. Look at the image `<path>/crit_N.png` (use the Read tool). It was painted for this commission: "<commission>". 1) In a few words, what do you FEEL looking at it, in the first three seconds? 2) What in the painting makes you feel that? 3) Its weaknesses as a painting, frankly: composition, values, edges, drawing, gesture, color, finish. 4) The one change that would most improve it. Be concrete and brief.
 
+For the final visitor reading, also give the critic `past_work.jpg` and add: 5) Compared with the painter's earlier work on the contact sheet, is this a new departure or more of the same? Name what it repeats.
+
+## Before phase 1: keep Teodor from repeating himself
+In the work dir, besides `brief.md`:
+- `cp docs/habits.md <WORKDIR>/habits.md`
+- `python3 studio/contact_sheet.py rounds <WORKDIR>/past_work.jpg`
+
+The brief tells Teodor to read both, research painters he hasn't drawn on, and break at least three habits. When you check `crit_1.png`, compare it with the contact sheet yourself. If it's another sibling of the old work (a lone figure from behind, a lit doorway, a warm dark room), say so in the studio manager's note under critique 1, naming the habits it repeats.
+
 ## Phase prompts (send each to a fresh general-purpose sub-agent)
 Run the phases one after another, waiting for each to finish: the next step depends on its files. A phase takes roughly 5–30 minutes.
 
@@ -49,5 +58,6 @@ Save each reading verbatim to `critique_N.md` with a header such as `# Critique 
    - `critiques/`: `crit_N.jpg` (600×800), `critique_N.md`, `visitor.md`
    - `scenes/` (scene JSON and overlay SVGs) or `schemas/` (schema SVGs for abstract work)
 3. **`docs/experiments.md`:** a section "## Round NN: *Title* (Teodor, v7; theme: …)" with setup, run (episodes, scene/schema versions), feeling, the person's reaction, critics' readings and lessons.
-4. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`. That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
-5. **Commit and push** everything above in one commit. Vercel builds and publishes the site (teodor.robertontiu.com) from the repo; there is nothing else to update.
+4. **Habits:** update `docs/habits.md`: add any new habit this painting showed, and note under "Broken so far" what it broke.
+5. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`. That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
+6. **Commit and push** everything above in one commit. Vercel builds and publishes the site (teodor.robertontiu.com) from the repo; there is nothing else to update.

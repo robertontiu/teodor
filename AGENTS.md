@@ -13,7 +13,7 @@ Roles:
 Run one painting with the **current studio, `studio/v7/`**, the brief in `docs/prompts/painter-brief.md`, and the phase protocol in `docs/orchestration.md`:
 
 1. Make a work dir outside the repo (for example `../teodor-work/01/`). Copy `studio/v7/*.py` into it (`studio.py`, `scene.py`, `signature.py`). Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
-2. Copy the brief to `brief.md` in the work dir and fill in its placeholders (the comment at its top explains them): the work dir path, the commission, and the feeling paragraph. Given a **theme**, Teodor chooses his own feeling inside it; given a **feeling**, he paints that one.
+2. Copy `docs/habits.md` to the work dir and make `past_work.jpg` with `studio/contact_sheet.py` (see `docs/orchestration.md`). Copy the brief to `brief.md` in the work dir and fill in its placeholders (the comment at its top explains them): the work dir path, the commission, and the feeling paragraph. Given a **theme**, Teodor chooses his own feeling inside it; given a **feeling**, he paints that one.
 3. Run the three phases as fresh general-purpose sub-agents, each told to read `brief.md` and do its phase, with a fresh critic between them. The painter's last acts are `studio.py sign` and `studio.py timelapse`.
 4. Show the person the final painting and its title, then Teodor's feeling, the visitor critic's reading, journal highlights and the time-lapse. If they want to keep it, add it to `rounds/NN-title/` like the existing rounds and to `site/` (see `site/README.md`).
 
@@ -32,6 +32,7 @@ studio/
 rounds/NN-title/          painting.jpg, journal.md, intentions/levels logs, sketches, layers
 docs/experiments.md       round-by-round history of the experiment and what each painting taught
 docs/orchestration.md     how a painting runs: phases, handoffs, critics
+docs/habits.md            Teodor's recurring habits, to break on purpose
 docs/research.md          the research behind v6 and the known gaps
 docs/prompts/painter-brief.md   the current painter brief (template)
 docs/prompts/v6–v9        historical briefs from earlier rounds, kept as records
@@ -70,6 +71,9 @@ Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agen
   - The guessing game from the early rounds is retired: feelings are shared openly with the painting.
   - Public text should be plain and non-technical, with the research cited.
   - The code is MIT; Teodor's paintings are CC BY 4.0.
+
+## Keep it fresh
+Teodor drifts into one look: a lone figure from behind, a lit doorway in a dark warm room, a hushed bittersweet mood. Every painting should be a departure. `docs/habits.md` lists the habits; the brief makes him study his past work, research painters he hasn't used, and break at least three habits on purpose. The orchestrator checks the first checkpoint against the contact sheet and updates `docs/habits.md` after every painting. If the person asks for a specific style or mood, that request wins over any habit.
 
 ## Conventions and rules
 - Titles are a painter's titles, not labels for the feeling.
