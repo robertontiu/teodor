@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600">
+<defs><radialGradient id="g" cx="0" cy="560" r="700" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffffff" stop-opacity="1"/><stop offset="0.2" stop-color="#fffff0" stop-opacity="0.9"/><stop offset="0.55" stop-color="#f2f6c0" stop-opacity="0.35"/><stop offset="1" stop-color="#e8f0b0" stop-opacity="0"/></radialGradient></defs>
+<rect x="0" y="0" width="1200" height="1600" fill="url(#g)"/>
+<polygon points="844,962 911,1078 814,1159 866,1221 1009,1102 956,918" fill="#a8150c"/>
+<g transform="translate(800 1215) rotate(35) scale(1.60)">
+<path d="M-58,-40 C-66,10 -55,60 -30,78 L40,80 C60,55 66,10 56,-42 C30,-60 -30,-60 -58,-40 Z" fill="#d0906c"/>
+<path d="M-50,-30 C-56,20 -45,55 -25,72" stroke="#7a4030" stroke-width="14" fill="none" opacity="0.45"/>
+<path d="M50,-30 C56,20 50,50 38,70" stroke="#f4d0b0" stroke-width="8" fill="none" opacity="0.5"/>
+<line x1="-32.0" y1="74.0" x2="-44.4" y2="118.3" stroke="#d0906c" stroke-width="22.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-44.4" y1="118.3" x2="-51.9" y2="155.5" stroke="#d0906c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-51.9" y1="155.5" x2="-55.5" y2="185.3" stroke="#d0906c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="-55.5" cy="185.3" r="5.6" fill="#f4d0b0" opacity="0.6"/>
+<line x1="-10.0" y1="74.0" x2="-14.9" y2="127.8" stroke="#d0906c" stroke-width="23.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-14.9" y1="127.8" x2="-16.8" y2="169.7" stroke="#d0906c" stroke-width="20.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-16.8" y1="169.7" x2="-16.7" y2="201.7" stroke="#d0906c" stroke-width="17.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="-16.7" cy="201.7" r="5.9" fill="#f4d0b0" opacity="0.6"/>
+<line x1="12.0" y1="74.0" x2="16.7" y2="125.8" stroke="#d0906c" stroke-width="22.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="16.7" y1="125.8" x2="18.6" y2="165.7" stroke="#d0906c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="18.6" y1="165.7" x2="18.4" y2="196.7" stroke="#d0906c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="18.4" cy="196.7" r="5.6" fill="#f4d0b0" opacity="0.6"/>
+<line x1="33.0" y1="74.0" x2="44.3" y2="114.5" stroke="#d0906c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="44.3" y1="114.5" x2="50.6" y2="145.8" stroke="#d0906c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="50.6" y1="145.8" x2="53.8" y2="171.6" stroke="#d0906c" stroke-width="14.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="53.8" cy="171.6" r="4.9" fill="#f4d0b0" opacity="0.6"/>
+<line x1="-56.0" y1="0.0" x2="-90.6" y2="20.0" stroke="#d0906c" stroke-width="30.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-90.6" y1="20.0" x2="-109.7" y2="48.2" stroke="#d0906c" stroke-width="24.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-109.7" y1="48.2" x2="-113.6" y2="75.9" stroke="#d0906c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+</g>
+<polygon points="166,1006 199,1214 292,1379 368,1341 301,1186 294,994" fill="#101216"/>
+<g transform="translate(345 1390) rotate(-10) scale(1.30)">
+<path d="M-58,-40 C-66,10 -55,60 -30,78 L40,80 C60,55 66,10 56,-42 C30,-60 -30,-60 -58,-40 Z" fill="#a86c4c"/>
+<path d="M-50,-30 C-56,20 -45,55 -25,72" stroke="#4a2818" stroke-width="14" fill="none" opacity="0.45"/>
+<path d="M50,-30 C56,20 50,50 38,70" stroke="#d8a888" stroke-width="8" fill="none" opacity="0.5"/>
+<line x1="-32.0" y1="74.0" x2="-40.6" y2="119.2" stroke="#a86c4c" stroke-width="22.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-40.6" y1="119.2" x2="-43.4" y2="157.1" stroke="#a86c4c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-43.4" y1="157.1" x2="-41.7" y2="187.0" stroke="#a86c4c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="-41.7" cy="187.0" r="5.6" fill="#d8a888" opacity="0.6"/>
+<line x1="-10.0" y1="74.0" x2="-13.4" y2="127.9" stroke="#a86c4c" stroke-width="23.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-13.4" y1="127.9" x2="-12.4" y2="169.9" stroke="#a86c4c" stroke-width="20.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-12.4" y1="169.9" x2="-8.3" y2="201.6" stroke="#a86c4c" stroke-width="17.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="-8.3" cy="201.6" r="5.9" fill="#d8a888" opacity="0.6"/>
+<line x1="12.0" y1="74.0" x2="15.3" y2="125.9" stroke="#a86c4c" stroke-width="22.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="15.3" y1="125.9" x2="14.3" y2="165.9" stroke="#a86c4c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="14.3" y1="165.9" x2="10.4" y2="196.6" stroke="#a86c4c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="10.4" cy="196.6" r="5.6" fill="#d8a888" opacity="0.6"/>
+<line x1="33.0" y1="74.0" x2="40.9" y2="115.3" stroke="#a86c4c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="40.9" y1="115.3" x2="43.2" y2="147.2" stroke="#a86c4c" stroke-width="16.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="43.2" y1="147.2" x2="41.7" y2="173.1" stroke="#a86c4c" stroke-width="14.0" stroke-linecap="round" opacity="1.00"/>
+<circle cx="41.7" cy="173.1" r="4.9" fill="#d8a888" opacity="0.6"/>
+<line x1="-56.0" y1="0.0" x2="-90.6" y2="20.0" stroke="#a86c4c" stroke-width="30.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-90.6" y1="20.0" x2="-109.0" y2="48.6" stroke="#a86c4c" stroke-width="24.0" stroke-linecap="round" opacity="1.00"/>
+<line x1="-109.0" y1="48.6" x2="-111.5" y2="76.5" stroke="#a86c4c" stroke-width="19.0" stroke-linecap="round" opacity="1.00"/>
+</g>
+</svg>

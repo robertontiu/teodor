@@ -1,0 +1,327 @@
+{
+ "camera": {
+  "pos": [
+   0,
+   0.12,
+   0
+  ],
+  "look_at": [
+   0.25,
+   5,
+   -1.2
+  ],
+  "fov": 72
+ },
+ "sun": {
+  "azimuth": 205,
+  "elevation": 72,
+  "color": "#fffbe8",
+  "intensity": 2.6,
+  "softness": 14
+ },
+ "sky": {
+  "zenith": "#eaf0c8",
+  "horizon": "#fbfbe6",
+  "sun_glow": 1.5,
+  "disc": 4
+ },
+ "ambient": {
+  "sky": "#a8c0dc",
+  "ground": "#c8c8a8",
+  "intensity": 0.62
+ },
+ "fog": {
+  "color": "#f4f6ea",
+  "density": 0.01
+ },
+ "ground": {
+  "color": "#9a9a90",
+  "color2": "#8a8a80"
+ },
+ "exposure": 1.3,
+ "objects": [
+  {
+   "type": "figure",
+   "pos": [
+    -0.325,
+    0,
+    -0.893
+   ],
+   "facing": 20.0,
+   "height": 1.82,
+   "color": "#121418",
+   "skin": "#c89070",
+   "hair": "#14100c",
+   "joints": {
+    "spine": 72,
+    "head": 25,
+    "arm_l": [
+     55,
+     10,
+     25
+    ],
+    "arm_r": [
+     70,
+     -5,
+     15
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.475,
+    0,
+    -0.823
+   ],
+   "facing": -30.0,
+   "height": 1.7,
+   "color": "#c81e14",
+   "skin": "#e0b090",
+   "hair": "#3a2210",
+   "joints": {
+    "spine": 67,
+    "head": 30,
+    "arm_l": [
+     40,
+     10,
+     40
+    ],
+    "arm_r": [
+     65,
+     0,
+     10
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "dress": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.893,
+    0,
+    -0.325
+   ],
+   "facing": -70.0,
+   "height": 1.78,
+   "color": "#e8e4d0",
+   "skin": "#a06848",
+   "hair": "#0a0808",
+   "joints": {
+    "spine": 64,
+    "head": 25,
+    "arm_l": [
+     20,
+     6,
+     10
+    ],
+    "arm_r": [
+     60,
+     -10,
+     25
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.861,
+    0,
+    0.402
+   ],
+   "facing": -115.0,
+   "height": 1.75,
+   "color": "#1e3c9a",
+   "skin": "#d8a080",
+   "hair": "#c0a060",
+   "joints": {
+    "spine": 74,
+    "head": 30,
+    "arm_l": [
+     65,
+     5,
+     15
+    ],
+    "arm_r": [
+     45,
+     8,
+     30
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.325,
+    0,
+    0.893
+   ],
+   "facing": -160.0,
+   "height": 1.66,
+   "color": "#16181c",
+   "skin": "#e8c0a0",
+   "hair": "#201410",
+   "joints": {
+    "spine": 64,
+    "head": 35,
+    "arm_l": [
+     10,
+     10,
+     30
+    ],
+    "arm_r": [
+     50,
+     5,
+     20
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.823,
+    0,
+    0.475
+   ],
+   "facing": 120.0,
+   "height": 1.88,
+   "color": "#2a2a26",
+   "skin": "#b07858",
+   "hair": "#101010",
+   "joints": {
+    "spine": 64,
+    "head": 30,
+    "arm_l": [
+     5,
+     6,
+     15
+    ],
+    "arm_r": [
+     30,
+     0,
+     30
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.324,
+    0,
+    1.207
+   ],
+   "facing": 165.0,
+   "height": 1.8,
+   "color": "#e8e8e0",
+   "skin": "#d8a888",
+   "hair": "#201410",
+   "joints": {
+    "spine": 52,
+    "head": 35,
+    "arm_l": [
+     30,
+     5,
+     60
+    ],
+    "arm_r": [
+     15,
+     5,
+     90
+    ],
+    "leg_l": [
+     15,
+     10
+    ],
+    "leg_r": [
+     0,
+     0
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.9,
+    0,
+    -1.6
+   ],
+   "facing": 120,
+   "height": 1.8,
+   "color": "#20306a",
+   "skin": "#c89878",
+   "hair": "#0c0c0c",
+   "joints": {
+    "head_yaw": 40,
+    "arm_l": [
+     0,
+     7,
+     10
+    ],
+    "arm_r": [
+     20,
+     5,
+     30
+    ],
+    "leg_l": [
+     10,
+     5
+    ],
+    "leg_r": [
+     -8,
+     0
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,293 @@
+{
+ "camera": {
+  "pos": [
+   0,
+   0.12,
+   0
+  ],
+  "look_at": [
+   0.3,
+   5,
+   -0.9
+  ],
+  "fov": 68
+ },
+ "sun": {
+  "azimuth": 200,
+  "elevation": 70,
+  "color": "#fffbe8",
+  "intensity": 2.6,
+  "softness": 14
+ },
+ "sky": {
+  "zenith": "#eef4e4",
+  "horizon": "#fcfcf0",
+  "sun_glow": 1.5,
+  "disc": 4
+ },
+ "ambient": {
+  "sky": "#c8d8e8",
+  "ground": "#b8b8a0",
+  "intensity": 0.6
+ },
+ "fog": {
+  "color": "#f4f6ea",
+  "density": 0.01
+ },
+ "ground": {
+  "color": "#9a9a90",
+  "color2": "#8a8a80"
+ },
+ "exposure": 1.3,
+ "objects": [
+  {
+   "type": "figure",
+   "pos": [
+    -0.274,
+    0,
+    -0.752
+   ],
+   "facing": 20.0,
+   "height": 1.82,
+   "color": "#121418",
+   "skin": "#c89070",
+   "hair": "#14100c",
+   "joints": {
+    "spine": 60,
+    "head": 25,
+    "arm_l": [
+     10,
+     8,
+     20
+    ],
+    "arm_r": [
+     25,
+     -6,
+     15
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.375,
+    0,
+    -0.65
+   ],
+   "facing": -30.0,
+   "height": 1.7,
+   "color": "#c81e14",
+   "skin": "#e0b090",
+   "hair": "#3a2210",
+   "joints": {
+    "spine": 55,
+    "head": 30,
+    "arm_l": [
+     20,
+     10,
+     40
+    ],
+    "arm_r": [
+     5,
+     0,
+     10
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "dress": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.799,
+    0,
+    -0.291
+   ],
+   "facing": -70.0,
+   "height": 1.78,
+   "color": "#e8e4d0",
+   "skin": "#a06848",
+   "hair": "#0a0808",
+   "joints": {
+    "spine": 50,
+    "head": 25,
+    "arm_l": [
+     0,
+     6,
+     10
+    ],
+    "arm_r": [
+     35,
+     -10,
+     25
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.634,
+    0,
+    0.296
+   ],
+   "facing": -115.0,
+   "height": 1.75,
+   "color": "#1e3c9a",
+   "skin": "#d8a080",
+   "hair": "#c0a060",
+   "joints": {
+    "spine": 62,
+    "head": 30,
+    "arm_l": [
+     15,
+     5,
+     15
+    ],
+    "arm_r": [
+     0,
+     8,
+     10
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.291,
+    0,
+    0.799
+   ],
+   "facing": -160.0,
+   "height": 1.66,
+   "color": "#d8c818",
+   "skin": "#e8c0a0",
+   "hair": "#201410",
+   "joints": {
+    "spine": 48,
+    "head": 35,
+    "arm_l": [
+     10,
+     10,
+     30
+    ],
+    "arm_r": [
+     8,
+     5,
+     20
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.779,
+    0,
+    0.45
+   ],
+   "facing": 120.0,
+   "height": 1.88,
+   "color": "#2a2a26",
+   "skin": "#b07858",
+   "hair": "#101010",
+   "joints": {
+    "spine": 45,
+    "head": 30,
+    "arm_l": [
+     5,
+     6,
+     15
+    ],
+    "arm_r": [
+     20,
+     0,
+     30
+    ],
+    "leg_l": [
+     25,
+     15
+    ],
+    "leg_r": [
+     5,
+     5
+    ]
+   },
+   "coat": true
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.35,
+    0,
+    -0.15
+   ],
+   "facing": -66.8,
+   "height": 1.72,
+   "color": "#f0eee6",
+   "skin": "#d09070",
+   "hair": "#1a120c",
+   "joints": {
+    "leg_l": [
+     80,
+     85
+    ],
+    "leg_r": [
+     0,
+     95
+    ],
+    "spine": 40,
+    "head": 30,
+    "arm_l": [
+     55,
+     -5,
+     20
+    ],
+    "arm_r": [
+     10,
+     10,
+     30
+    ]
+   }
+  }
+ ]
+}

@@ -16,6 +16,7 @@ const inOrderMade: Work[] = [
   { id: "r10", title: "Past the Lit Window" },
   { id: "r11", title: "The Long Gold Hour" },
   { id: "r12", title: "The Footlights" },
+  { id: "r13", title: "Black Noon" },
 ];
 
 export const works: Work[] = [...inOrderMade].reverse();

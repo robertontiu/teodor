@@ -1,0 +1,787 @@
+{
+ "camera": {
+  "pos": [
+   0.5,
+   13,
+   4.5
+  ],
+  "look_at": [
+   0,
+   0,
+   0
+  ],
+  "fov": 42
+ },
+ "sun": {
+  "azimuth": 120,
+  "elevation": 55,
+  "color": "#fffff0",
+  "intensity": 2.6,
+  "softness": 16
+ },
+ "sky": {
+  "zenith": "#c0d8e8",
+  "horizon": "#f0f0e8",
+  "sun_glow": 0.8,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#90b0d0",
+  "ground": "#c0c0b0",
+  "intensity": 0.5
+ },
+ "fog": {
+  "color": "#e8ece8",
+  "density": 0.004
+ },
+ "ground": {
+  "color": "#d8d4c4",
+  "color2": "#c4c0b0"
+ },
+ "exposure": 1.25,
+ "objects": [
+  {
+   "type": "figure",
+   "pos": [
+    3.01,
+    0,
+    0.23
+   ],
+   "facing": -100.8,
+   "height": 1.7613720135086681,
+   "color": "#c02018",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.53,
+    0,
+    2.37
+   ],
+   "facing": 149.7,
+   "height": 1.6171104363983548,
+   "color": "#6a2050",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.48,
+    0,
+    -3.23
+   ],
+   "facing": -26.0,
+   "height": 1.772201230399816,
+   "color": "#202020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    0.34,
+    0,
+    3.6
+   ],
+   "facing": -191.6,
+   "height": 1.8851239752537372,
+   "color": "#1a1a22",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.06,
+    0,
+    1.03
+   ],
+   "facing": 121.2,
+   "height": 1.8720548168389832,
+   "color": "#f0f0f0",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    2.26,
+    0,
+    -2.91
+   ],
+   "facing": -40.6,
+   "height": 1.8774553525965822,
+   "color": "#303a30",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     10,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    1.63,
+    0,
+    1.42
+   ],
+   "facing": -107.8,
+   "height": 1.7026566533196001,
+   "color": "#d0b020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.68,
+    0,
+    1.55
+   ],
+   "facing": 121.8,
+   "height": 1.692651552740396,
+   "color": "#2a4a8a",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.85,
+    0,
+    1.45
+   ],
+   "facing": 138.6,
+   "height": 1.7620367306094298,
+   "color": "#e8e0c0",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.87,
+    0,
+    3.86
+   ],
+   "facing": 170.7,
+   "height": 1.7998359570609697,
+   "color": "#2a4a8a",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    1.91,
+    0,
+    -0.21
+   ],
+   "facing": -84.7,
+   "height": 1.7735654551270015,
+   "color": "#6a2050",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     10,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.53,
+    0,
+    0.83
+   ],
+   "facing": 90.8,
+   "height": 1.652861936386672,
+   "color": "#f0f0f0",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     10,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.19,
+    0,
+    -2.83
+   ],
+   "facing": 31.7,
+   "height": 1.7552312840955997,
+   "color": "#202020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    1.69,
+    0,
+    0.15
+   ],
+   "facing": -119.7,
+   "height": 1.587841757088281,
+   "color": "#202020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     10,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.42,
+    0,
+    2.32
+   ],
+   "facing": 157.9,
+   "height": 1.791406575701032,
+   "color": "#303a30",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.01,
+    0,
+    3.8
+   ],
+   "facing": 159.0,
+   "height": 1.7111433714960667,
+   "color": "#202020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.5,
+    0,
+    2.26
+   ],
+   "facing": 112.2,
+   "height": 1.8905091701389658,
+   "color": "#202020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.59,
+    0,
+    -2.3
+   ],
+   "facing": 70.2,
+   "height": 1.703106015862741,
+   "color": "#d0b020",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -0.49,
+    0,
+    -1.55
+   ],
+   "facing": 13.2,
+   "height": 1.752987824828973,
+   "color": "#1a1a22",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.03,
+    0,
+    -1.65
+   ],
+   "facing": 38.8,
+   "height": 1.6663577941297565,
+   "color": "#303a30",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.47,
+    0,
+    -1.8
+   ],
+   "facing": 38.7,
+   "height": 1.7562819348365208,
+   "color": "#1a1a22",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.71,
+    0,
+    -1.65
+   ],
+   "facing": 51.1,
+   "height": 1.612097357417526,
+   "color": "#e8e0c0",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.9,
+    0,
+    1.27
+   ],
+   "facing": 138.1,
+   "height": 1.5867051040403224,
+   "color": "#1a1a22",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     150,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.4,
+    0,
+    -0.22
+   ],
+   "facing": 70.8,
+   "height": 1.8313326846382196,
+   "color": "#2a4a8a",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "stand",
+   "joints": {
+    "spine": -8,
+    "arm_l": [
+     60,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -2.96,
+    0,
+    -1.44
+   ],
+   "facing": 44.0,
+   "height": 1.7602534466437108,
+   "color": "#303a30",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     10,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    1.44,
+    0,
+    -3.54
+   ],
+   "facing": -38.7,
+   "height": 1.6678485822657083,
+   "color": "#2a4a8a",
+   "skin": "#d0a080",
+   "hair": "#201810",
+   "pose": "walk",
+   "joints": {
+    "spine": 0,
+    "arm_l": [
+     120,
+     20,
+     30
+    ],
+    "arm_r": [
+     70,
+     15,
+     40
+    ]
+   }
+  },
+  {
+   "type": "box",
+   "pos": [
+    0.2,
+    0.04,
+    0.1
+   ],
+   "size": [
+    0.32,
+    0.08,
+    0.12
+   ],
+   "rot": 30,
+   "color": "#e8e8e8",
+   "round": 0.03
+  },
+  {
+   "type": "ellipsoid",
+   "pos": [
+    -0.5,
+    0.08,
+    -0.3
+   ],
+   "radii": [
+    0.2,
+    0.08,
+    0.12
+   ],
+   "rot": 10,
+   "color": "#c8b020"
+  },
+  {
+   "type": "sphere",
+   "pos": [
+    0.7,
+    0.06,
+    0.5
+   ],
+   "r": 0.06,
+   "color": "#d02818"
+  }
+ ]
+}
