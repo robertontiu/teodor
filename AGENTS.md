@@ -33,6 +33,7 @@ rounds/NN-title/          painting.jpg, journal.md, intentions/levels logs, sket
 docs/experiments.md       round-by-round history of the experiment and what each painting taught
 docs/orchestration.md     how a painting runs: phases, handoffs, critics
 docs/habits.md            Teodor's recurring habits, to break on purpose
+docs/handover.md          current state, Robert's preferences, open threads (read this when starting a session)
 docs/research.md          the research behind v6 and the known gaps
 docs/prompts/painter-brief.md   the current painter brief (template)
 docs/prompts/v6–v9        historical briefs from earlier rounds, kept as records
@@ -59,6 +60,7 @@ Every painting is signed "Teodor" (`studio/signature.py`): a handwritten mark wi
 Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agent with all state on disk (`feeling.md`, `journal.md`, `handoff.md`, `critique_N.md`). Don't pause and resume one long painter session: sub-agents could not be resumed after a checkpoint, and painters can't spawn critics themselves.
 
 ## Operating notes (for a new session)
+- **Start here:** `docs/handover.md` has the current state, how Robert likes to work, and what to do next.
 - **Running a painting:** `docs/orchestration.md` has the phase prompts, the critic prompt, how to recover an interrupted phase, and the publishing checklist (round folder, experiments log, site, gallery, commit).
 - **Never resume a painter sub-agent:** always start a fresh session that reads the files. Run critics yourself, because painters can't spawn agents.
 - **Re-signing:** `python3 studio/signature.py in.png out.png` signs any image "Teodor". To re-sign, start from an unsigned image.
