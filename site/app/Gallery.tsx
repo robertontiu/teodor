@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { pagePath, src, works as list } from "./works";
 
-const works: [string, string][] = list.map((w) => [w.id, w.title]);
+const works: [string, string, string][] = list.map((w) => [w.id, w.title, w.model]);
 
 const toggleFullscreen = () => {
   try {
@@ -18,7 +18,7 @@ export default function Gallery({ initial }: { initial?: string }) {
   const slidesRef = useRef<HTMLElement[]>([]);
   const curRef = useRef(0);
   const [cur, setCur] = useState(-1);
-  const [title, setTitle] = useState({ text: "Teodor", visible: true });
+  const [title, setTitle] = useState({ text: "Teodor", model: "", visible: true });
   const [toast, setToast] = useState("");
   const toastTimer = useRef<number | undefined>(undefined);
 
@@ -26,7 +26,7 @@ export default function Gallery({ initial }: { initial?: string }) {
     curRef.current = i;
     setCur(i);
     setTitle((t) => ({ ...t, visible: false }));
-    window.setTimeout(() => setTitle({ text: works[i][1], visible: true }), 180);
+    window.setTimeout(() => setTitle({ text: works[i][1], model: works[i][2], visible: true }), 180);
     try {
       history.replaceState(null, "", i === 0 && !initial ? "/" : pagePath(works[i][0]));
     } catch {}
@@ -168,7 +168,10 @@ export default function Gallery({ initial }: { initial?: string }) {
       </div>
       <div className={toast ? "toast on" : "toast"} role="status" aria-live="polite">{toast}</div>
       <footer className="bar">
-        <h1 style={{ opacity: title.visible ? 1 : 0 }}>{title.text}</h1>
+        <h1 style={{ opacity: title.visible ? 1 : 0 }}>
+          {title.text}
+          {title.model && <span className="model">{title.model}</span>}
+        </h1>
         <small className="copy">© 2026 Robert Ontiu</small>
       </footer>
     </>

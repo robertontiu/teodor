@@ -26,6 +26,7 @@ body { font: 17px/1.4 var(--font-cormorant), "Cormorant Garamond", Georgia, seri
 .slide.on img { opacity: 1; }
 
 .bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--barh); display: flex; align-items: center; justify-content: center; background: var(--bar); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid rgba(236, 228, 214, 0.08); padding: 0 calc(16px + var(--sar)) var(--sab) calc(16px + var(--sal)); }
+.bar h1 .model { font-style: normal; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.5; margin-left: 12px; vertical-align: 2px; font-family: ui-sans-serif, system-ui, sans-serif; }
 .copy { position: absolute; right: calc(18px + var(--sar)); top: 0; height: 44px; display: flex; align-items: center; font-size: 13px; letter-spacing: 0.04em; opacity: 0.45; white-space: nowrap; }
 .bar h1 { margin: 0; font-weight: 500; font-style: italic; font-size: 19px; letter-spacing: 0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity 0.35s ease; }
 

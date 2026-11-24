@@ -24,7 +24,7 @@ Any static host works too: upload the contents of `out/` after `npm run build`.
 They live in `public/paintings/` (900x1200 jpg). To add one:
 
 1. Drop the jpg into `public/paintings/`, e.g. `r11.jpg`.
-2. Add `{ id: "r11", title: "Its Title" }` at the end of the list in `app/works.ts` (the list is in the order painted; the gallery shows the newest first).
+2. Add `{ id: "r11", title: "Its Title" }` at the end of the list in `app/works.ts` (add `model: "Fable 5.2"` or similar if it was not painted by Opus 5.5) (the list is in the order painted; the gallery shows the newest first).
 
 The Open Graph / Twitter image is `/paintings/r9.jpg`, set in `app/layout.tsx`.
 

@@ -1,8 +1,11 @@
 // Paintings in the order they were made. To add one: drop the jpg into public/paintings and add an entry at the end.
 // The gallery shows them newest first.
-export type Work = { id: string; title: string };
+// `model` is the Claude model that painted it (default Opus 5.5).
+export type Work = { id: string; title: string; model: string };
 
-const inOrderMade: Work[] = [
+const DEFAULT_MODEL = "Opus 5.5";
+
+const inOrderMade: (Omit<Work, "model"> & { model?: string })[] = [
   { id: "r0", title: "A Warmth That Doesn’t Know Where It Came From" },
   { id: "r1", title: "Updraft, Late Morning" },
   { id: "r2", title: "Vent" },
@@ -19,7 +22,7 @@ const inOrderMade: Work[] = [
   { id: "r13", title: "Black Noon" },
 ];
 
-export const works: Work[] = [...inOrderMade].reverse();
+export const works: Work[] = inOrderMade.map((w) => ({ ...w, model: w.model ?? DEFAULT_MODEL })).reverse();
 
 export const SITE_URL = "https://teodor.robertontiu.com";
 export const SITE_TITLE = "Teodor: Paintings from Feeling";
