@@ -68,7 +68,7 @@ Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agen
 - **The person:** Robert Ontiu directs the project. What he has decided so far:
   - The painter is called "Teodor" everywhere.
   - Every painting is signed.
-  - The guessing game from the early rounds is retired: feelings are shared openly with the painting.
+  - Feelings are published openly with each painting.
   - Public text should be plain and non-technical, with the research cited.
   - The code is MIT; Teodor's paintings are CC BY 4.0.
 

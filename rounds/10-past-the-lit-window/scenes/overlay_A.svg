@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <linearGradient id="spill" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#e8a860" stop-opacity="0.2"/>
+   <stop offset="1" stop-color="#e8a860" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="b"><feGaussianBlur stdDeviation="28"/></filter>
+ </defs>
+ <polygon points="800,1045 1100,1045 880,1380 440,1380" fill="url(#spill)" filter="url(#b)"/>
+</svg>

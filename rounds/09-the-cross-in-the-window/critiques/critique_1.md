@@ -11,4 +11,4 @@
 
 **Biggest fix:** Make the impact point the hottest, brightest, sharpest thing in the picture. Use jagged, hard-edged shards flying outward with warm light behind them, and give the figure a clear, readable fist and a diagonal thrust. Right now it's a crack in a quiet room. It needs to be an explosion.
 
-(Studio manager's note: the critic is reading against the theme's title. Weigh its feeling against YOUR feeling in .secret, not against the title.)
+(Studio manager's note: the critic is reading against the theme's title. Weigh its feeling against YOUR feeling in feeling.md, not against the title.)

@@ -10,7 +10,7 @@ Composition now:
 - The tide: deep indigo fan strokes leaning with the canvas, pressing to the bottom edge, heaviest in the lower-left corner, violet-rose toward the lower right.
 Value structure (gray, ep. 65): 4 groups, clean. Light dominant (centre), mid-light ring, mid dusk (edges, seam), dark tide (lower left). The middle is not murky.
 
-## What each element does for the feeling (see .secret)
+## What each element does for the feeling (see feeling.md)
 - The light: the fullness. Generous, still at its heart; only its edges stream away.
 - The violet reaching in: the coming evening already inside the warmth, gently, not striking. The ache lives at that tip.
 - The lilac tail of the light: the warmth cooling at its own end as it leans away.

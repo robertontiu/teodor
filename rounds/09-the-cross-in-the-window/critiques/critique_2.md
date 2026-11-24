@@ -11,4 +11,4 @@
 
 **The one fix:** Make the moment of impact violent. Draw a sharp, angular fist with the arm and body coiled behind it. Make the glass burst outward with hard-edged shards in the air and bright light spilling in. Then crop or darken the empty right side so the whole painting pulls toward that point.
 
-(Studio manager's note: as before, the critic reads against the theme's title. Weigh its feeling against YOUR feeling in .secret. Its craft points stand regardless: the figure's anatomy and tension, dead areas, and crisp edges where it matters.)
+(Studio manager's note: as before, the critic reads against the theme's title. Weigh its feeling against YOUR feeling in feeling.md. Its craft points stand regardless: the figure's anatomy and tension, dead areas, and crisp edges where it matters.)

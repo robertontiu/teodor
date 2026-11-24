@@ -1,0 +1,224 @@
+{
+ "camera": {
+  "pos": [
+   -1.2,
+   1.35,
+   12.0
+  ],
+  "look_at": [
+   0.2,
+   1.85,
+   0
+  ],
+  "fov": 44
+ },
+ "sun": {
+  "azimuth": 120,
+  "elevation": -6,
+  "color": "#7088b8",
+  "intensity": 0.6,
+  "softness": 6
+ },
+ "sky": {
+  "zenith": "#0b1222",
+  "horizon": "#34445e",
+  "sun_glow": 0.15,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#3a4a6a",
+  "ground": "#151820",
+  "intensity": 0.5
+ },
+ "fog": {
+  "color": "#28344a",
+  "density": 0.018
+ },
+ "ground": {
+  "color": "#2c3242",
+  "color2": "#20242f"
+ },
+ "lights": [
+  {
+   "pos": [
+    2.3,
+    1.6,
+    -4.9
+   ],
+   "color": "#ffb060",
+   "intensity": 3.0,
+   "radius": 4
+  },
+  {
+   "pos": [
+    2.0,
+    0.3,
+    -2.5
+   ],
+   "color": "#ff9a40",
+   "intensity": 1.2,
+   "radius": 4
+  }
+ ],
+ "exposure": 1.15,
+ "objects": [
+  {
+   "type": "house",
+   "pos": [
+    2.4,
+    0,
+    -7
+   ],
+   "size": [
+    8,
+    3.0,
+    5
+   ],
+   "rot": -6,
+   "roof_h": 2.0,
+   "color": "#3a3a46",
+   "roof_color": "#1c1e26",
+   "chimney": false,
+   "windows": [
+    {
+     "x": 0.6,
+     "y": 1.55,
+     "w": 3.0,
+     "h": 1.9,
+     "emit": 2.2,
+     "color": "#ffb45a"
+    },
+    {
+     "x": 3.0,
+     "y": 1.6,
+     "w": 0.8,
+     "h": 1.1,
+     "emit": 0.5,
+     "color": "#ff9a50"
+    }
+   ]
+  },
+  {
+   "type": "figure",
+   "pos": [
+    2.55,
+    0,
+    -4.2
+   ],
+   "facing": -65,
+   "height": 1.8,
+   "pose": "stand",
+   "color": "#2a1e1a",
+   "joints": {
+    "head": 18,
+    "head_yaw": -10,
+    "spine": 6,
+    "arm_l": [
+     70,
+     -20,
+     60
+    ],
+    "arm_r": [
+     55,
+     -25,
+     70
+    ]
+   }
+  },
+  {
+   "type": "figure",
+   "pos": [
+    2.12,
+    0,
+    -4.2
+   ],
+   "facing": 70,
+   "height": 1.66,
+   "pose": "stand",
+   "dress": true,
+   "color": "#3a2220",
+   "hair": "#1a1210",
+   "joints": {
+    "head": -8,
+    "head_yaw": 0,
+    "spine": -3,
+    "arm_r": [
+     75,
+     -25,
+     55
+    ],
+    "arm_l": [
+     60,
+     -25,
+     70
+    ]
+   }
+  },
+  {
+   "type": "fence",
+   "a": [
+    -7,
+    0,
+    -1.5
+   ],
+   "b": [
+    8,
+    0,
+    -2.4
+   ],
+   "h": 1.0,
+   "color": "#24221f"
+  },
+  {
+   "type": "tree",
+   "pos": [
+    -3.6,
+    0,
+    -5
+   ],
+   "h": 6.5,
+   "bare": true,
+   "color": "#151820",
+   "trunk": "#151820"
+  },
+  {
+   "type": "figure",
+   "pos": [
+    -1.05,
+    0,
+    6.6
+   ],
+   "facing": -90,
+   "height": 1.78,
+   "pose": "stand",
+   "coat": true,
+   "color": "#1e222c",
+   "skin": "#8a7a72",
+   "hair": "#16151a",
+   "joints": {
+    "spine": 10,
+    "head": 18,
+    "head_yaw": 75,
+    "shoulders": -0.02,
+    "arm_r": [
+     -6,
+     6,
+     18
+    ],
+    "arm_l": [
+     70,
+     -28,
+     125
+    ],
+    "leg_l": [
+     16,
+     8
+    ],
+    "leg_r": [
+     -10,
+     8
+    ]
+   }
+  }
+ ]
+}

@@ -11,4 +11,4 @@
 
 **Most important fix:** Give the sun's core real light against the dark: add a few cooler or deeper notes (violet or crimson) close to it, and sharpen 2–3 edges right at the core. Joy needs contrast to glow.
 
-(Studio manager's note: weigh the critic's feeling against YOUR feeling in .secret, not against the theme's title. Note also that it read the abstraction as a landscape, "a sunset over water"; decide whether that serves you.)
+(Studio manager's note: weigh the critic's feeling against YOUR feeling in feeling.md, not against the theme's title. Note also that it read the abstraction as a landscape, "a sunset over water"; decide whether that serves you.)
