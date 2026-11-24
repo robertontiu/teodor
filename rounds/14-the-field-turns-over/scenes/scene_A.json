@@ -1,0 +1,15 @@
+{
+ "camera": {"pos":[0.25,10.05,4.2], "look_at":[0.05,10.0,0], "fov":36},
+ "sun": {"azimuth":-28, "elevation":48, "color":"#fff6d0", "intensity":2.2, "softness":14},
+ "sky": {"zenith":"#3a8ad0", "horizon":"#bfe8ff", "sun_glow":0.3, "disc":0},
+ "ambient": {"sky":"#9fd0ff", "ground":"#e080a0", "intensity":0.6},
+ "fog": {"color":"#d8f0ff", "density":0.002},
+ "ground": {"enabled": false},
+ "exposure": 1.4,
+ "objects": [
+  {"type":"box","pos":[0,10,-0.25],"size":[12,12,0.2],"color":"#5fb83a"},
+  {"type":"figure","pos":[0,9.05,0],"facing":0,"height":1.78,"pose":"stand",
+   "joints":{"spine":-4,"head":-20,"head_yaw":55,"arm_l":[0,128,25],"arm_r":[0,100,40],"leg_l":[0,0],"leg_r":[55,95]},
+   "color":"#f2f0e8","skin":"#e8b898","hair":"#2a1a30"}
+ ]
+}

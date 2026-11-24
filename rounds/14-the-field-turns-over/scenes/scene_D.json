@@ -1,0 +1,21 @@
+{
+ "camera": {"pos":[-0.25,10.2,2.55], "look_at":[-0.1,10.1,0], "fov":42},
+ "sun": {"azimuth":-30, "elevation":50, "color":"#fff8d8", "intensity":2.3, "softness":12},
+ "sky": {"zenith":"#3a8ad0", "horizon":"#bfe8ff", "sun_glow":0.3, "disc":0},
+ "ambient": {"sky":"#8fd0ff", "ground":"#f08cb0", "intensity":0.65},
+ "fog": {"color":"#d8f0ff", "density":0.002},
+ "ground": {"enabled": false},
+ "exposure": 1.4,
+ "objects": [
+  {"type":"box","pos":[0,10,-0.25],"size":[12,12,0.2],"color":"#7cc832"},
+  {"type":"figure","pos":[0,9.05,0],"facing":0,"height":1.78,"pose":"stand",
+   "joints":{"spine":-4,"head":-25,"head_yaw":-65,"arm_l":[0,150,12],"arm_r":[0,80,25],"leg_l":[0,0],"leg_r":[55,95]},
+   "color":"#20a8c8","skin":"#f0b090","hair":"#1e1838"},
+  {"type":"figure","pos":[0,9.05,-0.03],"facing":0,"height":1.78,"pose":"stand",
+   "joints":{"spine":-4,"head":-25,"head_yaw":-65,"arm_l":[0,120,25],"arm_r":[0,105,20],"leg_l":[0,0],"leg_r":[55,95]},
+   "color":"#20a8c8","skin":"#f6c8b0","hair":"#1e1838"},
+  {"type":"figure","pos":[0,9.05,-0.06],"facing":0,"height":1.78,"pose":"stand",
+   "joints":{"spine":-4,"head":-25,"head_yaw":-65,"arm_l":[0,92,35],"arm_r":[0,130,15],"leg_l":[0,0],"leg_r":[55,95]},
+   "color":"#20a8c8","skin":"#fadcc8","hair":"#1e1838"}
+ ]
+}
