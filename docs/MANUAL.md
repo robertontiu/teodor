@@ -19,7 +19,7 @@ Starts a canvas (default 1200x1600 px, oil on canvas) toned to the colour given 
 - `scene <scene.json> [overlay.svg] [draft|final]`: render a 3D blockout as the schema (see the brief for the scene format). The camera can't roll and the mannequin can't lie down: for overhead views and flat styles, use an SVG schema.
 - `transfer [strength] [#color]`: lay the schema's contours on the canvas as a light drawing, once, early.
 
-**Translate the schema, don't copy it.** A painter groups the values into a few masses, keeps full detail and the hardest edges at the focal point, and simplifies everywhere else. Build that into the schema (or a second, simplified schema) before matching, and use `faithful` below 1 away from the focus.
+**Translate the schema, don't copy it.** A painter groups the values into a few masses, keeps full detail and the hardest edges at the focal point, and simplifies everywhere else. `simplify FX FY [groups] [radius]` does that to the current schema around a focal point (FX, FY in canvas pixels; groups 3-5; radius as a fraction of the diagonal, default 0.25) and sets the result as a new schema version. Use `faithful` below 1 away from the focus too.
 
 ## The hand: episodes and intentions
 
@@ -55,6 +55,7 @@ One episode is up to four intentions, then you look. Long stroke lists go in a J
 | `temp` | warm and cool: does temperature do work, or is it all one temperature? |
 | `mirror` | flipped left-right: a fresh eye for the drawing and the balance |
 | `upside` | rotated 180°: the design as shapes, not things |
+| `layers` | how many separate passes built each part of the canvas (blue = one or none, yellow = many), with the shares printed: a passage built in one go reads as a filter |
 | `crop X Y W H` | lean in |
 | `ref`, `diff`, `compare` | the schema, where the canvas differs from it, the two side by side |
 

@@ -14,7 +14,8 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   transfer [strength] [#color]  transfer the schema's contours lightly onto the canvas (like a cartoon)
   act '<json>' | act @file.json one episode: {"felt": {...}, "do": [intention, ...up to 4]}
   dry [0-1]                     let time pass
-  look full|thumb|gray|crop X Y W H|ref|diff|compare|mirror|upside|squint|notan [2|3]|edges|temp
+  look full|thumb|gray|crop X Y W H|ref|diff|compare|mirror|upside|squint|notan [2|3]|edges|temp|layers
+  simplify FX FY [groups] [radius]   turn the schema into a painter's reference around a focal point
   report [style]                the canvas measured in numbers (value, colour, edges, texture, structure),
                                 against the style's measured target (studio/targets.json) if it has one
   finish <op> ['<json>']        a finishing operation of the medium (varnish, fixative...)
@@ -451,6 +452,31 @@ def set_ref(cv, path):
     print(f"schema version {k} set")
 
 
+def simplify(cv, fx, fy, groups=4, radius=0.25, keep=1.0):
+    """Turn the schema into a painter's reference: values grouped into `groups` masses (colour kept
+    within each mass), and detail and edges softened with distance from the focal point (fx, fy).
+    Inside `radius` (fraction of the canvas diagonal) the schema is kept as it is (times `keep`)."""
+    ref = cv.ref
+    L = ref.mean(-1)
+    qs = np.quantile(L, [i / groups for i in range(1, groups)])
+    lab = np.digitize(gaussian_filter(L, 3), qs)
+    grouped = np.zeros_like(ref)
+    for g in range(groups):
+        m = (lab == g)
+        if m.any():
+            grouped[m] = ref[m] * 0.45 + ref[m].mean(0) * 0.55
+    yy, xx = np.mgrid[0:cv.H, 0:cv.W].astype(np.float32)
+    diag = math.hypot(cv.W, cv.H)
+    d = np.hypot(xx - fx, yy - fy) / diag
+    w = np.clip((d - radius) / max(radius, 1e-3), 0, 1)[..., None]
+    soft = np.stack([gaussian_filter(grouped[..., i], 18) for i in range(3)], -1)
+    far = grouped * 0.25 + soft * 0.75
+    near = ref * keep + grouped * (1 - keep)
+    out = near * (1 - w) + far * w
+    Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8)).save(P("simplified.png"))
+    set_ref(cv, P("simplified.png"))
+
+
 def transfer(cv, strength, color="#4a3a2e"):
     lum = gaussian_filter(cv.ref.mean(-1), 1.5)
     e = np.hypot(sobel(lum, 0), sobel(lum, 1))
@@ -503,6 +529,14 @@ def look(cv, mode, args):
         out = np.stack([0.5 + 0.5 * warm - 0.35 * cool, 0.5 + 0.1 * warm - 0.1 * cool, 0.5 + 0.5 * cool - 0.35 * warm], -1)
         out = 0.5 + (out - 0.5) * (0.4 + 0.6 * np.clip(sat * 2.5, 0, 1))[..., None]
         s = Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8)).resize((vw, vh), Image.LANCZOS)
+    elif mode == "layers":
+        pp = P("passes.npy")
+        n = np.load(pp).astype(np.float32) if os.path.exists(pp) else np.zeros((cv.H, cv.W), np.float32)
+        lv = np.clip(n / 6.0, 0, 1)
+        g = np.asarray(img.convert("L"), np.float32) / 255
+        rgb = np.stack([0.25 + 0.75 * lv, 0.25 + 0.5 * lv * (1 - lv) * 4 * 0.5 + 0.2 * lv, 0.6 * (1 - lv)], -1) * (0.55 + 0.45 * g[..., None])
+        s = Image.fromarray((np.clip(rgb, 0, 1) * 255).astype(np.uint8)).resize((vw, vh), Image.LANCZOS)
+        print(f"passes: one or none {float((n <= 1).mean()):.0%} of the canvas, two or three {float(((n >= 2) & (n <= 3)).mean()):.0%}, four or more {float((n >= 4).mean()):.0%}")
     elif mode == "compare":
         a = Image.fromarray((cv.ref * 255).astype(np.uint8)).resize((vw * 3 // 4, vh * 3 // 4), Image.LANCZOS)
         b = img.resize((vw * 3 // 4, vh * 3 // 4), Image.LANCZOS)
@@ -584,6 +618,10 @@ if __name__ == "__main__":
         print(eyes.format_report(m, target, style if target else (f"{style} (no measured target yet)" if style else None)))
         json.dump(m, open(P("report.json"), "w"), indent=1)
         sys.exit()
+    if cmd == "simplify":
+        a = sys.argv[2:]
+        simplify(cv, float(a[0]), float(a[1]), int(a[2]) if len(a) > 2 else 4, float(a[3]) if len(a) > 3 else 0.25)
+        look(cv, "ref", []); sys.exit()
     if cmd == "transfer":
         transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else "#4a3a2e")
     elif cmd == "sign":
@@ -609,11 +647,16 @@ if __name__ == "__main__":
         if len(todo) > 4:
             sys.exit("An episode holds at most 4 intentions; look again before continuing.")
         nlog = sum(1 for _ in open(P("log.jsonl")))
+        before = cv.col.copy()
         for k, it in enumerate(todo):
             rng = np.random.default_rng(it.get("seed", nlog * 131 + k * 17 + 3))
             INTENT[intent_kind(it)](cv, it, felt, rng)
             cv.clip = None
         cv.medium.episode_end(cv)
+        pp = P("passes.npy")
+        passes = np.load(pp).astype(np.float32) if os.path.exists(pp) else np.zeros((cv.H, cv.W), np.float32)
+        passes += (np.abs(cv.col - before).sum(-1) > 0.04)
+        np.save(pp, np.clip(passes, 0, 255).astype(np.uint8))
         with open(P("log.jsonl"), "a") as f:
             f.write(json.dumps(ep) + "\n")
     cv.save()
