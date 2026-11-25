@@ -555,5 +555,239 @@
       "MoMA, Pollock One conservation: https://www.moma.org/explore/inside_out/2013/01/08/momas-jackson-pollock-conservation-project-looking-closely-at-one-number-31-1950/",
       "Getty, Pollock's Mural: https://getty.edu/conservation/our_projects/science/modpaints/modpaints_jp_mural.html"
     ]
+  },
+  "ukiyo-e": {
+    "name": "Ukiyo-e (woodblock prints and painted ukiyo-e)",
+    "doc": "docs/styles/ukiyo-e.md",
+    "period": "Japan, Edo period (1615-1868); full-colour nishiki-e from 1765",
+    "media": [
+      "woodblock",
+      "gouache",
+      "ink"
+    ],
+    "support": {
+      "woodblock": "paper-kozo",
+      "gouache": "paper",
+      "ink": "paper"
+    },
+    "ground": "#efe7d4",
+    "size": [
+      1060,
+      1560
+    ],
+    "technique": [
+      "sumi key line enclosing flat water-based colour areas",
+      "one colour per block, printed in sequence with registration",
+      "bokashi graded bands",
+      "blind embossing and mica as luxury finishes"
+    ],
+    "palette": {
+      "principle": "limited flat water-based colours, about ten or more impressions; indigo/dayflower blues then Prussian blue (Vermeulen et al. 2020); hexes approximate aged prints (judgement)",
+      "colors": [
+        "#22201e",
+        "#1f4e79",
+        "#7fa7c4",
+        "#3a4f66",
+        "#d9849b",
+        "#c9a2a0",
+        "#c8442e",
+        "#d86a3a",
+        "#dcb54a",
+        "#6f7d4a",
+        "#9a958a",
+        "#f3eee4"
+      ],
+      "avoid": [
+        "oil chroma and impasto",
+        "gradients except deliberate bokashi bands",
+        "black cast shadows",
+        "atmospheric haze over everything"
+      ]
+    },
+    "light": "no modelled light or cast shadows; time and weather carried by flat colour fields and bokashi (AAM, Fitzwilliam)",
+    "value_key": "high to middle; paper is the lightest value (judgement)",
+    "composition": "strong diagonals, high or low viewpoints, cropped foreground at the frame, asymmetry, graded sky bands; narrow formats force vertical crops (judgement; formats from Fitzwilliam)",
+    "drawing": "clean closed key line carries form; typified elongated figures; textiles as flat pattern (AAM; judgement on character)",
+    "edges": "all hard except bokashi bands",
+    "marks": {
+      "tools": [
+        "liner",
+        "flat"
+      ],
+      "length": "flat fills; long even lines",
+      "direction": "lines follow contour; fills invisible",
+      "visible": false
+    },
+    "process": [
+      "line design as a schema of key lines and colour zones",
+      "flat colour areas one colour at a time, lightest first, clipped to zones, paper left showing",
+      "bokashi bands and pattern",
+      "key line in sumi over the colour (brushed analogue; historically key block first)",
+      "line corrections; embossing/mica when available; sign"
+    ],
+    "finishing": [
+      "no varnish",
+      "optional blind embossing or mica as finish ops when the medium supports them",
+      "stop at clean flat areas; no added shading (judgement)"
+    ],
+    "pitfalls": [
+      "orientalist postcard: Great Wave, Fuji, cherry blossom, geisha, torii",
+      "pastiche of a named design; fake seals or Japanese signatures",
+      "vector clip-art flatness",
+      "bokashi everywhere as airbrush",
+      "nearest wrong feelings: decorative prettiness, tourist exoticism, anime-cute faces"
+    ],
+    "felt_bias": {
+      "arousal": -0.1,
+      "tension": 0.0,
+      "care": 0.45
+    },
+    "engine_gaps": [
+      "woodblock-print look medium not yet available (gouache on paper as proxy)",
+      "no paper fibre texture",
+      "no embossing or mica render",
+      "no registration-offset model",
+      "no one-colour-per-block constraint",
+      "no zone-fill planning helper"
+    ],
+    "sources": [
+      "Met, Woodblock Prints in the Ukiyo-e Style: https://www.metmuseum.org/en/essays/woodblock-prints-in-the-ukiyo-e-style",
+      "Asian Art Museum, The ukiyo-e woodblock printing process: https://education.asianart.org/resources/the-ukiyo-e-woodblock-printing-process/",
+      "Fitzwilliam Museum, Yoshitoshi glossary: https://yoshitoshi.fitzmuseum.cam.ac.uk/glossary/",
+      "Vermeulen et al. 2020, npj Heritage Science 8:62, doi:10.1186/s40494-020-00406-y"
+    ]
+  },
+  "east-asian-ink": {
+    "name": "East Asian ink painting (literati landscape and sumi-e)",
+    "doc": "docs/styles/east-asian-ink.md",
+    "period": "China from the Tang (landscape) and Song/Yuan (literati); Japan, late Kamakura and Muromachi (suibokuga) onward",
+    "media": [
+      "ink",
+      "watercolour"
+    ],
+    "support": {
+      "ink": "paper-sized",
+      "watercolour": "paper-sized"
+    },
+    "ground": "#f1ece0",
+    "size": [
+      800,
+      2000
+    ],
+    "technique": [
+      "outline then texture strokes (cun) then graded washes then dots",
+      "boneless (mogu) strokes",
+      "splashed and broken ink",
+      "flying white and dry brush",
+      "blank paper for water, mist and snow",
+      "no correction: every stroke final"
+    ],
+    "palette": {
+      "principle": "ink is the colour: one black in many dilutions; light blue-green and red-orange/ochre washes secondary (AAM Brushstrokes). Hex tones are judgement.",
+      "colors": [
+        "#151413",
+        "#2e2c2a",
+        "#5a5753",
+        "#8d8a84",
+        "#bdb9b0",
+        "#d9d4c9"
+      ],
+      "tint_colors": [
+        "#8fa3a0",
+        "#6f8f7a",
+        "#c9a66b",
+        "#b07a50"
+      ],
+      "avoid": [
+        "opaque or saturated colour",
+        "mineral blue-green court style unless chosen",
+        "pure digital grey gradients"
+      ]
+    },
+    "light": "no consistent light source; light and dark from ink tone and bare paper; mist bands separate planes (Cahill; AAM)",
+    "value_key": "high: mostly paper and pale wash, darkest ink in few accents (judgement)",
+    "composition": "mountain and water; main mountain with subordinates; three distances (high, deep, level); stacked near-middle-far with mist; paths, small figures and pavilions to enter; large blanks; inscription/seal placed in an active area (AAM; Cahill)",
+    "drawing": "line first ('making boundaries'); cun texture strokes by rock type with set brush angles; dots for foliage and moss; boneless leaves; form by type from stored observation, not a model (AAM; Guo Xi via Cahill)",
+    "edges": "crisp on sized paper, soft and fuzzy bleeding on unsized paper; flying-white broken edges",
+    "marks": {
+      "tools": [
+        "pointed round (upright tip)",
+        "pointed round (slanted side)",
+        "large soft brush"
+      ],
+      "length": "from dots to long continuous lines",
+      "direction": "follows the structure of rock, tree and water; calligraphic",
+      "visible": true
+    },
+    "modes": {
+      "literati": {
+        "ground": "#f1ece0",
+        "support": {
+          "ink": "paper-sized"
+        },
+        "felt_bias": {
+          "arousal": -0.1,
+          "tension": 0.0,
+          "care": 0.25
+        }
+      },
+      "xieyi": {
+        "ground": "#f3efe6",
+        "support": {
+          "ink": "paper-unsized"
+        },
+        "felt_bias": {
+          "arousal": 0.3,
+          "tension": 0.0,
+          "care": -0.2
+        }
+      }
+    },
+    "process": [
+      "grind ink to the needed tones; choose brush and paper",
+      "observe, then paint from the image held in the mind",
+      "literati: main forms in pale-to-middle outline, near to far",
+      "cun texture strokes",
+      "graded washes with water, blanks left",
+      "dots and darkest accents last",
+      "inscription and seal (Teodor: signature)",
+      "xieyi: pale tones, then darker into the still-wet ink, then accents and flying-white lines"
+    ],
+    "finishing": [
+      "stop while fresh: vitality over completeness",
+      "last dots and dark accents",
+      "sign in an active area that balances the composition, as a seal would be placed",
+      "no fake seals or invented characters"
+    ],
+    "pitfalls": [
+      "orientalist postcard: panda, red sun, crane and moon, pagoda, straw-hat fisherman, tourist karsts",
+      "Zen decor minimalism",
+      "fake calligraphy and seals",
+      "Western single light source, perspective, full coverage, overpainting",
+      "grey mush without dark accents or white",
+      "nearest wrong feelings: generic spa calm, default melancholy"
+    ],
+    "felt_bias": {
+      "arousal": -0.1,
+      "tension": 0.0,
+      "care": 0.25
+    },
+    "engine_gaps": [
+      "ink medium and paper absorption not yet available",
+      "no brush-angle parameter (upright vs slanted tip)",
+      "no multi-tone loading in one brush",
+      "no permanence rule forbidding covering",
+      "transfer should be optional and faint"
+    ],
+    "sources": [
+      "JAANUS, suibokuga: https://projects.mcah.columbia.edu/jaanus/record/suibokuga",
+      "JAANUS, bunbo shiho: https://projects.mcah.columbia.edu/jaanus/record/bunboshiho",
+      "Met, Landscape Painting in Chinese Art: https://www.metmuseum.org/TOAH/HD/clpg/hd_clpg.htm",
+      "Asian Art Museum, Brushstrokes: Styles and Techniques of Chinese Painting: https://education.asianart.org/wp-content/uploads/sites/6/2019/09/Brushstrokes.pdf",
+      "Smithsonian NMAA, Four Treasures: https://asia-archive.si.edu/learn/chinas-calligraphic-arts/four-treasures",
+      "J. Cahill, Lecture 7B (Guo Xi): https://ieas.berkeley.edu/sites/default/files/aparv_lecture7b.pdf",
+      "Cleveland Museum of Art, Haboku Landscape: https://www.clevelandart.org/art/148810",
+      "Xie He Six Principles: ibiblio Cultural Heritage of China; HKU University Museum, Huihua Liufa"
+    ]
   }
 }
