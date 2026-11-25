@@ -80,6 +80,7 @@ Intentions (each episode: up to 4):
 - {"type":"match", "brush": a tool of your medium, "size":[min,max], "threshold": 0.02-0.15, "faithful": 0-1, "colors":[...], "color_shift":{"temp","sat","value"} (multipliers: value 0.9 darkens 10%), "region", "clip", "max_strokes", "adaptive": true, "edge":"hard|soft|lost", "pressure", "load"}: strokes toward the schema, following the form.
 - {"type":"free", "brush", "size", "colors":["#hex",["#hex",w]], "region", "clip", "direction":{"angle","spread"}|{"around":[x,y]}|{"toward"}|{"away"}|{"field":true}, "count", "length":[min,max], "curve", "pressure", "load", "edge"}
 - {"type":"strokes", "brush", "strokes":[{"pts":[[x,y],...],"size","color","pressure"}], "edge"}: exact deliberate marks.
+- {"type":"hatch", "brush", "angle", "spacing", "layers":[0.75,0.55,0.35,0.18], "cross":45, "size", "colors", "region"}: tone from parallel and crossing lines following the schema's values (drawing, pen, tempera).
 - {"type":"blend", "size", "region", "direction", "count", "length"}: soften (where the medium allows it).
 - {"type":"glaze", "color", "opacity", "region", "feather"}: your medium's thin layer (glaze, wash, veil, flat block).
 Regions: {"type":"canvas"} | {"type":"rect","x","y","w","h"} | {"type":"ellipse","cx","cy","rx","ry"} | {"type":"poly","pts":[[x,y],...]}.
@@ -91,6 +92,7 @@ LESSONS FROM EARLIER PAINTINGS (the full log is docs/experiments.md; the habits 
 (4) Keep 3-5 distinct value groups and never let the middle go murky; avoid large empty blocks of one colour.
 (5) Viewers feel the obvious half of a complex feeling first: give the second half its own form and space.
 (6) The same mark everywhere reads as a filter: vary marks by passage, build passages in layers.
+(7) Work the way your medium works: watercolour and ink in big washes first and few, decisive marks after (many small matched strokes dry into a patchwork of hard edges); tempera and drawing media by hatching; prints by flat blocks and a keyline; oil from thin and lean to thick.
 
 A PROFESSIONAL FINISH (in the terms of your current): a strong, simple value structure; one light logic; a focal area with the sharpest edges, the strongest contrast and the finest detail; soft and lost edges elsewhere; temperature shifts; the medium's own beauty (transparency in watercolour, the line in ink, the tooth in pastel, the film in tempera, the body in oil). Then the FINISHING STAGE: the last few accents (few, placed with intent), an edge pass at the focus, the unifying layer your current used, and your medium's finishing steps (finish ...), as your style doc and docs/FINISHING.md describe. Check the mirror and the squint view once more before you sign.
 

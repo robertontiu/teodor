@@ -406,6 +406,62 @@ def do_match(cv, it, felt, rng):
         play(cv, b, gesture_path(ctrl, felt, rng, sz), felt, it.get("pressure", 0.9), rng)
 
 
+def do_hatch(cv, it, felt, rng):
+    """Hatching, the way a draughtsman builds tone with lines: parallel strokes at an angle across a
+    region, each layer covering only where the schema (or a flat `value`) is darker than its level;
+    darker passages get more layers, each turned by `cross` degrees. Lines follow the hand (gesture
+    path, speed profile, felt state); spacing and angle drift a little, never a ruler."""
+    reg = it.get("region", {"type": "canvas"})
+    mask = region_mask(reg, cv.W, cv.H)
+    cv.clip = mask if it.get("clip") else None
+    if cv.ref is None and "value" not in it:
+        sys.exit("hatch needs a schema (ref) or a flat 'value' (0 dark .. 1 light).")
+    val = gaussian_filter(cv.ref.mean(-1), 3) if cv.ref is not None and "value" not in it else np.full((cv.H, cv.W), float(it["value"]), np.float32)
+    layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
+    cross = it.get("cross", 45)
+    spacing = it.get("spacing", 9)
+    size = float(np.mean(it.get("size", [3, 3]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3))
+    seg_max = it.get("length", 140)
+    cols, w = palette(it) if it.get("colors") else ([hx("#2a2a2a")], np.array([1.0]))
+    if mask is not None:
+        ys, xs = np.nonzero(mask > 0.5)
+        x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
+    else:
+        x0, x1, y0, y1 = 0, cv.W - 1, 0, cv.H - 1
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    R = math.hypot(x1 - x0, y1 - y0) / 2 + spacing
+    n = 0
+    for li, level in enumerate(layers):
+        ang = math.radians(it.get("angle", 50) + li * cross + rng.normal(0, 2))
+        dx, dy = math.cos(ang), math.sin(ang)
+        nx, ny = -dy, dx
+        off = -R + rng.uniform(0, spacing)
+        while off < R:
+            sp = spacing * rng.uniform(0.85, 1.15)
+            px, py = cx + nx * off, cy + ny * off
+            t, run = -R, []
+            while t <= R:
+                x, y = px + dx * t, py + dy * t
+                ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and val[int(y), int(x)] < level
+                if ok:
+                    run.append([x, y])
+                if (not ok or len(run) * 3 >= seg_max) and len(run) >= 3:
+                    a, b = run[0], run[-1]
+                    a = [a[0] + rng.normal(0, 1.5), a[1] + rng.normal(0, 1.5)]
+                    ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8), (a[1] + b[1]) / 2 + rng.normal(0, 0.8)], b]
+                    col = np.clip(cols[rng.choice(len(cols), p=w)] + rng.normal(0, 0.01, 3), 0, 1)
+                    br = make_brush(it, size * rng.uniform(0.85, 1.15), col, rng, cv)
+                    play(cv, br, gesture_path(ctrl, felt, rng, size), felt, it.get("pressure", 0.8), rng)
+                    n += 1
+                    run = []
+                elif not ok:
+                    run = []
+                t += 3
+            off += sp
+            if n > it.get("max_strokes", 1500):
+                return
+
+
 def do_glaze(cv, it, felt, rng):
     reg = it.get("region", {"type": "canvas"})
     mask = region_mask(reg, cv.W, cv.H, feather=it.get("feather", 30))
@@ -425,7 +481,7 @@ def do_blend(cv, it, felt, rng):
         do_free(cv, it, felt, rng)
 
 
-INTENT = {"free": do_free, "strokes": do_strokes, "match": do_match, "glaze": do_glaze, "blend": do_blend}
+INTENT = {"free": do_free, "strokes": do_strokes, "match": do_match, "glaze": do_glaze, "blend": do_blend, "hatch": do_hatch}
 
 
 def intent_kind(it):
