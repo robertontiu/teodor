@@ -2,6 +2,30 @@
 
 Long painter sessions can't be paused and resumed reliably: a sub-agent that stops at a checkpoint may not be resumable ("transcript missing"), and a painter sub-agent can't spawn its own critic. So a painting is made in **phases**, each a fresh painter session, with all state on disk.
 
+## The owner's standing rules
+Set by Robert; they apply until he changes them.
+1. **The artist is called Teodor**, everywhere; every painting is signed.
+2. **It must be a painting:** every mark goes through the studio's tools; nothing pasted, composited, traced or flat-filled (AGENTS.md).
+3. **Styles and movements, never authors:** only currents, schools and techniques are versioned. A request for a specific artist gets temporary research and a configuration in `studio/styles.local/` (gitignored), used for that painting only. No likeness of real people.
+4. **Style settings come from research, not guesses:** every value in a style entry cites a source or is marked as a judgement call. A current that isn't in `studio/styles.json` is researched first (`docs/styles/README.md`), and measured (`tools/measure_targets.py`: add a rule) where public-domain works exist.
+5. **Every painting is a departure:** `docs/habits.md` is read before every painting and updated after it; at least three habits are broken on purpose.
+6. **Research beats suggestions; Robert is the eye test.** His notes are symptoms to diagnose; where the research disagrees, follow the research and tell him why.
+7. **Personal details stay out of the repo.** Anything personal Robert shares is context for shaping a brief, never content: not in briefs, journals, feeling files, docs, commits or the site.
+8. **Feelings are published openly** with each painting.
+9. **Publish without asking** when a painting is finished (below); show Robert each checkpoint as it happens.
+10. **Commit as you go**, after every finished piece of work, so an interrupted session loses at most the piece in progress.
+11. **It's an experiment:** report misses honestly, in the experiments log and on the site.
+
+## Starting a painting
+1. If the commission names a current that isn't researched, research it first: its doc in `docs/styles/<id>.md`, its entry in `studio/styles.json`, and a measuring rule in `tools/measure_targets.py` (then `python3 tools/measure_targets.py measure <id>`). If it names an artist, research the artist's practice into `studio/styles.local/<id>.json` (gitignored) and say in the brief that it's a temporary configuration.
+2. If the current's medium isn't in the studio yet, build it first (a medium module under `studio/v8/media/`, its mark sheet in `docs/gallery/`, its page in `docs/manual/`, `test_v8.py` passing) or choose the closest medium that exists and say so to Robert.
+3. Make the work dir and the brief in one step:
+   ```
+   python3 tools/make_brief.py ../teodor-work/NN --commission "a public exhibition on a THEME. The theme is: ..." (--theme | --feeling "...") [--style ID|free] [--medium M] [--support S]
+   ```
+   It copies the studio (v8, with its media), habits, a fresh contact sheet of past work, the styles and the targets, and fills in the brief.
+4. Run the phases (below).
+
 ## Files in the round's studio directory
 | File | Written by | Purpose |
 |---|---|---|
@@ -19,7 +43,7 @@ Long painter sessions can't be paused and resumed reliably: a sub-agent that sto
 3. **Phase 2, development** (~30–40 episodes). A new painter session reads `brief.md`, `feeling.md`, `journal.md`, `handoff.md` and `critique_1.md`, then looks at the canvas. End: `crit_2.png`, updated `handoff.md`, reply `PHASE 2 DONE`.
 4. **Orchestrator:** a fresh critic on `crit_2.png` → `critique_2.md`.
 5. **Phase 3, finalization** (~15–25 episodes). A new session reads the same files plus `critique_2.md`, finishes, **signs** (`studio.py sign`), runs `timelapse`, writes `final.png`, and replies with `FINISHED`, the title and its notes.
-6. **Orchestrator:** a last fresh critic on `final.png` (a visitor's first reading). Show the person the painting and its title, then Teodor's feeling, the visitor's reading, journal highlights and the time-lapse.
+6. **Orchestrator:** a last fresh critic on `final.png`, given `past_work.jpg` too (question 5 below) (a visitor's first reading). Show the person the painting and its title, then Teodor's feeling, the visitor's reading, journal highlights and the time-lapse.
 
 Use a fresh critic every time, so no critic sees an earlier state. Never give a critic `feeling.md`, the journal or the handoff: its value is an honest first reading of the canvas alone.
 
@@ -45,6 +69,11 @@ Run the phases one after another, waiting for each to finish: the next step depe
 - **Phase 3:** the same, "PHASE 3 (finalization)", reading `critique_2.md` too. Add: "Weigh the critique as a painter: take what is true about the craft, and judge its reading against your own feeling. Finish exactly as the brief's last paragraph says (sign, time-lapse, `final.png`, reply FINISHED with the title)."
 
 **If a phase is interrupted** (the person stops it, or it dies), don't try to resume that session. Everything is on disk: start a fresh session for the same phase, tell it the phase was resumed after episode N, and have it continue from N+1. Round 11's phase 2 was recovered this way after stopping at episode 46.
+
+## Checking a checkpoint (the orchestrator, after each phase)
+- Read `feeling.md` (the feeling, the nearest wrong feelings and looks), look at the checkpoint, and run `python3 <WORKDIR>/studio.py report` there.
+- In the studio manager's note under the critique: say which of the nearest wrong feelings the critic read, if any; name any report flag and any measure far outside the current's target; name repeated habits (compare with `past_work.jpg`); and push back on critic advice that would drag the painting into an old habit or out of its current. Never write the feeling itself into the note.
+- At phase 1, if Robert is around, offer him the thumbnails and colour studies (the painter saves them as images) before the painter commits; his pick is a strong signal.
 
 ## Critic readings
 Save each reading verbatim to `critique_N.md` with a header such as `# Critique 1 (a fresh critic; knew only the commission "…"; read crit_1.png)`. The final reading of `final.png` goes to `visitor.md`. If the reading is pulled toward the commission's title rather than the painting, the orchestrator may add one line under it ("Studio manager's note: …") pointing the painter back to his own feeling; never add the feeling itself.

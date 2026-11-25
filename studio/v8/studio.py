@@ -577,9 +577,7 @@ if __name__ == "__main__":
     if cmd == "report":
         import eyes
         style = sys.argv[2] if len(sys.argv) > 2 else cv.meta.get("style")
-        tp = os.path.join(D, "..", "targets.json")
-        if not os.path.exists(tp):
-            tp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "targets.json")
+        tp = next((t for t in (os.path.join(D, "targets.json"), os.path.join(D, "..", "targets.json")) if os.path.exists(t)), "")
         targets = json.load(open(tp)) if os.path.exists(tp) else {}
         target = targets.get(style) if style else None
         m = eyes.measure(cv.render())
