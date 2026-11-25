@@ -10,12 +10,15 @@ Roles:
 
 ## Quick start: someone asked you to paint
 
-Run one painting with the **current studio, `studio/v7/`**, the brief in `docs/prompts/painter-brief.md`, and the phase protocol in `docs/orchestration.md`:
+Run one painting with the **current studio, `studio/v8/`** (media as pluggable instruments, styles as configuration), the brief template `docs/prompts/painter-brief.md` and the phase protocol in `docs/orchestration.md`:
 
-1. Make a work dir outside the repo (for example `../teodor-work/01/`). Copy `studio/v7/*.py` into it (`studio.py`, `scene.py`, `signature.py`). Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
-2. Copy `docs/habits.md` to the work dir and make `past_work.jpg` with `studio/contact_sheet.py` (see `docs/orchestration.md`). Copy the brief to `brief.md` in the work dir and fill in its placeholders (the comment at its top explains them): the work dir path, the commission, and the feeling paragraph. Given a **theme**, Teodor chooses his own feeling inside it; given a **feeling**, he paints that one.
-3. Run the three phases as fresh general-purpose sub-agents, each told to read `brief.md` and do its phase, with a fresh critic between them. The painter's last acts are `studio.py sign` and `studio.py timelapse`.
-4. Show the person the final painting and its title, then Teodor's feeling, the visitor critic's reading, journal highlights and the time-lapse. If they want to keep it, add it to `rounds/NN-title/` like the existing rounds and to `site/` (see `site/README.md`).
+1. Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
+2. If the commission names a current that isn't in `studio/styles.json`, or a medium the studio doesn't have, research or build it first (`docs/orchestration.md`, "Starting a painting"). A request to paint like a specific artist gets a temporary, gitignored configuration in `studio/styles.local/`, never a versioned one.
+3. Set up the work dir and the brief in one step, outside the repo:
+   `python3 tools/make_brief.py ../teodor-work/01 --commission "a public exhibition on a THEME. The theme is: ..." --theme [--style impressionism] [--medium watercolour]`
+   (`--feeling "..."` instead of `--theme` if the person named the feeling; `--style free` or no `--style` lets Teodor choose the current).
+4. Run the three phases as fresh general-purpose sub-agents, each told to read `brief.md` and do its phase, with a fresh critic between them and the orchestrator's checks (`report`, nearest wrong feelings, habits). The painter's last acts are the finishing steps, `sign` and `timelapse`.
+5. Show the person the final painting and its title, then Teodor's feeling, the visitor critic's reading, journal highlights and the time-lapse. If they want to keep it, publish it (`docs/orchestration.md`, "Publishing").
 
 ## Repository map
 ```
@@ -27,12 +30,25 @@ studio/
   v4/studio.py            identical engine to v3 (copied per round)
   v5-levels/studio.py     NCM-style parallel coarse-to-fine levels, layer snapshots
   v6/studio.py            research-informed studio (see below)
-  v7/                     CURRENT: v6 plus 3D blockouts (scene.py), the liner brush, adaptive matching and signing
+  v7/                     v6 plus 3D blockouts (scene.py), the liner brush, adaptive matching and signing
+  v8/                     CURRENT: v7's core with media as pluggable instruments (v8/media/: oil, watercolour, ink,
+                          charcoal, graphite, pastel, gouache, tempera, woodblock; oil-v7 frozen as the regression
+                          reference), eyes with numbers (v8/eyes.py, `report`), critic views (mirror, notan, edges,
+                          temp, squint, upside), finishing (`finish`), a tool gallery (v8/gallery.py), tests (v8/test_v8.py)
+  styles.json             the researched currents (one configuration each); styles.local/ is gitignored (artist-specific)
+  media.json              the media research as data (binder, supports, tools, order of work, finishing)
+  targets.json            measured targets per current (statistics of public-domain works; tools/measure_targets.py)
   signature.py            Teodor's signature, for any image
 rounds/NN-title/          painting.jpg, journal.md, intentions/levels logs, sketches, layers
 docs/experiments.md       round-by-round history of the experiment and what each painting taught
 docs/orchestration.md     how a painting runs: phases, handoffs, critics
 docs/habits.md            Teodor's recurring habits, to break on purpose
+docs/MANUAL.md            the studio manual (the painter's reference); docs/manual/<medium>.md, one page per medium
+docs/styles/              the style system (README.md: layers, rules, template) and one doc per current
+docs/research/            emotion.md (how images carry and viewers perceive emotion), process.md (Teodor vs Spectre vs painters)
+docs/MEDIA.md, FINISHING.md  the media and finishing research
+docs/gallery/             mark sheets of every medium's tools
+tools/                    make_brief.py (work dir + brief), measure_targets.py (style targets)
 docs/handover.md          current state, Robert's preferences, open threads (read this when starting a session)
 docs/research.md          the research behind v6 and the known gaps
 docs/prompts/painter-brief.md   the current painter brief (template)
@@ -76,6 +92,9 @@ Phase-based, see `docs/orchestration.md`. Each phase is a fresh painter sub-agen
 
 ## It must be a painting
 Every mark on the canvas goes through the studio's brushes. Schemas, blockouts and references can be built with any script, but nothing is pasted, composited, traced or flat-filled onto the canvas. Round 14b (Fable 5.2) leaned on its own compositing and figure rig and on machine-perfect tile fills, and Robert felt it "doesn't really feel much like a painting". The brief says so; when you check a checkpoint, flag anything that reads as a rendered graphic in the studio manager's note.
+
+## Adding a medium (an instrument)
+A medium is a module in `studio/v8/media/` with a `Medium` subclass (`media/base.py` documents the interface; `media/oil.py` is the pattern). It registers itself. It keeps `cv.col` as the apparent colour and its own state in declared arrays; it gives `tools`, `supports` and `finishes`, `make_tool` (a tool whose `dab` the core calls along each stroke with pressure, speed and the felt state), `glaze`, `episode_end`, `dry`, `render` and `finish`. Shared physics in `base.py`: `kmix` (mixing in place) and `pigment`/`km_layer` (Kubelka-Munk transparent films). Check it with `gallery.py` (save the sheet in `docs/gallery/`) and `test_v8.py`, document it in `docs/manual/<medium>.md`, and add it to `studio/media.json` and the table in `docs/MANUAL.md`. Engine edits while a painting is running must be written atomically (temp file plus rename).
 
 ## Keep it fresh
 Teodor drifts into one look: a lone figure from behind, a lit doorway in a dark warm room, a hushed bittersweet mood. Every painting should be a departure. `docs/habits.md` lists the habits; the brief makes him study his past work, research painters he hasn't used, and break at least three habits on purpose. The orchestrator checks the first checkpoint against the contact sheet and updates `docs/habits.md` after every painting. If the person asks for a specific style or mood, that request wins over any habit.

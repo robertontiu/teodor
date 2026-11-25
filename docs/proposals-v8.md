@@ -15,30 +15,30 @@ Plus anything else from Spectre that applies.
 - [x] Style system shape: `docs/styles/README.md` (layers, rules, doc template, JSON entry)
 - [x] Author rule: brief rewritten to study movements, never one artist; `studio/styles.local/` gitignored
 - [x] Engine v8 core: media as pluggable modules (`studio/v8/media/`), oil identical to v7 (`studio/v8/test_v8.py`), new views (mirror, upside, squint, notan, edges, temp), `finish`, `media`, `act @file.json`
-- [ ] Research: emotion in visual art → `docs/research/emotion.md`
+- [x] Research: emotion in visual art → `docs/research/emotion.md`
 - [x] Research: process gaps vs Spectre and human painters → `docs/research/process.md` (20 ranked proposals; some sources written from memory are flagged there for checking)
-- [ ] Research: media and finishing → `docs/MEDIA.md`, `docs/FINISHING.md`, `studio/media.json`
-- [ ] Research: 15 currents → `docs/styles/<id>.md`, `studio/styles.parts/batch-{a,b,c}.json` (merge into `studio/styles.json`)
+- [x] Research: media and finishing → `docs/MEDIA.md`, `docs/FINISHING.md`, `studio/media.json`
+- [x] Research: 15 currents (merged into `studio/styles.json`) → `docs/styles/<id>.md`, `studio/styles.parts/batch-{a,b,c}.json` (merge into `studio/styles.json`)
   - batch A: byzantine-icon, renaissance, baroque, dutch-golden-age, romanticism
   - batch B: realism, impressionism, post-impressionism, fauvism, expressionism
   - batch C: cubism, surrealism, abstract-expressionism, ukiyo-e, east-asian-ink
-- [ ] Engine media from `docs/MEDIA.md`: watercolour, ink, charcoal/graphite, pastel, gouache, egg tempera, woodblock look; oil finishing (varnish); each registered in `studio/v8/media/__init__.py`, passing `test_v8.py`
-- [ ] `docs/MANUAL.md`: the painter's manual for v8 (commands, media, tools, views, finishing)
-- [ ] Process: brief template with style config, nearest wrong feelings, an eye-path ledger, style research on demand; orchestration and AGENTS.md updated; lessons across styles
+- [~] Engine media from `docs/MEDIA.md` (done: woodblock, gouache, egg tempera; building: watercolour, ink, dry media, oil refinements): watercolour, ink, charcoal/graphite, pastel, gouache, egg tempera, woodblock look; oil finishing (varnish); each registered in `studio/v8/media/__init__.py`, passing `test_v8.py`
+- [x] `docs/MANUAL.md`: the painter's manual for v8 (commands, media, tools, views, finishing)
+- [x] Process: brief template (docs/prompts/painter-brief.md, filled by tools/make_brief.py) with style config, nearest wrong feelings, an eye-path ledger, style research on demand; orchestration and AGENTS.md updated; lessons across styles
 - [ ] A test painting in a new current and medium
 
 ## Everything that can elevate the project (Robert, 2026-11-25: "everything that has the potential to elevate this project should go into it")
 From Spectre and from `docs/research/process.md` part 3:
-- [ ] **Measured style targets:** measure each current from public-domain museum images (the Met open-access API and images are reachable from the workspace; the Art Institute of Chicago API is reachable, its IIIF images returned 403 in a first test): value key and histogram, value groups, saturation, palette spread, edge density and hard-edge share, spectral slope, where the strongest contrast sits. Store targets with provenance in `studio/targets.json`; a `report` command compares the canvas with its style's target, like Spectre's master report. The painter fixes deviations by painting.
-- [ ] **Numbers, not only pictures, in the views:** a value report (groups, share per group, key, flags: murky middle, too few groups, one empty block), an edge report (hard/firm/soft/lost classes, hard-edge share in vs out of the focal area), a saliency check against the declared focal point, and element clarity (each blockout element's contrast at thumbnail size; flag "masked" elements), the painting version of Spectre's masking measure.
+- [~] **Measured style targets:** (tool and `report` built; The Met index and measuring in progress) measure each current from public-domain museum images (the Met open-access API and images are reachable from the workspace; the Art Institute of Chicago API is reachable, its IIIF images returned 403 in a first test): value key and histogram, value groups, saturation, palette spread, edge density and hard-edge share, spectral slope, where the strongest contrast sits. Store targets with provenance in `studio/targets.json`; a `report` command compares the canvas with its style's target, like Spectre's master report. The painter fixes deviations by painting.
+- [~] **Numbers, not only pictures, in the views:** (`report` built: value, colour, edges, texture, structure, flags; element clarity still to do) a value report (groups, share per group, key, flags: murky middle, too few groups, one empty block), an edge report (hard/firm/soft/lost classes, hard-edge share in vs out of the focal area), a saliency check against the declared focal point, and element clarity (each blockout element's contrast at thumbnail size; flag "masked" elements), the painting version of Spectre's masking measure.
 - [ ] **Translate the reference, don't copy it:** before matching, turn the blockout into a painter's reference (group values, simplify detail and edges away from a declared focal point; matching less faithful with distance from it).
 - [ ] **Passages built in layers with roles:** underpainting, dead colour, body, glazes, scumbles, accents; a view that shows where a passage has only one layer or one kind of mark (Spectre's stacks and stack view).
 - [ ] **A stronger hand:** articulations (drag, swell-and-taper, scumble, scrape, wipe-out), variation that drifts across a passage instead of random jitter, "model a form", "hatch a plane", faces and hands from a tonal study. The mind decides; the hand performs.
-- [ ] **Variants before committing:** 6-10 tiny two- or three-value thumbnails in different structures, then two or three colour studies; Robert may pick (Spectre's sound stage).
-- [ ] **A gallery of every tool:** a mark sheet per medium and tool, checked against real examples before painters use it (Spectre's `gallery.py`).
-- [ ] **Nearest wrong feelings and looks** in every brief; each critic reading scored against them.
-- [ ] **An expectation ledger:** the painting sets up a direction, value key, temperature and edge world, then breaks it once on purpose; the views confirm the break is the strongest point.
+- [x] **Variants before committing:** 6-10 tiny two- or three-value thumbnails in different structures, then two or three colour studies; Robert may pick (Spectre's sound stage).
+- [x] **A gallery of every tool:** a mark sheet per medium and tool, checked against real examples before painters use it (Spectre's `gallery.py`).
+- [x] **Nearest wrong feelings and looks** in every brief; each critic reading scored against them.
+- [x] **An expectation ledger:** the painting sets up a direction, value key, temperature and edge world, then breaks it once on purpose; the views confirm the break is the strongest point.
 - [ ] **Revision tools:** scrape back, wipe out, paint out (painters revise by taking away).
-- [ ] **Standing rules, lessons across styles, research beats suggestions, Robert as the eye test** in the orchestration docs.
+- [x] **Standing rules, lessons across styles, research beats suggestions, Robert as the eye test** in the orchestration docs.
 
 If a research file is missing, rerun that research with the prompt shape in this plan; the other parts don't depend on each other until the engine media step (needs `docs/MEDIA.md`) and the process step (needs the research).
