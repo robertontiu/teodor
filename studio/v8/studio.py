@@ -7,7 +7,7 @@ medium decides what a dab does, how paint dries and flows, how the surface looks
 exist and what finishing means.
 
 Commands (CANVAS env var selects a canvas name; default "main"):
-  new "#RRGGBB" [W H] [--medium M] [--support S]   start a canvas (default 1200x1600, oil on canvas)
+  new "#RRGGBB" [W H] [--medium M] [--support S] [--style ID]   start a canvas (default 1200x1600, oil on canvas)
   media                         list the media, their tools, supports and finishing steps
   ref <file.svg|file.png>       set / revise the schema (rendered to canvas size)
   scene <scene.json> [overlay.svg] [quality]   render a 3D blockout as the schema (quality: draft|final)
@@ -15,6 +15,8 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   act '<json>' | act @file.json one episode: {"felt": {...}, "do": [intention, ...up to 4]}
   dry [0-1]                     let time pass
   look full|thumb|gray|crop X Y W H|ref|diff|compare|mirror|upside|squint|notan [2|3]|edges|temp
+  report [style]                the canvas measured in numbers (value, colour, edges, texture, structure),
+                                against the style's measured target (studio/targets.json) if it has one
   finish <op> ['<json>']        a finishing operation of the medium (varnish, fixative...)
   sign [auto|br|bl]             sign the finished painting ("Teodor"), the very last brush act
   timelapse                     build the time-lapse video from recorded frames
@@ -208,6 +210,8 @@ def play(cv, brush, path, felt, base_press, rng):
             brush.step = math.hypot(x - prev_xy[0], y - prev_xy[1])
         prev_xy = (x, y)
         brush.dab(cv, x, y, ang, float(np.clip(press, 0.03, 1.3)), rscale=max(0.3, rscale))
+    if hasattr(brush, "end"):
+        brush.end(cv)
 
 
 # ---------------------------------------------------------------- regions, sampling, directions
@@ -405,7 +409,10 @@ def do_glaze(cv, it, felt, rng):
     mask = region_mask(reg, cv.W, cv.H, feather=it.get("feather", 30))
     if mask is None:
         mask = np.ones((cv.H, cv.W), np.float32)
-    cv.medium.glaze(cv, mask, hx(it["color"]), it.get("opacity", 0.25))
+    try:
+        cv.medium.glaze(cv, mask, hx(it["color"]), it.get("opacity", 0.25), it)
+    except TypeError:
+        cv.medium.glaze(cv, mask, hx(it["color"]), it.get("opacity", 0.25))
 
 
 def do_blend(cv, it, felt, rng):
@@ -539,12 +546,14 @@ if __name__ == "__main__":
     if cmd == "new":
         args = sys.argv[2:]
         opt = {}
-        for key in ("--medium", "--support"):
+        for key in ("--medium", "--support", "--style"):
             if key in args:
                 i = args.index(key); opt[key[2:]] = args[i + 1]; del args[i:i + 2]
         g = args[0] if args else "#c8b89a"
         wh = list(map(int, args[1:3])) if len(args) > 2 else [1200, 1600]
         Canvas.new(g, *wh, medium=opt.get("medium", "oil"), support=opt.get("support"))
+        if opt.get("style"):
+            mp = P("meta.json"); meta = json.load(open(mp)); meta["style"] = opt["style"]; json.dump(meta, open(mp, "w"))
         cv = Canvas(); record(cv); print(P("view.png")); sys.exit()
     if cmd == "media":
         media_list(); sys.exit()
@@ -565,12 +574,27 @@ if __name__ == "__main__":
         set_ref(cv, out); look(cv, "ref", []); sys.exit()
     if cmd == "look":
         look(cv, sys.argv[2], sys.argv[3:]); sys.exit()
+    if cmd == "report":
+        import eyes
+        style = sys.argv[2] if len(sys.argv) > 2 else cv.meta.get("style")
+        tp = os.path.join(D, "..", "targets.json")
+        if not os.path.exists(tp):
+            tp = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "targets.json")
+        targets = json.load(open(tp)) if os.path.exists(tp) else {}
+        target = targets.get(style) if style else None
+        m = eyes.measure(cv.render())
+        print(eyes.format_report(m, target, style if target else (f"{style} (no measured target yet)" if style else None)))
+        json.dump(m, open(P("report.json"), "w"), indent=1)
+        sys.exit()
     if cmd == "transfer":
         transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else "#4a3a2e")
     elif cmd == "sign":
-        sys.path.insert(0, os.path.join(D, "..")); sys.path.insert(0, D)
-        from signature import sign_array
-        sign_array(cv.col, sys.argv[2] if len(sys.argv) > 2 else "auto")
+        if hasattr(cv.medium, "sign"):
+            cv.medium.sign(cv, sys.argv[2] if len(sys.argv) > 2 else "auto")
+        else:
+            sys.path.insert(0, os.path.join(D, "..")); sys.path.insert(0, D)
+            from signature import sign_array
+            sign_array(cv.col, sys.argv[2] if len(sys.argv) > 2 else "auto")
     elif cmd == "dry":
         cv.medium.dry(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.9)
     elif cmd == "finish":
