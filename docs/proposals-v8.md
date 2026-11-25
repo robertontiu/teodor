@@ -38,6 +38,7 @@ From Spectre and from `docs/research/process.md` part 3:
 - [x] **A gallery of every tool:** a mark sheet per medium and tool, checked against real examples before painters use it (Spectre's `gallery.py`).
 - [x] **Nearest wrong feelings and looks** in every brief; each critic reading scored against them.
 - [x] **An expectation ledger:** the painting sets up a direction, value key, temperature and edge world, then breaks it once on purpose; the views confirm the break is the strongest point.
+- [ ] **Media grounded in real data (Robert, 2026-11-25: "base your utensils building on research and real data"):** a pigment library from published measurements (`studio/pigments.json`), physical figures from the literature (`docs/media-data.md`), and calibration of every tool against measured statistics of real marks in high-resolution public-domain museum images (`studio/calibration_refs.json`, `tools/calibrate_media.py`), with a calibration report per medium next to its mark sheet. Until then, the media's numbers are starting values tuned by eye.
 - [ ] **Revision tools:** scrape back, wipe out, paint out (painters revise by taking away).
 - [x] **Standing rules, lessons across styles, research beats suggestions, Robert as the eye test** in the orchestration docs.
 

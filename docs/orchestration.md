@@ -14,7 +14,8 @@ Set by Robert; they apply until he changes them.
 8. **Feelings are published openly** with each painting.
 9. **Publish without asking** when a painting is finished (below); show Robert each checkpoint as it happens.
 10. **Commit as you go**, after every finished piece of work, so an interrupted session loses at most the piece in progress.
-11. **It's an experiment:** report misses honestly, in the experiments log and on the site.
+11. **Utensils rest on research and real data** (Robert, 2026-11-25): media, tools, pigments and supports are built from published measurements and calibrated against measured statistics of real marks; every value tuned by eye is marked as such until it is calibrated.
+12. **It's an experiment:** report misses honestly, in the experiments log and on the site.
 
 ## Starting a painting
 1. If the commission names a current that isn't researched, research it first: its doc in `docs/styles/<id>.md`, its entry in `studio/styles.json`, and a measuring rule in `tools/measure_targets.py` (then `python3 tools/measure_targets.py measure <id>`). If it names an artist, research the artist's practice into `studio/styles.local/<id>.json` (gitignored) and say in the brief that it's a temporary configuration.
