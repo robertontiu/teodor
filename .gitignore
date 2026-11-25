@@ -5,3 +5,6 @@
 *_view.png
 *_frames/
 __pycache__/
+
+# artist-specific configurations are temporary and never versioned (docs/styles/README.md)
+studio/styles.local/
