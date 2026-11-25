@@ -90,7 +90,7 @@ Save each reading verbatim to `critique_N.md` with a header such as `# Critique 
 3. **`docs/experiments.md`:** a section "## Round NN: *Title* (Teodor, v7, <model>; theme: …)" with setup, run (episodes, scene/schema versions), feeling, the person's reaction, critics' readings and lessons.
 4. **Habits:** update `docs/habits.md`: add any new habit this painting showed, and note under "Broken so far" what it broke.
 5. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`, with `model` set if the painter was not Opus 5.5 (the site shows the model next to the title). That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
-6. **Commit and push** everything above in one commit. Vercel builds and publishes the site (teodor.robertontiu.com) from the repo; there is nothing else to update.
+6. **Commit and push** everything above in one commit. A GitHub Action deploys the site (teodor.robertontiu.com) about 5 minutes after the last push that touched `site/`; there is nothing else to update. Keep site changes in as few pushes as you can.
 
 ## Comparing models
 To compare models, run the same commission in parallel: one work dir per model (for example `v14/` and `v14f/`), the same brief with its paths changed, and the painter sub-agents launched with the `model` parameter. Each painting gets its own round folder (`14-…` and `14b-…`), its own site id (`r14`, `r14b`) and its `model` in `works.ts`. Round folders record the model in `feeling.md`. Rounds 0–13 were all painted by Opus 5.5.

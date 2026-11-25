@@ -1,0 +1,43 @@
+# Deploys the site through a Vercel Deploy Hook instead of Vercel's Git integration.
+# Vercel's Hobby plan allows 100 deployments a day, and skipped builds still count,
+# so Git-triggered deploys are off (site/vercel.json) and this workflow deploys only when
+# site/ changes. Pushes that land close together are batched: each run waits a few
+# minutes and is cancelled by the next push, so a burst of commits makes one deployment.
+#
+# Setup (once): in Vercel, Project Settings -> Git -> Deploy Hooks, create a hook for
+# branch "main"; in GitHub, Settings -> Secrets and variables -> Actions, add its URL
+# as the secret VERCEL_DEPLOY_HOOK_URL.
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    paths: ["site/**"]
+  workflow_dispatch:
+    inputs:
+      now:
+        description: "Deploy without waiting"
+        type: boolean
+        default: true
+
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Wait for more pushes
+        if: github.event_name == 'push'
+        run: sleep 300
+      - name: Trigger the Vercel Deploy Hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::Secret VERCEL_DEPLOY_HOOK_URL is not set (see the setup note at the top of this file)."
+            exit 1
+          fi
+          curl --fail --silent --show-error -X POST "$HOOK"

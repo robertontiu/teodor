@@ -11,7 +11,7 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 ### Earlier state (Nov 24, 2026)
 
 - **Seventeen paintings**, rounds 0–15, with round 14 painted twice (`14-…` by Opus 5.5 and `14b-…` by Fable 5.2). Every round folder has `painting.jpg` and, where one exists, `feeling.md`, `journal.md`, `brief.md`, `handoff.md`, critiques, scenes or schemas, helper scripts and `timelapse.mp4`.
-- **Site:** live at https://teodor.robertontiu.com, deployed by Vercel from `site/` on every push that touches it. Newest painting first; each painting has its own page `/rN/` with a share preview; the model that painted it is shown next to the title.
+- **Site:** live at https://teodor.robertontiu.com, deployed by Vercel through a Deploy Hook: `.github/workflows/deploy-site.yml` runs when a push touches `site/`, waits 5 minutes so a burst of pushes makes one deployment, then calls the hook (Git-triggered deploys are off in `site/vercel.json`, because Vercel's Hobby plan allows 100 deployments a day and skipped builds count too). Run the workflow by hand from GitHub's Actions tab to deploy at once. Newest painting first; each painting has its own page `/rN/` with a share preview; the model that painted it is shown next to the title.
 - **Process:** the phase protocol (`docs/orchestration.md`), the current brief template (`docs/prompts/painter-brief.md`) and Teodor's habit list (`docs/habits.md`) are up to date. The studio is `studio/v7/`.
 - **Round 15** (*One More Night*, Opus 5.5) is finished and published.
 - **Nothing is in progress.** The old studio work dirs from the chat session (`/home/claude/vN/`) are not needed: everything worth keeping was copied into `rounds/`.
