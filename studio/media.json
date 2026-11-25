@@ -1,0 +1,295 @@
+{
+  "_about": "One entry per medium for the studio's instruments. Facts and sources in docs/MEDIA.md; finishing operations in docs/FINISHING.md. absorbency and tooth are 0-1 engine parameters (starting values for tuning). Source ids refer to docs/MEDIA.md#sources.",
+  "media": [
+    {
+      "name": "oil",
+      "doc": "docs/MEDIA.md#oil",
+      "binder": "drying oil (linseed, walnut, poppy); dries by oxidation",
+      "opacity": "transparent to opaque by pigment; glazes transparent, whites and earths opaque",
+      "mixing": "subtractive",
+      "supports": {
+        "canvas_linen": {"texture": "fine irregular weave under acrylic or oil gesso", "tone": "#e9e3d6", "absorbency": 0.25, "tooth": 0.5},
+        "canvas_toned": {"texture": "weave under a thin transparent earth imprimatura", "tone": "#a98a68", "absorbency": 0.25, "tooth": 0.5},
+        "panel_gesso": {"texture": "smooth sanded gesso panel; every stroke edge shows", "tone": "#f2efe8", "absorbency": 0.4, "tooth": 0.15}
+      },
+      "default_support": "canvas_linen",
+      "tools": {
+        "round": "tapered point; line to blob with pressure",
+        "flat": "long square-edged hair; planes and chisel edges",
+        "bright": "short stiff flat; short thick dabs",
+        "filbert": "flat with rounded tip; soft-edged leaf-shaped marks",
+        "fan": "sparse spread hairs; foliage, hair, softening",
+        "rigger": "very long thin hair; long even lines",
+        "knife": "flat slabs, crisp edges, scraped passages",
+        "rag": "wipes out lights toward the ground",
+        "blender": "soft dry brush or finger; softens edges",
+        "scraper": "sgraffito into wet paint, reveals ground"
+      },
+      "order_of_work": ["toned ground (imprimatura)", "drawing / transfer", "thin lean block-in or monochrome underpainting", "let dry (indirect) or continue wet-in-wet (direct)", "colour layers, each fatter than the last", "thick lights, thin darks", "glazes", "last accents and edges"],
+      "finishing": ["finish accents", "finish edges", "finish glaze", "dry", "finish retouch (after 2-3 months for normal layers)", "finish varnish gloss=G (when dry throughout, ~1 year)", "sign"],
+      "signatures": ["bristle furrows along the stroke", "impasto ridges at stroke ends", "wet-in-wet pickup and colour drag", "scumble and dry-brush over weave", "glaze depth over light underlayer", "uneven gloss where passages sank in", "lost and found edges"],
+      "sources": ["S4", "S5", "S6", "S7", "S3", "S24", "S25", "S26", "S33", "S37"]
+    },
+    {
+      "name": "watercolour",
+      "doc": "docs/MEDIA.md#watercolour",
+      "binder": "gum arabic",
+      "opacity": "transparent (thin layers rarely look opaque)",
+      "mixing": "layered",
+      "supports": {
+        "hot_press": {"texture": "smooth, pressed with heated rollers; paint stays on surface, sharp edges, lifts well", "tone": "#f7f5ef", "absorbency": 0.35, "tooth": 0.15},
+        "cold_press": {"texture": "felt-roller tooth that grips paint; granulation and soft edges", "tone": "#f6f3eb", "absorbency": 0.55, "tooth": 0.5},
+        "rough": {"texture": "pronounced texture; fast absorption, strong granulation, hard to detail", "tone": "#f5f2ea", "absorbency": 0.7, "tooth": 0.8}
+      },
+      "default_support": "cold_press",
+      "tools": {
+        "round": "main brush; holds water, comes to a point; hairline to broad by pressure",
+        "mop": "large soft belly; even washes and wet-in-wet skies",
+        "flat": "broad even bands, straight edges",
+        "hake": "wide flat goat-hair brush for laying washes",
+        "rigger": "long hair for branches and long lines",
+        "sponge": "lifts soft-edged lights, textures",
+        "tissue": "blots and lifts",
+        "clean_damp_brush": "adds water: lifts lines, causes blooms in damp washes",
+        "masking_fluid": "reserves white shapes with hard edges",
+        "salt": "pulls water into small pale starry spots in a damp wash",
+        "granulation_medium": "increases granulation"
+      },
+      "order_of_work": ["light pencil drawing", "masking", "large pale washes, often wet-in-wet", "let dry", "midtone glazes wet-on-dry", "darks and details", "final darks and accents", "lifting and unmasking"],
+      "finishing": ["finish darks", "finish lift", "finish unmask", "finish dry", "sign", "finish mount (no varnish; glass)"],
+      "signatures": ["edge darkening of dried washes", "back-runs / blooms with branching dark edges", "granulation and colour separation", "wet-in-wet feathery flow", "dry-brush on paper peaks", "hard vs soft edges", "white of paper as the light", "transparent glazes", "tide lines"],
+      "sources": ["S1", "S8", "S9", "S18", "S31", "S32"]
+    },
+    {
+      "name": "ink",
+      "doc": "docs/MEDIA.md#ink",
+      "binder": "animal glue (East Asian soot ink stick); gum arabic (Western carbon, iron gall, bistre)",
+      "opacity": "dense carbon black when full strength; transparent grey washes when diluted",
+      "mixing": "layered",
+      "supports": {
+        "xuan_raw": {"texture": "unsized absorbent fibrous paper; ink feathers and bleeds", "tone": "#f3eee2", "absorbency": 0.95, "tooth": 0.3},
+        "xuan_sized": {"texture": "alum-and-glue sized xuan; crisp lines for gongbi", "tone": "#efe8d6", "absorbency": 0.3, "tooth": 0.2},
+        "silk": {"texture": "sized silk with fine weave, warm tone", "tone": "#e6d9bb", "absorbency": 0.25, "tooth": 0.15},
+        "bristol": {"texture": "smooth hard board for pen", "tone": "#fbfaf6", "absorbency": 0.2, "tooth": 0.05},
+        "laid_paper": {"texture": "laid lines; historic pen-and-wash paper", "tone": "#efe6d2", "absorbency": 0.4, "tooth": 0.3}
+      },
+      "default_support": "xuan_raw",
+      "tools": {
+        "brush_chinese": "conical tuft with belly reservoir; tip dark, belly watery; pressure swells the line",
+        "brush_side": "oblique brush; broad stroke, sharp on one side, ragged on the other",
+        "pen_nib": "flexible steel nib; line swells with pressure",
+        "pen_reed": "broad blunt reed; direction-dependent width, gritty",
+        "pen_tech": "even-width technical line",
+        "wash_brush": "diluted ink washes",
+        "scraper": "scrapes ink off for highlights"
+      },
+      "order_of_work": ["(pen) light pencil drawing", "light ink structure", "darker ink", "washes light to dark", "darkest accents and dots last", "(pen) erase pencil when dry"],
+      "finishing": ["finish dots", "finish scrape", "finish erase-pencil", "finish seal", "sign", "finish mount"],
+      "signatures": ["line weight variation with pressure", "tone gradation within one stroke", "flying white (feibai) in fast dry strokes", "feathery bleeding into raw xuan with darker rim", "hatching and cross-hatching", "stippling", "blots at slow starts"],
+      "sources": ["S2", "S20", "S21", "S22", "S29", "S36"]
+    },
+    {
+      "name": "charcoal",
+      "doc": "docs/MEDIA.md#charcoal",
+      "binder": "none (vine/willow); clay, gum or wax (compressed)",
+      "opacity": "opaque dust; tone set by coverage of the paper",
+      "mixing": "optical",
+      "supports": {
+        "laid_drawing": {"texture": "Ingres-type laid lines that show in every tone", "tone": "#efebe1", "absorbency": 0.2, "tooth": 0.6},
+        "smooth_bristol": {"texture": "smooth; little tooth, smooth tone", "tone": "#f8f7f2", "absorbency": 0.1, "tooth": 0.2},
+        "watercolour_140lb": {"texture": "cold-press texture that makes interesting broken marks", "tone": "#f4f1e8", "absorbency": 0.4, "tooth": 0.75},
+        "toned_grey": {"texture": "mid-grey drawing paper for working with white chalk", "tone": "#9c9a94", "absorbency": 0.2, "tooth": 0.55}
+      },
+      "default_support": "laid_drawing",
+      "tools": {
+        "vine_tip": "grey, irregular, very erasable line",
+        "vine_side": "broad pale band broken by tooth",
+        "compressed_tip": "dense rich black line, harder to erase",
+        "compressed_side": "broad dense black band",
+        "powder": "tones large areas",
+        "stump": "rolled paper; smooth blended tone",
+        "tortillon": "small pointed blender for detail",
+        "finger": "smears tone, soft gradients",
+        "chamois": "wide soft smear, knocks back tone",
+        "kneaded": "dabbed lifts, soft highlights; tone by pressure",
+        "hard_eraser": "crisp clean whites",
+        "white_chalk": "added lights on toned paper"
+      },
+      "order_of_work": ["tone the paper or start white", "block in big shapes and tones quickly", "refine with harder sticks or pencils", "refine tones with erasers", "reserve or add whites", "fix in layers", "final fix"],
+      "finishing": ["finish accents (compressed)", "finish lift", "finish clean", "finish fixative kind=final", "sign"],
+      "signatures": ["tooth catching at light pressure", "smudged soft tone", "erasing as drawing", "ghost lines (pentimenti)", "velvety matte blacks", "broken gestural line"],
+      "sources": ["S12", "S13", "S27", "S28", "S11"]
+    },
+    {
+      "name": "graphite",
+      "doc": "docs/MEDIA.md#graphite-pencil",
+      "binder": "clay (graphite-clay mix, fired)",
+      "opacity": "opaque particles; tone by coverage; darkest is a mid-dark grey",
+      "mixing": "optical",
+      "supports": {
+        "bristol_smooth": {"texture": "smooth for fine tonal work", "tone": "#faf9f5", "absorbency": 0.1, "tooth": 0.2},
+        "drawing_medium": {"texture": "medium-tooth drawing paper", "tone": "#f5f3ec", "absorbency": 0.15, "tooth": 0.45},
+        "hot_press": {"texture": "smooth watercolour paper", "tone": "#f7f5ef", "absorbency": 0.35, "tooth": 0.15}
+      },
+      "default_support": "drawing_medium",
+      "tools": {
+        "pencil_9H_to_9B": "grade sets hardness and darkness; point gives narrow even line",
+        "pencil_side": "broad tone with a soft grade",
+        "hatch": "parallel strokes building tone; second pass for cross-hatching",
+        "stump": "smooth modulated tone",
+        "kneaded": "soft lifts",
+        "hard_eraser": "crisp highlights (reduction drawing)",
+        "stylus": "indented lines that stay white under later tone"
+      },
+      "order_of_work": ["light construction with a hard grade", "big value shapes", "build tone with softer grades", "blend where wanted", "erase lights", "darkest accents and crisp edges"],
+      "finishing": ["finish clean", "finish accents", "finish lift", "finish fixative kind=final strength=0.5 (optional)", "sign"],
+      "signatures": ["graphite shine in raking light", "hatching and cross-hatching", "tooth speckle at light pressure", "burnished slick darks", "crisp line edges", "eraser ghosts"],
+      "sources": ["S10", "S13", "S27"]
+    },
+    {
+      "name": "pastel",
+      "doc": "docs/MEDIA.md#soft-pastel-and-oil-pastel",
+      "binder": "minimal (soft pastel); non-drying oil and wax (oil pastel variant)",
+      "opacity": "opaque particles but broken over tooth; underlayers show through",
+      "mixing": "optical",
+      "supports": {
+        "toned_laid": {"texture": "Ingres-type laid toned paper; modest tooth", "tone": "#8f8577", "absorbency": 0.2, "tooth": 0.5},
+        "toned_honeycomb": {"texture": "honeycomb-textured toned pastel paper", "tone": "#6f7a80", "absorbency": 0.2, "tooth": 0.6},
+        "sanded": {"texture": "sanded board; holds many layers", "tone": "#b8a58c", "absorbency": 0.1, "tooth": 0.95},
+        "pulp_rough": {"texture": "inexpensive machine-made wood-pulp paper with rough texture (Degas)", "tone": "#c9b48f", "absorbency": 0.3, "tooth": 0.65}
+      },
+      "default_support": "toned_laid",
+      "tools": {
+        "hard_pastel_side": "broad early masses broken by tooth",
+        "hard_pastel_tip": "lines and hatching",
+        "soft_pastel_side": "rich broad colour; fills tooth",
+        "soft_pastel_tip": "final bright accents",
+        "stump": "blends powder",
+        "finger": "blends and softens",
+        "chamois": "knocks back an area",
+        "kneaded": "lifts dust",
+        "workable_fix": "restores tooth between layers, darkens slightly",
+        "oil_pastel": "buttery, waxy, blends by pressure",
+        "scraper": "sgraffito through oil pastel",
+        "solvent_brush": "dissolves oil pastel into a wash"
+      },
+      "order_of_work": ["choose paper tone", "big masses with sides of hard pastels", "dark to light, hard to soft", "selective workable fixative between layers", "build to the lights", "softest brightest accents last, unfixed"],
+      "finishing": ["finish fixative kind=workable (selective)", "finish accents tool=soft_pastel", "sign", "finish glaze-frame"],
+      "signatures": ["broken colour over tooth", "scumbles", "side-by-side optical mixtures", "chalky velvety matte surface", "paper tone showing through", "visible strokes", "smearing once tooth is full"],
+      "sources": ["S11", "S27", "S34", "S37"]
+    },
+    {
+      "name": "gouache",
+      "doc": "docs/MEDIA.md#gouache",
+      "binder": "gum arabic (higher pigment load, often chalk or titanium white opacifier)",
+      "opacity": "opaque",
+      "mixing": "subtractive",
+      "supports": {
+        "hot_press": {"texture": "smooth watercolour paper", "tone": "#f7f5ef", "absorbency": 0.35, "tooth": 0.15},
+        "illustration_board": {"texture": "smooth rigid board", "tone": "#f4f2ec", "absorbency": 0.3, "tooth": 0.1},
+        "toned_paper": {"texture": "toned drawing paper", "tone": "#7d7468", "absorbency": 0.3, "tooth": 0.35}
+      },
+      "default_support": "hot_press",
+      "tools": {
+        "round": "general shapes and lines",
+        "flat": "flat even fields and crisp edges",
+        "detail_round": "small detail and lights",
+        "dry_brush": "textured broken strokes"
+      },
+      "order_of_work": ["drawing", "background and big flat shapes", "darker shapes", "lights and details on top", "final light accents"],
+      "finishing": ["finish accents", "finish edges", "finish dry", "sign (no varnish; glass)"],
+      "signatures": ["matte flat opaque fields", "light over dark", "crisp poster-like edges", "reactivated muddied edges", "drying shift (lights darker, darks lighter)"],
+      "sources": ["S18"]
+    },
+    {
+      "name": "tempera",
+      "doc": "docs/MEDIA.md#egg-tempera",
+      "binder": "egg yolk with water",
+      "opacity": "translucent to opaque by layering; thin layers",
+      "mixing": "layered",
+      "supports": {
+        "panel_gesso": {"texture": "rigid wood panel, glue size, several coats of gesso sanded smooth", "tone": "#f6f3ea", "absorbency": 0.5, "tooth": 0.05},
+        "gold_ground": {"texture": "water-gilt gold leaf over bole, burnished, with punchwork", "tone": "#c9a24a", "absorbency": 0.0, "tooth": 0.0}
+      },
+      "default_support": "panel_gesso",
+      "tools": {
+        "small_round": "small soft sable, nearly dry; thin hatched strokes",
+        "hatch": "short parallel and cross-hatched strokes following form",
+        "gild": "lays gold leaf over bole in a region",
+        "burnish": "agate burnisher; mirror-bright gold",
+        "punch": "stippled punchwork patterns in gold",
+        "stylus": "incised outlines"
+      },
+      "order_of_work": ["panel, size, gesso, sand", "drawing, fixed in ink", "imprimatura to mute the drawing", "gilding and punchwork", "background in thin layers", "verdaccio under flesh", "flesh tones in several premixed values", "fine accents", "optional oil glazes", "highlights re-strengthened"],
+      "finishing": ["finish hatch-lights", "finish oil-glaze (optional)", "finish punch", "finish sheen 0.35", "sign (usually no varnish)"],
+      "signatures": ["small hatched strokes", "layered translucency over green verdaccio", "no soft blending", "crisp edges", "burnished gold with punchwork"],
+      "sources": ["S14", "S15", "S38"]
+    },
+    {
+      "name": "acrylic",
+      "doc": "docs/MEDIA.md#acrylic",
+      "binder": "acrylic polymer emulsion",
+      "opacity": "transparent to opaque by pigment",
+      "mixing": "subtractive",
+      "supports": {
+        "canvas_cotton": {"texture": "cotton duck under acrylic gesso", "tone": "#f0ede6", "absorbency": 0.25, "tooth": 0.5},
+        "panel": {"texture": "smooth primed panel", "tone": "#f2efe8", "absorbency": 0.3, "tooth": 0.15}
+      },
+      "default_support": "canvas_cotton",
+      "tools": {
+        "flat": "hard-edged planes",
+        "round": "lines and shapes",
+        "knife": "gel impasto with sharp peaks",
+        "sponge": "texture"
+      },
+      "order_of_work": ["toned ground", "block-in", "fast layers", "glazes with medium", "accents"],
+      "finishing": ["finish accents", "finish varnish gloss=G (after isolation coat)", "sign"],
+      "signatures": ["hard edges from fast drying", "flat even fields", "darker when dry", "sharp gel impasto"],
+      "sources": ["S35", "S18"]
+    },
+    {
+      "name": "fresco",
+      "doc": "docs/MEDIA.md#fresco",
+      "binder": "none (lime carbonation fixes pigment in wet intonaco); binder for secco",
+      "opacity": "thin transparent washes building to chalky opaque",
+      "mixing": "layered",
+      "supports": {
+        "intonaco": {"texture": "fresh lime plaster over rough arriccio, painted in daily giornate", "tone": "#eee8dc", "absorbency": 0.85, "tooth": 0.4}
+      },
+      "default_support": "intonaco",
+      "tools": {
+        "soft_brush": "watery lime-fast pigment",
+        "cartoon_transfer": "pounced or incised drawing",
+        "secco_brush": "bound paint on dry plaster for details"
+      },
+      "order_of_work": ["arriccio", "transfer composition", "intonaco for one giornata", "paint while wet, top down", "next giornata", "secco details last"],
+      "finishing": ["finish secco", "sign"],
+      "signatures": ["matte chalky high-key colour", "giornata seams", "limited earth palette", "watercolour-like thin passages"],
+      "sources": ["S19"]
+    },
+    {
+      "name": "woodblock",
+      "doc": "docs/MEDIA.md#woodblock-print-ukiyo-e",
+      "binder": "water-based colour with rice-flour paste (nori)",
+      "opacity": "transparent impressions; overlaps combine",
+      "mixing": "layered",
+      "supports": {
+        "washi_sized": {"texture": "kozo-fibre washi sized with dosa; fibres visible; printed damp", "tone": "#f1ead9", "absorbency": 0.3, "tooth": 0.3}
+      },
+      "default_support": "washi_sized",
+      "tools": {
+        "carve_key": "keyblock: brushed lines left raised, keeping brush taper",
+        "carve_block": "one colour block per region",
+        "ink_block": "brush colour into the wood grain with hake; nori for even spread",
+        "bokashi": "graded wiping of colour into water on the block",
+        "baren": "pressing; more pressure darker",
+        "print": "one impression with kento registration",
+        "emboss": "blind embossing, relief only"
+      },
+      "order_of_work": ["artist's line drawing", "carve keyblock", "key proofs", "colour the proofs", "carve one block per colour", "print lightest colours first, darker on top", "bokashi blocks", "keyline"],
+      "finishing": ["finish seal (printed)", "no finishing beyond the impression"],
+      "signatures": ["flat colour fields", "keyline outlines", "bokashi gradients", "baren mottle and wood grain", "paper fibre texture", "small registration offsets", "overprinted colours"],
+      "sources": ["S16", "S17", "S30"]
+    }
+  ]
+}

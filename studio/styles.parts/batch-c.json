@@ -1,0 +1,559 @@
+{
+  "cubism": {
+    "name": "Cubism (Analytic and Synthetic)",
+    "doc": "docs/styles/cubism.md",
+    "period": "Paris, 1907-1914 (Analytic c.1908-12, Synthetic c.1912-14)",
+    "media": [
+      "oil",
+      "charcoal",
+      "gouache"
+    ],
+    "support": {
+      "oil": "canvas",
+      "charcoal": "paper",
+      "gouache": "paper"
+    },
+    "ground": "#ece8dc",
+    "technique": [
+      "charcoal drawing then selective thin oil",
+      "faceting into small planes",
+      "bare ground left showing",
+      "stencilled lettering",
+      "Synthetic: flat planes, pattern and texture over them"
+    ],
+    "palette": {
+      "principle": "Analytic: near-monochrome browns, greys, ochres and black (Met, Tate); Synthetic: simpler shapes, brighter flat colours (Tate). Hexes are judgement.",
+      "colors": [
+        "#efe9dc",
+        "#9a9184",
+        "#7d7f7c",
+        "#b8904f",
+        "#6b5a45",
+        "#57402e",
+        "#262422"
+      ],
+      "synthetic_colors": [
+        "#5f7a5a",
+        "#4a6b93",
+        "#a3473a",
+        "#c9a542",
+        "#e5dcc4",
+        "#8a6643"
+      ],
+      "avoid": [
+        "rainbow saturation",
+        "whole-object gradients",
+        "atmospheric blue distance",
+        "strong hue in Analytic mode beyond one accent"
+      ]
+    },
+    "light": "no single source; each facet carries its own small light-to-dark shift, light as rhythm across planes (judgement)",
+    "value_key": "middle, narrow range in Analytic; contrast between whole shapes in Synthetic (judgement)",
+    "composition": "upright or oval table-top still life seen from several viewpoints; dense interlocking centre thinning to bare ground at the edges; letters flat on the picture plane (Met, Tate)",
+    "drawing": "objects dissected into small facets and reassembled; charcoal outlines on, under and beside the paint; open contours so planes slide together; recognisable clues anchor the subject (Met)",
+    "edges": "facets hard on one side, lost into the neighbour on the other (judgement, 'passage'); Synthetic edges crisp",
+    "marks": {
+      "tools": [
+        "flat",
+        "filbert",
+        "liner"
+      ],
+      "length": "short",
+      "direction": "parallel within each facet, one angle per plane (judgement)",
+      "visible": true
+    },
+    "process": [
+      "thin smooth white ground",
+      "charcoal drawing of the main elements",
+      "selective thin oil, washes, bare ground left",
+      "facet building with small parallel strokes, densest at centre",
+      "more charcoal on and beside the paint",
+      "darkest accents and stencilled letters last"
+    ],
+    "finishing": [
+      "check the centre is the densest area",
+      "last dark accents and lettering",
+      "no unifying glaze; surface left matte (judgement)"
+    ],
+    "pitfalls": [
+      "pastiche: guitar, bottle and 'JOURNAL'",
+      "random shattered-glass triangles over a realist picture",
+      "kaleidoscope colour in Analytic mode",
+      "machine-flat vector planes in Synthetic mode",
+      "nearest wrong feelings: cold detachment, chaos/anxiety"
+    ],
+    "felt_bias": {
+      "arousal": -0.15,
+      "tension": 0.1,
+      "care": 0.3
+    },
+    "engine_gaps": [
+      "one medium per canvas: no charcoal over oil",
+      "no stencil tool",
+      "no sand/texture additive",
+      "no pasted paper (by rule: paint its look)",
+      "needs a schema helper that recuts a blockout into planes from several viewpoints"
+    ],
+    "sources": [
+      "Met, Cubism: https://www.metmuseum.org/essays/cubism",
+      "Met, Braque, Bottle of Marc: https://www.metmuseum.org/articles/georges-braque-bottle-of-marc-vieux",
+      "Tate, Cubism: https://www.tate.org.uk/art/art-terms/c/cubism",
+      "Tate, Analytical cubism: https://www.tate.org.uk/art/art-terms/a/analytical-cubism",
+      "Tate, Synthetic cubism: https://www.tate.org.uk/art/art-terms/s/synthetic-cubism",
+      "Tate, Papier collé: https://www.tate.org.uk/art/art-terms/p/papier-colle"
+    ]
+  },
+  "post-impressionism": {
+    "name": "Post-Impressionism",
+    "doc": "docs/styles/post-impressionism.md",
+    "period": "France, c. 1885-1905",
+    "media": [
+      "oil",
+      "watercolour"
+    ],
+    "support": {
+      "oil": "canvas",
+      "watercolour": "paper-cold-press"
+    },
+    "ground": "#f0ebdf",
+    "modes": {
+      "constructive": {
+        "technique": [
+          "pencil sketch",
+          "blue brush outline",
+          "parallel hatched strokes and colour patches",
+          "white ground left visible"
+        ],
+        "colors": [
+          "#f0ebdf",
+          "#e6b23a",
+          "#c99a4b",
+          "#b5553a",
+          "#3d5fa8",
+          "#2c3f7a",
+          "#3f7d5e",
+          "#7a8a4a",
+          "#8c6aa0"
+        ],
+        "marks": {
+          "tools": [
+            "flat",
+            "liner"
+          ],
+          "length": "short",
+          "direction": "parallel hatching at one diagonal per passage (judgement)",
+          "visible": true
+        },
+        "felt_bias": {
+          "arousal": -0.1,
+          "tension": 0.1,
+          "care": 0.4
+        }
+      },
+      "divisionist": {
+        "technique": [
+          "first campaign in broken strokes",
+          "dots, dabs and dashes of minimally mixed prismatic colour, unblended",
+          "haloing at edges",
+          "painted inner border"
+        ],
+        "colors": [
+          "#f3eee2",
+          "#f4dc3c",
+          "#eab21e",
+          "#df4a2e",
+          "#b8345a",
+          "#45b07a",
+          "#2f58b0",
+          "#2a3488",
+          "#e9965a"
+        ],
+        "marks": {
+          "tools": [
+            "round",
+            "flat"
+          ],
+          "length": "dots",
+          "direction": "alternating size and direction at edges",
+          "visible": true
+        },
+        "felt_bias": {
+          "arousal": -0.3,
+          "tension": 0.0,
+          "care": 0.6
+        }
+      },
+      "expressive": {
+        "technique": [
+          "wet-into-wet",
+          "directional impasto scaled to feeling",
+          "flat colour planes in dark outlines (cloisonnism)",
+          "exaggerated complementaries"
+        ],
+        "colors": [
+          "#efb81c",
+          "#e8722a",
+          "#d6343a",
+          "#2d4fa8",
+          "#1f3d6e",
+          "#3a9a5a",
+          "#6e4a9a",
+          "#1a1a22"
+        ],
+        "marks": {
+          "tools": [
+            "round",
+            "flat",
+            "liner"
+          ],
+          "length": "medium-long",
+          "direction": "follows form and rhythm; swirls only where the subject asks",
+          "visible": true
+        },
+        "felt_bias": {
+          "arousal": 0.4,
+          "tension": 0.3,
+          "care": 0.0
+        }
+      }
+    },
+    "default_mode": "constructive",
+    "technique": [
+      "constructive stroke",
+      "divisionism",
+      "expressive contour and colour"
+    ],
+    "palette": {
+      "principle": "colour as structure or feeling rather than record: modulated patches (constructive), minimally mixed prismatic dots (divisionist), boldly exaggerated complementaries (expressive)",
+      "colors": [
+        "#f0ebdf",
+        "#e6b23a",
+        "#df4a2e",
+        "#b8345a",
+        "#3d5fa8",
+        "#2a3488",
+        "#3f7d5e",
+        "#45b07a",
+        "#6e4a9a",
+        "#1a1a22"
+      ],
+      "avoid": [
+        "complementaries mixed into mud",
+        "brown tonal unity",
+        "golden varnish",
+        "black in the divisionist mode"
+      ]
+    },
+    "light": "light from colour, not chiaroscuro; luminosity from high-chroma light pigments; symbolic light in the expressive mode",
+    "value_key": "middle-high",
+    "composition": "stable architectural (constructive), planned frieze with painted border (divisionist), high viewpoint and flattened print-like depth (expressive)",
+    "drawing": "form as planes with blue contour restated (constructive); contours enlarged around figures (divisionist); heavy dark outlines and deformation for mood (expressive)",
+    "edges": "built by adjacent planes; haloed by alternating dots; or hard dark contour lines around flat fields",
+    "marks": {
+      "tools": [
+        "flat",
+        "round",
+        "liner",
+        "knife"
+      ],
+      "length": "short",
+      "direction": "per mode",
+      "visible": true
+    },
+    "process": [
+      "constructive: pencil sketch, thin blue outline, hatched strokes from thin washes to rich layers over the whole, impasto rework of the focal area, stop with ground showing",
+      "divisionist: Impressionist-like first campaign, dry, second campaign of unblended prismatic dots with contours reinforced, painted border last",
+      "expressive: contour drawing, colour fields wet into wet, impasto in proportion to feeling, dark outlines restated last (judgement)"
+    ],
+    "finishing": [
+      "constructive: may stop unfinished, ground visible, edges incomplete; no unifying glaze",
+      "divisionist: painted inner border as the final stage; white frame",
+      "expressive: last outlines and accents; no varnish tone (judgement)"
+    ],
+    "pitfalls": [
+      "swirl and sunflower pastiche",
+      "pointillism as an even dot filter over a finished image",
+      "geometric faceting without colour modulation",
+      "complementaries mixed into mud",
+      "decorative cheerfulness or sterile system instead of feeling",
+      "Teodor's hushed bittersweet habit"
+    ],
+    "felt_bias": {
+      "arousal": 0.0,
+      "tension": 0.1,
+      "care": 0.3
+    },
+    "engine_gaps": [
+      "no native dot or hatch primitive (free with short length and narrow spread approximates)",
+      "no rule placing complementaries side by side",
+      "do_match blends divisionist dots away; dots must be free intentions",
+      "watercolour medium not built yet"
+    ],
+    "sources": [
+      "https://phillipscollection.org/sites/default/files/2025-03/up-close-with-cezanne-text-panels.pdf",
+      "https://colourlex.com/project/georges-seurat-a-sunday-on-la-grande-jatte/",
+      "https://www.artic.edu/articles/969/la-grande-jatte-frame-by-frame",
+      "https://archive.artic.edu/sciarttech/2e3.html",
+      "https://vangoghmuseum.nl/en/stories/looking-for-contrast",
+      "https://www.getty.edu/news/impasto-paint-how-to-van-gogh-art-style-technique",
+      "https://artsandculture.google.com/story/3AXB4iaqB_MqNg",
+      "https://www.theartstory.org/movement/cloisonnism-and-synthetism/",
+      "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
+    ]
+  },
+  "surrealism": {
+    "name": "Surrealism (illusionistic and automatist)",
+    "doc": "docs/styles/surrealism.md",
+    "period": "Paris and Europe, 1924 to the Second World War",
+    "media": [
+      "oil",
+      "ink"
+    ],
+    "support": {
+      "oil": "panel",
+      "ink": "paper"
+    },
+    "ground": "#f0ebe0",
+    "technique": [
+      "illusionistic: precise underdrawing, thin smooth modelling, hidden brushwork",
+      "automatist: automatic drawing, stained or scumbled field, chance textures (frottage, grattage, decalcomania) worked back into"
+    ],
+    "palette": {
+      "principle": "illusionistic: naturalistic, controlled colour, strong colour only on the strange object; automatist: one field colour, black line, a few primaries (judgement; Magritte's smoky greys/blues/earths then lighter, MoMA)",
+      "colors": [
+        "#8fb3d1",
+        "#e8e2cf",
+        "#5d7f9e",
+        "#8a8c8a",
+        "#c49a5a",
+        "#5e4a36",
+        "#2b2622",
+        "#e3b99a",
+        "#b23a2e"
+      ],
+      "automatist_colors": [
+        "#3f63a6",
+        "#c9a86a",
+        "#1c1b1a",
+        "#c7372f",
+        "#e0b52f",
+        "#f2efe6"
+      ],
+      "avoid": [
+        "neon fantasy saturation",
+        "purple-pink dreamy gradients",
+        "airbrushed glow"
+      ]
+    },
+    "light": "illusionistic: one low raking light, long sharp cast shadows, everything legible; automatist: little modelling (judgement)",
+    "value_key": "illusionistic: high-key sky over a darker foreground; automatist: middle (judgement)",
+    "composition": "illusionistic: deep empty stage, low horizon, few isolated objects; automatist: all-over field with floating biomorphic signs (judgement)",
+    "drawing": "illusionistic: precise graphite drawing, convincing modelling of impossible juxtapositions, double images; automatist: fast unplanned line, then read and defined (Philadelphia, Tate, Pompidou)",
+    "edges": "illusionistic: soft within forms, crisp at silhouettes; automatist: lost field edges, crisp lines",
+    "marks": {
+      "tools": [
+        "round",
+        "filbert",
+        "blend",
+        "liner",
+        "knife"
+      ],
+      "length": "illusionistic: short hidden; automatist: long continuous lines",
+      "direction": "illusionistic follows form; automatist free",
+      "visible": false
+    },
+    "modes": {
+      "illusionistic": {
+        "ground": "#f0ebe0",
+        "support": {
+          "oil": "panel"
+        },
+        "felt_bias": {
+          "arousal": -0.2,
+          "tension": 0.15,
+          "care": 0.4
+        }
+      },
+      "automatist": {
+        "ground": "#c9b48e",
+        "support": {
+          "oil": "canvas",
+          "ink": "paper"
+        },
+        "felt_bias": {
+          "arousal": 0.3,
+          "tension": 0.0,
+          "care": -0.3
+        }
+      }
+    },
+    "process": [
+      "illusionistic: find the juxtaposition or double image; precise drawing on a smooth light ground; thin lay-in; soft modelling and sharp cast shadows; highest finish on the strange object",
+      "automatist: lay a stained or textured field; automatic drawing at speed; look and read the forms; define a few, leave the field open"
+    ],
+    "finishing": [
+      "illusionistic: low-opacity unifying glaze, then varnish when available",
+      "automatist: stop when forms are found and the field breathes; no glaze (judgement)"
+    ],
+    "pitfalls": [
+      "pastiche: melting clocks, bowler hats, floating apples, ants, crutches",
+      "fantasy-illustration kitsch and random weirdness without one charged relation",
+      "automatist mode as pretty doodle",
+      "nearest wrong feelings: whimsy, explicit horror, cold cleverness"
+    ],
+    "felt_bias": {
+      "arousal": -0.2,
+      "tension": 0.15,
+      "care": 0.4
+    },
+    "engine_gaps": [
+      "no chance-texture tools (frottage, decalcomania, grattage over a textured object)",
+      "no varnish step for oil",
+      "no mixed media or sand",
+      "no way to suppress planning for automatic drawing",
+      "ink medium needed for automatic drawing"
+    ],
+    "sources": [
+      "Met, Surrealism: https://www.metmuseum.org/en/essays/surrealism",
+      "Tate, Surrealism: https://www.tate.org.uk/art/art-terms/s/surrealism",
+      "Tate, The uncanny: https://www.tate.org.uk/art/art-terms/u/uncanny",
+      "Tate, Frottage / Grattage / Decalcomania / Biomorphic / Automatism art terms",
+      "Centre Pompidou, Masson, Dessin automatique: https://www.centrepompidou.fr/en/ressources/oeuvre/czAzGRr",
+      "Philadelphia Museum of Art, Dalí teacher resource: https://legacyweb.philamuseum.org/doc_downloads/education/ex_resources/dali.pdf",
+      "Fundació Gala-Salvador Dalí, Painting and Documenting the painting technique",
+      "MoMA, Magritte materials and techniques: https://www.moma.org/explore/inside_out/2013/10/15/revealing-the-mystery-of-magrittes-materials-and-techniques/"
+    ]
+  },
+  "abstract-expressionism": {
+    "name": "Abstract Expressionism (gestural and colour field)",
+    "doc": "docs/styles/abstract-expressionism.md",
+    "period": "New York, early 1940s to late 1950s",
+    "media": [
+      "oil",
+      "gouache",
+      "ink"
+    ],
+    "support": {
+      "oil": "canvas",
+      "gouache": "paper",
+      "ink": "paper"
+    },
+    "ground": "#e4dccb",
+    "technique": [
+      "gestural: sweeping large-brush marks, poured/trailed/flicked paint, wet-into-wet layering, building up and scraping down",
+      "colour field: tinted size stain, thin wet-on-wet field layers, feathered edges, egg and dammar glazes"
+    ],
+    "palette": {
+      "principle": "gestural: reduced (black/raw canvas) or all-over interlace, colour as energy (judgement); colour field: two or three colours in thin luminous layers (Tate Papers 23 pigments)",
+      "colors": [
+        "#161514",
+        "#ece6d8",
+        "#9c9ea0",
+        "#e3a99b",
+        "#e8b923",
+        "#c08f3e",
+        "#c33a2c",
+        "#2f6f86"
+      ],
+      "colour_field_colors": [
+        "#5a1e24",
+        "#3d1418",
+        "#1a1514",
+        "#b8502a",
+        "#b2302a",
+        "#4b2a3d",
+        "#d3a540",
+        "#2b3a7a",
+        "#6e7078"
+      ],
+      "avoid": [
+        "pastel prettiness in gestural mode",
+        "smooth digital gradients",
+        "rule-based colour harmonies"
+      ]
+    },
+    "light": "no depicted light; gestural energy from value contrast; colour field light from within thin stacked layers and soft edges (judgement)",
+    "value_key": "gestural: mixed, often high contrast; colour field: low and close-valued or saturated mid (judgement)",
+    "composition": "gestural: all-over or a few big strokes in tension; colour field: frontal, vertical, soft rectangles or bands in a field; big, enveloping scale (Met)",
+    "drawing": "gestural: drawing in paint at full arm, figures emerging and dissolving; colour field: the soft rectangle or band as the only form",
+    "edges": "gestural: varied, broken, dragged; colour field: feathered, soft (Tate Papers 23)",
+    "marks": {
+      "tools": [
+        "flat",
+        "round",
+        "liner",
+        "knife",
+        "smudge",
+        "blend"
+      ],
+      "length": "long",
+      "direction": "free, from the body's gesture",
+      "visible": true
+    },
+    "modes": {
+      "gestural": {
+        "ground": "#e4dccb",
+        "size": [
+          1800,
+          1200
+        ],
+        "felt_bias": {
+          "arousal": 0.4,
+          "tension": 0.1,
+          "care": -0.4
+        }
+      },
+      "colour-field": {
+        "ground": "#4a1f22",
+        "size": [
+          1200,
+          1600
+        ],
+        "felt_bias": {
+          "arousal": -0.3,
+          "tension": 0.0,
+          "care": 0.2
+        }
+      }
+    },
+    "process": [
+      "gestural: raw canvas; unplanned first marks, thin; wet-into-wet layers in quick succession; look and respond, build up and scrape down; stop when the event holds together",
+      "colour field: tinted glue size stained into raw canvas; thin field layers wet on wet a day apart; dammar sealing glaze; feathered under-colour at figure edges; figure colour last; egg and dammar glazes"
+    ],
+    "finishing": [
+      "gestural: no varnish or unifying glaze; judge the event complete",
+      "colour field: very low-opacity glazes over parts of the field only, unevenly"
+    ],
+    "pitfalls": [
+      "pastiche: drip-splatter or two rectangles on maroon",
+      "random noise without a felt arc",
+      "digital gradients",
+      "nearest wrong feelings: default chaos/anger in gestural, decor or wellness calm in colour field"
+    ],
+    "felt_bias": {
+      "arousal": 0.4,
+      "tension": 0.1,
+      "care": -0.4
+    },
+    "engine_gaps": [
+      "no pour/drip tool",
+      "no flick or splatter",
+      "no floor orientation or gravity flow",
+      "no raw-canvas absorption or soak-stain",
+      "no matte/gloss render variation",
+      "no subtractive scrape",
+      "no newspaper transfer",
+      "no enamel/house-paint behaviour"
+    ],
+    "sources": [
+      "Met, Abstract Expressionism: https://www.metmuseum.org/en/essays/abstract-expressionism",
+      "Tate, Abstract expressionism: https://www.tate.org.uk/art/art-terms/a/abstract-expressionism",
+      "Tate, Action painters: https://www.tate.org.uk/art/art-terms/a/action-painters",
+      "Tate, Colour field painting: https://www.tate.org.uk/art/art-terms/c/colour-field-painting",
+      "Tate Papers 23, Conserving Rothko's Black on Maroon: https://www.tate.org.uk/research/tate-papers/23/conserving-mark-rothkos-black-on-maroon-1958-the-construction-of-a-representative-sample-and-the-removal-of-graffiti-ink",
+      "Tate, Women Singing II, Process and Memory: https://www.tate.org.uk/research/in-focus/women-singing-ii/process-and-memory",
+      "MoMA, Pollock One conservation: https://www.moma.org/explore/inside_out/2013/01/08/momas-jackson-pollock-conservation-project-looking-closely-at-one-number-31-1950/",
+      "Getty, Pollock's Mural: https://getty.edu/conservation/our_projects/science/modpaints/modpaints_jp_mural.html"
+    ]
+  }
+}
