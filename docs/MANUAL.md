@@ -84,11 +84,14 @@ A current without a target (Surrealism and Abstract Expressionism are still in c
 | Medium | Page | Supports |
 |---|---|---|
 | oil | [manual/oil.md](manual/oil.md) | canvas, panel |
-| watercolour | [manual/watercolour.md](manual/watercolour.md) | cold-press, hot-press, rough paper |
-| ink | [manual/ink.md](manual/ink.md) | raw xuan, sized xuan or silk, smooth drawing paper |
-| charcoal, graphite, pastel | [manual/drymedia.md](manual/drymedia.md) | drawing paper, toned paper, laid paper; pastel paper, sanded paper |
-| gouache, egg tempera | [manual/opaque.md](manual/opaque.md) | board, paper; gesso panel, gold ground |
-| woodblock | [manual/woodblock.md](manual/woodblock.md) | washi, coarse paper |
+| watercolour | [manual/watercolour.md](manual/watercolour.md) | cold_press, hot_press, rough |
+| ink | [manual/ink.md](manual/ink.md) | xuan_raw, xuan_sized, silk, bristol, laid_paper |
+| charcoal | [manual/charcoal.md](manual/charcoal.md) | drawing, toned, ingres |
+| graphite | [manual/graphite.md](manual/graphite.md) | drawing, toned, ingres, bristol |
+| pastel | [manual/pastel.md](manual/pastel.md) | toned, sanded, ingres |
+| gouache | [manual/gouache.md](manual/gouache.md) | illustration_board, watercolour_paper, toned_paper |
+| tempera | [manual/tempera.md](manual/tempera.md) | gesso_panel, gold_ground |
+| woodblock | [manual/woodblock.md](manual/woodblock.md) | washi, coarse |
 | oil-v7 | (frozen reference) | the oil of studio v7, kept only for the regression test |
 
 Run `media` for the live list. Adding a medium: see `studio/v8/media/base.py` (the interface) and AGENTS.md.
