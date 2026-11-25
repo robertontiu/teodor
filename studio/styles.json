@@ -1,0 +1,1771 @@
+{
+ "_about": "Style configurations: one entry per current (movement or school). Schema and rules: docs/styles/README.md. Detail and sources: each entry's doc. Merged from the research batches in studio/styles.parts/ (2026-11-25).",
+ "byzantine-icon": {
+  "name": "Byzantine and Orthodox icon painting",
+  "doc": "docs/styles/byzantine-icon.md",
+  "period": "Byzantium and the Orthodox world, 6th-15th c. and continuing (post-Byzantine, Russian)",
+  "media": [
+   "egg-tempera",
+   "oil"
+  ],
+  "support": {
+   "egg-tempera": "panel-gessoed",
+   "oil": "panel"
+  },
+  "ground": "#f4f0e6",
+  "technique": [
+   "gilding on bole",
+   "roskrysh: flat dark local colour first",
+   "dark-to-light highlight ladder",
+   "floats (transparent glazes) between highlights",
+   "hatched tempera strokes",
+   "linear highlights (ozhivki)"
+  ],
+  "palette": {
+   "principle": "few mineral and earth pigments in flat symbolic zones, modelled dark to light; gold as the field of light",
+   "colors": [
+    "#c9a43a",
+    "#8e3b28",
+    "#5a5233",
+    "#7d8a5f",
+    "#c49a45",
+    "#9a4a2e",
+    "#c0392b",
+    "#d8572a",
+    "#5c2b2b",
+    "#2f5e9a",
+    "#26408b",
+    "#3f8a5c",
+    "#f1ebdd",
+    "#1d1b19"
+   ],
+   "avoid": [
+    "atmospheric blue-grey distance",
+    "cast-shadow greys",
+    "broken or optical colour",
+    "modern synthetic brights"
+   ]
+  },
+  "light": "no source in the scene and no cast shadows; light is the gold ground and the final highlights and ozhivki",
+  "value_key": "middle-dark figures on a high-key gold field (judgement)",
+  "composition": "central, frontal, near-symmetric figure filling the panel against gold; inscriptions; inverse perspective in scenes",
+  "drawing": "contour first, incised or painted lines restored at the end; conventional types and proportions",
+  "edges": "crisp drawn outlines; smooth transitions only inside faces through floats",
+  "marks": {
+   "tools": [
+    "liner",
+    "round-small"
+   ],
+   "length": "short",
+   "direction": "hatched along form; highlight lines follow folds and features",
+   "visible": false
+  },
+  "process": [
+   "prepare panel: recess, linen, many gesso layers, polish",
+   "draw and incise the design",
+   "bole and gold leaf on ground and haloes, burnish",
+   "repaint guide lines",
+   "roskrysh: flat dark local colour; sankir on flesh and hair",
+   "highlights in progressively lighter, smaller layers, each floated with a transparent glaze",
+   "last sparing highlights; golden glaze unifies the face",
+   "restore final lines",
+   "ozhivki and gold assist lines",
+   "inscriptions"
+  ],
+  "finishing": [
+   "olifa (linseed oil with resin) over the cured tempera for a warm amber depth; no faked age or soot"
+  ],
+  "pitfalls": [
+   "pastiche: gold background plus sad face without the layered build; fake cracks or soot",
+   "melodrama or expressive gesture",
+   "sentimental devotional-print sweetness",
+   "a Renaissance perspective box with gold behind it",
+   "Teodor's hushed bittersweet interior habit",
+   "careless imitation of liturgical inscriptions"
+  ],
+  "felt_bias": {
+   "arousal": -0.25,
+   "tension": 0.1,
+   "care": 0.4
+  },
+  "engine_gaps": [
+   "no gilding (gold leaf on bole, burnished, reflective)",
+   "egg tempera medium not yet available (fast drying, hatching, no wet blending)",
+   "no olifa finishing op",
+   "scene blockouts render linear perspective only; inverse perspective needs a hand-drawn SVG schema",
+   "no incising tool; no lettering tool for inscriptions"
+  ],
+  "judgement_calls": [
+   "all hex values approximate the named pigments",
+   "ground #f4f0e6",
+   "value_key",
+   "felt_bias",
+   "oil-on-panel fallback",
+   "maphorion colour association"
+  ],
+  "sources": [
+   "Met Heilbrunn Timeline, Icons and Iconoclasm in Byzantium: https://www.metmuseum.org/essays/icons-and-iconoclasm-in-byzantium",
+   "Smarthistory, Icons, an introduction: https://pressbooks.pub/smarthistoryguidetobyzantineart/chapter/icons-an-introduction/",
+   "Museum of Russian Icons, Creation of an Icon: https://www.iconmuseum.org/wp-content/uploads/2024/11/Creation-of-an-Icon.pdf",
+   "I. Zoetmulder, The Rich World of Icons: https://azbyka.ru/otechnik/ikona/the-rich-world-of-icons/4_4",
+   "Zentralinstitut für Kunstgeschichte, The Human Image in Panel Painting in the Mediterranean: https://artsandculture.google.com/story/YwXBmJkkx_srLw",
+   "Amanatiadis et al. 2021, Minerals 11(7) 782 (pigments of Byzantine iconography): https://www.mdpi.com/2075-163X/11/7/782",
+   "Met Heilbrunn Timeline, Painting in Oil in the Low Countries and Its Spread to Southern Europe (tempera handling): https://www.metmuseum.org/essays/painting-in-oil-in-the-low-countries-and-its-spread-to-southern-europe"
+  ]
+ },
+ "renaissance": {
+  "name": "Renaissance painting (Early and High, Italy and the North)",
+  "doc": "docs/styles/renaissance.md",
+  "period": "Italy and the Low Countries, c. 1420-1520",
+  "media": [
+   "oil",
+   "egg-tempera"
+  ],
+  "support": {
+   "oil": "panel",
+   "egg-tempera": "panel-gessoed"
+  },
+  "ground": "#f3efe4",
+  "priming": "#cfcac0",
+  "technique": [
+   "underdrawing",
+   "monochrome underpainting",
+   "layered lay-in per colour zone",
+   "sfumato (blending by thinning the top layer)",
+   "transparent glazes and scumbles",
+   "tempera hatching (early manner)"
+  ],
+  "palette": {
+   "principle": "clear local colours modelled in value within each zone; ultramarine and red lake as climaxes; earths and greens for landscape",
+   "colors": [
+    "#253f8e",
+    "#2f5d97",
+    "#9b1f35",
+    "#c8361f",
+    "#e3c654",
+    "#c79b4a",
+    "#3f7d63",
+    "#7f8b62",
+    "#6b4a2f",
+    "#22201e",
+    "#f2ede2"
+   ],
+   "avoid": [
+    "muddy chiaroscuro",
+    "high-chroma modern colour",
+    "colour broken into visible strokes"
+   ]
+  },
+  "light": "one steady daylight source from the side; soft, transparent-looking shadows in oil",
+  "value_key": "middle, full range in oil; lighter and more even in tempera",
+  "composition": "single-point linear perspective, vanishing point on the horizon; centralised or pyramidal groups; architecture or measured landscape",
+  "drawing": "underdrawing first; form modelled in light; idealised proportion; firm early contours, sfumato in the High Renaissance",
+  "edges": "crisp in early tempera; lost, smoky edges in High Renaissance flesh, with structure kept",
+  "marks": {
+   "tools": [
+    "round-small",
+    "filbert",
+    "blend",
+    "liner"
+   ],
+   "length": "short",
+   "direction": "follows form; hatching in tempera",
+   "visible": false
+  },
+  "process": [
+   "panel with gesso and glue ground",
+   "underdrawing in a fluid dark medium",
+   "light grey oil priming",
+   "monochrome underpainting in dark yellow, brown, blackish-brown",
+   "colour lay-in per zone (e.g. grey, azurite, then ultramarine for blue drapery)",
+   "flesh in opaque layers, shadows blended by thinning the top layer",
+   "glazes and scumbles for rich drapery",
+   "final details and small gilded accents"
+  ],
+  "finishing": [
+   "final unifying glazes",
+   "small mordant-gilded accents if any",
+   "varnish (judgement: standard practice)"
+  ],
+  "pitfalls": [
+   "pastiche: enigmatic smile, overall blur, perspective grid as decoration, fake craquelure",
+   "sentimental pseudo-Renaissance sweetness",
+   "cold diagrammatic geometry",
+   "Baroque darkness creeping in via dark grounds"
+  ],
+  "felt_bias": {
+   "arousal": -0.15,
+   "tension": -0.1,
+   "care": 0.35
+  },
+  "engine_gaps": [
+   "egg tempera medium (hatching, fast drying) not yet available",
+   "no gilding",
+   "no varnish finishing op",
+   "glaze is a uniform regional mix, not a brushed transparent layer",
+   "no per-pigment K and S (glaze transparency vs opacity)"
+  ],
+  "judgement_calls": [
+   "hex values approximate the pigments",
+   "ground and priming hex",
+   "value_key",
+   "felt_bias",
+   "varnish as last step",
+   "aerial blue distance"
+  ],
+  "unverified": [
+   "green-earth flesh underlayer, three-value tempera modelling and varnish in Cennini: located, not read this session"
+  ],
+  "sources": [
+   "Met Heilbrunn Timeline, Painting in Oil in the Low Countries and Its Spread to Southern Europe: https://www.metmuseum.org/essays/painting-in-oil-in-the-low-countries-and-its-spread-to-southern-europe",
+   "Smarthistory, Linear Perspective: Brunelleschi's Experiment: https://smarthistory.org/linear-perspective",
+   "Warburg Institute, Following Alberti's advice: the fifteenth-century shift to oil paint: https://omeka.warburg.sas.ac.uk/exhibits/show/paintinggoldthread-slug/3bellini-slug",
+   "Keith, Roy, Morrison, Schade 2011, National Gallery Technical Bulletin 32 (Virgin of the Rocks): https://www.nationalgallery.org.uk/upload/pdf/keith_roy_morrison_schade2011.pdf",
+   "Shafe, Cennini's Il Libro dell'Arte, the panel painter's workshop: https://www.shafe.co.uk/essay_panel_painters_workshop/",
+   "C. Cennini, Il Libro dell'Arte, trans. D. V. Thompson 1933 (located, not read): https://ia801802.us.archive.org/20/items/illibrodellarte1933cenn/illibrodellarte1933cenn.pdf"
+  ]
+ },
+ "baroque": {
+  "name": "Baroque chiaroscuro and tenebrism",
+  "doc": "docs/styles/baroque.md",
+  "period": "Rome c. 1600, spreading across Europe to c. 1670 (Caravaggisti, Spain, Utrecht, Rembrandt)",
+  "media": [
+   "oil"
+  ],
+  "support": {
+   "oil": "canvas"
+  },
+  "ground": "#5a4532",
+  "technique": [
+   "coloured ground as mid-tone",
+   "incised contours",
+   "abbozzo (broad form indications)",
+   "direct, thick lights",
+   "impasto highlights over dark ground",
+   "late dark accents and shadow glazes"
+  ],
+  "palette": {
+   "principle": "limited earth palette on a brown ground; few saturated accents; colour lives only in the light",
+   "colors": [
+    "#efe8d8",
+    "#c08f45",
+    "#ddc25a",
+    "#c13a24",
+    "#8f2032",
+    "#93452c",
+    "#5c4a36",
+    "#4a3424",
+    "#1a1714",
+    "#6f7556",
+    "#3a5276",
+    "#5a4532"
+   ],
+   "avoid": [
+    "high-key pastel colour",
+    "cool atmospheric shadows",
+    "white mixed into shadows"
+   ]
+  },
+  "light": "one strong focused source, high and to one side, no reflected light; shadows merge into the dark ground",
+  "value_key": "low, with a narrow band of high lights",
+  "composition": "half- or three-quarter figures close to the picture plane; shallow dark stage; diagonals; tight cropping; a moment of action or recognition",
+  "drawing": "from live models, unidealised; incised lines and broad abbozzo instead of full drawing; form carved by light",
+  "edges": "hard where light meets dark; lost where shadow meets background",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "knife",
+    "smudge",
+    "blend"
+   ],
+   "length": "medium to long",
+   "direction": "follows form in lights; broad in darks",
+   "visible": true
+  },
+  "process": [
+   "warm or dark coloured ground",
+   "pose model and light; incise key contours",
+   "abbozzo: broad brush indications of forms",
+   "build the lights thickly in lead-white-rich paint; let dry",
+   "final paint in one or two layers, ground kept as mid-tone",
+   "late brown ground-coloured paint to sharpen darks",
+   "shadow glazes feathered onto lights"
+  ],
+  "finishing": [
+   "strongest highlights and dark accents last",
+   "varnish (judgement)",
+   "do not exaggerate ground darkness for an aged look"
+  ],
+  "pitfalls": [
+   "pastiche: black background plus spotlight; candle kitsch; brown sauce; faked craquelure",
+   "horror-film menace or cheap theatricality; gloom without an event",
+   "Teodor's lit doorway in a dark warm room habit",
+   "muddy value collapse without a narrow high band"
+  ],
+  "felt_bias": {
+   "arousal": 0.15,
+   "tension": 0.2,
+   "care": 0.1
+  },
+  "engine_gaps": [
+   "no incising tool",
+   "exposed ground has no transparency, it is only unpainted ground colour",
+   "no varnish finishing op"
+  ],
+  "judgement_calls": [
+   "ground hex",
+   "hex values",
+   "most of the pigment list (standard practice)",
+   "tenebrism definition",
+   "composition and edge conventions",
+   "felt_bias"
+  ],
+  "sources": [
+   "Met Heilbrunn Timeline, Caravaggio and His Followers: https://www.metmuseum.org/essays/caravaggio-michelangelo-merisi-1571-1610-and-his-followers",
+   "Tate art term, Chiaroscuro: https://www.tate.org.uk/art/art-terms/c/chiaroscuro",
+   "L. Keith 1998, Three Paintings by Caravaggio, National Gallery Technical Bulletin 19: https://www.nationalgallery.org.uk/research/research-resources/technical-bulletin/three-paintings-by-caravaggio",
+   "P. Noble 2025, The Role of the Colored Ground in Rembrandt's Painting Practice, JHNA 17:2: https://jhna.org/articles/the-role-of-the-colored-ground-in-rembrandts-painting-practice/",
+   "E. Kolfin 2025, Why Colored Grounds Matter, JHNA 17:2: https://jhna.org/articles/why-colored-grounds-matter-evolving-research-colored-grounds-in-dutch-paintings-1580-1720/"
+  ]
+ },
+ "dutch-golden-age": {
+  "name": "Dutch Golden Age painting (genre scenes, still life, landscape)",
+  "doc": "docs/styles/dutch-golden-age.md",
+  "period": "Dutch Republic, c. 1600-1680",
+  "media": [
+   "oil"
+  ],
+  "support": {
+   "oil": "panel"
+  },
+  "ground": "#cdb894",
+  "technique": [
+   "coloured ground as mid-tone",
+   "dead colouring (monochrome underpainting)",
+   "working up (opmaken) area by area",
+   "thin semi-transparent shadows over the ground",
+   "unifying glazes",
+   "impasto highlights"
+  ],
+  "palette": {
+   "principle": "restrained, harmonised earths with a few precious accents; near-monochrome tonal palette for banquet pieces and tonal landscapes; fuller colour after 1650",
+   "colors": [
+    "#efe9dc",
+    "#e1c75a",
+    "#c39a4c",
+    "#be3a26",
+    "#8c2236",
+    "#26418f",
+    "#5a6f9c",
+    "#33608f",
+    "#727a57",
+    "#3f6b4a",
+    "#62513b",
+    "#4a3a2a",
+    "#1b1916",
+    "#9a8b6e",
+    "#b9ad92"
+   ],
+   "avoid": [
+    "high saturation across the picture",
+    "cool greys unrelated to the ground",
+    "expressive colour"
+   ]
+  },
+  "light": "side window daylight in interiors; candle or hearth night pieces; diffuse daylight under a large sky in landscape",
+  "value_key": "middle, tonal unity",
+  "composition": "measured interior box with figures in quiet occupation; tabletop still life seen slightly from above with an overhanging edge; low horizon and large sky in landscape",
+  "drawing": "observational and accurate; form built tonally over the dead colour; textures through value and highlight",
+  "edges": "soft where ground shows between light and shadow; crisp on highlights and detail",
+  "marks": {
+   "tools": [
+    "round",
+    "filbert",
+    "liner",
+    "blend"
+   ],
+   "length": "short",
+   "direction": "follows form; smooth",
+   "visible": false
+  },
+  "process": [
+   "warm coloured ground (chalk-glue plus oil priming on panel; grey over red on canvas)",
+   "sketch the composition on the ground",
+   "dead colouring: monochrome brown underpainting of composition and light",
+   "working up each area in one or two sessions, back to front: lights in body colour, shadows thin over the ground",
+   "glazes to deepen and unify",
+   "impasto highlights and last accents, ground left between light and shadow"
+  ],
+  "finishing": [
+   "unifying glazes",
+   "small impasto highlights",
+   "varnish (judgement)"
+  ],
+  "pitfalls": [
+   "pastiche: pearl earring, maid at a window, skull and candle, fake yellow varnish",
+   "sterile photographic hyperrealism",
+   "decorative Victorian clutter",
+   "Baroque spotlight drama",
+   "Teodor's hushed doorway habit",
+   "tonal treated as grey instead of warm harmonised earths"
+  ],
+  "felt_bias": {
+   "arousal": -0.2,
+   "tension": -0.1,
+   "care": 0.3
+  },
+  "engine_gaps": [
+   "glaze is a uniform regional mix, not brushed transparent paint",
+   "no per-pigment transparency",
+   "no varnish finishing op",
+   "fijnschilder detail beyond canvas resolution"
+  ],
+  "judgement_calls": [
+   "ground hex",
+   "pigment list and hex values (standard practice)",
+   "still-life composition conventions",
+   "low horizon",
+   "felt_bias"
+  ],
+  "sources": [
+   "Met Heilbrunn Timeline, Genre Painting in Northern Europe: https://www.metmuseum.org/essays/genre-painting-in-northern-europe",
+   "Met Heilbrunn Timeline, Still-Life Painting in Northern Europe, 1600-1800: https://www.metmuseum.org/essays/still-life-painting-in-northern-europe-1600-1800",
+   "Met Heilbrunn Timeline, Landscape Painting in the Netherlands: https://www.metmuseum.org/essays/landscape-painting-in-the-netherlands",
+   "E. Kolfin 2025, Why Colored Grounds Matter, JHNA 17:2: https://jhna.org/articles/why-colored-grounds-matter-evolving-research-colored-grounds-in-dutch-paintings-1580-1720/",
+   "Essential Vermeer, Working up (after van de Wetering): https://www.essentialvermeer.com/technique/technique_working_up.html",
+   "P. Noble 2025, The Role of the Colored Ground in Rembrandt's Painting Practice, JHNA 17:2: https://jhna.org/articles/the-role-of-the-colored-ground-in-rembrandts-painting-practice/"
+  ]
+ },
+ "romanticism": {
+  "name": "Romanticism (the sublime landscape and the British watercolour tradition)",
+  "doc": "docs/styles/romanticism.md",
+  "period": "Britain, France and Germany, c. 1790-1850",
+  "media": [
+   "oil",
+   "watercolour",
+   "gouache"
+  ],
+  "support": {
+   "oil": "canvas-fine",
+   "watercolour": "paper-cold-press",
+   "gouache": "paper-toned"
+  },
+  "ground": "#ebe3d1",
+  "ground_by_medium": {
+   "watercolour": "#f6f2e8",
+   "gouache": "#a9b1b8"
+  },
+  "technique": [
+   "thin transparent washes over drawing",
+   "scumbling for haze",
+   "veiling forms with sky paint",
+   "stippling and selective impasto",
+   "watercolour colour beginnings",
+   "wet-in-wet",
+   "lifting, rubbing and scratching out",
+   "reserved paper lights"
+  ],
+  "palette": {
+   "principle": "atmosphere over local colour; warm-cool polarity of light against storm; few pigments with tonal gradation; in watercolour the paper is the light",
+   "colors": [
+    "#efe9dd",
+    "#9a4b33",
+    "#6a7fa8",
+    "#e8c55a",
+    "#a9c3d9",
+    "#1f3b5a",
+    "#2b438f",
+    "#2f55a4",
+    "#c79c4b",
+    "#8a4a2c",
+    "#7d3a32",
+    "#4b3a2a",
+    "#1d1b19",
+    "#5c6470",
+    "#8d8f8c"
+   ],
+   "avoid": [
+    "flat local colour",
+    "pure black skies",
+    "saturated synthetic greens",
+    "uniform daylight"
+   ]
+  },
+  "light": "the protagonist: breaking through cloud, low sun, moon, fire or storm; a bright centre in a turbulent surround, or a graded sky over dark land",
+  "value_key": "wide range; varies from high-key atmospheric to low-key nocturne",
+  "composition": "low horizon and big sky; edge-to-edge emptiness without framing foreground; storm vortex around a light centre; tiny figures against vast nature",
+  "drawing": "two poles: form dissolved into atmosphere, or precise drawing veiled by thin paint",
+  "edges": "lost in sky and distance; a few crisp edges near the focus; in watercolour soft wet edges early, hard dry edges later",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "blend",
+    "smudge",
+    "fan",
+    "knife",
+    "liner"
+   ],
+   "length": "long in skies, short for detail",
+   "direction": "sweeps with the weather; stipple for mist",
+   "visible": true
+  },
+  "process": [
+   "decide horizon and light; underdrawing (ruled for architecture, freer for nature)",
+   "colour beginning: thin warm then cool washes (watercolour) or thin transparent tonal washes (oil)",
+   "sky and distance wet-in-wet or scumbled; veil forms with sky paint",
+   "middle and near forms in harder-edged strokes",
+   "lights: lifted, rubbed, scratched or reserved (watercolour); selective impasto (oil)",
+   "last telling details and small figures"
+  ],
+  "finishing": [
+   "oil: varnish (judgement)",
+   "watercolour: no varnish; stop when telling details are placed and lights lifted",
+   "restraint: leave the atmosphere open"
+  ],
+  "pitfalls": [
+   "pastiche: wanderer above a sea of fog; generic orange sunset vortex; calendar mountains",
+   "Teodor's lone figure from behind habit (the Rückenfigur): avoid unless commissioned",
+   "kitsch fantasy-cover grandeur",
+   "soft-focus nostalgia; gloom without awe; picturesque prettiness without threat",
+   "overworked muddy watercolour"
+  ],
+  "felt_bias": {
+   "arousal": 0.2,
+   "tension": 0.15,
+   "care": -0.1
+  },
+  "engine_gaps": [
+   "watercolour and gouache media not yet in v8 (blooms, granulation, staining, hard drying edges, body colour)",
+   "no lifting, sponging, scratching-out or reserve/masking tools",
+   "no gum arabic gloss",
+   "no toned-paper support",
+   "glaze is a regional mix, not a broken scumble",
+   "no varnish finishing op"
+  ],
+  "judgement_calls": [
+   "ground hexes",
+   "most hex values and the period-pigment list beyond Friedrich's",
+   "light and value summary",
+   "felt_bias (the painter's feeling picks the stormy or still pole)",
+   "Turner reworking",
+   "sky schema advice"
+  ],
+  "sources": [
+   "Met Heilbrunn Timeline, Romanticism: https://www.metmuseum.org/essays/romanticism",
+   "Tate art term, Romanticism: https://www.tate.org.uk/art/art-terms/r/romanticism",
+   "Llewellyn and Riding (eds) 2013, The Art of the Sublime, Tate: https://www.tate.org.uk/art/research-publications/the-sublime/the-romantic-sublime-r1109221",
+   "Met Heilbrunn Timeline, Watercolor Painting in Britain, 1750-1850: https://www.metmuseum.org/essays/watercolor-painting-in-britain-1750-1850",
+   "Smarthistory, Caspar David Friedrich, Monk by the Sea: https://smarthistory.org/friedrich-monk-by-the-sea",
+   "National Gallery, Winter Landscape close examination: https://www.nationalgallery.org.uk/research/research-resources/research-papers/close-examination/winter-landscape",
+   "Wallace Collection, Turner's watercolour materials and techniques: https://www.wallacecollection.org/explore/explore-in-depth/turner/turners-watercolors/turners-watercolour-materials-and-techniques/"
+  ]
+ },
+ "cubism": {
+  "name": "Cubism (Analytic and Synthetic)",
+  "doc": "docs/styles/cubism.md",
+  "period": "Paris, 1907-1914 (Analytic c.1908-12, Synthetic c.1912-14)",
+  "media": [
+   "oil",
+   "charcoal",
+   "gouache"
+  ],
+  "support": {
+   "oil": "canvas",
+   "charcoal": "paper",
+   "gouache": "paper"
+  },
+  "ground": "#ece8dc",
+  "technique": [
+   "charcoal drawing then selective thin oil",
+   "faceting into small planes",
+   "bare ground left showing",
+   "stencilled lettering",
+   "Synthetic: flat planes, pattern and texture over them"
+  ],
+  "palette": {
+   "principle": "Analytic: near-monochrome browns, greys, ochres and black (Met, Tate); Synthetic: simpler shapes, brighter flat colours (Tate). Hexes are judgement.",
+   "colors": [
+    "#efe9dc",
+    "#9a9184",
+    "#7d7f7c",
+    "#b8904f",
+    "#6b5a45",
+    "#57402e",
+    "#262422"
+   ],
+   "synthetic_colors": [
+    "#5f7a5a",
+    "#4a6b93",
+    "#a3473a",
+    "#c9a542",
+    "#e5dcc4",
+    "#8a6643"
+   ],
+   "avoid": [
+    "rainbow saturation",
+    "whole-object gradients",
+    "atmospheric blue distance",
+    "strong hue in Analytic mode beyond one accent"
+   ]
+  },
+  "light": "no single source; each facet carries its own small light-to-dark shift, light as rhythm across planes (judgement)",
+  "value_key": "middle, narrow range in Analytic; contrast between whole shapes in Synthetic (judgement)",
+  "composition": "upright or oval table-top still life seen from several viewpoints; dense interlocking centre thinning to bare ground at the edges; letters flat on the picture plane (Met, Tate)",
+  "drawing": "objects dissected into small facets and reassembled; charcoal outlines on, under and beside the paint; open contours so planes slide together; recognisable clues anchor the subject (Met)",
+  "edges": "facets hard on one side, lost into the neighbour on the other (judgement, 'passage'); Synthetic edges crisp",
+  "marks": {
+   "tools": [
+    "flat",
+    "filbert",
+    "liner"
+   ],
+   "length": "short",
+   "direction": "parallel within each facet, one angle per plane (judgement)",
+   "visible": true
+  },
+  "process": [
+   "thin smooth white ground",
+   "charcoal drawing of the main elements",
+   "selective thin oil, washes, bare ground left",
+   "facet building with small parallel strokes, densest at centre",
+   "more charcoal on and beside the paint",
+   "darkest accents and stencilled letters last"
+  ],
+  "finishing": [
+   "check the centre is the densest area",
+   "last dark accents and lettering",
+   "no unifying glaze; surface left matte (judgement)"
+  ],
+  "pitfalls": [
+   "pastiche: guitar, bottle and 'JOURNAL'",
+   "random shattered-glass triangles over a realist picture",
+   "kaleidoscope colour in Analytic mode",
+   "machine-flat vector planes in Synthetic mode",
+   "nearest wrong feelings: cold detachment, chaos/anxiety"
+  ],
+  "felt_bias": {
+   "arousal": -0.15,
+   "tension": 0.1,
+   "care": 0.3
+  },
+  "engine_gaps": [
+   "one medium per canvas: no charcoal over oil",
+   "no stencil tool",
+   "no sand/texture additive",
+   "no pasted paper (by rule: paint its look)",
+   "needs a schema helper that recuts a blockout into planes from several viewpoints"
+  ],
+  "sources": [
+   "Met, Cubism: https://www.metmuseum.org/essays/cubism",
+   "Met, Braque, Bottle of Marc: https://www.metmuseum.org/articles/georges-braque-bottle-of-marc-vieux",
+   "Tate, Cubism: https://www.tate.org.uk/art/art-terms/c/cubism",
+   "Tate, Analytical cubism: https://www.tate.org.uk/art/art-terms/a/analytical-cubism",
+   "Tate, Synthetic cubism: https://www.tate.org.uk/art/art-terms/s/synthetic-cubism",
+   "Tate, Papier collé: https://www.tate.org.uk/art/art-terms/p/papier-colle"
+  ]
+ },
+ "post-impressionism": {
+  "name": "Post-Impressionism",
+  "doc": "docs/styles/post-impressionism.md",
+  "period": "France, c. 1885-1905",
+  "media": [
+   "oil",
+   "watercolour"
+  ],
+  "support": {
+   "oil": "canvas",
+   "watercolour": "paper-cold-press"
+  },
+  "ground": "#f0ebdf",
+  "modes": {
+   "constructive": {
+    "technique": [
+     "pencil sketch",
+     "blue brush outline",
+     "parallel hatched strokes and colour patches",
+     "white ground left visible"
+    ],
+    "colors": [
+     "#f0ebdf",
+     "#e6b23a",
+     "#c99a4b",
+     "#b5553a",
+     "#3d5fa8",
+     "#2c3f7a",
+     "#3f7d5e",
+     "#7a8a4a",
+     "#8c6aa0"
+    ],
+    "marks": {
+     "tools": [
+      "flat",
+      "liner"
+     ],
+     "length": "short",
+     "direction": "parallel hatching at one diagonal per passage (judgement)",
+     "visible": true
+    },
+    "felt_bias": {
+     "arousal": -0.1,
+     "tension": 0.1,
+     "care": 0.4
+    }
+   },
+   "divisionist": {
+    "technique": [
+     "first campaign in broken strokes",
+     "dots, dabs and dashes of minimally mixed prismatic colour, unblended",
+     "haloing at edges",
+     "painted inner border"
+    ],
+    "colors": [
+     "#f3eee2",
+     "#f4dc3c",
+     "#eab21e",
+     "#df4a2e",
+     "#b8345a",
+     "#45b07a",
+     "#2f58b0",
+     "#2a3488",
+     "#e9965a"
+    ],
+    "marks": {
+     "tools": [
+      "round",
+      "flat"
+     ],
+     "length": "dots",
+     "direction": "alternating size and direction at edges",
+     "visible": true
+    },
+    "felt_bias": {
+     "arousal": -0.3,
+     "tension": 0.0,
+     "care": 0.6
+    }
+   },
+   "expressive": {
+    "technique": [
+     "wet-into-wet",
+     "directional impasto scaled to feeling",
+     "flat colour planes in dark outlines (cloisonnism)",
+     "exaggerated complementaries"
+    ],
+    "colors": [
+     "#efb81c",
+     "#e8722a",
+     "#d6343a",
+     "#2d4fa8",
+     "#1f3d6e",
+     "#3a9a5a",
+     "#6e4a9a",
+     "#1a1a22"
+    ],
+    "marks": {
+     "tools": [
+      "round",
+      "flat",
+      "liner"
+     ],
+     "length": "medium-long",
+     "direction": "follows form and rhythm; swirls only where the subject asks",
+     "visible": true
+    },
+    "felt_bias": {
+     "arousal": 0.4,
+     "tension": 0.3,
+     "care": 0.0
+    }
+   }
+  },
+  "default_mode": "constructive",
+  "technique": [
+   "constructive stroke",
+   "divisionism",
+   "expressive contour and colour"
+  ],
+  "palette": {
+   "principle": "colour as structure or feeling rather than record: modulated patches (constructive), minimally mixed prismatic dots (divisionist), boldly exaggerated complementaries (expressive)",
+   "colors": [
+    "#f0ebdf",
+    "#e6b23a",
+    "#df4a2e",
+    "#b8345a",
+    "#3d5fa8",
+    "#2a3488",
+    "#3f7d5e",
+    "#45b07a",
+    "#6e4a9a",
+    "#1a1a22"
+   ],
+   "avoid": [
+    "complementaries mixed into mud",
+    "brown tonal unity",
+    "golden varnish",
+    "black in the divisionist mode"
+   ]
+  },
+  "light": "light from colour, not chiaroscuro; luminosity from high-chroma light pigments; symbolic light in the expressive mode",
+  "value_key": "middle-high",
+  "composition": "stable architectural (constructive), planned frieze with painted border (divisionist), high viewpoint and flattened print-like depth (expressive)",
+  "drawing": "form as planes with blue contour restated (constructive); contours enlarged around figures (divisionist); heavy dark outlines and deformation for mood (expressive)",
+  "edges": "built by adjacent planes; haloed by alternating dots; or hard dark contour lines around flat fields",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "liner",
+    "knife"
+   ],
+   "length": "short",
+   "direction": "per mode",
+   "visible": true
+  },
+  "process": [
+   "constructive: pencil sketch, thin blue outline, hatched strokes from thin washes to rich layers over the whole, impasto rework of the focal area, stop with ground showing",
+   "divisionist: Impressionist-like first campaign, dry, second campaign of unblended prismatic dots with contours reinforced, painted border last",
+   "expressive: contour drawing, colour fields wet into wet, impasto in proportion to feeling, dark outlines restated last (judgement)"
+  ],
+  "finishing": [
+   "constructive: may stop unfinished, ground visible, edges incomplete; no unifying glaze",
+   "divisionist: painted inner border as the final stage; white frame",
+   "expressive: last outlines and accents; no varnish tone (judgement)"
+  ],
+  "pitfalls": [
+   "swirl and sunflower pastiche",
+   "pointillism as an even dot filter over a finished image",
+   "geometric faceting without colour modulation",
+   "complementaries mixed into mud",
+   "decorative cheerfulness or sterile system instead of feeling",
+   "Teodor's hushed bittersweet habit"
+  ],
+  "felt_bias": {
+   "arousal": 0.0,
+   "tension": 0.1,
+   "care": 0.3
+  },
+  "engine_gaps": [
+   "no native dot or hatch primitive (free with short length and narrow spread approximates)",
+   "no rule placing complementaries side by side",
+   "do_match blends divisionist dots away; dots must be free intentions",
+   "watercolour medium not built yet"
+  ],
+  "sources": [
+   "https://phillipscollection.org/sites/default/files/2025-03/up-close-with-cezanne-text-panels.pdf",
+   "https://colourlex.com/project/georges-seurat-a-sunday-on-la-grande-jatte/",
+   "https://www.artic.edu/articles/969/la-grande-jatte-frame-by-frame",
+   "https://archive.artic.edu/sciarttech/2e3.html",
+   "https://vangoghmuseum.nl/en/stories/looking-for-contrast",
+   "https://www.getty.edu/news/impasto-paint-how-to-van-gogh-art-style-technique",
+   "https://artsandculture.google.com/story/3AXB4iaqB_MqNg",
+   "https://www.theartstory.org/movement/cloisonnism-and-synthetism/",
+   "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
+  ]
+ },
+ "surrealism": {
+  "name": "Surrealism (illusionistic and automatist)",
+  "doc": "docs/styles/surrealism.md",
+  "period": "Paris and Europe, 1924 to the Second World War",
+  "media": [
+   "oil",
+   "ink"
+  ],
+  "support": {
+   "oil": "panel",
+   "ink": "paper"
+  },
+  "ground": "#f0ebe0",
+  "technique": [
+   "illusionistic: precise underdrawing, thin smooth modelling, hidden brushwork",
+   "automatist: automatic drawing, stained or scumbled field, chance textures (frottage, grattage, decalcomania) worked back into"
+  ],
+  "palette": {
+   "principle": "illusionistic: naturalistic, controlled colour, strong colour only on the strange object; automatist: one field colour, black line, a few primaries (judgement; Magritte's smoky greys/blues/earths then lighter, MoMA)",
+   "colors": [
+    "#8fb3d1",
+    "#e8e2cf",
+    "#5d7f9e",
+    "#8a8c8a",
+    "#c49a5a",
+    "#5e4a36",
+    "#2b2622",
+    "#e3b99a",
+    "#b23a2e"
+   ],
+   "automatist_colors": [
+    "#3f63a6",
+    "#c9a86a",
+    "#1c1b1a",
+    "#c7372f",
+    "#e0b52f",
+    "#f2efe6"
+   ],
+   "avoid": [
+    "neon fantasy saturation",
+    "purple-pink dreamy gradients",
+    "airbrushed glow"
+   ]
+  },
+  "light": "illusionistic: one low raking light, long sharp cast shadows, everything legible; automatist: little modelling (judgement)",
+  "value_key": "illusionistic: high-key sky over a darker foreground; automatist: middle (judgement)",
+  "composition": "illusionistic: deep empty stage, low horizon, few isolated objects; automatist: all-over field with floating biomorphic signs (judgement)",
+  "drawing": "illusionistic: precise graphite drawing, convincing modelling of impossible juxtapositions, double images; automatist: fast unplanned line, then read and defined (Philadelphia, Tate, Pompidou)",
+  "edges": "illusionistic: soft within forms, crisp at silhouettes; automatist: lost field edges, crisp lines",
+  "marks": {
+   "tools": [
+    "round",
+    "filbert",
+    "blend",
+    "liner",
+    "knife"
+   ],
+   "length": "illusionistic: short hidden; automatist: long continuous lines",
+   "direction": "illusionistic follows form; automatist free",
+   "visible": false
+  },
+  "modes": {
+   "illusionistic": {
+    "ground": "#f0ebe0",
+    "support": {
+     "oil": "panel"
+    },
+    "felt_bias": {
+     "arousal": -0.2,
+     "tension": 0.15,
+     "care": 0.4
+    }
+   },
+   "automatist": {
+    "ground": "#c9b48e",
+    "support": {
+     "oil": "canvas",
+     "ink": "paper"
+    },
+    "felt_bias": {
+     "arousal": 0.3,
+     "tension": 0.0,
+     "care": -0.3
+    }
+   }
+  },
+  "process": [
+   "illusionistic: find the juxtaposition or double image; precise drawing on a smooth light ground; thin lay-in; soft modelling and sharp cast shadows; highest finish on the strange object",
+   "automatist: lay a stained or textured field; automatic drawing at speed; look and read the forms; define a few, leave the field open"
+  ],
+  "finishing": [
+   "illusionistic: low-opacity unifying glaze, then varnish when available",
+   "automatist: stop when forms are found and the field breathes; no glaze (judgement)"
+  ],
+  "pitfalls": [
+   "pastiche: melting clocks, bowler hats, floating apples, ants, crutches",
+   "fantasy-illustration kitsch and random weirdness without one charged relation",
+   "automatist mode as pretty doodle",
+   "nearest wrong feelings: whimsy, explicit horror, cold cleverness"
+  ],
+  "felt_bias": {
+   "arousal": -0.2,
+   "tension": 0.15,
+   "care": 0.4
+  },
+  "engine_gaps": [
+   "no chance-texture tools (frottage, decalcomania, grattage over a textured object)",
+   "no varnish step for oil",
+   "no mixed media or sand",
+   "no way to suppress planning for automatic drawing",
+   "ink medium needed for automatic drawing"
+  ],
+  "sources": [
+   "Met, Surrealism: https://www.metmuseum.org/en/essays/surrealism",
+   "Tate, Surrealism: https://www.tate.org.uk/art/art-terms/s/surrealism",
+   "Tate, The uncanny: https://www.tate.org.uk/art/art-terms/u/uncanny",
+   "Tate, Frottage / Grattage / Decalcomania / Biomorphic / Automatism art terms",
+   "Centre Pompidou, Masson, Dessin automatique: https://www.centrepompidou.fr/en/ressources/oeuvre/czAzGRr",
+   "Philadelphia Museum of Art, Dalí teacher resource: https://legacyweb.philamuseum.org/doc_downloads/education/ex_resources/dali.pdf",
+   "Fundació Gala-Salvador Dalí, Painting and Documenting the painting technique",
+   "MoMA, Magritte materials and techniques: https://www.moma.org/explore/inside_out/2013/10/15/revealing-the-mystery-of-magrittes-materials-and-techniques/"
+  ]
+ },
+ "abstract-expressionism": {
+  "name": "Abstract Expressionism (gestural and colour field)",
+  "doc": "docs/styles/abstract-expressionism.md",
+  "period": "New York, early 1940s to late 1950s",
+  "media": [
+   "oil",
+   "gouache",
+   "ink"
+  ],
+  "support": {
+   "oil": "canvas",
+   "gouache": "paper",
+   "ink": "paper"
+  },
+  "ground": "#e4dccb",
+  "technique": [
+   "gestural: sweeping large-brush marks, poured/trailed/flicked paint, wet-into-wet layering, building up and scraping down",
+   "colour field: tinted size stain, thin wet-on-wet field layers, feathered edges, egg and dammar glazes"
+  ],
+  "palette": {
+   "principle": "gestural: reduced (black/raw canvas) or all-over interlace, colour as energy (judgement); colour field: two or three colours in thin luminous layers (Tate Papers 23 pigments)",
+   "colors": [
+    "#161514",
+    "#ece6d8",
+    "#9c9ea0",
+    "#e3a99b",
+    "#e8b923",
+    "#c08f3e",
+    "#c33a2c",
+    "#2f6f86"
+   ],
+   "colour_field_colors": [
+    "#5a1e24",
+    "#3d1418",
+    "#1a1514",
+    "#b8502a",
+    "#b2302a",
+    "#4b2a3d",
+    "#d3a540",
+    "#2b3a7a",
+    "#6e7078"
+   ],
+   "avoid": [
+    "pastel prettiness in gestural mode",
+    "smooth digital gradients",
+    "rule-based colour harmonies"
+   ]
+  },
+  "light": "no depicted light; gestural energy from value contrast; colour field light from within thin stacked layers and soft edges (judgement)",
+  "value_key": "gestural: mixed, often high contrast; colour field: low and close-valued or saturated mid (judgement)",
+  "composition": "gestural: all-over or a few big strokes in tension; colour field: frontal, vertical, soft rectangles or bands in a field; big, enveloping scale (Met)",
+  "drawing": "gestural: drawing in paint at full arm, figures emerging and dissolving; colour field: the soft rectangle or band as the only form",
+  "edges": "gestural: varied, broken, dragged; colour field: feathered, soft (Tate Papers 23)",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "liner",
+    "knife",
+    "smudge",
+    "blend"
+   ],
+   "length": "long",
+   "direction": "free, from the body's gesture",
+   "visible": true
+  },
+  "modes": {
+   "gestural": {
+    "ground": "#e4dccb",
+    "size": [
+     1800,
+     1200
+    ],
+    "felt_bias": {
+     "arousal": 0.4,
+     "tension": 0.1,
+     "care": -0.4
+    }
+   },
+   "colour-field": {
+    "ground": "#4a1f22",
+    "size": [
+     1200,
+     1600
+    ],
+    "felt_bias": {
+     "arousal": -0.3,
+     "tension": 0.0,
+     "care": 0.2
+    }
+   }
+  },
+  "process": [
+   "gestural: raw canvas; unplanned first marks, thin; wet-into-wet layers in quick succession; look and respond, build up and scrape down; stop when the event holds together",
+   "colour field: tinted glue size stained into raw canvas; thin field layers wet on wet a day apart; dammar sealing glaze; feathered under-colour at figure edges; figure colour last; egg and dammar glazes"
+  ],
+  "finishing": [
+   "gestural: no varnish or unifying glaze; judge the event complete",
+   "colour field: very low-opacity glazes over parts of the field only, unevenly"
+  ],
+  "pitfalls": [
+   "pastiche: drip-splatter or two rectangles on maroon",
+   "random noise without a felt arc",
+   "digital gradients",
+   "nearest wrong feelings: default chaos/anger in gestural, decor or wellness calm in colour field"
+  ],
+  "felt_bias": {
+   "arousal": 0.4,
+   "tension": 0.1,
+   "care": -0.4
+  },
+  "engine_gaps": [
+   "no pour/drip tool",
+   "no flick or splatter",
+   "no floor orientation or gravity flow",
+   "no raw-canvas absorption or soak-stain",
+   "no matte/gloss render variation",
+   "no subtractive scrape",
+   "no newspaper transfer",
+   "no enamel/house-paint behaviour"
+  ],
+  "sources": [
+   "Met, Abstract Expressionism: https://www.metmuseum.org/en/essays/abstract-expressionism",
+   "Tate, Abstract expressionism: https://www.tate.org.uk/art/art-terms/a/abstract-expressionism",
+   "Tate, Action painters: https://www.tate.org.uk/art/art-terms/a/action-painters",
+   "Tate, Colour field painting: https://www.tate.org.uk/art/art-terms/c/colour-field-painting",
+   "Tate Papers 23, Conserving Rothko's Black on Maroon: https://www.tate.org.uk/research/tate-papers/23/conserving-mark-rothkos-black-on-maroon-1958-the-construction-of-a-representative-sample-and-the-removal-of-graffiti-ink",
+   "Tate, Women Singing II, Process and Memory: https://www.tate.org.uk/research/in-focus/women-singing-ii/process-and-memory",
+   "MoMA, Pollock One conservation: https://www.moma.org/explore/inside_out/2013/01/08/momas-jackson-pollock-conservation-project-looking-closely-at-one-number-31-1950/",
+   "Getty, Pollock's Mural: https://getty.edu/conservation/our_projects/science/modpaints/modpaints_jp_mural.html"
+  ]
+ },
+ "ukiyo-e": {
+  "name": "Ukiyo-e (woodblock prints and painted ukiyo-e)",
+  "doc": "docs/styles/ukiyo-e.md",
+  "period": "Japan, Edo period (1615-1868); full-colour nishiki-e from 1765",
+  "media": [
+   "woodblock",
+   "gouache",
+   "ink"
+  ],
+  "support": {
+   "woodblock": "paper-kozo",
+   "gouache": "paper",
+   "ink": "paper"
+  },
+  "ground": "#efe7d4",
+  "size": [
+   1060,
+   1560
+  ],
+  "technique": [
+   "sumi key line enclosing flat water-based colour areas",
+   "one colour per block, printed in sequence with registration",
+   "bokashi graded bands",
+   "blind embossing and mica as luxury finishes"
+  ],
+  "palette": {
+   "principle": "limited flat water-based colours, about ten or more impressions; indigo/dayflower blues then Prussian blue (Vermeulen et al. 2020); hexes approximate aged prints (judgement)",
+   "colors": [
+    "#22201e",
+    "#1f4e79",
+    "#7fa7c4",
+    "#3a4f66",
+    "#d9849b",
+    "#c9a2a0",
+    "#c8442e",
+    "#d86a3a",
+    "#dcb54a",
+    "#6f7d4a",
+    "#9a958a",
+    "#f3eee4"
+   ],
+   "avoid": [
+    "oil chroma and impasto",
+    "gradients except deliberate bokashi bands",
+    "black cast shadows",
+    "atmospheric haze over everything"
+   ]
+  },
+  "light": "no modelled light or cast shadows; time and weather carried by flat colour fields and bokashi (AAM, Fitzwilliam)",
+  "value_key": "high to middle; paper is the lightest value (judgement)",
+  "composition": "strong diagonals, high or low viewpoints, cropped foreground at the frame, asymmetry, graded sky bands; narrow formats force vertical crops (judgement; formats from Fitzwilliam)",
+  "drawing": "clean closed key line carries form; typified elongated figures; textiles as flat pattern (AAM; judgement on character)",
+  "edges": "all hard except bokashi bands",
+  "marks": {
+   "tools": [
+    "liner",
+    "flat"
+   ],
+   "length": "flat fills; long even lines",
+   "direction": "lines follow contour; fills invisible",
+   "visible": false
+  },
+  "process": [
+   "line design as a schema of key lines and colour zones",
+   "flat colour areas one colour at a time, lightest first, clipped to zones, paper left showing",
+   "bokashi bands and pattern",
+   "key line in sumi over the colour (brushed analogue; historically key block first)",
+   "line corrections; embossing/mica when available; sign"
+  ],
+  "finishing": [
+   "no varnish",
+   "optional blind embossing or mica as finish ops when the medium supports them",
+   "stop at clean flat areas; no added shading (judgement)"
+  ],
+  "pitfalls": [
+   "orientalist postcard: Great Wave, Fuji, cherry blossom, geisha, torii",
+   "pastiche of a named design; fake seals or Japanese signatures",
+   "vector clip-art flatness",
+   "bokashi everywhere as airbrush",
+   "nearest wrong feelings: decorative prettiness, tourist exoticism, anime-cute faces"
+  ],
+  "felt_bias": {
+   "arousal": -0.1,
+   "tension": 0.0,
+   "care": 0.45
+  },
+  "engine_gaps": [
+   "woodblock-print look medium not yet available (gouache on paper as proxy)",
+   "no paper fibre texture",
+   "no embossing or mica render",
+   "no registration-offset model",
+   "no one-colour-per-block constraint",
+   "no zone-fill planning helper"
+  ],
+  "sources": [
+   "Met, Woodblock Prints in the Ukiyo-e Style: https://www.metmuseum.org/en/essays/woodblock-prints-in-the-ukiyo-e-style",
+   "Asian Art Museum, The ukiyo-e woodblock printing process: https://education.asianart.org/resources/the-ukiyo-e-woodblock-printing-process/",
+   "Fitzwilliam Museum, Yoshitoshi glossary: https://yoshitoshi.fitzmuseum.cam.ac.uk/glossary/",
+   "Vermeulen et al. 2020, npj Heritage Science 8:62, doi:10.1186/s40494-020-00406-y"
+  ]
+ },
+ "east-asian-ink": {
+  "name": "East Asian ink painting (literati landscape and sumi-e)",
+  "doc": "docs/styles/east-asian-ink.md",
+  "period": "China from the Tang (landscape) and Song/Yuan (literati); Japan, late Kamakura and Muromachi (suibokuga) onward",
+  "media": [
+   "ink",
+   "watercolour"
+  ],
+  "support": {
+   "ink": "paper-sized",
+   "watercolour": "paper-sized"
+  },
+  "ground": "#f1ece0",
+  "size": [
+   800,
+   2000
+  ],
+  "technique": [
+   "outline then texture strokes (cun) then graded washes then dots",
+   "boneless (mogu) strokes",
+   "splashed and broken ink",
+   "flying white and dry brush",
+   "blank paper for water, mist and snow",
+   "no correction: every stroke final"
+  ],
+  "palette": {
+   "principle": "ink is the colour: one black in many dilutions; light blue-green and red-orange/ochre washes secondary (AAM Brushstrokes). Hex tones are judgement.",
+   "colors": [
+    "#151413",
+    "#2e2c2a",
+    "#5a5753",
+    "#8d8a84",
+    "#bdb9b0",
+    "#d9d4c9"
+   ],
+   "tint_colors": [
+    "#8fa3a0",
+    "#6f8f7a",
+    "#c9a66b",
+    "#b07a50"
+   ],
+   "avoid": [
+    "opaque or saturated colour",
+    "mineral blue-green court style unless chosen",
+    "pure digital grey gradients"
+   ]
+  },
+  "light": "no consistent light source; light and dark from ink tone and bare paper; mist bands separate planes (Cahill; AAM)",
+  "value_key": "high: mostly paper and pale wash, darkest ink in few accents (judgement)",
+  "composition": "mountain and water; main mountain with subordinates; three distances (high, deep, level); stacked near-middle-far with mist; paths, small figures and pavilions to enter; large blanks; inscription/seal placed in an active area (AAM; Cahill)",
+  "drawing": "line first ('making boundaries'); cun texture strokes by rock type with set brush angles; dots for foliage and moss; boneless leaves; form by type from stored observation, not a model (AAM; Guo Xi via Cahill)",
+  "edges": "crisp on sized paper, soft and fuzzy bleeding on unsized paper; flying-white broken edges",
+  "marks": {
+   "tools": [
+    "pointed round (upright tip)",
+    "pointed round (slanted side)",
+    "large soft brush"
+   ],
+   "length": "from dots to long continuous lines",
+   "direction": "follows the structure of rock, tree and water; calligraphic",
+   "visible": true
+  },
+  "modes": {
+   "literati": {
+    "ground": "#f1ece0",
+    "support": {
+     "ink": "paper-sized"
+    },
+    "felt_bias": {
+     "arousal": -0.1,
+     "tension": 0.0,
+     "care": 0.25
+    }
+   },
+   "xieyi": {
+    "ground": "#f3efe6",
+    "support": {
+     "ink": "paper-unsized"
+    },
+    "felt_bias": {
+     "arousal": 0.3,
+     "tension": 0.0,
+     "care": -0.2
+    }
+   }
+  },
+  "process": [
+   "grind ink to the needed tones; choose brush and paper",
+   "observe, then paint from the image held in the mind",
+   "literati: main forms in pale-to-middle outline, near to far",
+   "cun texture strokes",
+   "graded washes with water, blanks left",
+   "dots and darkest accents last",
+   "inscription and seal (Teodor: signature)",
+   "xieyi: pale tones, then darker into the still-wet ink, then accents and flying-white lines"
+  ],
+  "finishing": [
+   "stop while fresh: vitality over completeness",
+   "last dots and dark accents",
+   "sign in an active area that balances the composition, as a seal would be placed",
+   "no fake seals or invented characters"
+  ],
+  "pitfalls": [
+   "orientalist postcard: panda, red sun, crane and moon, pagoda, straw-hat fisherman, tourist karsts",
+   "Zen decor minimalism",
+   "fake calligraphy and seals",
+   "Western single light source, perspective, full coverage, overpainting",
+   "grey mush without dark accents or white",
+   "nearest wrong feelings: generic spa calm, default melancholy"
+  ],
+  "felt_bias": {
+   "arousal": -0.1,
+   "tension": 0.0,
+   "care": 0.25
+  },
+  "engine_gaps": [
+   "ink medium and paper absorption not yet available",
+   "no brush-angle parameter (upright vs slanted tip)",
+   "no multi-tone loading in one brush",
+   "no permanence rule forbidding covering",
+   "transfer should be optional and faint"
+  ],
+  "sources": [
+   "JAANUS, suibokuga: https://projects.mcah.columbia.edu/jaanus/record/suibokuga",
+   "JAANUS, bunbo shiho: https://projects.mcah.columbia.edu/jaanus/record/bunboshiho",
+   "Met, Landscape Painting in Chinese Art: https://www.metmuseum.org/TOAH/HD/clpg/hd_clpg.htm",
+   "Asian Art Museum, Brushstrokes: Styles and Techniques of Chinese Painting: https://education.asianart.org/wp-content/uploads/sites/6/2019/09/Brushstrokes.pdf",
+   "Smithsonian NMAA, Four Treasures: https://asia-archive.si.edu/learn/chinas-calligraphic-arts/four-treasures",
+   "J. Cahill, Lecture 7B (Guo Xi): https://ieas.berkeley.edu/sites/default/files/aparv_lecture7b.pdf",
+   "Cleveland Museum of Art, Haboku Landscape: https://www.clevelandart.org/art/148810",
+   "Xie He Six Principles: ibiblio Cultural Heritage of China; HKU University Museum, Huihua Liufa"
+  ]
+ },
+ "realism": {
+  "name": "Realism",
+  "doc": "docs/styles/realism.md",
+  "period": "France, c. 1840-1880s",
+  "media": [
+   "oil",
+   "charcoal"
+  ],
+  "support": {
+   "oil": "canvas",
+   "charcoal": "paper-laid"
+  },
+  "ground": "#3a2e24",
+  "ground_by_medium": {
+   "oil": "#3a2e24",
+   "charcoal": "#e9e1cf"
+  },
+  "technique": [
+   "dark ground",
+   "lights built thick out of the dark",
+   "palette-knife impasto",
+   "stumped tonal masses (charcoal)"
+  ],
+  "palette": {
+   "principle": "restricted earth-dominated tonal palette organised by value; subdued local colour, few strong accents (judgement)",
+   "colors": [
+    "#ece4d2",
+    "#c08a3e",
+    "#a8743a",
+    "#8a4a2a",
+    "#5a4630",
+    "#4a3324",
+    "#c2412b",
+    "#3c4a5c",
+    "#4d5a3a",
+    "#1c1a18"
+   ],
+   "avoid": [
+    "prismatic high-key colour",
+    "coloured-shadow system",
+    "pastel tints",
+    "saturated decorative fields"
+   ]
+  },
+  "light": "contrast of light and dark guides the eye; lights opaque and loaded, shadows thin and warm, close to the ground",
+  "value_key": "low-middle",
+  "composition": "ordinary subjects at monumental scale; frieze rows or one labourer filling the frame; rocks, earth and water close to the viewer; depth by overlap, little atmospheric perspective",
+  "drawing": "solid generalised masses with weight and posture; academic scale and perspective may be broken; space can flatten",
+  "edges": "firm where mass meets mass, lost into the dark ground in shadow",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "knife"
+   ],
+   "length": "medium",
+   "direction": "follows the material: troweled rock, dragged earth, laid water",
+   "visible": true
+  },
+  "process": [
+   "studies from observation (schema/blockout)",
+   "dark warm ground over the canvas",
+   "thin lay-in of the big masses in dark-middle values, ground left as shadow",
+   "build the lights with loaded brush and knife, handling each material in its own way; revise freely",
+   "last lightest knife accents and darkest accents",
+   "charcoal: block-in, stumped masses, darks reinforced, lights lifted, contour accents, fixative"
+  ],
+  "finishing": [
+   "resolved weighty image, not a polished academic surface",
+   "lightest knife accents and darkest accents last",
+   "optional very light warm unifying glaze in place of a natural-resin varnish (judgement)",
+   "charcoal: fixative over the finished sheet; signed in the medium lower right"
+  ],
+  "pitfalls": [
+   "brown-gravy museum filter with no value structure",
+   "sentimental genre picture (pity instead of gravity)",
+   "photographic hyper-realism",
+   "Teodor's own hushed bittersweet dark-room habit",
+   "heroic propaganda or academic polish"
+  ],
+  "felt_bias": {
+   "arousal": 0.0,
+   "tension": 0.1,
+   "care": 0.2
+  },
+  "engine_gaps": [
+   "charcoal medium not built yet (stick vs compressed, stumping, paper tooth)",
+   "no subtractive tool for lifting or scraping",
+   "no varnish or fixative finishing step",
+   "single-constant KM makes earth darks slightly chalky"
+  ],
+  "sources": [
+   "https://www.metmuseum.org/toah/hd/rlsm/hd_rlsm.htm",
+   "https://www.metmuseum.org/art/collection/search/436023",
+   "https://www.nga.gov/content/ngaweb/Collection/art-object-page.154844.html",
+   "https://www.getty.edu/education/teachers/classroom_resources/curricula/landscapes/ib_ornans.html",
+   "https://www.themorgan.org/drawings/item/247412",
+   "https://artsandculture.google.com/asset/young-man-sitting-study-self-portrait-known-as-at-the-easel/5gGgmfez-G4BOQ",
+   "https://www.metmuseum.org/en/perspectives/materials-and-techniques-drawing-charcoal",
+   "https://www.thehistoryofart.org/gustave-courbet/style-and-technique/",
+   "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
+  ]
+ },
+ "impressionism": {
+  "name": "Impressionism",
+  "doc": "docs/styles/impressionism.md",
+  "period": "France, 1860s-1886 (exhibitions 1874-1886)",
+  "media": [
+   "oil",
+   "pastel"
+  ],
+  "support": {
+   "oil": "canvas-fine",
+   "pastel": "paper-toned"
+  },
+  "ground": "#ebe5d6",
+  "ground_by_medium": {
+   "oil": "#ebe5d6",
+   "pastel": "#c9c3ae"
+  },
+  "technique": [
+   "alla prima",
+   "wet-into-wet",
+   "broken colour",
+   "open network of strokes with ground showing"
+  ],
+  "palette": {
+   "principle": "pure, mostly unmixed spectral colours plus white; shadows and highlights in colour; no black",
+   "colors": [
+    "#f1ece0",
+    "#f2c230",
+    "#e9a800",
+    "#e0452b",
+    "#b0304a",
+    "#3fae7a",
+    "#2f7a64",
+    "#2f55a8",
+    "#2b3a8f"
+   ],
+   "avoid": [
+    "black",
+    "earth browns as shadow",
+    "muddy over-mixing",
+    "glazes",
+    "golden varnish"
+   ]
+  },
+  "light": "specific outdoor light (hour, season, weather); modelling by colour temperature; shadows blue/violet/green",
+  "value_key": "high",
+  "composition": "modern leisure and urban life, planned under spontaneous handling; horizon set early, whole canvas worked together; casual cropping (judgement)",
+  "drawing": "no underdrawing; thin lay-in in subdued colour; strokes barely convey forms; figures as a few gestural strokes",
+  "edges": "soft and broken everywhere; hard only for rare accents",
+  "marks": {
+   "tools": [
+    "flat",
+    "round"
+   ],
+   "length": "short",
+   "direction": "follows form or the light, varied",
+   "visible": true,
+   "size_px": [
+    18,
+    28
+   ]
+  },
+  "process": [
+   "off-white ground",
+   "thin lay-in of main elements in subdued colour, horizon set early",
+   "build the whole together, moving between areas, surroundings brought up around forms",
+   "wet-in-wet upper layers, figures painted into wet surroundings; some strokes over dry",
+   "reinforce: intense local colour on top, reflections last, thin dragged strokes, corners reinforced",
+   "pastel: linear and stumped layers, fixative only as a barrier in selected areas"
+  ],
+  "finishing": [
+   "no varnish, no unifying glaze",
+   "last accents and reflections; ground may show",
+   "finished when the light effect is complete, not when the surface is closed (judgement)",
+   "pastel: no overall fixative (it darkens and dulls)"
+  ],
+  "pitfalls": [
+   "chocolate-box pastiche (lilies, parasols, sweet pinks, uniform commas)",
+   "over-blending into mush",
+   "grey-black shadows",
+   "sweet nostalgia or generic pleasantness instead of a specific moment",
+   "do_match strokes too uniform and too obedient to the schema"
+  ],
+  "felt_bias": {
+   "arousal": 0.2,
+   "tension": -0.1,
+   "care": -0.1
+  },
+  "engine_gaps": [
+   "pastel medium not built yet (toned paper tooth, stick skipping, stumping, selective fixative)",
+   "no light model for hour and weather (the schema must carry it)",
+   "no deliberate complementary placement per stroke, only colour jitter"
+  ],
+  "sources": [
+   "https://www.metmuseum.org/toah/hd/imml/hd_imml.htm",
+   "https://publications.artic.edu/node/135599",
+   "https://publications.artic.edu/api/epub/135564/content.xhtml",
+   "https://colourlex.com/project/monet-lavacourt-under-snow",
+   "https://www.metmuseum.org/essays/precious-powder-degas",
+   "https://www.nationalgallery.org.uk/stories/how-did-new-pigment-technologies-drive-the-impressionist-movement",
+   "https://en.wikipedia.org/wiki/Ground_(art)",
+   "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
+  ]
+ },
+ "fauvism": {
+  "name": "Fauvism",
+  "doc": "docs/styles/fauvism.md",
+  "period": "France, c. 1905-1910",
+  "media": [
+   "oil"
+  ],
+  "support": {
+   "oil": "canvas-fine"
+  },
+  "ground": "#f6f3ea",
+  "ground_options": {
+   "white-left-visible": "#f6f3ea",
+   "raw-canvas-no-ground": "#cdb892"
+  },
+  "technique": [
+   "direct painting, mostly wet-in-wet",
+   "colour almost straight from the tube",
+   "mosaic of loose separate strokes",
+   "white ground left exposed",
+   "thin dark contour lines"
+  ],
+  "palette": {
+   "principle": "saturated hues juxtaposed in complementary pairs; colour contrast instead of shadow; white ground as the lightest light",
+   "colors": [
+    "#e23d28",
+    "#d42a3c",
+    "#e88a8a",
+    "#f5dc3a",
+    "#f08a1c",
+    "#2b3a9a",
+    "#2fae72",
+    "#3d7a3a",
+    "#7a3a8a",
+    "#f6f3ea"
+   ],
+   "avoid": [
+    "black",
+    "earth browns as shadow",
+    "greys",
+    "tonal modelling",
+    "glazes"
+   ]
+  },
+  "light": "intense and everywhere; hardly any shadows; volume and depth by colour contrast; thickest paint where light is strongest",
+  "value_key": "high",
+  "composition": "flat pictorial space of colour zones, each with its own stroke direction and density; key line (horizon) set first; no traditional perspective",
+  "drawing": "forms simplified toward abstraction; layout in a thin blue line or light ultramarine; no compositional changes",
+  "edges": "hard by juxtaposition; thin dark fluid contour lines where shapes would merge",
+  "marks": {
+   "tools": [
+    "flat",
+    "liner"
+   ],
+   "length": "short-medium",
+   "direction": "per zone: radiating from the light, horizontal for water",
+   "visible": true,
+   "spacing": "strokes rarely overlapping, a distance apart"
+  },
+  "process": [
+   "drawing from the motif close in form and colour",
+   "bright white ground intended to stay visible (or no ground, thick single layers)",
+   "layout with thin blue line or light ultramarine glazes",
+   "key line first, then zones with their own stroke direction",
+   "direct, mostly wet-in-wet patches of nearly pure colour; few layers, no reworking",
+   "thin dark contour lines where shapes would merge (order is judgement)"
+  ],
+  "finishing": [
+   "no varnish tone (yellowed varnishes on Fauve pictures were non-original and removed)",
+   "stop while the ground still breathes (judgement)",
+   "no glazes, no blending, no last darks except contours"
+  ],
+  "pitfalls": [
+   "random 'wild colour' filter over a naturalistic picture",
+   "filling every gap and covering the white ground",
+   "complementaries greyed by high wetmix",
+   "decorative holiday-poster prettiness",
+   "drifting into Expressionist anguish or Teodor's hushed dark interior"
+  ],
+  "felt_bias": {
+   "arousal": 0.4,
+   "tension": 0.0,
+   "care": -0.2
+  },
+  "engine_gaps": [
+   "no stroke-spacing control (only count)",
+   "no zone-wise complementary palette rule",
+   "do_match closes the surface; use free strokes or low cover",
+   "unprimed canvas absorbency not modelled"
+  ],
+  "sources": [
+   "https://www.tate.org.uk/art/art-terms/f/fauvism",
+   "https://www.museothyssen.org/en/node/25199",
+   "https://courtauld.ac.uk/wp-content/uploads/2021/04/Report-Derain-by-F-Whitlum-Cooper-and-Cleo-Nisse.compressed.pdf"
+  ]
+ },
+ "expressionism": {
+  "name": "German Expressionism (Brücke)",
+  "doc": "docs/styles/expressionism.md",
+  "period": "Germany (Dresden, Berlin), 1905-1920s",
+  "media": [
+   "oil",
+   "charcoal",
+   "ink"
+  ],
+  "media_notes": {
+   "ink": "the woodcut look: flat black relief on paper; no relief-print medium exists yet"
+  },
+  "support": {
+   "oil": "canvas",
+   "charcoal": "paper",
+   "ink": "paper-wove"
+  },
+  "ground": "#efe9dc",
+  "ground_by_medium": {
+   "oil": "#efe9dc",
+   "charcoal": "#e6dfcf",
+   "ink": "#ece4d0"
+  },
+  "technique": [
+   "underdrawing",
+   "thin lean matte colour (little binder, wax in benzine)",
+   "hatching",
+   "dark angular contours",
+   "woodcut: gouged whites, black relief, wood grain"
+  ],
+  "palette": {
+   "principle": "vivid non-naturalistic high-chroma colour for tension and contrast; aniline colours; matte not glossy; black for contour and woodcut",
+   "colors": [
+    "#7cc242",
+    "#f0c419",
+    "#e2382a",
+    "#d23c8c",
+    "#ef7a1e",
+    "#2a3a9e",
+    "#1e3a5f",
+    "#6a3a8c",
+    "#141210",
+    "#efe9dc"
+   ],
+   "avoid": [
+    "glossy depth",
+    "browns as harmonisers",
+    "naturalistic flesh",
+    "smooth gradations",
+    "thick shiny impasto"
+   ]
+  },
+  "light": "no consistent source; high value and colour contrast; flickering lights without sources; woodcut two values only",
+  "value_key": "contrasting",
+  "composition": "crowded city streets with compressed space, or nudes in nature; rhythm of figures by repeated marks; woodcut compositions reversed",
+  "drawing": "simplified, distorted, angular forms; underdrawn and planned, but forms change during work",
+  "edges": "hard, angular, splintered contours; hatching edges",
+  "marks": {
+   "tools": [
+    "flat",
+    "round",
+    "liner"
+   ],
+   "length": "medium-long",
+   "direction": "hatched diagonals and sharp rays; angular",
+   "visible": true
+  },
+  "process": [
+   "seeds: sketchbook impressions, charcoal, pastel colour trials, prints of the motif",
+   "underdrawing on canvas",
+   "thin lean vivid colour fields, drying matte",
+   "rework and restate; forms change in the process",
+   "hatching and dark contours last (judgement)",
+   "charcoal: broad strokes, hatched contours, wash or stumping, emphasis lines, fixative",
+   "woodcut look: flat black masses, then hard white cuts painted over (Teodor proxy)"
+  ],
+  "finishing": [
+   "no varnish: the Brücke painters avoided gloss",
+   "no glaze; matte surface",
+   "process energy left visible within a planned image",
+   "woodcut: grain and uneven inking accepted; charcoal: fixative"
+  ],
+  "pitfalls": [
+   "horror-poster pastiche (green faces, screaming masks as a filter)",
+   "glossy thick oil impasto",
+   "random scribble instead of planned energy",
+   "Fauvist joy, generic angst, or Teodor's hushed bittersweet habit"
+  ],
+  "felt_bias": {
+   "arousal": 0.4,
+   "tension": 0.5,
+   "care": -0.2
+  },
+  "engine_gaps": [
+   "no woodcut / relief-print medium; no subtractive cut; no wood-grain texture",
+   "charcoal medium not built yet",
+   "no matte surface parameter (render adds specular on height)",
+   "Der Blaue Reiter needs its own entry"
+  ],
+  "sources": [
+   "https://www.tate.org.uk/art/art-terms/g/german-expressionism",
+   "https://www.tate.org.uk/art/art-terms/e/expressionism",
+   "https://www.tate.org.uk/art/art-terms/b/brucke",
+   "https://www.tate.org.uk/art/art-terms/w/woodcut",
+   "https://www.moma.org/momaorg/shared/pdfs/docs/learn/courses/Kirchner.pdf",
+   "https://www.staedelmuseum.de/en/mysteries-material",
+   "https://rheinneckarblog.de/10/die-maltechnik-von-kirchner/65884.html",
+   "https://artdaily.com/news/70440/images/close.gif",
+   "https://collections.lacma.org/object/71942",
+   "https://www.theartstory.org/movement/die-brucke/"
+  ]
+ }
+}
