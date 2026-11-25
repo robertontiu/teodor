@@ -9,9 +9,19 @@ State per pixel (besides `col`, the apparent colour):
   mask        masking fluid (reserved paper), removed by `finish unmask`
   gran        granulation tendency of the pigment in the current wash
   stain       how strongly the pigment binds to the fibres (lifting removes 1 - stain)
+  fine        share of fine (colloidal) pigment in the current wash: its edge darkening grows with concentration
+  wq          the current wash's wet-to-dry shift (how much darker it looks while wet), per pigment
 
 A film is fully described by K*x and S*x, so pigments mixed in one wash simply add, and a dried wash is
 composited over what lies below with base.km_layer: the paper's white is the light and every glaze deepens.
+
+Calibration (docs/calibration/watercolour.md, docs/media-data.md "Watercolour"): every colour is a measured
+watercolour pigment (studio/pigments.json, handprint ratings): named with "pigment": "PB29", or the nearest
+pigment by hue, chroma and value. Its granulation, staining, transparency, darkest single-wash value and
+wet-to-dry shift come from the data; edge darkening grows with concentration only for fine pigments
+(Gonzalez-Gutierrez et al. 2019); drying time is scaled from their 50 uL drop (t_c = 2490 s) on 300 g/m2
+cold-press paper. Values still set by eye are marked "eye"; constants with no citation (the tool table KINDS,
+the flow, back-run and lifting constants) are eye as well.
 
 Dabs act at full resolution (hard, ragged edges on dry paper; dry-brush on the paper's peaks). Between episodes
 (`episode_end`) and when time passes (`dry`) the wash moves on a bounded crop and, for wide spreads, a
@@ -22,23 +32,218 @@ import math
 import numpy as np
 from scipy.ndimage import gaussian_filter, binary_dilation, binary_erosion
 from PIL import Image
-from .base import Medium, hx, pigment_from_hex, km_layer
+from functools import lru_cache
+from .base import Medium, hx, pigment_from_hex, km_layer, load_pigments
+
+# --------------------------------------------------------------------------- time
+# One episode is taken as EPISODE_MIN minutes of studio time (eye: a painter's working spell; it keeps the
+# wet-in-wet window of the earlier, uncalibrated model). Water is counted in "drop loads": water = 1 is the
+# load of the measured 50 uL drop on 300 g/m2 cold-press paper, which dries in t_c = 2490 s at 22 C, 35% RH
+# (Gonzalez-Gutierrez et al. 2019, [W1] in docs/media-data.md). A thin film evaporates at a constant rate, so a
+# wash's drying time is proportional to its water (thin-film assumption, not measured).
+EPISODE_MIN = 10.0
+TC_EPISODES = 2490.0 / 60.0 / EPISODE_MIN          # 4.15 episodes: a water = 1 wash on cold press is dry by then
 
 # --------------------------------------------------------------------------- supports
-# absorb/air: how fast surface water sinks in / evaporates per episode; ddecay: damp paper drying;
-# sig: wet-in-wet spread (px); gran: how much the paper makes pigment granulate; ring: edge darkening;
-# shade: relief shading in the render; slope: how sharply dry-brush picks out peaks; ragged: edge raggedness;
-# lift: how well pigment lifts (hot-press lifts best).
+# air/absorb: surface water lost per episode to the air / into the sheet (constant-flux thin film), set so that
+# water = 1 on cold press is dry to the touch after TC_EPISODES (see the calibration report); ddecay: the
+# sheet's own drying (damp, per episode); hot and rough paper keep the earlier relative rates (eye: no
+# measurement of drying on those papers was found).
+# sig: wet-in-wet spread (px, eye); gran: how much the paper makes pigment granulate (cold press calibrated on
+# the flat-field texture, the others relative, eye); ring: edge darkening (cold press calibrated on the rim
+# ratio of isolated washes, the others relative, eye); shade: relief shading in the render (calibrated on the
+# texture of blank paper); slope: how sharply dry-brush picks out peaks; ragged: edge raggedness; lift: how well
+# pigment lifts (hot-press lifts best) (eye).
 SUP = {
-    "cold_press": dict(absorb=0.32, air=0.22, ddecay=0.35, sig=5.0, gran=0.6, ring=0.8, shade=0.045,
+    "cold_press": dict(absorb=0.13, air=0.20, ddecay=0.9, sig=5.0, gran=0.75, ring=0.8, shade=0.05,
                        slope=5.0, ragged=0.22, lift=1.0),
-    "hot_press": dict(absorb=0.18, air=0.28, ddecay=0.40, sig=6.5, gran=0.25, ring=1.0, shade=0.014,
+    "hot_press": dict(absorb=0.07, air=0.21, ddecay=1.03, sig=6.5, gran=0.31, ring=1.0, shade=0.016,
                       slope=3.0, ragged=0.06, lift=1.3),
-    "rough": dict(absorb=0.42, air=0.20, ddecay=0.32, sig=4.0, gran=1.0, ring=0.65, shade=0.075,
+    "rough": dict(absorb=0.17, air=0.21, ddecay=0.82, sig=4.0, gran=1.25, ring=0.65, shade=0.083,
                   slope=7.5, ragged=0.42, lift=0.8),
 }
+DAMP_GAIN = 2.0            # eye: damp (0..1, sheet saturated at 1) per unit of water absorbed
 MASKCOL = hx("#eadf9e")
 WET = 0.04
+# edge darkening (calibrated, see the report): ring strength = ring * (RING0 + RING1 * fine * phi), phi = the
+# suspended pigment's absorption / RING_PHI; SETTLE_COARSE: extra settling rate of coarse pigment (eye)
+RING0, RING1, RING_PHI, RING_WIDEN, SETTLE_COARSE, COARSE_SUSP = 0.05, 0.8, 1.2, 4.0, 2.0, 0.4
+
+# --------------------------------------------------------------------------- measured pigments (handprint)
+# Ratings per Colour Index name in studio/pigments.json -> media.watercolour (MacEvoy, handprint.com, [P3]).
+OPACITY_SCALE = 0.6        # eye: handprint "opaque" (Tr 0) -> base.pigment_from_hex opacity 0.6
+DEFAULT_Q = None           # wet density gain where not measured: the median over the measured pigments (set below)
+PAPER_L = 94.0             # handprint's paper value (the value range is measured from it)
+KNEE = 0.6                 # eye: a wash darkens linearly with pigment up to 60% of its darkest, then saturates
+
+
+def _lab(c):
+    c = np.asarray(c, np.float64)
+    lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    M = np.array([[0.4124564, 0.3575761, 0.1804375], [0.2126729, 0.7151522, 0.0721750], [0.0193339, 0.1191920, 0.9503041]])
+    xyz = lin @ M.T / np.array([0.95047, 1.0, 1.08883])
+    f = np.where(xyz > 216 / 24389, np.cbrt(xyz), (24389 / 27 * xyz + 16) / 116)
+    return 116 * f[..., 1] - 16, 500 * (f[..., 0] - f[..., 1]), 200 * (f[..., 1] - f[..., 2])
+
+
+def _L_to_v(L):
+    """CIE L* of a grey -> the engine's sRGB-encoded value."""
+    Y = ((L + 16) / 116) ** 3 if L > 8 else L / 903.3
+    return 12.92 * Y if Y <= 0.0031308 else 1.055 * Y ** (1 / 2.4) - 0.055
+
+
+def _shift_q(pct, darkest_L):
+    """Wet-to-dry lightness shift (% of the masstone's dry L*) -> the factor by which the wet film's optical
+    density exceeds the dry one's (K_wet = K (1 + q))."""
+    Ld = max(darkest_L, 8.0)
+    Lw = Ld / (1 + pct / 100.0)
+    vp = _L_to_v(PAPER_L)
+    Dd, Dw = -math.log(_L_to_v(Ld) / vp), -math.log(max(_L_to_v(Lw), 1e-3) / vp)
+    return float(np.clip(Dw / max(Dd, 1e-3) - 1, -0.5, 1.5))
+
+
+_TABLE = None
+
+
+def _table():
+    """The watercolour pigments of pigments.json with the engine's attributes."""
+    global _TABLE
+    if _TABLE is None:
+        rows = []
+        for p in load_pigments():
+            w = (p.get("media") or {}).get("watercolour")
+            if not w or p["ci"].startswith("PW"):
+                continue
+            row = _row(p, w)
+            if row:
+                rows.append(row)
+        # a shift measured as % of the masstone's lightness does not transfer to paints of another value; the
+        # density ratio q does, so unmeasured paints get the median q of the measured ones
+        global DEFAULT_Q
+        qs = [r["q"] for r in rows if r["q"] is not None]
+        DEFAULT_Q = float(np.median(qs)) if qs else 0.15
+        for r in rows:
+            if r["q"] is None:
+                r["q"] = DEFAULT_Q
+        _TABLE = rows
+    return _TABLE
+
+
+def _row(p, w):
+    Gr, St, Tr = w.get("granulation_0_4"), w.get("staining_0_4"), w.get("transparency_0_4")
+    VR, HA = w.get("value_range"), w.get("hue_angle_cielab")
+    if None in (Gr, St, Tr, VR, HA):
+        return None
+    dark = PAPER_L - float(VR)
+    jab = w.get("ciecam_Jab_masstone")
+    if jab:
+        C = math.hypot(jab[1], jab[2])
+    else:   # no masstone colour: a typical chroma for the class (eye)
+        C = 5.0 if p["ci"].startswith("PBk") else 40.0
+    sh = w.get("drying_shift_lightness_pct")
+    return dict(ci=p["ci"], name=p.get("name") or p["ci"], gran=float(Gr) / 4, stain=float(St) / 4,
+                opacity=(1 - float(Tr) / 4) * OPACITY_SCALE, darkest_L=dark, L=dark, C=C, h=float(HA),
+                shift=sh, q=_shift_q(float(sh), dark) if sh is not None else None,
+                # particle size: granulation is the visible sign of large, dense particles; the four pigments
+                # measured by DLS in [W1] fit it (quinacridone, madder: Gr 0, fine; ultramarine, Mars black:
+                # Gr >= 1.5, coarse). A proxy, not a measurement of each pigment.
+                fine=float(np.clip(1 - float(Gr) / 1.5, 0, 1)), n=int(w.get("n_paints", 1) or 1))
+
+
+@lru_cache(maxsize=4096)
+def _nearest(key):
+    """Nearest measured pigment to an sRGB colour (quantised key) by hue, chroma and value."""
+    c = np.array(key, np.float64) / 255.0
+    L, a, b = _lab(c)
+    Ch, hh = math.hypot(a, b), math.degrees(math.atan2(b, a)) % 360
+    best, bc = None, 1e9
+    for r in _table():
+        dh = abs((hh - r["h"] + 180) % 360 - 180)
+        cost = (dh / 25.0) ** 2 * min(1.0, Ch / 15.0)                           # hue, when the colour has one
+        Cexp = r["C"] * float(np.clip((100 - L) / (100 - r["L"] + 1e-3), 0, 1.2))   # a tint's chroma at this value
+        cost += ((Ch - Cexp) / 20.0) ** 2
+        if L < r["darkest_L"] - 2:                                              # darker than one wash can go
+            cost += ((r["darkest_L"] - L) / 10.0) ** 2
+        cost -= 0.25 * math.log(1 + r["n"])                                     # prefer common paints (eye)
+        if cost < bc:
+            best, bc = r, cost
+    return best
+
+
+def wc_pigment(color=None, name=None):
+    """A measured watercolour pigment: by Colour Index name or common name ('PB29', 'burnt sienna'), else the
+    nearest to the colour. Returns the engine's attributes (dict) or None if the library is missing."""
+    if name:
+        k, p = str(name).strip().lower(), None
+        for q in load_pigments():
+            bn = ((q.get("media") or {}).get("watercolour") or {}).get("by_name") or {}
+            if k in ((q.get("ci") or "").lower(), (q.get("name") or "").lower()) or k in bn:
+                p = q          # (natural earths are split by marketing name under PBr7)
+                break
+        if p is not None and (p.get("media") or {}).get("watercolour"):
+            w = dict(p["media"]["watercolour"])
+            bn = (w.get("by_name") or {}).get(k)
+            if bn:   # the ratings of that marketing name (e.g. burnt sienna within PBr7)
+                w.update(granulation_0_4=bn["Gr"], staining_0_4=bn["St"], transparency_0_4=bn["Tr"], value_range=bn["VR"])
+                p = dict(p, name=k)
+            r = _row(p, w)
+            if r:
+                _table()
+                if r["q"] is None:
+                    r["q"] = DEFAULT_Q
+                return r
+        print(f"watercolour: no measured watercolour pigment '{name}'; using the nearest by colour")
+    if color is None or not _table():
+        return None
+    key = tuple(int(v) for v in np.clip(np.round(np.asarray(color, np.float64) * 255), 0, 255))
+    return _nearest(key)
+
+
+def _kmax(darkest_L, paper):
+    """For a transparent film (S ~ 0, as match lays): the luminance-weighted absorption at which a single wash
+    reaches the pigment's darkest value (handprint value range) over this paper (R = R0 exp(-2K))."""
+    v = _L_to_v(darkest_L)
+    vp = float(np.dot(paper, (0.3, 0.59, 0.11)))
+    return max(0.05, -0.5 * math.log(max(v, 1e-3) / max(vp, 1e-3)))
+
+
+@lru_cache(maxsize=4096)
+def _mmax_cached(K, S, darkest_L, paper):
+    K, S, P = np.array(K, np.float32), np.array(S, np.float32), np.array(paper, np.float32)[None, :]
+    L = lambda m: float(_lab(km_layer(P, K * m, S * m + 1e-4, np.ones(1, np.float32))[0])[0])
+    if L(64.0) > darkest_L:
+        return 64.0
+    lo, hi = 0.0, 64.0
+    for _ in range(30):
+        mid = 0.5 * (lo + hi)
+        lo, hi = (mid, hi) if L(mid) > darkest_L else (lo, mid)
+    return max(0.05, 0.5 * (lo + hi))
+
+
+def _mmax(K, S, darkest_L, paper):
+    """The amount of this paint (a multiple of the unit film whose colour over white is the given colour) at
+    which one wash reaches the pigment's darkest value over this paper."""
+    r = lambda a: tuple(round(float(v), 3) for v in np.atleast_1d(a))
+    S3 = np.broadcast_to(np.asarray(S, np.float32), (3,))
+    return _mmax_cached(r(K), r(S3), round(float(darkest_L), 1), r(paper))
+
+
+def _sat(c, cmax):
+    """Pigment in one wash: linear up to KNEE of the pigment's darkest, then saturating exponentially toward it
+    (deposit density vs concentration saturates exponentially, [W1]). c, cmax: amounts of paint."""
+    a = KNEE * cmax
+    if c <= a:
+        return c
+    return a + (cmax - a) * (1 - math.exp(-(c - a) / (cmax - a)))
+
+
+def _saturate(K, kmax):
+    """_sat for a transparent film given by its absorption K (luminance-weighted against kmax)."""
+    K = np.asarray(K, np.float32)
+    kl = float(np.dot(K, (0.3, 0.59, 0.11)))
+    if kl <= KNEE * kmax or kl <= 0:
+        return K
+    return (K * (_sat(kl, kmax) / kl)).astype(np.float32)
 
 
 def _n(a):
@@ -87,14 +292,17 @@ def _normconv(a, R, sig):
     return _blur(a * R, sig) / (Rb + 1e-4)
 
 
-def _guess_granulation(c):
-    r, g, b = c
-    if b > r + 0.08 and b >= g:                       # ultramarine, cobalt, cerulean
-        return 0.65
-    sat = max(c) - min(c)
-    if r > b and sat < 0.45 and 0.15 < c.mean() < 0.7:  # earths: siennas, umbers, ochres
-        return 0.5
-    return 0.22
+def _pigment_attrs(it, color):
+    """Granulation, staining, opacity, darkest value, wet shift and fineness of the paint: from the measured
+    pigment (named or nearest), with any explicit value in the intention taking precedence."""
+    r = wc_pigment(color, it.get("pigment")) or {}
+    return dict(ci=r.get("ci"),
+                gran=float(it.get("granulation", r.get("gran", 0.25))),
+                stain=float(it.get("staining", r.get("stain", 0.75))),
+                opacity=float(it.get("opacity", r.get("opacity", 0.15))),
+                darkest_L=float(r.get("darkest_L", 30.0)),
+                q=float(r.get("q", DEFAULT_Q if DEFAULT_Q is not None else 0.14)),
+                fine=float(it.get("fine", r.get("fine", 0.5))))
 
 
 # --------------------------------------------------------------------------- tools
@@ -111,6 +319,9 @@ KINDS = {
     "water":  (1.20, 60.0, 0.00, 4.0, 0.50, 0.30),
     "mask":   (1.00, 60.0, 0.00, 9.0, 1.00, 0.30),
 }
+# match (eye): skip a stroke whose start needs less than this optical density (about a 5% darkening); strokes of
+# at least HALO_MIN px get a wet margin HALO_SPREAD x their size wide with HALO_WATER x their water
+MATCH_SKIP, HALO_MIN, HALO_SPREAD, HALO_WATER = 0.05, 14, 0.3, 0.5
 ALIAS = {"liner": "rigger", "filbert": "round", "fan": "dry", "knife": "lift", "smudge": "lift", "blend": "soften",
          "hake": "mop", "wash": "mop", "tissue": "lift", "clean_damp_brush": "water", "masking_fluid": "mask",
          "drybrush": "dry", "dry-brush": "dry"}
@@ -124,12 +335,17 @@ class WBrush:
         self.hold, self.sharp, self.arate, self.spacing = hold, sharp, arate, spacing
         self.conc = conc * float(it.get("strength", 1.0))
         self.color = np.asarray(color, np.float32)
-        K, S = pigment_from_hex(self.color, float(it.get("opacity", 0.1)))
+        pa = _pigment_attrs(it, self.color)
+        K, S = pigment_from_hex(self.color, pa["opacity"])
         self.K, self.S = K, float(S.mean())
-        self.gran = float(it.get("granulation", _guess_granulation(self.color)))
-        self.stain = float(it.get("staining", 0.4))
+        self.gran, self.stain, self.fine, self.q = pa["gran"], pa["stain"], pa["fine"], pa["q"]
+        self.darkest_L, self.kmax = pa["darkest_L"], None
         self.lift = float(it.get("lift", 0.5))
         self.target = self.color.copy() if it.get("type") == "match" else None
+        # match: a watercolourist does not glaze over a passage for a small difference (each glaze over dry paint
+        # costs an edge), and lays wash-sized strokes with a soft, wet margin so neighbours fuse (eye)
+        self.skip = float(it.get("skip", MATCH_SKIP))
+        self.halo = self.target is not None and kind in ("round", "flat", "mop") and size >= HALO_MIN
         self.step, self.speedfx = 1.0, 0.0
         self.travel, self.started, self.noop = 0.0, False, False
         if kind == "rigger":
@@ -168,15 +384,21 @@ class WBrush:
 
     def _match_pigment(self, cv, x, y):
         """Match: choose the transparent colour that, laid over what is already on the paper here, gives the
-        target (how a watercolourist thinks: you can only go darker)."""
+        target (how a watercolourist thinks: you can only go darker). The decision to paint is taken once, at
+        the start of the stroke: once the brush is down the stroke is continuous (no fragments), carrying less
+        pigment where little is needed."""
         yi, xi = int(np.clip(y, 0, cv.H - 1)), int(np.clip(x, 0, cv.W - 1))
         y0, y1, x0, x1 = max(0, yi - 2), yi + 3, max(0, xi - 2), xi + 3
         base = km_layer(cv.under[y0:y1, x0:x1], cv.dK[y0:y1, x0:x1], cv.dS[y0:y1, x0:x1, None] + 1e-4, 1.0)
         base = base.reshape(-1, 3).mean(0)
         need = np.clip(-0.5 * np.log(np.clip(self.target, 1e-3, 1) / np.clip(base, 1e-3, 1)), 0, 3.5).astype(np.float32)
-        if need.max() < 0.025:
-            return False      # already dark enough here: the painter skips it
-        K = need if not self.started else 0.5 * self.K + 0.5 * need
+        if not self.started:
+            if need.max() < self.skip:
+                self.noop = True      # already close enough here: the painter leaves it
+                return False
+            K = need
+        else:
+            K = 0.5 * self.K + 0.5 * need
         self.K, self.S, self.conc = K, float(0.02 * K.mean() + 1e-3), 1.0
         return True
 
@@ -188,11 +410,11 @@ class WBrush:
         if self.started and self.travel < self.spacing * r:
             return
         self.travel = 0.0
+        if self.noop:
+            return
         if self.target is not None and not self._match_pigment(cv, x, y):
             return
         self.started = True
-        if self.noop:
-            return
         R = int(math.ceil(r * 1.5)) + 2
         x0, x1 = max(0, int(x) - R), min(cv.W, int(x) + R + 1)
         y0, y1 = max(0, int(y) - R), min(cv.H, int(y) + R + 1)
@@ -244,8 +466,21 @@ class WBrush:
             loc = (cv.gK[sl] * m[..., None]).sum((0, 1)) / ms / max(self.conc, 1e-3)
             pk = min(0.25, 0.04 * lw * self.step / max(self.size * 0.3, 1.0))
             self.K = self.K * (1 - pk) + loc * pk
-        Kt, St = self.K * self.conc, self.S * self.conc
-        wetp = float(((w + cv.damp[sl] * 0.6) * (m > 0.05)).sum() / ((m > 0.05).sum() + 1e-6))
+        if self.target is not None:      # match lays a transparent film computed from the need
+            if self.kmax is None:
+                self.kmax = _kmax(self.darkest_L, self.med.paper(cv))
+            Kt = _saturate(self.K * self.conc, self.kmax)
+            St = self.S * self.conc
+        else:                            # the paint's amount saturates toward its darkest single wash
+            if self.kmax is None:
+                self.kmax = _mmax(self.K, self.S, self.darkest_L, self.med.paper(cv))
+            c = _sat(self.conc, self.kmax)
+            Kt, St = self.K * c, self.S * c
+        # into paper that was already wet (or damp) before this episode the charge blooms out at once; strokes of
+        # the same episode lie side by side crisply and join when the water moves (episode_end)
+        wp = getattr(cv, "_wpre", None)
+        w_pre = wp[sl] if getattr(cv, "_wc_snap", False) and wp is not None and wp.shape == cv.water.shape else w
+        wetp = float(((w_pre + cv.damp[sl] * 0.6) * (m > 0.05)).sum() / ((m > 0.05).sum() + 1e-6))
         if wetp > 0.2 and self.kind != "dry":   # into wet paper the charge blooms out softly at once
             m = gaussian_filter(m, max(1.0, self.size * 0.25 * min(wetp, 1.2)))
             a = np.clip(m * self.arate, 0, 1)
@@ -256,16 +491,28 @@ class WBrush:
             cv.gS[sl] += (St - cv.gS[sl]) * aw
             cv.water[sl] = np.maximum(w, m * Wb * (0.8 + 0.2 * m)) + m * 0.03 * Wb
             cv.gran[sl] += (self.gran - cv.gran[sl]) * aw
+            cv.fine[sl] += (self.fine - cv.fine[sl]) * aw
+            cv.wq[sl] += (self.q - cv.wq[sl]) * aw
         if todry > 0:
             ad = a * todry
             d = cv.dK[sl]
             d += np.maximum(Kt[None, None, :] - d, 0) * ad[..., None]
             cv.dS[sl] += np.maximum(St - cv.dS[sl], 0) * ad
         cv.stain[sl] += (self.stain - cv.stain[sl]) * a * 0.5
+        if self.halo and self.kind != "dry":
+            # a wet margin of clean water around the stroke: the edge bleeds out softly when the water moves, and
+            # strokes laid next to each other in one episode join into one wash
+            free = 1 - cv.mask[sl]
+            hm = np.clip(gaussian_filter(m, max(1.0, self.size * HALO_SPREAD)) * 1.8, 0, 1) * free
+            if cv.clip is not None:
+                hm = hm * cv.clip[sl]
+            cv.water[sl] = np.maximum(cv.water[sl], hm * Wb * HALO_WATER)
 
     def _water(self, cv, sl, m):
         """Clean water: wets the paper; re-dissolves a little dried, non-staining pigment."""
         cv.water[sl] = np.maximum(cv.water[sl], m * self.W)
+        if getattr(cv, "_wpre", None) is not None:
+            cv._wpre[sl] = np.maximum(cv._wpre[sl], cv.water[sl])
         f = m * 0.06 * (1 - cv.stain[sl]) * self.sup["lift"]
         self.med.relift(cv, sl, f, into_wash=True)
 
@@ -299,7 +546,7 @@ def noise(h, w, sigma, seed):
 # --------------------------------------------------------------------------- the medium
 class Watercolour(Medium):
     name = "watercolour"
-    arrays = ("col", "under", "gK", "gS", "dK", "dS", "water", "damp", "mask", "gran", "stain")
+    arrays = ("col", "under", "gK", "gS", "dK", "dS", "water", "damp", "mask", "gran", "stain", "fine", "wq")
     supports = {"cold_press": "cold-pressed (NOT) cotton paper, 300 gsm: felt tooth, granulation, soft ragged edges",
                 "hot_press": "hot-pressed paper: smooth, paint stays on the surface, crisp edges, lifts well",
                 "rough": "rough paper: pronounced tooth, fast absorption, strong granulation and broken dry-brush"}
@@ -340,9 +587,9 @@ class Watercolour(Medium):
         cv.under = cv.col.copy()
         for a in ("gK", "dK"):
             setattr(cv, a, np.zeros((H, W, 3), np.float32))
-        for a in ("gS", "dS", "water", "damp", "mask", "gran"):
+        for a in ("gS", "dS", "water", "damp", "mask", "gran", "fine", "wq"):
             setattr(cv, a, np.zeros((H, W), np.float32))
-        cv.stain = np.full((H, W), 0.4, np.float32)
+        cv.stain = np.full((H, W), 0.75, np.float32)    # the median handprint staining rating (3 of 4)
 
     def paper(self, cv):
         return hx((getattr(cv, "meta", None) or {}).get("ground", "#f6f3eb"))
@@ -352,7 +599,9 @@ class Watercolour(Medium):
         K = cv.gK[sl] + cv.dK[sl]
         S = (cv.gS[sl] + cv.dS[sl])[..., None] + 1e-4
         wf = np.clip(cv.water[sl] * 1.6 + cv.damp[sl] * 0.5, 0, 1)[..., None]
-        R = km_layer(cv.under[sl], K * (1 + 0.25 * wf), S, 1.0)   # wet colour looks darker; it dries lighter
+        # wet colour looks darker and dries lighter, by the pigment's measured drying shift (wq); the wet paper's
+        # own darkening (5%) is eye
+        R = km_layer(cv.under[sl], K * (1 + cv.wq[sl][..., None] * wf), S, 1.0)
         R = R * (1 - 0.05 * wf)
         mk = cv.mask[sl][..., None] * 0.5
         return (R * (1 - mk) + MASKCOL * mk).astype(np.float32)
@@ -375,6 +624,7 @@ class Watercolour(Medium):
     def _snap(self, cv):
         if not getattr(cv, "_wc_snap", False):
             cv._w0, cv._d0, cv._wc_snap = cv.water.copy(), cv.damp.copy(), True
+            cv._wpre = cv.water.copy()     # water a stroke of this episode finds already there (washes, clean water)
 
     def make_tool(self, it, size, color, rng):
         cv = getattr(self, "_cv", None)
@@ -385,16 +635,28 @@ class Watercolour(Medium):
         b = WBrush(self, kind, size, color, rng, it, SUP.get(getattr(self, "_support", "cold_press"), SUP["cold_press"]))
         return _Bound(self, b)
 
-    def glaze(self, cv, mask, col, op):
-        """A wash: a flat transparent film of water and pigment laid over the region with a big brush."""
+    def glaze(self, cv, mask, col, op, it=None):
+        """A wash: a flat transparent film of water and pigment laid over the region with a big brush. The
+        pigment is the measured one named in the intention ("pigment") or the nearest to the colour."""
         self._bind(cv)
+        it = it or {}
+        col = np.asarray(col, np.float32)
+        pa = _pigment_attrs(it, col)
         m = np.clip(mask, 0, 1) * (1 - cv.mask)
-        K, S = pigment_from_hex(np.asarray(col, np.float32), 0.1)
+        K, S = pigment_from_hex(col, pa["opacity"])
+        c = _sat(float(op), _mmax(K, float(S.mean()), pa["darkest_L"], self.paper(cv)))
+        Ks, sf = K * c, c / max(float(op), 1e-6)
         wet = m > 0.03
-        cv.water = np.where(wet, np.maximum(cv.water, 0.9 * np.clip(m * 1.3, 0, 1)), cv.water)
-        cv.gK += K[None, None, :] * (m * op)[..., None]
-        cv.gS += float(S.mean()) * m * op
-        cv.gran += (_guess_granulation(np.asarray(col, np.float32)) - cv.gran) * m
+        water = float(it.get("water", 1.0))
+        cv.water = np.where(wet, np.maximum(cv.water, 0.9 * water * np.clip(m * 1.3, 0, 1)), cv.water)
+        if getattr(cv, "_wpre", None) is not None:
+            cv._wpre = np.maximum(cv._wpre, cv.water)
+        cv.gK += Ks[None, None, :] * m[..., None]
+        cv.gS += float(S.mean()) * c * m
+        cv.gran += (pa["gran"] - cv.gran) * m
+        cv.fine += (pa["fine"] - cv.fine) * m
+        cv.wq += (pa["q"] - cv.wq) * m
+        cv.stain += (pa["stain"] - cv.stain) * m * 0.5
         cv.col = self.appear(cv, (slice(None), slice(None)))
 
     def _bind(self, cv):
@@ -426,21 +688,24 @@ class Watercolour(Medium):
         W, D = cv.water[sl].copy(), cv.damp[sl].copy()
         g, gS, d, dS = cv.gK[sl].copy(), cv.gS[sl].copy(), cv.dK[sl].copy(), cv.dS[sl].copy()
         tex, free = cv.tex[sl], (cv.mask[sl] < 0.5)
-        gran = cv.gran[sl]
+        gran, fine, wq = cv.gran[sl], cv.fine[sl], cv.wq[sl]
         tt = min(t, 1.5)  # flow happens while the wash is wet; long waits do not move pigment further
 
         # 1. flow: wet-in-wet bleeding inside the wet area (paper that is wet or damp), feathered
         wetR = (((W > WET) | (D > 0.22)) & free).astype(np.float32)
         if wetR.any():
             feather = 0.72 + 0.34 * _n(gaussian_filter(tex, 2.0)) + 0.22 * _n(gaussian_filter(tex, (1.2, 4.0)))
-            rec = np.clip(W * 2.0 + D * 0.8, 0, 1) * wetR * feather + 1e-4 * wetR   # where pigment can go
-            mob = np.clip(W * 1.1 + D * 0.25, 0, 0.85) * wetR * min(1.0, tt)              # how much leaves
+            mu = np.clip(W * 1.1 + D * 0.25, 0, 0.85) * wetR                                 # mobility of the water
+            # where pigment can go: in proportion to the mobility, so pigment does not pile up where the water thins
+            # toward the edge (that drift made every wash ring alike); edge darkening is the ring flow of step 3
+            rec = mu / 0.85 * feather + 1e-4 * wetR
+            mob = mu * min(1.0, tt)                                                           # how much leaves
             mob2 = np.clip((W - 0.2) * 1.4, 0, 0.7) * wetR * min(1.0, tt)
             for s, mb in ((sp["sig"], mob), (sp["sig"] * 5.0, mob2)):
                 if mb.max() < 0.01:
                     continue
                 rb = _blur(rec, s) + 1e-5
-                for arr in (g, gS, gran):
+                for arr in (g, gS, gran, fine, wq):
                     o = arr * (mb[..., None] if arr.ndim == 3 else mb)
                     inflow = _blur(o, s) / (rb[..., None] if arr.ndim == 3 else rb)
                     arr -= o
@@ -456,42 +721,63 @@ class Watercolour(Medium):
             if zone.any() and src.any() and binary_dilation(src, iterations=3)[zone].any():
                 reach = _blur(src.astype(np.float32) * np.clip(fresh, 0, 1.5), 16.0) * 2.0
                 bn = 0.45 * _n(gaussian_filter(tex, 1.5)) + 0.35 * _n(gaussian_filter(tex, 4.0)) + 0.2 * _n(gaussian_filter(tex, 9.0))
-                bloom = (zone | src) & (reach > 0.04 + 0.3 * bn)
+                # the bloom grows inside the damp wash only (fresh paint laid in the same episode elsewhere does not
+                # take part: that drew a dark line around every new wash), and its dark front forms away from where
+                # the fresh water came in, not along the contact line
+                bloom = zone & (reach > 0.04 + 0.3 * bn)
                 if bloom.any():
                     push = np.where(src, 0.25, 0.6) * bloom
                     rg = g * push[..., None]
                     rd = d * (bloom * 0.45)[..., None]
                     g -= rg; d -= rd
                     gS -= gS * push; dS -= dS * bloom * 0.45
-                    front = binary_dilation(bloom, iterations=2) & ~binary_erosion(bloom, iterations=1) & (zone | bloom)
-                    fr = front.astype(np.float32)
+                    front = binary_dilation(bloom, iterations=2) & ~binary_erosion(bloom, iterations=1) & zone
+                    front &= ~binary_dilation(src & ~zone, iterations=3)
+                    fr = gaussian_filter(front.astype(np.float32), 1.0) * (zone | bloom)   # a front of a few px, not one
                     moved = rg + rd
-                    g += _blur(moved, 5.0) / (_blur(fr, 5.0)[..., None] + 1e-3) * fr[..., None] * 0.9
+                    nf = _blur(fr, 5.0)
+                    keep = (nf > 1e-3)[..., None]          # pigment with no front within reach stays put
+                    # each source hands its pigment to the front within reach, in proportion (mass-conserving)
+                    g += moved * ~keep + _blur(moved * keep / (nf[..., None] + 1e-4), 5.0) * fr[..., None] * 0.9
                     W = np.where(bloom, np.maximum(W, 0.25), W)
 
-        # 3. evaporation and absorption; the coffee-ring flow carries suspended pigment to pinned edges
+        # 3. evaporation and absorption: a thin film loses water at a constant rate (to the air, and into the sheet
+        # while the sheet has room), so drying time grows with the load (TC_EPISODES for water = 1 on cold press);
+        # the sheet then dries from inside. The coffee-ring flow carries suspended pigment to pinned edges.
         Wb = W.copy()
-        k = sp["absorb"] + sp["air"]
-        loss = W * (1 - math.exp(-k * t))
+        ev, ab = sp["air"] * t, sp["absorb"] * t * np.clip(1 - D, 0, 1)
+        loss = np.minimum(W, ev + ab)
         W = W - loss
-        D = np.clip(D + loss * sp["absorb"] / k * 0.9, 0, 1) * math.exp(-sp["ddecay"] * t)
+        D = np.clip(D + loss * ab / (ev + ab + 1e-6) * DAMP_GAIN, 0, 1) * math.exp(-sp["ddecay"] * t)
         wet = (Wb > WET) & free
         if wet.any():
             frac = np.clip(loss / (Wb + 1e-4), 0, 1)
             drysides = ((~wet) & (D < 0.2)).astype(np.float32)
-            band = wet * np.clip(gaussian_filter(drysides, 1.3) * 3.0, 0, 1)
+            phi = np.clip(g.sum(-1) / RING_PHI, 0, 2.0)
+            grow = np.clip(fine * phi, 0, 1)         # the ring widens with concentration for fine pigments [W1]
+            band = wet * np.clip(gaussian_filter(drysides, 1.3) * 3.0 * (1 - grow) + gaussian_filter(drysides, 1.3 + RING_WIDEN) * 3.0 * grow, 0, 1)
             if band.max() > 0:
                 prox = np.clip(gaussian_filter(band, 5.0) * 4.0, 0, 1)
-                rs = sp["ring"] * frac * prox * wet * np.clip(Wb * 1.4, 0.25, 1)   # wetter washes ring harder
+                # edge darkening: every pigment rings a little (the coffee-ring effect is universal); for fine,
+                # colloidal pigments the ring grows with the concentration in suspension, for coarse ones it does
+                # not (they settle within seconds) [W1]. RING0, RING1 calibrated on the rim ratio.
+                # only what is still suspended can travel: coarse pigment has mostly settled (factor eye)
+                susp = fine + (1 - fine) * COARSE_SUSP
+                rs = sp["ring"] * frac * prox * wet * np.clip(Wb * 1.4, 0.25, 1) * (RING0 + RING1 * fine * phi) * susp
+                nb = gaussian_filter(band, 5.0)
+                rs = np.clip(rs, 0, 0.5) * (nb > 1e-3)
                 tau = g * rs[..., None]
                 tS = gS * rs
                 g -= tau; gS -= tS
-                nb = gaussian_filter(band, 5.0)[..., None] + 1e-4
-                g += gaussian_filter(tau, (5.0, 5.0, 0)) / nb * band[..., None]
-                gS += gaussian_filter(tS, 5.0) / nb[..., 0] * band
+                # each source hands its pigment to the band pixels within reach, in proportion (mass-conserving;
+                # dividing at the receiver instead piled pigment into one-pixel lines at the wet boundary)
+                nbi = 1.0 / (nb + 1e-4)
+                g += gaussian_filter(tau * nbi[..., None], (5.0, 5.0, 0)) * band[..., None]
+                gS += gaussian_filter(tS * nbi, 5.0) * band
 
         # 4. settling: pigment leaves the water for the paper, granulating into the hollows when wet
-        rate = 1 - np.exp(-t * (0.25 + 1.5 * np.clip(1 - W / 0.45, 0, 1)))
+        # coarse pigment settles out of the water faster than fine (settling velocities in [W1]; the factor is eye)
+        rate = 1 - np.exp(-t * (0.25 * (1 + SETTLE_COARSE * (1 - fine)) + 1.5 * np.clip(1 - W / 0.45, 0, 1)))
         G = gran * sp["gran"] * np.clip(Wb * 1.5 + 0.2, 0, 1)
         tg = _n(gaussian_filter(tex, 0.7) - gaussian_filter(tex, 4.0))
         gfac = np.clip(1 + G * (0.5 - tg) * 2.2, 0.25, 2.0)
@@ -509,10 +795,11 @@ class Watercolour(Medium):
                 u[sel] = km_layer(u[sel], (g + d)[sel], ((gS + dS)[sel])[:, None] + 1e-4, 1.0)
                 cv.under[sl] = u
             g[drymask] = 0; d[drymask] = 0; gS[drymask] = 0; dS[drymask] = 0
-            W[drymask] = 0; D[drymask] = 0; gran[drymask] = 0
+            W[drymask] = 0; D[drymask] = 0; gran[drymask] = 0; fine[drymask] = 0; wq[drymask] = 0
         W[W < 0.003] = 0
         cv.water[sl], cv.damp[sl] = W, D
         cv.gK[sl], cv.gS[sl], cv.dK[sl], cv.dS[sl], cv.gran[sl] = g, np.clip(gS, 0, None), np.clip(d, 0, None), np.clip(dS, 0, None), gran
+        cv.fine[sl], cv.wq[sl] = fine, wq
         cv.col[sl] = self.appear(cv, sl)
 
     # ---------------------------------------------------------------- seeing

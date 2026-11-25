@@ -156,6 +156,6 @@ def find_pigment(key):
     """A pigment by Colour Index name (e.g. 'PB27') or by name (e.g. 'Prussian blue'), case-insensitive."""
     k = key.lower()
     for p in load_pigments():
-        if p.get("ci", "").lower() == k or p.get("name", "").lower() == k:
+        if (p.get("ci") or "").lower() == k or (p.get("name") or "").lower() == k:
             return p
     return None
