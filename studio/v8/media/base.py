@@ -9,6 +9,7 @@ because looking, matching and the critic's views work on it. Anything else a med
 To add a medium: write media/<name>.py with a Medium subclass, register it in media/__init__.py,
 add its entry to studio/media.json and document it in docs/MANUAL.md.
 """
+import os
 import numpy as np
 from scipy.ndimage import gaussian_filter
 
@@ -129,3 +130,32 @@ def km_layer(R0, K, S, x):
     T = b / c
     R0 = np.clip(R0, 0, 1)
     return np.clip(R + T * T * R0 / (1 - R * R0 + 1e-6), 0, 1).astype(np.float32)
+
+
+# ---------------------------------------------------------------- the measured pigment library
+_PIGMENTS = None
+
+
+def load_pigments():
+    """studio/pigments.json (measured pigments with provenance; docs/media-data.md), searched next to the
+    studio (a work dir made by tools/make_brief.py) and in the repo's studio/ folder. Returns the list."""
+    global _PIGMENTS
+    if _PIGMENTS is None:
+        here = os.path.dirname(os.path.abspath(__file__))
+        for c in (os.path.join(here, "..", "pigments.json"), os.path.join(here, "..", "..", "pigments.json")):
+            if os.path.exists(c):
+                import json
+                _PIGMENTS = json.load(open(c))["pigments"]
+                break
+        else:
+            _PIGMENTS = []
+    return _PIGMENTS
+
+
+def find_pigment(key):
+    """A pigment by Colour Index name (e.g. 'PB27') or by name (e.g. 'Prussian blue'), case-insensitive."""
+    k = key.lower()
+    for p in load_pigments():
+        if p.get("ci", "").lower() == k or p.get("name", "").lower() == k:
+            return p
+    return None

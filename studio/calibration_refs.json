@@ -1,0 +1,2150 @@
+{
+ "about": "Public-domain (CC0) works in The Met's Open Access collection whose marks can be measured at full resolution, for calibrating the studio's media (docs/media-data.md, 'Calibration method'; tools/calibrate_media.py). Images are not versioned: download primaryImage (verified 2026-11-25), then measure crop_xywh (full-resolution px). Crops were chosen automatically (highest local detail energy away from the margins) and checked by eye on contact sheets. px_per_mm = image px / catalogued size; it is approximate where the photo includes mounts or frames.",
+ "source": "The Met Collection API, https://collectionapi.metmuseum.org/public/collection/v1/objects/{id} (records and images CC0)",
+ "what_to_measure": {
+  "oil": "impasto ridges, bristle furrows, broken colour, glazes in darks (van der Goes, David: glaze reference)",
+  "tempera_gold": "hatched flesh modelling, gold leaf, punchwork, craquelure",
+  "watercolour": "wash edges (edge darkening), granulation, wet-in-wet blooms, dry-brush",
+  "gouache": "flat opaque fields, crisp edges, light over dark",
+  "ink_brush": "brush width along stroke, flying white, tone gradation, feathering on paper or silk",
+  "charcoal": "tooth speckle, smudged tone, eraser lifts (black chalk and Conte included, as catalogued)",
+  "graphite": "hatching, line width, tooth fill, sheen not visible in diffuse photography",
+  "pastel": "broken colour over tooth, hatching, paper tone showing",
+  "ukiyoe": "keyline width, flat fields with baren mottle and wood grain, bokashi gradients, registration"
+ },
+ "media": {
+  "oil": [
+   {
+    "objectID": 436535,
+    "artistDisplayName": "Vincent van Gogh",
+    "title": "Wheat Field with Cypresses",
+    "objectDate": "1889",
+    "medium": "Oil on canvas",
+    "dimensions": "28 13/16 × 36 3/4 in. (73.2 × 93.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436535",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-42549-001.jpg",
+    "image_px": [
+     4000,
+     3184
+    ],
+    "bytes": 8291194,
+    "size_mm_hw": [
+     732,
+     934
+    ],
+    "px_per_mm": 4.32,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     480,
+     1152,
+     955,
+     955
+    ]
+   },
+   {
+    "objectID": 436532,
+    "artistDisplayName": "Vincent van Gogh",
+    "title": "Self-Portrait with a Straw Hat (obverse: The Potato Peeler)",
+    "objectDate": "1887",
+    "medium": "Oil on canvas",
+    "dimensions": "16 x 12 1/2 in. (40.6 x 31.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436532",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT1502_cropped2.jpg",
+    "image_px": [
+     2829,
+     3520
+    ],
+    "bytes": 3200170,
+    "size_mm_hw": [
+     406,
+     318
+    ],
+    "px_per_mm": 8.78,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     554,
+     2152,
+     848,
+     848
+    ]
+   },
+   {
+    "objectID": 436528,
+    "artistDisplayName": "Vincent van Gogh",
+    "title": "Irises",
+    "objectDate": "1890",
+    "medium": "Oil on canvas",
+    "dimensions": "29 x 36 1/4 in. (73.7 x 92.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436528",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP346474.jpg",
+    "image_px": [
+     4000,
+     3172
+    ],
+    "bytes": 5228776,
+    "size_mm_hw": [
+     737,
+     921
+    ],
+    "px_per_mm": 4.32,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1847,
+     773,
+     951,
+     951
+    ]
+   },
+   {
+    "objectID": 437980,
+    "artistDisplayName": "Vincent van Gogh",
+    "title": "Cypresses",
+    "objectDate": "1889",
+    "medium": "Oil on canvas",
+    "dimensions": "36 3/4 x 29 1/8 in. (93.4 x 74 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437980",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP130999.jpg",
+    "image_px": [
+     1476,
+     1861
+    ],
+    "bytes": 2858568,
+    "size_mm_hw": [
+     934,
+     740
+    ],
+    "px_per_mm": 1.99,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     725,
+     421,
+     442,
+     442
+    ]
+   },
+   {
+    "objectID": 437399,
+    "artistDisplayName": "Rembrandt (Rembrandt van Rijn)",
+    "title": "Man with a Magnifying Glass",
+    "objectDate": "early 1660s",
+    "medium": "Oil on canvas",
+    "dimensions": "36 x 29 1/4 in. (91.4 x 74.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437399",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP145909.jpg",
+    "image_px": [
+     3028,
+     3717
+    ],
+    "bytes": 1760236,
+    "size_mm_hw": [
+     914,
+     743
+    ],
+    "px_per_mm": 4.07,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     638,
+     869,
+     908,
+     908
+    ]
+   },
+   {
+    "objectID": 437305,
+    "artistDisplayName": "Camille Pissarro",
+    "title": "A Washerwoman at Eragny",
+    "objectDate": "1893",
+    "medium": "Oil on canvas",
+    "dimensions": "18 x 15 in. (45.7 x 38.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437305",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT1867.jpg",
+    "image_px": [
+     3083,
+     3712
+    ],
+    "bytes": 4633286,
+    "size_mm_hw": [
+     457,
+     381
+    ],
+    "px_per_mm": 8.11,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1752,
+     444,
+     924,
+     924
+    ]
+   },
+   {
+    "objectID": 437680,
+    "artistDisplayName": "Alfred Sisley",
+    "title": "The Bridge at Villeneuve-la-Garenne",
+    "objectDate": "1872",
+    "medium": "Oil on canvas",
+    "dimensions": "19 1/2 x 25 3/4 in. (49.5 x 65.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437680",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-041.jpg",
+    "image_px": [
+     4000,
+     3000
+    ],
+    "bytes": 6012677,
+    "size_mm_hw": [
+     495,
+     654
+    ],
+    "px_per_mm": 6.09,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1858,
+     1738,
+     900,
+     900
+    ]
+   },
+   {
+    "objectID": 437433,
+    "artistDisplayName": "Auguste Renoir",
+    "title": "The Farm at Les Collettes, Cagnes",
+    "objectDate": "1908–14",
+    "medium": "Oil on canvas",
+    "dimensions": "21 1/2 x 25 3/4in. (54.6 x 65.4cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437433",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-22988-001.jpg",
+    "image_px": [
+     4000,
+     3359
+    ],
+    "bytes": 7512329,
+    "size_mm_hw": [
+     546,
+     654
+    ],
+    "px_per_mm": 6.13,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1297,
+     400,
+     1007,
+     1007
+    ]
+   },
+   {
+    "objectID": 435881,
+    "artistDisplayName": "Paul Cézanne",
+    "title": "Still Life with a Ginger Jar and Eggplants",
+    "objectDate": "1893–94",
+    "medium": "Oil on canvas",
+    "dimensions": "28 1/2 x 36 in. (72.4 x 91.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/435881",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-20100-001.jpg",
+    "image_px": [
+     4000,
+     3179
+    ],
+    "bytes": 5116573,
+    "size_mm_hw": [
+     724,
+     914
+    ],
+    "px_per_mm": 4.38,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2569,
+     718,
+     953,
+     953
+    ]
+   },
+   {
+    "objectID": 436140,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Dancers, Pink and Green",
+    "objectDate": "ca. 1890",
+    "medium": "Oil on canvas",
+    "dimensions": "32 3/8 x 29 3/4 in. (82.2 x 75.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436140",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-033.jpg",
+    "image_px": [
+     3630,
+     4000
+    ],
+    "bytes": 7434057,
+    "size_mm_hw": [
+     822,
+     756
+    ],
+    "px_per_mm": 4.83,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1921,
+     712,
+     1024,
+     1024
+    ]
+   },
+   {
+    "objectID": 436016,
+    "artistDisplayName": "Gustave Courbet",
+    "title": "Madame Auguste Cuoq (Mathilde Desportes, 1827–1910)",
+    "objectDate": "ca. 1852–57",
+    "medium": "Oil on canvas",
+    "dimensions": "69 1/2 x 42 1/2 in. (176.5 x 108 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436016",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT1960.jpg",
+    "image_px": [
+     2280,
+     3722
+    ],
+    "bytes": 1308726,
+    "size_mm_hw": [
+     1765,
+     1080
+    ],
+    "px_per_mm": 2.11,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1322,
+     1704,
+     684,
+     684
+    ]
+   },
+   {
+    "objectID": 436596,
+    "artistDisplayName": "Francesco Guardi",
+    "title": "Venice from the Bacino di San Marco",
+    "objectDate": "ca. 1765–75",
+    "medium": "Oil on canvas",
+    "dimensions": "48 x 60 in. (121.9 x 152.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436596",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-14936-015.jpg",
+    "image_px": [
+     4000,
+     3150
+    ],
+    "bytes": 4302465,
+    "size_mm_hw": [
+     1219,
+     1524
+    ],
+    "px_per_mm": 2.6,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1616,
+     1358,
+     945,
+     945
+    ]
+   },
+   {
+    "objectID": 436523,
+    "artistDisplayName": "Hugo van der Goes",
+    "title": "The Adoration of the Magi",
+    "objectDate": "",
+    "medium": "Oil on wood",
+    "dimensions": "29 1/8 x 25 5/8 in. (74 x 65.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436523",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP332733.jpg",
+    "image_px": [
+     3782,
+     3849
+    ],
+    "bytes": 3409083,
+    "size_mm_hw": [
+     740,
+     651
+    ],
+    "px_per_mm": 5.51,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1078,
+     2161,
+     1024,
+     1024
+    ]
+   },
+   {
+    "objectID": 436098,
+    "artistDisplayName": "Gerard David",
+    "title": "The Crucifixion",
+    "objectDate": "ca. 1495",
+    "medium": "Oil on wood",
+    "dimensions": "Overall 21 x 15 in. (53.3 x 38.1 cm); painted surface 20 5/8 x 14 3/4 in. (52.5 x 37.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436098",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-17230-001.jpg",
+    "image_px": [
+     3050,
+     4000
+    ],
+    "bytes": 5059182,
+    "size_mm_hw": [
+     533,
+     381
+    ],
+    "px_per_mm": 7.75,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     608,
+     1100,
+     915,
+     915
+    ]
+   }
+  ],
+  "tempera_gold": [
+   {
+    "objectID": 438423,
+    "artistDisplayName": "Bernardo Daddi",
+    "title": "The Crucifixion",
+    "objectDate": "ca. 1325–30",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "Overall 18 1/4 x 11 3/8 in. (46.4 x 28.9 cm); painted surface 17 1/2 x 11 3/8 in. (44.5 x 28.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/438423",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT4527.jpg",
+    "image_px": [
+     2323,
+     3722
+    ],
+    "bytes": 3234414,
+    "size_mm_hw": [
+     464,
+     289
+    ],
+    "px_per_mm": 8.03,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1348,
+     1726,
+     696,
+     696
+    ]
+   },
+   {
+    "objectID": 438754,
+    "artistDisplayName": "Duccio di Buoninsegna",
+    "title": "Madonna and Child",
+    "objectDate": "ca. 1290–1300",
+    "medium": "Tempera and gold on wood",
+    "dimensions": "Overall, with engaged frame, 11 x 8 1/4 in. (27.9 x 21 cm); painted surface 9 3/8 x 6 1/2 in. (23.8 x 16.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/438754",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP142735.jpg",
+    "image_px": [
+     2697,
+     3542
+    ],
+    "bytes": 2890499,
+    "size_mm_hw": [
+     279,
+     210
+    ],
+    "px_per_mm": 12.77,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1566,
+     678,
+     809,
+     809
+    ]
+   },
+   {
+    "objectID": 437007,
+    "artistDisplayName": "Fra Angelico (Guido di Pietro)",
+    "title": "The Crucifixion",
+    "objectDate": "ca. 1420–23",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "25 1/8 in. × 19 in. (63.8 × 48.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437007",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-31245-001.jpg",
+    "image_px": [
+     3094,
+     4000
+    ],
+    "bytes": 7076165,
+    "size_mm_hw": [
+     638,
+     483
+    ],
+    "px_per_mm": 6.34,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     505,
+     505,
+     928,
+     928
+    ]
+   },
+   {
+    "objectID": 436908,
+    "artistDisplayName": "Pietro Lorenzetti",
+    "title": "Saint Catherine of Alexandria",
+    "objectDate": "ca. 1342",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "Overall 26 x 16 1/4 in. (66 x 41.3 cm); painted surface 24 1/2 x 16 1/4 in. (62.2 x 41.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436908",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/SF%20Lorenzetti.jpg",
+    "image_px": [
+     1218,
+     1959
+    ],
+    "bytes": 620130,
+    "size_mm_hw": [
+     660,
+     413
+    ],
+    "px_per_mm": 2.96,
+    "px_per_mm_note": "check: dimensions may include the engaged frame",
+    "crop_xywh": [
+     557,
+     1023,
+     365,
+     365
+    ]
+   },
+   {
+    "objectID": 436053,
+    "artistDisplayName": "Carlo Crivelli",
+    "title": "Pietà",
+    "objectDate": "1476",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "Overall 28 1/4 x 25 3/8 in. (71.8 x 64.5 cm); painted surface 28 x 25 1/8 in. (71.1 x 63.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436053",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-19502-001.jpg",
+    "image_px": [
+     3612,
+     4000
+    ],
+    "bytes": 6900097,
+    "size_mm_hw": [
+     718,
+     645
+    ],
+    "px_per_mm": 5.59,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     430,
+     478,
+     1024,
+     1024
+    ]
+   },
+   {
+    "objectID": 437611,
+    "artistDisplayName": "Sassetta (Stefano di Giovanni)",
+    "title": "The Journey of the Magi",
+    "objectDate": "ca. 1433–35",
+    "medium": "Tempera and gold on wood",
+    "dimensions": "8 1/2 x 11 3/4 in. (21.6 x 29.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437611",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-29215-001.jpg",
+    "image_px": [
+     4000,
+     3049
+    ],
+    "bytes": 4535223,
+    "size_mm_hw": [
+     216,
+     298
+    ],
+    "px_per_mm": 13.77,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2087,
+     1547,
+     914,
+     914
+    ]
+   },
+   {
+    "objectID": 438020,
+    "artistDisplayName": "Taddeo Gaddi",
+    "title": "Saint Julian",
+    "objectDate": "1340s",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "Overall, with added strips, 21 1/4 x 14 1/4 in. (54 x 36.2 cm); painted surface 20 3/4 x 13 7/8 in. (52.7 x 35.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/438020",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT4166.jpg",
+    "image_px": [
+     2514,
+     3722
+    ],
+    "bytes": 2905031,
+    "size_mm_hw": [
+     540,
+     362
+    ],
+    "px_per_mm": 6.92,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     299,
+     445,
+     754,
+     754
+    ]
+   },
+   {
+    "objectID": 436506,
+    "artistDisplayName": "Giovanni da Milano",
+    "title": "Madonna and Child with Donors",
+    "objectDate": "ca. 1365",
+    "medium": "Tempera on wood, gold ground",
+    "dimensions": "27 1/8 x 56 3/4 in. (68.9 x 144.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436506",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-18296-011.jpg",
+    "image_px": [
+     4000,
+     2097
+    ],
+    "bytes": 2777728,
+    "size_mm_hw": [
+     689,
+     1441
+    ],
+    "px_per_mm": 2.91,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1124,
+     250,
+     629,
+     629
+    ]
+   }
+  ],
+  "watercolour": [
+   {
+    "objectID": 819278,
+    "artistDisplayName": "Francisco (Pancho) Fierro",
+    "title": "An elegantly dressed woman and her page, from a group of drawings depicting Peruvian dress",
+    "objectDate": "ca. 1848",
+    "medium": "Watercolor",
+    "dimensions": "Sheet: 9 1/16 × 8 1/16 in. (23 × 20.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/819278",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP883515.jpg",
+    "image_px": [
+     3013,
+     3373
+    ],
+    "bytes": 2710165,
+    "size_mm_hw": [
+     230,
+     205
+    ],
+    "px_per_mm": 14.68,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1448,
+     1964,
+     903,
+     903
+    ]
+   },
+   {
+    "objectID": 420544,
+    "artistDisplayName": "George Richmond",
+    "title": "Study of a tree",
+    "objectDate": "possibly 1848",
+    "medium": "Watercolor",
+    "dimensions": "Sheet: 8 7/8 x 7 5/16 in. (22.5 x 18.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/420544",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP829461.jpg",
+    "image_px": [
+     1428,
+     1774
+    ],
+    "bytes": 1978445,
+    "size_mm_hw": [
+     225,
+     185
+    ],
+    "px_per_mm": 7.8,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     623,
+     662,
+     428,
+     428
+    ]
+   },
+   {
+    "objectID": 390390,
+    "artistDisplayName": "Anonymous, Italian, 19th century",
+    "title": "Design for a Painted Ceiling",
+    "objectDate": "1825–75",
+    "medium": "Watercolor",
+    "dimensions": "6-3/8 x 9-3/8 in",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/390390",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP803923.jpg",
+    "image_px": [
+     3838,
+     2614
+    ],
+    "bytes": 1326679,
+    "size_mm_hw": null,
+    "px_per_mm": null,
+    "px_per_mm_note": null,
+    "crop_xywh": [
+     1454,
+     1398,
+     784,
+     784
+    ]
+   },
+   {
+    "objectID": 363700,
+    "artistDisplayName": "Sir Francis Seymour Haden",
+    "title": "Pisa",
+    "objectDate": "1843–44",
+    "medium": "Watercolor over graphite",
+    "dimensions": "Sheet: 2 1/16 x 4 13/16 in. (5.2 x 12.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/363700",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP804414.jpg",
+    "image_px": [
+     3028,
+     1287
+    ],
+    "bytes": 1035751,
+    "size_mm_hw": [
+     52,
+     122
+    ],
+    "px_per_mm": 24.78,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     938,
+     614,
+     386,
+     386
+    ]
+   },
+   {
+    "objectID": 364366,
+    "artistDisplayName": "Robert Charles Dudley",
+    "title": "Valentia in 1857-1858 at the Time of the Laying of the Former Cable",
+    "objectDate": "1865",
+    "medium": "Watercolor over graphite with touches of gouache (bodycolor)",
+    "dimensions": "Sheet: 6 3/4 x 10 1/16 in. (17.2 x 25.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/364366",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP801238.jpg",
+    "image_px": [
+     3326,
+     2257
+    ],
+    "bytes": 1396427,
+    "size_mm_hw": [
+     172,
+     255
+    ],
+    "px_per_mm": 13.08,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2250,
+     1170,
+     677,
+     677
+    ]
+   },
+   {
+    "objectID": 383837,
+    "artistDisplayName": "Robert Charles Dudley",
+    "title": "Getting Out One of the Great Buoys: The Deck of the Great Eastern Looking From the Forecastle",
+    "objectDate": "1865–66",
+    "medium": "Watercolor over graphite with touches of gouache (bodycolor)",
+    "dimensions": "Sheet: 9 13/16 × 14 7/16 in. (25 × 36.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/383837",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP801368.jpg",
+    "image_px": [
+     3903,
+     2667
+    ],
+    "bytes": 2368526,
+    "size_mm_hw": [
+     250,
+     367
+    ],
+    "px_per_mm": 10.65,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1060,
+     702,
+     800,
+     800
+    ]
+   },
+   {
+    "objectID": 356060,
+    "artistDisplayName": "Virginia Ferrari",
+    "title": "Design for a Decanter",
+    "objectDate": "19th century",
+    "medium": "Watercolor, over graphite. Design pasted to brown mounting paper.",
+    "dimensions": "sheet: 10 11/16 x 8 3/8 in. (27.1 x 21.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/356060",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP812600.jpg",
+    "image_px": [
+     1975,
+     3568
+    ],
+    "bytes": 1563344,
+    "size_mm_hw": [
+     271,
+     212
+    ],
+    "px_per_mm": 11.24,
+    "px_per_mm_note": "inconsistent (h 13.2, w 9.3): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     328,
+     1152,
+     592,
+     592
+    ]
+   }
+  ],
+  "gouache": [
+   {
+    "objectID": 437315,
+    "artistDisplayName": "Camille Pissarro",
+    "title": "Fan Mount: The Cabbage Gatherers",
+    "objectDate": "ca. 1878–79",
+    "medium": "Gouache on silk",
+    "dimensions": "6 1/2 x 20 1/2 in. (16.5 x 52.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437315",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT1858.jpg",
+    "image_px": [
+     3811,
+     1930
+    ],
+    "bytes": 2015255,
+    "size_mm_hw": [
+     165,
+     521
+    ],
+    "px_per_mm": 9.51,
+    "px_per_mm_note": "inconsistent (h 11.7, w 7.3): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     649,
+     1107,
+     579,
+     579
+    ]
+   },
+   {
+    "objectID": 436134,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Dancer Onstage",
+    "objectDate": "ca. 1877",
+    "medium": "Gouache over graphite underdrawing on thin wove commercially coated yellow paper, laid down on board",
+    "dimensions": "Paper 6 3/4 x 8 3/8 in. (17.1 x 21.3 cm); board 7 x 9 in. (17.8 x 22.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436134",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT1913.jpg",
+    "image_px": [
+     3811,
+     3009
+    ],
+    "bytes": 3476196,
+    "size_mm_hw": [
+     171,
+     213
+    ],
+    "px_per_mm": 17.74,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1430,
+     497,
+     902,
+     902
+    ]
+   },
+   {
+    "objectID": 710360,
+    "artistDisplayName": "Anonymous, Alsatian, 19th century",
+    "title": "Textile Design with Scrolling Branches and Pearls",
+    "objectDate": "1840",
+    "medium": "Gouache",
+    "dimensions": "Sheet: 1 13/16 in. × 2 in. (4.6 × 5.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/710360",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP889515.jpg",
+    "image_px": [
+     939,
+     856
+    ],
+    "bytes": 370557,
+    "size_mm_hw": [
+     46,
+     51
+    ],
+    "px_per_mm": 18.51,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     468,
+     102,
+     256,
+     256
+    ]
+   },
+   {
+    "objectID": 355542,
+    "artistDisplayName": "John Frederick Lewis",
+    "title": "Arab School",
+    "objectDate": "1841–51",
+    "medium": "Watercolor and  gouache (bodycolor) over black chalk on brownish paper",
+    "dimensions": "sheet: 11 11/16 x 19 1/8 in. (29.7 x 48.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/355542",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP805928.jpg",
+    "image_px": [
+     3670,
+     2251
+    ],
+    "bytes": 1620079,
+    "size_mm_hw": [
+     297,
+     486
+    ],
+    "px_per_mm": 7.57,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     741,
+     511,
+     675,
+     675
+    ]
+   },
+   {
+    "objectID": 386569,
+    "artistDisplayName": "Anonymous, British, 19th century",
+    "title": "Design for a Mirrored Cabinet and a Set of Corner Shelves",
+    "objectDate": "19th century",
+    "medium": "Pen and ink, watercolor and gouache (bodycolor)",
+    "dimensions": "",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/386569",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP806643.jpg",
+    "image_px": [
+     3497,
+     2548
+    ],
+    "bytes": 1330587,
+    "size_mm_hw": null,
+    "px_per_mm": null,
+    "px_per_mm_note": null,
+    "crop_xywh": [
+     624,
+     1236,
+     764,
+     764
+    ]
+   },
+   {
+    "objectID": 378505,
+    "artistDisplayName": "Brewster & Co.",
+    "title": "Victoria #4188",
+    "objectDate": "1892",
+    "medium": "Pen and black ink, watercolor and gouache",
+    "dimensions": "sheet: 6 x 9 1/2 in. (15.2 x 24.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/378505",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP879670.jpg",
+    "image_px": [
+     3214,
+     2007
+    ],
+    "bytes": 1620067,
+    "size_mm_hw": [
+     152,
+     241
+    ],
+    "px_per_mm": 13.27,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1755,
+     611,
+     602,
+     602
+    ]
+   },
+   {
+    "objectID": 379126,
+    "artistDisplayName": "Brewster & Co.",
+    "title": "Rockaway #3104",
+    "objectDate": "1875",
+    "medium": "Pen and black ink, watercolor and gouache with gum arabic",
+    "dimensions": "Sheet: 7 3/16 x 9 7/8 in. (18.3 x 25.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/379126",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP882572.jpg",
+    "image_px": [
+     3649,
+     2651
+    ],
+    "bytes": 2233621,
+    "size_mm_hw": [
+     183,
+     251
+    ],
+    "px_per_mm": 14.51,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     777,
+     1235,
+     795,
+     795
+    ]
+   }
+  ],
+  "ink_brush": [
+   {
+    "objectID": 737736,
+    "artistDisplayName": "Gu Yun",
+    "title": "Landscape",
+    "objectDate": "1890",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Image: 26 3/16 × 13 3/16 in. (66.5 × 33.5 cm)\r\nOverall with mounting: 64 × 23 7/16 in. (162.5 × 59.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/737736",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-41032-002.jpg",
+    "image_px": [
+     2777,
+     4000
+    ],
+    "bytes": 2789707,
+    "size_mm_hw": [
+     665,
+     335
+    ],
+    "px_per_mm": 7.15,
+    "px_per_mm_note": "inconsistent (h 6.0, w 8.3): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     874,
+     2644,
+     833,
+     833
+    ]
+   },
+   {
+    "objectID": 916565,
+    "artistDisplayName": "Tani Bunchō",
+    "title": "Mountains in Rain",
+    "objectDate": "1831",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Image: 64 5/8 × 21 1/8 in. (164.1 × 53.6 cm)\r\nOverall with mounting: 89 5/16 × 27 3/8 in. (226.9 × 69.5 cm)\r\nOverall with knobs: 89 5/16 × 29 9/16 in. (226.9 × 75.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/916565",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-39335-002.jpg",
+    "image_px": [
+     1679,
+     4000
+    ],
+    "bytes": 1501283,
+    "size_mm_hw": [
+     1641,
+     536
+    ],
+    "px_per_mm": 2.79,
+    "px_per_mm_note": "inconsistent (h 2.4, w 3.1): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     311,
+     1645,
+     503,
+     503
+    ]
+   },
+   {
+    "objectID": 48903,
+    "artistDisplayName": "Hai Rui",
+    "title": "Poem on a Spring Pool",
+    "objectDate": "",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Overall with mounting: 108 3/4 x 28 in. (276.2 x 71.1 cm)\r\nImage: 82 3/8 x 20 1/8 in. (209.2 x 51.1 cm)\r\nOverall with knobs: 108 3/4 x 31 3/4 in. (276.2 x 80.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/48903",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-35738-002.jpg",
+    "image_px": [
+     1445,
+     4000
+    ],
+    "bytes": 928630,
+    "size_mm_hw": [
+     2762,
+     711
+    ],
+    "px_per_mm": 1.74,
+    "px_per_mm_note": "inconsistent (h 1.4, w 2.0): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     431,
+     1615,
+     433,
+     433
+    ]
+   },
+   {
+    "objectID": 902217,
+    "artistDisplayName": "Seigan Sōi",
+    "title": "Line from a Poem by Li Bai",
+    "objectDate": "mid 17th century",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Image: 48 11/16 × 11 1/4 in. (123.7 × 28.5 cm)\r\nOverall with mounting: 75 3/16 × 13 11/16 in. (191 × 34.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/902217",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-32433-002.jpg",
+    "image_px": [
+     1014,
+     4000
+    ],
+    "bytes": 920899,
+    "size_mm_hw": [
+     1237,
+     285
+    ],
+    "px_per_mm": 3.4,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     548,
+     1137,
+     304,
+     304
+    ]
+   },
+   {
+    "objectID": 36084,
+    "artistDisplayName": "Liu Shiru",
+    "title": "Flowering Plum in Moonlight and Snow",
+    "objectDate": "16th century",
+    "medium": "Hanging scroll; ink on silk",
+    "dimensions": "Image: 60 x 35 5/16 in. (152.4 x 89.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/36084",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-37469-002.jpg",
+    "image_px": [
+     2700,
+     4000
+    ],
+    "bytes": 2758824,
+    "size_mm_hw": [
+     1524,
+     897
+    ],
+    "px_per_mm": 2.82,
+    "px_per_mm_note": "inconsistent (h 2.6, w 3.0): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     553,
+     1863,
+     810,
+     810
+    ]
+   },
+   {
+    "objectID": 48967,
+    "artistDisplayName": "Mi Wanzhong",
+    "title": "Couplet from Song Zhiwen’s poem “Ascending the Pavilion at the Monastery of Meditative Concentration”",
+    "objectDate": "late 16th or early 17th century",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Image: 134 3/4 x 39 1/8 in. (342.3 x 99.4 cm)\r\nOverall: 186 3/4 x 48 in. (474.3 x 121.9 cm)\r\nOverall with knobs: 186 3/4 x 53 3/4 in. (474.3 x 136.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/48967",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-21611-001.jpg",
+    "image_px": [
+     1447,
+     4000
+    ],
+    "bytes": 967999,
+    "size_mm_hw": [
+     3423,
+     994
+    ],
+    "px_per_mm": 1.31,
+    "px_per_mm_note": "inconsistent (h 1.2, w 1.5): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     815,
+     913,
+     434,
+     434
+    ]
+   },
+   {
+    "objectID": 45620,
+    "artistDisplayName": "",
+    "title": "Kongōyasha Myōō",
+    "objectDate": "12th century",
+    "medium": "Hanging scroll; ink on paper",
+    "dimensions": "Image: 28 3/8 x 21 1/4 in. (72.1 x 54 cm)\r\nOverall with mounting: 65 5/8 x 26 1/2 in. (166.7 x 67.3 cm)\r\nOverall with knobs: 65 5/8 x 28 5/8 in. (166.7 x 72.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/45620",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP276185.jpg",
+    "image_px": [
+     1384,
+     1995
+    ],
+    "bytes": 2156436,
+    "size_mm_hw": [
+     721,
+     540
+    ],
+    "px_per_mm": 2.66,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     445,
+     945,
+     415,
+     415
+    ]
+   },
+   {
+    "objectID": 51415,
+    "artistDisplayName": "Unidentified artist",
+    "title": "Mountain Retreat",
+    "objectDate": "mid-16th century",
+    "medium": "Hanging scroll; ink on silk",
+    "dimensions": "60 1/2 x 32 3/4 in. (153.7 x 83.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/51415",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-32420-002.jpg",
+    "image_px": [
+     2398,
+     4000
+    ],
+    "bytes": 2164976,
+    "size_mm_hw": [
+     1537,
+     832
+    ],
+    "px_per_mm": 2.74,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1393,
+     2449,
+     719,
+     719
+    ]
+   },
+   {
+    "objectID": 57262,
+    "artistDisplayName": "Katsushika Hokusai",
+    "title": "Turtles",
+    "objectDate": "18th–19th century",
+    "medium": "Ink on paper",
+    "dimensions": "11 3/8 x 8 3/8 in. (28.9 x 21.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/57262",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-24904-001.jpg",
+    "image_px": [
+     2698,
+     3725
+    ],
+    "bytes": 3586649,
+    "size_mm_hw": [
+     289,
+     213
+    ],
+    "px_per_mm": 12.78,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1566,
+     2354,
+     809,
+     809
+    ]
+   },
+   {
+    "objectID": 57261,
+    "artistDisplayName": "Katsushika Hokusai",
+    "title": "Portrait of the Poet Matsuo Bashō (?)",
+    "objectDate": "18th–19th century",
+    "medium": "Ink on paper",
+    "dimensions": "9 7/8 x 7 7/16 in. (25.1 x 18.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/57261",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP-24903-001.jpg",
+    "image_px": [
+     2753,
+     3774
+    ],
+    "bytes": 3648874,
+    "size_mm_hw": [
+     251,
+     189
+    ],
+    "px_per_mm": 14.8,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1048,
+     608,
+     825,
+     825
+    ]
+   }
+  ],
+  "charcoal": [
+   {
+    "objectID": 399579,
+    "artistDisplayName": "Anton Mauve",
+    "title": "Landscape with Women Working in a Field (recto); Sketch of Landscape with Person on a Path (verso)",
+    "objectDate": "19th century",
+    "medium": "Charcoal",
+    "dimensions": "sheet: 5 7/8 x 3 11/16 in. (15 x 9.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/399579",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-20675-001.jpg",
+    "image_px": [
+     3699,
+     2385
+    ],
+    "bytes": 2869732,
+    "size_mm_hw": [
+     150,
+     93
+    ],
+    "px_per_mm": 27.84,
+    "px_per_mm_note": "inconsistent (h 15.9, w 39.8): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     819,
+     921,
+     715,
+     715
+    ]
+   },
+   {
+    "objectID": 436166,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Two Dancers",
+    "objectDate": "ca. 1879",
+    "medium": "Charcoal and white chalk on green commercially coated wove paper",
+    "dimensions": "25 1/8 x 19 1/4 in. (63.8 x 48.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436166",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT253888.jpg",
+    "image_px": [
+     2816,
+     3722
+    ],
+    "bytes": 2708285,
+    "size_mm_hw": [
+     638,
+     489
+    ],
+    "px_per_mm": 5.8,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1634,
+     814,
+     844,
+     844
+    ]
+   },
+   {
+    "objectID": 365663,
+    "artistDisplayName": "Anton Melbye",
+    "title": "The English Fleet Anchored at the Town of Beykoz, North of Istanbul",
+    "objectDate": "1853",
+    "medium": "Graphite and charcoal",
+    "dimensions": "sheet: 11 5/8 x 15 3/16 in. (29.5 x 38.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365663",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP802628.jpg",
+    "image_px": [
+     3548,
+     2723
+    ],
+    "bytes": 2199416,
+    "size_mm_hw": [
+     295,
+     385
+    ],
+    "px_per_mm": 9.22,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1308,
+     1274,
+     816,
+     816
+    ]
+   },
+   {
+    "objectID": 337802,
+    "artistDisplayName": "Jean-François Millet",
+    "title": "A Seated Shepherd with His Dog and Sheep",
+    "objectDate": "1830–75",
+    "medium": "Conté crayon on wove paper",
+    "dimensions": "7 5/16 x 12 in.  (18.6 x 30.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/337802",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP807720.jpg",
+    "image_px": [
+     3863,
+     2383
+    ],
+    "bytes": 1730233,
+    "size_mm_hw": [
+     186,
+     305
+    ],
+    "px_per_mm": 12.74,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2687,
+     1135,
+     714,
+     714
+    ]
+   },
+   {
+    "objectID": 335745,
+    "artistDisplayName": "Anonymous, German, 16th century",
+    "title": "Anamorphic Drawing of a Stag",
+    "objectDate": "16th century (?)",
+    "medium": "Black chalk, on light-brown paper",
+    "dimensions": "12 1/2 x 3 1/16 in.  (31.7 x 7.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/335745",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP803432.jpg",
+    "image_px": [
+     1008,
+     3925
+    ],
+    "bytes": 837043,
+    "size_mm_hw": [
+     317,
+     77
+    ],
+    "px_per_mm": 12.74,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     585,
+     2088,
+     302,
+     302
+    ]
+   },
+   {
+    "objectID": 436127,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Woman Bathing in a Shallow Tub",
+    "objectDate": "1885",
+    "medium": "Charcoal and pastel on light green wove paper, now discolored to warm gray, laid down on silk bolting",
+    "dimensions": "32 x 22 1/8in. (81.3 x 56.2cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436127",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP253483.jpg",
+    "image_px": [
+     2704,
+     3878
+    ],
+    "bytes": 3115476,
+    "size_mm_hw": [
+     813,
+     562
+    ],
+    "px_per_mm": 4.79,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     323,
+     1311,
+     811,
+     811
+    ]
+   },
+   {
+    "objectID": 436151,
+    "artistDisplayName": "Edgar Degas",
+    "title": "The Milliner",
+    "objectDate": "ca. 1882",
+    "medium": "Pastel and charcoal on warm gray wove paper, now discolored to buff (watermark MICHALLET), laid down on dark brown wove paper",
+    "dimensions": "18 3/4 x 24 1/2 in. (47.6 x 62.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436151",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP289328.jpg",
+    "image_px": [
+     1955,
+     1464
+    ],
+    "bytes": 2686790,
+    "size_mm_hw": [
+     476,
+     622
+    ],
+    "px_per_mm": 3.11,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     234,
+     768,
+     439,
+     439
+    ]
+   },
+   {
+    "objectID": 337511,
+    "artistDisplayName": "Charles de la Fosse",
+    "title": "The Vision of St. John of the Cross",
+    "objectDate": "n.d.",
+    "medium": "Black chalk, over red chalk, heightened with white on gray paper",
+    "dimensions": "13 1/4 x 9 5/8 in.  (33.6 x 24.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/337511",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP806870.jpg",
+    "image_px": [
+     2814,
+     3825
+    ],
+    "bytes": 2715680,
+    "size_mm_hw": [
+     336,
+     244
+    ],
+    "px_per_mm": 11.46,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1270,
+     782,
+     844,
+     844
+    ]
+   }
+  ],
+  "graphite": [
+   {
+    "objectID": 409002,
+    "artistDisplayName": "Jean Auguste Dominique Ingres",
+    "title": "Madame Armand Bertin, née Marie-Anne-Cécile Dollfuss",
+    "objectDate": "1843",
+    "medium": "Graphite",
+    "dimensions": "Sheet: 13 7/16 x 10 1/4 in. (34.2 x 26 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/409002",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP823935.jpg",
+    "image_px": [
+     1373,
+     1805
+    ],
+    "bytes": 1468551,
+    "size_mm_hw": [
+     342,
+     260
+    ],
+    "px_per_mm": 5.28,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     474,
+     832,
+     411,
+     411
+    ]
+   },
+   {
+    "objectID": 355649,
+    "artistDisplayName": "Eugène Delacroix",
+    "title": "Studies of a Fallen Male Nude for \"Hercules and the Horses of Diomedes\"",
+    "objectDate": "1852",
+    "medium": "Graphite",
+    "dimensions": "sheet: 8 7/16 x 12 1/2 in. (21.4 x 31.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/355649",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP836021.jpg",
+    "image_px": [
+     3598,
+     2396
+    ],
+    "bytes": 2239271,
+    "size_mm_hw": [
+     214,
+     318
+    ],
+    "px_per_mm": 11.26,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1675,
+     1119,
+     718,
+     718
+    ]
+   },
+   {
+    "objectID": 384261,
+    "artistDisplayName": "Eduard Julius Friedrich Bendemann",
+    "title": "Studies of a Seated Woman from Behind",
+    "objectDate": "1811–89",
+    "medium": "Graphite",
+    "dimensions": "9 5/8 × 6 15/16 in. (24.5 × 17.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/384261",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP803688.jpg",
+    "image_px": [
+     2843,
+     3880
+    ],
+    "bytes": 1408356,
+    "size_mm_hw": [
+     245,
+     176
+    ],
+    "px_per_mm": 16.0,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     810,
+     1552,
+     852,
+     852
+    ]
+   },
+   {
+    "objectID": 365595,
+    "artistDisplayName": "Ferdinand Georg Waldmüller",
+    "title": "Portrait of Franz Jauner (Vienna 1832-1900 Vienna), Theater Director and Actor in Vienna",
+    "objectDate": "1800–1865",
+    "medium": "Graphite",
+    "dimensions": "sheet: 13 x 10 7/16 in. (33 x 26.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365595",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP804167.jpg",
+    "image_px": [
+     2824,
+     3490
+    ],
+    "bytes": 1004536,
+    "size_mm_hw": [
+     330,
+     265
+    ],
+    "px_per_mm": 10.62,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1075,
+     997,
+     847,
+     847
+    ]
+   },
+   {
+    "objectID": 812726,
+    "artistDisplayName": "J. J. Grandville",
+    "title": "Dog in doghouse; cock singing at window",
+    "objectDate": "ca. 1842",
+    "medium": "Graphite",
+    "dimensions": "Sheet: 5 1/2 × 4 5/16 in. (14 × 10.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/812726",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP885149.jpg",
+    "image_px": [
+     2781,
+     3080
+    ],
+    "bytes": 2173008,
+    "size_mm_hw": [
+     140,
+     109
+    ],
+    "px_per_mm": 23.76,
+    "px_per_mm_note": "inconsistent (h 22.0, w 25.5): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     825,
+     1665,
+     834,
+     834
+    ]
+   },
+   {
+    "objectID": 345512,
+    "artistDisplayName": "Jules-Edmond-Charles Lachaise",
+    "title": "Seven Miscellaneous Designs for the de la Rochejaquelein Family",
+    "objectDate": "second half 19th century",
+    "medium": "Graphite",
+    "dimensions": "12 1/4 x 18 3/4 in.  (31.1 x 47.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/345512",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP807058.jpg",
+    "image_px": [
+     2409,
+     3658
+    ],
+    "bytes": 1958358,
+    "size_mm_hw": [
+     311,
+     476
+    ],
+    "px_per_mm": 8.41,
+    "px_per_mm_note": "inconsistent (h 11.8, w 5.1): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     945,
+     1637,
+     722,
+     722
+    ]
+   },
+   {
+    "objectID": 344278,
+    "artistDisplayName": "Anonymous, French, 18th century",
+    "title": "Design for a Plumed Oil Lamp",
+    "objectDate": "ca. 1770–90",
+    "medium": "Graphite",
+    "dimensions": "8 7/8 x 6 in.  (22.5 x 15.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/344278",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP808946.jpg",
+    "image_px": [
+     2577,
+     3821
+    ],
+    "bytes": 1188790,
+    "size_mm_hw": [
+     225,
+     152
+    ],
+    "px_per_mm": 16.97,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     898,
+     2282,
+     773,
+     773
+    ]
+   },
+   {
+    "objectID": 386741,
+    "artistDisplayName": "Anonymous, British, 19th century",
+    "title": "Reliquary Containing Two Slender Bones",
+    "objectDate": "second half 19th century",
+    "medium": "Graphite",
+    "dimensions": "sheet: 6 1/2 x 4 1/8 in. (16.5 x 10.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/386741",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP806692.jpg",
+    "image_px": [
+     2085,
+     3307
+    ],
+    "bytes": 780355,
+    "size_mm_hw": [
+     165,
+     105
+    ],
+    "px_per_mm": 19.95,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     774,
+     2286,
+     625,
+     625
+    ]
+   }
+  ],
+  "pastel": [
+   {
+    "objectID": 436173,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Woman Having Her Hair Combed",
+    "objectDate": "ca. 1886–88",
+    "medium": "Pastel on light green wove paper, now discolored to warm gray, affixed to original pulpboard mount",
+    "dimensions": "29 1/8 x 23 7/8 in. (74 x 60.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436173",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP253480.jpg",
+    "image_px": [
+     3165,
+     3865
+    ],
+    "bytes": 3053151,
+    "size_mm_hw": [
+     740,
+     606
+    ],
+    "px_per_mm": 5.22,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1149,
+     2454,
+     949,
+     949
+    ]
+   },
+   {
+    "objectID": 437379,
+    "artistDisplayName": "Odilon Redon",
+    "title": "Bouquet of Flowers",
+    "objectDate": "ca. 1900–1905",
+    "medium": "Pastel on paper",
+    "dimensions": "31 5/8 x 25 1/4 in. (80.3 x 64.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437379",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT245117.jpg",
+    "image_px": [
+     2949,
+     3722
+    ],
+    "bytes": 3307491,
+    "size_mm_hw": [
+     803,
+     641
+    ],
+    "px_per_mm": 4.62,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1436,
+     1338,
+     884,
+     884
+    ]
+   },
+   {
+    "objectID": 438544,
+    "artistDisplayName": "Rosalba Carriera",
+    "title": "Gustavus Hamilton (1710–1746), Second Viscount Boyne, in Masquerade Costume",
+    "objectDate": "1730–31",
+    "medium": "Pastel on paper, laid down on canvas",
+    "dimensions": "22 1/4 x 16 7/8 in. (56.5 x 42.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/438544",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP161652.jpg",
+    "image_px": [
+     3189,
+     3877
+    ],
+    "bytes": 2351292,
+    "size_mm_hw": [
+     565,
+     429
+    ],
+    "px_per_mm": 7.15,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1622,
+     1736,
+     956,
+     956
+    ]
+   },
+   {
+    "objectID": 438615,
+    "artistDisplayName": "Jean-Baptiste Perronneau",
+    "title": "Olivier Journu (1724–1783)",
+    "objectDate": "1756",
+    "medium": "Pastel on blue-gray laid paper, laid down on canvas",
+    "dimensions": "22 7/8 x 18 1/2 in. (58.1 x 47 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/438615",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP161654.jpg",
+    "image_px": [
+     3168,
+     3881
+    ],
+    "bytes": 1979617,
+    "size_mm_hw": [
+     581,
+     470
+    ],
+    "px_per_mm": 6.71,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1091,
+     2138,
+     950,
+     950
+    ]
+   },
+   {
+    "objectID": 436163,
+    "artistDisplayName": "Edgar Degas",
+    "title": "Three Dancers Preparing for Class",
+    "objectDate": "after 1878",
+    "medium": "Pastel on buff-colored wove paper",
+    "dimensions": "21 1/2 x 20 1/2 in. (54.6 x 52.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436163",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DT245118.jpg",
+    "image_px": [
+     3506,
+     3672
+    ],
+    "bytes": 3455608,
+    "size_mm_hw": [
+     546,
+     521
+    ],
+    "px_per_mm": 6.73,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     778,
+     1069,
+     1024,
+     1024
+    ]
+   },
+   {
+    "objectID": 437584,
+    "artistDisplayName": "William Russell",
+    "title": "Robert Shurlock (1772–1847)",
+    "objectDate": "ca. 1805",
+    "medium": "Pastel on paper",
+    "dimensions": "23 7/8 x 17 7/8 in. (60.6 x 45.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/437584",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP161650.jpg",
+    "image_px": [
+     2936,
+     3893
+    ],
+    "bytes": 1639045,
+    "size_mm_hw": [
+     606,
+     454
+    ],
+    "px_per_mm": 6.45,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1218,
+     1484,
+     880,
+     880
+    ]
+   },
+   {
+    "objectID": 436124,
+    "artistDisplayName": "Edgar Degas",
+    "title": "The Artist's Cousin, Probably Mrs. William Bell (Mathilde Musson, 1841–1878)",
+    "objectDate": "1873",
+    "medium": "Pastel on green wove paper, now darkened to brown",
+    "dimensions": "18 5/8 x 15 1/8 in. (47.3 x 38.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436124",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP338363.jpg",
+    "image_px": [
+     3166,
+     3869
+    ],
+    "bytes": 2934208,
+    "size_mm_hw": [
+     473,
+     384
+    ],
+    "px_per_mm": 8.21,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1827,
+     462,
+     949,
+     949
+    ]
+   },
+   {
+    "objectID": 436159,
+    "artistDisplayName": "Edgar Degas",
+    "title": "The Singer in Green",
+    "objectDate": "ca. 1884",
+    "medium": "Pastel on light blue laid paper",
+    "dimensions": "23 3/4 x 18 1/4 in. (60.3 x 46.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/436159",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/ep/original/DP-25446-001.jpg",
+    "image_px": [
+     3110,
+     4000
+    ],
+    "bytes": 6018165,
+    "size_mm_hw": [
+     603,
+     464
+    ],
+    "px_per_mm": 6.67,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1805,
+     479,
+     933,
+     933
+    ]
+   }
+  ],
+  "ukiyoe": [
+   {
+    "objectID": 37224,
+    "artistDisplayName": "Utagawa Hiroshige",
+    "title": "Hamamatsu",
+    "objectDate": "ca. 1840",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "Overall: 8 3/4 x 13 3/4in. (22.2 x 34.9cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/37224",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP122910.jpg",
+    "image_px": [
+     3822,
+     2495
+    ],
+    "bytes": 2827014,
+    "size_mm_hw": [
+     222,
+     349
+    ],
+    "px_per_mm": 11.1,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2342,
+     1448,
+     748,
+     748
+    ]
+   },
+   {
+    "objectID": 56188,
+    "artistDisplayName": "Utagawa Hiroshige",
+    "title": "Evening Rain on the Karasaki Pine",
+    "objectDate": "",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "H. 10 1/4 in. (26 cm); W. 15 in. (38.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/56188",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP122123.jpg",
+    "image_px": [
+     3883,
+     2668
+    ],
+    "bytes": 3008699,
+    "size_mm_hw": null,
+    "px_per_mm": null,
+    "px_per_mm_note": null,
+    "crop_xywh": [
+     2538,
+     1534,
+     800,
+     800
+    ]
+   },
+   {
+    "objectID": 57052,
+    "artistDisplayName": "Utagawa Hiroshige",
+    "title": "Vesper Bells at Mii Temple",
+    "objectDate": "1797–1858",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "9 3/4 x 14 7/8 in. (24.8 x 37.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/57052",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP122155.jpg",
+    "image_px": [
+     3871,
+     2583
+    ],
+    "bytes": 2851897,
+    "size_mm_hw": [
+     248,
+     378
+    ],
+    "px_per_mm": 10.33,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2633,
+     1499,
+     774,
+     774
+    ]
+   },
+   {
+    "objectID": 55740,
+    "artistDisplayName": "Katsushika Hokusai",
+    "title": "Sazai Hall at the Temple of the Five Hundred Arhats (Gohyaku Rakanji Sazaidō), from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+    "objectDate": "ca. 1830–32",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "Oban 10 1/4 x 15 1/4 in. (26 x 38.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/55740",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP141079.jpg",
+    "image_px": [
+     3893,
+     2620
+    ],
+    "bytes": 3012705,
+    "size_mm_hw": [
+     260,
+     387
+    ],
+    "px_per_mm": 10.07,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     807,
+     1501,
+     786,
+     786
+    ]
+   },
+   {
+    "objectID": 56212,
+    "artistDisplayName": "Katsushika Hokusai",
+    "title": "The New Fields at Ōno in Suruga Province (Sunshū Ōno shinden), from the series Thirty-six Views of Mount Fuji (Fugaku sanjūrokkei)",
+    "objectDate": "ca. 1830–32",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "10 x 14 3/4 in. (25.4 x 37.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/56212",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP141047.jpg",
+    "image_px": [
+     1935,
+     1312
+    ],
+    "bytes": 2155962,
+    "size_mm_hw": [
+     254,
+     375
+    ],
+    "px_per_mm": 5.16,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1029,
+     676,
+     393,
+     393
+    ]
+   },
+   {
+    "objectID": 55020,
+    "artistDisplayName": "Katsushika Hokusai",
+    "title": "Ono Waterfall on the Kisokaidō (Kisokaidō Ono no bakufu), from the series A Tour of Waterfalls in Various Provinces (Shokoku taki meguri)",
+    "objectDate": "ca. 1832",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "14 7/8 x 10 5/16 in. (37.8 x 26.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/55020",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP141248.jpg",
+    "image_px": [
+     2705,
+     3870
+    ],
+    "bytes": 3281750,
+    "size_mm_hw": [
+     378,
+     262
+    ],
+    "px_per_mm": 10.28,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     565,
+     2499,
+     811,
+     811
+    ]
+   },
+   {
+    "objectID": 57062,
+    "artistDisplayName": "Utagawa Hiroshige",
+    "title": "Boats Returning to Gyotoku",
+    "objectDate": "1797–1858",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "8 7/8 x 13 1/8 in. (22.5 x 33.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/57062",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP123270.jpg",
+    "image_px": [
+     3832,
+     2609
+    ],
+    "bytes": 2862869,
+    "size_mm_hw": [
+     225,
+     333
+    ],
+    "px_per_mm": 11.55,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1107,
+     1501,
+     782,
+     782
+    ]
+   },
+   {
+    "objectID": 45301,
+    "artistDisplayName": "Utagawa Hiroshige",
+    "title": "The Year's First Song of the Cuckoo at Tsukudajima",
+    "objectDate": "1831",
+    "medium": "Woodblock print; ink and color on paper",
+    "dimensions": "13 3/4 x 8 1/2 in. (34.9 x 21.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/45301",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/as/original/DP123253.jpg",
+    "image_px": [
+     3884,
+     2612
+    ],
+    "bytes": 2903386,
+    "size_mm_hw": [
+     349,
+     216
+    ],
+    "px_per_mm": 12.73,
+    "px_per_mm_note": "inconsistent (h 7.5, w 18.0): image may include frame/mount or dims are of the sheet",
+    "crop_xywh": [
+     2171,
+     1517,
+     783,
+     783
+    ]
+   }
+  ]
+ },
+ "excluded": [
+  {
+   "objectID": 437127,
+   "reason": "no public-domain image"
+  },
+  {
+   "objectID": 437693,
+   "reason": "image only 680 px"
+  },
+  {
+   "objectID": 437695,
+   "reason": "image only 680 px"
+  },
+  {
+   "objectID": 36145,
+   "reason": "image only 904 px"
+  }
+ ]
+}

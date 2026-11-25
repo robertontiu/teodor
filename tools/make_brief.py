@@ -91,7 +91,7 @@ def main():
     shutil.copytree(os.path.join(STUDIO, "media"), os.path.join(w, "media"), dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns("__pycache__", ".*"))
     shutil.copy(os.path.join(ROOT, "docs", "habits.md"), os.path.join(w, "habits.md"))
-    for f in ("styles.json", "targets.json"):
+    for f in ("styles.json", "targets.json", "pigments.json"):
         p = os.path.join(ROOT, "studio", f)
         if os.path.exists(p):
             shutil.copy(p, os.path.join(w, f))
