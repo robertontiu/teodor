@@ -11,18 +11,22 @@ How it is modelled (docs/MEDIA.md, "Ink", Engine model):
   several tones; light pressure lets only the dark tip touch, pressing spreads the belly (width swells).
   Hairs run dry at different times and speed separates them: flying white (feibai), streaks of bare
   paper along the stroke.
-- A stroke is laid into a stroke buffer (ink coverage and water). When it ends (the next stroke starts or
-  the episode ends) its liquid ink spreads: on raw xuan a coarse-grid, MoXi-like flow along the paper's
-  fibres with pinning (the front stops where too little water is left, ink piles up at the front), so wet
-  ink feathers into a pale, fibrous halo with a darker rim; strokes into still-damp ink fuse. Sized xuan,
-  silk, bristol and laid paper hold the ink where it lands (a slight soft edge, a darker rim when wet).
+- A stroke is laid into a stroke buffer (ink coverage and liquid). When it ends (the next stroke starts or
+  the episode ends) its liquid ink spreads. On raw xuan the spread conserves volume: the liquid beyond what
+  the paper under the stroke can hold flows out along the fibres until every wetted cell holds the paper's
+  capacity, so a microlitre wets 0.39-0.49 cm2 by xuan type (Wu et al. 2016, measured drops); soot is
+  filtered out on the way, so the halo is paler than the core and fades outward; strokes into still-damp
+  paper fuse and spread further. Sized xuan, silk, bristol and laid paper hold the ink where it lands (a
+  slight soft edge, a darker rim when wet).
+- Physical scale: PX_PER_MM (4 px/mm: a 1200x1600 canvas is a 30 x 40 cm sheet); liquid in films of
+  FILM_UM. Which parameters rest on data and which are by eye: docs/calibration/ink.md.
 - Pens: a flexible steel nib (width swells with pressure and on down-strokes), a technical pen (even
   line), a reed pen (width set by direction); occasional blots at slow starts; a hatching tool.
 State arrays: col (apparent colour), water (dampness 0..1), ink (carbon density laid), pencil (graphite
 construction layer, erasable).
 """
 import numpy as np, math, os, json
-from scipy.ndimage import gaussian_filter, zoom
+from scipy.ndimage import gaussian_filter, uniform_filter, zoom, distance_transform_edt
 from PIL import Image, ImageDraw, ImageFont
 from .base import Medium, hx, noise_field, pigment_from_hex, km_layer
 
@@ -44,6 +48,42 @@ ALIAS = {"brush_chinese": "brush", "round": "brush", "filbert": "brush", "liner"
          "blend": "water", "smudge": "water", "dots": "brush"}
 NIB = {"pen_tech": "tech", "pen_reed": "reed"}
 STUDIO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# ---- physical scale and liquid units (docs/calibration/ink.md)
+# A canvas is a sheet at PX_PER_MM (cv.meta["px_per_mm"] overrides): 1200x1600 px = 30 x 40 cm.
+PX_PER_MM = 4.0
+# The liquid a tool lays (Wl) is a film on the paper: Wl = 1 is FILM_UM micrometres of ink, i.e.
+# FILM_UM * 1e-3 / ppm^2 microlitres per pixel (2.8 nL per px at 4 px/mm). Estimate, not measured: about
+# the diameter of a brush hair (wolf/goat hair 50-100 um), the film a fully wet tuft leaves when pressed.
+FILM_UM = 45.0
+# Raw xuan, Wu et al. 2016 [I1]: spread of a 50 uL ink drop (area per uL), contact angle 0.02 s after a 4 uL
+# drop lands, fibre overlaps per mm (SEM). The paper holds 10/area nL per mm2 (um of liquid) once the ink
+# has stopped spreading: capacity 20-26 um, against a ~100 um sheet of web density 360-460 kg/m3.
+XUAN = {"qianlong": dict(area=24.5 / 50, contact=36.8, overlaps=77),
+        "bamboo": dict(area=22.7 / 50, contact=50.1, overlaps=52),
+        "jingpi": dict(area=19.6 / 50, contact=60.6, overlaps=40)}
+XUAN_DEFAULT = "bamboo"
+DRAIN = 18.0     # px of stroke per px of brush size until a hair runs dry (x load x thickness); set by flying white
+RES_MIN = 16.0   # a fine line is drawn with the tip of a brush that holds more (reservoir ~ max(size, RES_MIN)^2); by eye
+SPEED_DRY = 4.0  # how much brush speed opens flying white (x the core's speedfx); set by flying white
+CLUMP = 0.08     # hair bundles in flying white, as a share of the tuft's hairs; by eye
+PLATEAU = 0.55   # share of the half-width in the tip's full tone before the belly's paler ink; set by edge rise
+RHYTHM = 0.3     # along-stroke swell and thinning of the brush (lifting and pressing); set by width CV
+ROUGH = 0.45     # permeability noise of the fibre web on bamboo xuan (scaled by sqrt(52/overlaps)); by eye
+FEATHER = 0.6    # how far the full-resolution front breaks along fibres; by eye
+EVEN = 5         # free liquid evens out inside saturated paper over this many coarse cells per step; by eye
+WICK_MM = 0.3    # fibre wicking fringe at every edge on raw xuan (bamboo); set by the hard-edge share
+DAMP_FILL = 0.5  # share of the paper's capacity that damp from earlier strokes still fills (the rest has gone into
+                 # the felt underlay or evaporated); by eye
+SOOT_STEPS = 30  # soot filtered out of the liquid moving through wet paper: 1/e per SOOT_STEPS front steps; by eye
+
+
+def _sh(a, dy, dx):
+    """b[y, x] = a[y + dy, x + dx], zero outside (a neighbour's value)."""
+    b = np.zeros_like(a)
+    H, W = a.shape
+    b[max(0, -dy):H - max(0, dy), max(0, -dx):W - max(0, dx)] = a[max(0, dy):H - max(0, -dy), max(0, dx):W - max(0, -dx)]
+    return b
 
 
 def lum(c):
@@ -126,10 +166,15 @@ class InkTool:
         self.blen = np.clip(rng.normal(0.97, 0.05, K), 0.82, 1.06).astype(np.float32)
         if kind == "brush_side":
             self.blen = np.clip(rng.normal(0.7, 0.24, K), 0.2, 1.05).astype(np.float32)
-        self.bn = rng.random(K).astype(np.float32)          # which hairs separate first
-        self.brate = np.clip(rng.normal(1.0, 0.3, K), 0.45, 1.8).astype(np.float32)
+        # which hairs separate first: drying hairs cling together in bundles (CLUMP hairs across)
+        from scipy.ndimage import gaussian_filter1d
+        bn = gaussian_filter1d(rng.random(K), max(0.5, K * CLUMP), mode="wrap")
+        self.bn = ((np.argsort(np.argsort(bn)) + 0.5) / K).astype(np.float32)
+        self.brate = np.clip(1 + 0.3 * (self.bn - 0.5) / 0.29 + rng.normal(0, 0.1, K), 0.45, 1.8).astype(np.float32)
         self.walk = 0.75
         self.blot = float(it.get("blots", 0.12))
+        sz = max(self.size, 2.0)
+        self.rh = (2 * math.pi / (max(sz, 12) * rng.uniform(5, 10)), rng.uniform(0, 6.283))
 
     # ------------------------------------------------------------------ setup on first contact
     def _begin(self, cv):
@@ -229,6 +274,10 @@ class InkTool:
             self.pts.append((x, y, ang, press))
             self.ndab += 1
             return
+        if k in ("brush", "brush_side") and RHYTHM > 0:
+            a = self.acc_arc = getattr(self, "acc_arc", 0.0) + st
+            ph = self.rh
+            rscale = rscale * (1 + RHYTHM * math.sin(a * ph[0] + ph[1]))
         rt = max(0.6, self.size / 2 * rscale)
         minsp = {"pen": 0.35, "pencil": 0.35}.get(k, max(0.45, rt * 0.12))
         if k == "splash":
@@ -246,9 +295,12 @@ class InkTool:
     def _gate(self, cv, sl, bi, wetb, press, dry_bias=0.0, patch=0.15):
         """Flying white: hairs that run dry (or move fast) stop marking, the rest catch the paper's tooth
         (fine grain, and in patches where the brush skips over the paper)."""
-        eff = wetb - float(getattr(self, "speedfx", 0.0)) * 1.3 - dry_bias
+        # pressing squeezes ink from the belly into the tip; speed lets hairs skip (closing again as the
+        # brush slows), so fast strokes open streaks in their middle, dry brushes at their tail
+        sp = 0.45 * math.tanh(float(getattr(self, "speedfx", 0.0)) * SPEED_DRY / 0.45)   # saturates: a fast brush still marks
+        eff = wetb + 0.3 * float(np.clip(press - 0.7, 0, 0.4)) - sp - dry_bias
         thr = np.clip((0.46 - eff) / 0.46, 0, 1.15) + max(0.0, 0.22 - press) * 2.0
-        g = (0.5 - patch / 2) * cv.tex[sl] + (0.5 - patch / 2) * self.bn[bi] + patch * self.med.fields(cv)[1][sl]
+        g = (1 - patch) * (0.3 * cv.tex[sl] + 0.7 * self.bn[bi]) + patch * self.med.fields(cv)[1][sl]
         return np.clip((g + 0.22 - thr * 1.05) * 6, 0, 1)
 
     def _brush(self, cv, x, y, ang, press, rt, dist, st):
@@ -261,16 +313,19 @@ class InkTool:
         sl, u, v, _, _ = w
         t = np.clip(v / r, -1.2, 1.2)
         bi = np.clip(((t + 1) * 0.5 * (self.K - 1) + 0.5).astype(np.int32), 0, self.K - 1)
-        d2 = (u / ru) ** 2 + (v / r) ** 2
-        m = np.clip((self.blen[bi] - d2) * 3, 0, 1) ** 0.6
+        rr = np.sqrt((u / ru) ** 2 + (v / r) ** 2)
+        # the tuft's edge is the ends of its hairs: sharp (about one pixel), ragged hair by hair
+        m = np.clip((np.sqrt(self.blen[bi]) - rr) * r + 0.5, 0, 1)
         p = np.clip(np.abs(t) * min(c, 1.0), 0, 1)
-        conc = self.belly + (1 - self.belly) * (1 - p) ** 1.4
+        # tone across the stroke: the dark tip's ink fills the middle, the pale belly shows only at the margins
+        z = np.clip((p - PLATEAU) / (1.05 - PLATEAU), 0, 1)
+        conc = 1 - (1 - self.belly) * z * z * (3 - 2 * z)
         wetb = self.wb[bi]
         conc = conc * (1 - (0.06 + 0.3 * np.clip(1 - wetb, 0, 1)) * self.bn[bi])   # hair streaks
         m = m * self._gate(cv, sl, bi, wetb, press)
         self._lay(sl, m, conc * (0.8 + 0.2 * np.minimum(1, wetb * 1.6)), self.water * np.minimum(1, wetb * 1.5) * self._dwell(st))
         touch = np.abs(self.bpos) <= min(c, 1.0) + 0.06
-        self.wb -= dist * self.brate * touch * (0.35 + 0.65 * min(press, 1.0)) / (max(self.size, 2) * 26 * self.thick)
+        self.wb -= dist * self.brate * touch * (0.35 + 0.65 * min(press, 1.0)) / (max(self.size, RES_MIN) ** 2 / max(self.size, 2) * DRAIN * self.thick)
         np.maximum(self.wb, 0, out=self.wb)
 
     def _side(self, cv, x, y, ang, press, rt, dist, st):
@@ -289,9 +344,9 @@ class InkTool:
         conc = self.belly + (1 - self.belly) * (1 - pp) ** 1.3
         wetb = self.wb[bi]
         conc = conc * (1 - (0.1 + 0.3 * np.clip(1 - wetb, 0, 1)) * self.bn[bi])
-        m = m * self._gate(cv, sl, bi, wetb, press, dry_bias=0.24 + 0.3 * pp, patch=0.45)
+        m = m * self._gate(cv, sl, bi, wetb, press, dry_bias=0.2 * pp, patch=0.45)
         self._lay(sl, m, conc * (0.8 + 0.2 * np.minimum(1, wetb * 1.6)), self.water * np.minimum(1, wetb * 1.5) * self._dwell(st))
-        self.wb -= dist * self.brate * (0.4 + 0.6 * min(press, 1.0)) / (max(self.size, 2) * 18 * self.thick)
+        self.wb -= dist * self.brate * (0.4 + 0.6 * min(press, 1.0)) / (max(self.size, RES_MIN) ** 2 / max(self.size, 2) * DRAIN * 0.7 * self.thick)
         np.maximum(self.wb, 0, out=self.wb)
 
     def _wash(self, cv, x, y, ang, press, rt, dist, st):
@@ -496,7 +551,10 @@ class Ink(Medium):
         wl = min(1.4, t.wmax)
         if t.kind in ("brush", "brush_side", "wash", "splash", "pen", "hatch"):
             if bleed >= 0.5:
-                pad = int(3 + bleed * (5 + t.size * 0.45 + 16) * wl * (1.3 if t.kind == "splash" else 1.0))
+                # the halo can reach at most as far as the excess liquid would cover as a disc
+                b0 = (slice(y0, y1), slice(x0, x1))
+                ex = float(np.maximum(t.Wl[b0] / self.capacity(cv) + cv.water[b0] * DAMP_FILL - 1, 0).sum())
+                pad = int(6 + 1.15 * math.sqrt(ex / math.pi))
             else:
                 pad = int(3 + 8 * bleed * wl)
             x0, y0 = max(0, x0 - pad), max(0, y0 - pad)
@@ -527,67 +585,130 @@ class Ink(Medium):
             self._droplets(cv, t)
 
     # ------------------------------------------------------------------ spreading
+    def xuan(self, cv):
+        return XUAN.get(cv.meta.get("xuan", XUAN_DEFAULT), XUAN[XUAN_DEFAULT])
+
+    def ppm(self, cv):
+        return float(cv.meta.get("px_per_mm", PX_PER_MM))
+
+    def capacity(self, cv):
+        """Raw xuan's capacity, in units of the laid liquid Wl: 10/area um of ink per mm2 (Wu et al. 2016)."""
+        return 10.0 / self.xuan(cv)["area"] / FILM_UM
+
     def _bleed_raw(self, cv, sl, X, Wl, t, bleed):
-        """Raw xuan: liquid ink flows along fibres on a coarse grid; the front pins where water runs out."""
+        """Raw xuan: the liquid beyond what the paper under the stroke can hold flows out along the fibres
+        until every wetted cell holds the paper's capacity, so the wetted area is the volume over the
+        capacity: 0.39-0.49 cm2 per uL by xuan type (Wu et al. 2016). The free liquid evens out inside the
+        saturated paper and is pushed into the dry cells at its edge, faster where the fibre network is
+        dense (permeability noise, smoother on papers with more fibre overlaps). Soot is carried with the
+        liquid but fibres hold some of it back, so the halo is paler than the core and fades outward."""
         h, w = X.shape
-        f = 2 if h * w < 300_000 else (3 if h * w < 1_200_000 else 4)
+        C = self.capacity(cv)
+        xt = self.xuan(cv)
+        damp = cv.water[sl]
+        liq = Wl / C
+        # coarse grid: fine enough for the stroke, coarse enough that the halo is reached in ~40 steps
+        reach = math.sqrt(float(np.maximum(liq + damp * DAMP_FILL - 1, 0).sum()) / math.pi)
+        f = int(max(2 if h * w < 300_000 else (3 if h * w < 1_200_000 else 4), min(8, math.ceil(reach / 40))))
         H2, W2 = -(-h // f), -(-w // f)
         P = lambda a: np.pad(a, ((0, H2 * f - h), (0, W2 * f - w)), mode="edge").reshape(H2, f, W2, f).mean((1, 3))
-        damp = cv.water[sl]
-        mob = np.clip(0.62 * bleed * np.minimum(Wl, 1.0) + 0.45 * damp * (Wl > 0.02), 0, 0.88)
-        if t.kind == "splash":
-            mob = np.clip(mob * 1.2, 0, 0.9)
-        q0 = X * mob
-        stay = X - q0
+
+        def U(a):
+            u = zoom(a, f, order=1)[:h, :w]
+            return np.pad(u, ((0, h - u.shape[0]), (0, w - u.shape[1])), mode="edge") if u.shape != (h, w) else u
+        Lc, d0 = P(liq), P(damp) * DAMP_FILL
+        s = np.minimum(Lc + d0, 1.0)
+        e = (Lc + d0 - s).astype(np.float32)
+        mob = np.clip(e / (Lc + 1e-6), 0, 1)
+        # soot in the excess liquid moves; the rest stays where the brush laid it (full resolution)
+        mob_full = np.clip(U(mob), 0, 1)
+        st0 = X * (1 - mob_full)
+        # the part that stays keeps a crisp edge where the brush was nearly dry, a soft one where it was wet
+        stay = (1 - mob_full) * gaussian_filter(st0, 0.45) + mob_full * gaussian_filter(st0, 0.6 + 0.5 * f)
+        qf = (P(X) * mob).astype(np.float32)
+        qd = np.zeros_like(qf)
         fibf, pinf = self.fields(cv)
         fib = fibf[sl]
-        fc, pc = P(fib), P(pinf[sl])
-        wat = P(Wl) * 1.15 + P(damp) * 0.8
-        q = P(q0)
-        perm = (0.02 + 0.22 * fc ** 1.5).astype(np.float32)
-        pin = (0.03 + 0.16 * pc ** 1.5 + 0.04 * (1 - bleed)).astype(np.float32)
-        n = int(np.clip(10 + 26 * min(1.3, t.wmax) + 14 * float(damp.max()), 8, 56))
-        dep = self._diffuse(wat.astype(np.float32), q.astype(np.float32), perm, pin, n, 0.085, 0.022)
-        up = zoom(dep, f, order=1)[:h, :w]
-        if up.shape != (h, w):
-            up = np.pad(up, ((0, h - up.shape[0]), (0, w - up.shape[1])), mode="edge")
-        inside = np.clip(Wl * 4, 0, 1)   # fibre texture shows in the feathered fringe, not inside the stroke
-        halo = up * (1 + (1 - inside) * (0.7 * gaussian_filter(fib, 0.6) - 0.35))
-        stay = gaussian_filter(stay, 0.45)
-        # the darker rim where the wet stroke's own edge pinned (the ink core outline)
-        wetc = zoom(np.minimum(wat, 1.2), f, order=1)[:h, :w]
-        wetc = np.pad(wetc, ((0, h - wetc.shape[0]), (0, w - wetc.shape[1])), mode="edge") if wetc.shape != (h, w) else wetc
-        return stay + halo, np.clip(wetc * 0.8, 0, 1)
-
-    @staticmethod
-    def _diffuse(w, q, perm, pin, n, dk, ab):
-        dep = np.zeros_like(q)
-        px = np.minimum(perm[:, :-1], perm[:, 1:])
-        py = np.minimum(perm[:-1], perm[1:])
-        for _ in range(n):
-            act = w > pin
-            cs = q / (w + 1e-4)
-            d = w[:, :-1] - w[:, 1:]
-            pos = d > 0
-            F = px * d * np.where(pos, act[:, :-1], act[:, 1:]) * (0.35 + 0.65 * np.minimum(np.where(pos, w[:, :-1], w[:, 1:]), 1))
-            Q = F * np.where(pos, cs[:, :-1], cs[:, 1:])
-            e = w[:-1] - w[1:]
-            pos = e > 0
-            G = py * e * np.where(pos, act[:-1], act[1:]) * (0.35 + 0.65 * np.minimum(np.where(pos, w[:-1], w[1:]), 1))
-            Qy = G * np.where(pos, cs[:-1], cs[1:])
-            # carbon also diffuses inside the water film where both cells are wet (wet-in-wet fusing)
-            wa = np.minimum(w, 1.0) * act
-            Q += 0.16 * np.minimum(wa[:, :-1], wa[:, 1:]) * (q[:, :-1] - q[:, 1:])
-            Qy += 0.16 * np.minimum(wa[:-1], wa[1:]) * (q[:-1] - q[1:])
-            w[:, :-1] -= F; w[:, 1:] += F; w[:-1] -= G; w[1:] += G
-            q[:, :-1] -= Q; q[:, 1:] += Q; q[:-1] -= Qy; q[1:] += Qy
-            np.maximum(q, 0, out=q)
-            np.maximum(w, 0, out=w)
-            dd = q * dk
-            dep += dd
-            q -= dd
-            w *= (1 - ab)
-        return dep + q
+        rough = ROUGH * math.sqrt(52.0 / xt["overlaps"])
+        perm = np.clip(1 + rough * 2 * (P(fib) - 0.5) + 0.5 * rough * 2 * (P(pinf[sl]) - 0.5), 0.08, None).astype(np.float32)
+        mine = (Lc > 0.01).astype(np.float32)       # cells holding this stroke's liquid
+        e0 = float(e.sum())
+        filt = 1 - math.exp(-1.0 / SOOT_STEPS)
+        it = 0
+        while e0 > 1e-3 and it < 48 and float(e.sum()) > 0.02 * e0:
+            it += 1
+            # the free liquid evens out inside the saturated paper (and its soot with it)
+            sat = (s > 0.995) * mine
+            Gs = uniform_filter(sat, EVEN) + 1e-6
+            for a in (e, qf):
+                tot = float(a.sum())
+                b = sat * uniform_filter(a * sat, EVEN) / Gs + a * (1 - sat)
+                a[...] = b * (tot / max(float(b.sum()), 1e-9))
+            # ... and is pushed into neighbouring cells that still have room
+            room = 1 - s
+            op = perm * (room > 1e-3)
+            opn = [_sh(op, 0, 1), _sh(op, 0, -1), _sh(op, 1, 0), _sh(op, -1, 0)]   # right, left, down, up
+            norm = opn[0] + opn[1] + opn[2] + opn[3] + 1e-6
+            give = e * (norm > 1e-3) / norm
+            o = [give * k for k in opn]          # wanted outflow to each neighbour
+            inc = _sh(o[0], 0, -1) + _sh(o[1], 0, 1) + _sh(o[2], -1, 0) + _sh(o[3], 1, 0)
+            acc = np.where(inc > room, room / (inc + 1e-9), 1.0).astype(np.float32)
+            T = [o[0] * _sh(acc, 0, 1), o[1] * _sh(acc, 0, -1), o[2] * _sh(acc, 1, 0), o[3] * _sh(acc, -1, 0)]
+            out = T[0] + T[1] + T[2] + T[3]
+            conc = qf / (e + 1e-6)
+            e -= out
+            np.maximum(e, 0, out=e)
+            qf -= out * conc
+            Tin = _sh(T[0], 0, -1) + _sh(T[1], 0, 1) + _sh(T[2], -1, 0) + _sh(T[3], 1, 0)
+            ct = [k * conc for k in T]
+            cin = _sh(ct[0], 0, -1) + _sh(ct[1], 0, 1) + _sh(ct[2], -1, 0) + _sh(ct[3], 1, 0)
+            s += Tin
+            mine = np.maximum(mine, (Tin > 1e-4).astype(np.float32))
+            qd += cin                              # liquid soaking into dry paper leaves its soot there
+            np.maximum(qf, 0, out=qf)
+            # the fibres filter soot out of the liquid moving through saturated paper, so the liquid
+            # that reaches the front late is paler: the halo fades outward
+            dq = qf * sat * filt
+            qd += dq
+            qf -= dq
+        E = float(e.sum())
+        if E > 1e-3:
+            # what is still free when the steps run out (a large pool) wets the nearest dry cells, so the
+            # wetted area keeps to volume / capacity
+            dist = distance_transform_edt(s < 0.995) / perm
+            room = (1 - s).ravel()
+            order = np.argsort(np.where(room > 1e-3, dist.ravel(), np.inf), kind="stable")
+            cum = np.cumsum(room[order])
+            k = int(np.searchsorted(cum, E)) + 1
+            idx = order[:k]
+            add = np.zeros(s.size, np.float32)
+            add[idx] = room[idx]
+            add[idx[-1]] -= max(0.0, float(cum[min(k, cum.size) - 1]) - E)
+            add = add.reshape(s.shape)
+            s += add
+            cfree = float(qf.sum()) * 0.5
+            qd += add * (cfree / max(float(add.sum()), 1e-9))
+            qf *= 0.5
+            e[:] = 0
+        qd += qf                                   # what is still free settles where it is
+        s_up = np.clip(U(s), 0, 1)
+        # the front at full resolution: the wetted edge breaks along the fibres
+        laid = np.clip(Wl * 6, 0, 1)
+        thr = 0.5 + FEATHER * rough * (gaussian_filter(fib, 0.6) - 0.5)
+        front = np.maximum(np.clip((s_up - thr) * 5 + 0.5, 0, 1), laid)
+        halo = U(qd) * front
+        inside = np.clip(Wl * 4, 0, 1)            # fibre texture shows in the fringe, not inside the stroke
+        halo = halo * (1 + (1 - inside) * (0.3 * gaussian_filter(fib, 0.6) - 0.15))
+        total = stay + halo
+        # capillary wicking along the fibres that cross the stroke's edge, even where no liquid is left to
+        # spread: a fringe whose length scales as sqrt(cos(contact angle)) (Washburn), so it is longest on
+        # Qianlong xuan (36.8 deg) and shortest on Jingpi (60.6 deg); WICK_MM itself is by eye
+        lw = WICK_MM * self.ppm(cv) * math.sqrt(math.cos(math.radians(xt["contact"])) / math.cos(math.radians(XUAN["bamboo"]["contact"])))
+        if lw > 0.2:
+            fr = gaussian_filter(total, lw) * (0.55 + 0.9 * gaussian_filter(fib, 0.5))
+            total = np.maximum(total, fr * 0.85)
+        self._last_bleed = dict(C=C, iters=it, wet_px=float((s_up * front > 0.5).sum()), vol=float(liq.sum() * C), e_left=float(e.sum()) / max(e0, 1e-9))
+        return total, np.clip(s_up * front, 0, 1)
 
     def _bleed_sized(self, cv, sl, X, Wl, t, bleed):
         """Sized paper, silk, bristol: the ink sits; a slight soft edge and a darker rim where it was wet."""

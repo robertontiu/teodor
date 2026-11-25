@@ -8,7 +8,7 @@ Two traditions in one medium. One is East Asian ink and brush (Chinese *shuimo*,
 
 | id | what it is | how ink behaves |
 |---|---|---|
-| `xuan_raw` (default) | raw, unsized xuan rice paper | wet ink bleeds and feathers along the fibres into a pale, fibrous halo with a slightly darker front; strokes into still-damp ink fuse; dry strokes stay crisp |
+| `xuan_raw` (default) | raw, unsized xuan rice paper | wet ink bleeds along the fibres into a pale halo that fades outward; a microlitre of liquid wets 0.39-0.49 cm² (see Calibration); strokes into still-damp paper fuse and spread further; thick, dry strokes stay nearly crisp, with a fine fibrous fringe |
 | `xuan_sized` | sized ("cooked") xuan, for fine-line *gongbi* | ink sits where it lands: crisp lines, a little softness, a darker rim on very wet strokes |
 | `silk` | sized silk, warm tone, fine weave | like sized xuan, slightly less bleed |
 | `bristol` | smooth hard drawing board | for pen: no bleed, crisp lines; wet washes dry with a faint darker edge |
@@ -59,9 +59,34 @@ Water sinks into raw xuan fast: about 70% of the dampness is gone after each epi
 
 There is no varnish or fixative for ink.
 
+## Scale, liquid and xuan type
+
+- A canvas is a sheet at 4 px/mm: 1200 × 1600 px is 30 × 40 cm, and a brush `size` of 40 is a 10 mm footprint. `"px_per_mm"` in `<canvas>_meta.json` changes it.
+- The liquid a tool lays is a film: a full film is 45 µm, 2.8 nL per pixel at 4 px/mm. On raw xuan only the liquid above what the paper under the stroke can hold spreads, so `jiao` and `nong` strokes barely bleed and `zhong` to `qing` strokes (and slow, wet ones) do.
+- Raw xuan comes in three types, from Wu et al.'s measurements: `qianlong` (spreads most, 0.49 cm² per µL, smoothest front), `bamboo` (the default, 0.454) and `jingpi` (0.392, roughest front). Set `"xuan"` in `<canvas>_meta.json`.
+
+## Calibration
+
+Measured against ten Met ink paintings (`calibration_refs.json` group `ink_brush`) and the raw-xuan data of Wu et al. 2016. Full report: `docs/calibration/ink.md`.
+
+From data:
+- **Bleed on raw xuan** conserves volume. Liquid beyond the paper's capacity flows out until every wetted cell holds the capacity. So the wetted area is volume / capacity: 0.490 / 0.454 / 0.392 cm² per µL for Qianlong / bamboo / Jingpi xuan, as Wu et al. measured with 50 µL drops. Before, the area was 0.17-0.24 cm² per µL, the same for every paper, and it fell as the volume grew.
+- **Front roughness** scales as 1/√(fibre overlaps per mm), using the measured 77 / 52 / 40. **Edge wicking** scales as √(cos contact angle), using the measured 36.8° / 50.1° / 60.6° (Washburn). Both are relative scalings. Their absolute sizes are by eye.
+- **Width variation along a stroke** (`RHYTHM` 0.3, a slow swell and thinning) is set by the width CV. Calligraphy passage: 0.16 before, 0.235 after, references 0.24 (0.19-0.26). Landscape passage: 0.21 before, 0.30 after, references 0.29.
+- **Flying white** is set by the share of paper showing within the strokes: 0.0016 before, 0.027 (0.019-0.047) after, references 0.03 (0.007-0.068). Hairs now dry in bundles. Speed opens streaks in a fast stroke's middle that close again as the brush slows (`SPEED_DRY`, saturating). A brush runs dry after `DRAIN` 18 brush widths of stroke. A fine line drains like a brush of at least 16 px.
+- **Edges**: the tuft's edge is now about one pixel wide, and the belly's paler ink shows only at the stroke's margins (`PLATEAU` 0.55). Landscape edge rise: 1.17 mm before, 0.83 mm after, references 0.88 mm. Hard-edge share: 0.34 on raw xuan and 0.51 on sized, references 0.28 (0.16-0.42). Raw xuan is softer through its fibre fringe (`WICK_MM` 0.3, set by this share).
+
+By eye, still uncalibrated:
+- The liquid film thickness (45 µm). It decides which strokes bleed, and no measured brush release was found.
+- Halo shading: soot filtering (`SOOT_STEPS`), front breakup (`FEATHER`, `ROUGH`), and how much earlier damp still fills the paper (`DAMP_FILL` 0.5).
+- Hair bundles (`CLUMP`), the fine-line reservoir (`RES_MIN`), the pressure-to-width curve, the tip and belly tones, and the side brush's dryness (kept as before).
+- The sized supports' slight bleed, the pens, the hatch tool and the washes on sized paper.
+- **Spectrum slope** is still too smooth: -3.3 to -3.4 on raw xuan, references -2.85. It mostly reflects the size mix of the marks in a passage.
+- **Orientation coherence** (0.75-0.79, references 0.58) is set by the composition, not the medium. The calligraphy passage matches the calligraphy references (0.73-0.83).
+
 ## Limits
 
-- The bleeding is a simplified flow on a half- or third-resolution grid. Feathering follows a fibre map and pins at the front, but it is not a full lattice-Boltzmann (MoXi) simulation, and very wide splashes on raw paper are approximate.
+- The bleeding is a volume-conserving flow on a coarse grid (2-8 px cells) with a fibre-noise front at full resolution. It is not a full lattice-Boltzmann (MoXi) simulation. The time course of spreading is not modelled, only where the ink ends up.
 - A stroke's ink spreads when the stroke ends (when the next stroke starts or the episode ends). If a `match` runs right after another intention in the same episode, it does not yet see the last stroke of that intention.
 - The `transfer` command and `sign` write into the picture directly, not as ink or pencil. Use `pencil` strokes for an erasable under-drawing and `finish seal` for an ink-painting signature.
 - Colours are a few light, transparent films, not a full pigment palette. Heavy colour belongs in watercolour or gouache.
