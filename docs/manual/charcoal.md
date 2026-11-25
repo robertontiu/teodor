@@ -9,10 +9,10 @@
 - `toned`: mid-grey toned paper (`#9a978f` when the ground you give `new` is light). Work both ways from the middle: charcoal for the darks, `white_chalk` for the lights.
 - `ingres`: Ingres laid paper. Its fine laid lines and its chain lines show in every tone. It holds a little less charcoal than drawing paper.
 
-**Tools** (`"brush": ...`). `size` is the width of the mark in px. Sticks are capped at 26 px for the end and 140 px for the side.
-- `vine_tip` (default): the end of a vine stick. A grey, irregular, broken line that is very erasable. Its darkest is a soft dark grey.
+**Tools** (`"brush": ...`). `size` is the width of the mark in px; the sheet is stated as 1200 px = 48 cm (2.5 px/mm, so 1 px = 0.4 mm). Sticks are capped at 26 px for the end and 140 px for the side.
+- `vine_tip` (default): the end of a vine stick. A grey, irregular, broken line that is very erasable. Its darkest is a soft dark grey (about L* 29).
 - `vine_side`: the stick laid on its side, across the stroke. A broad, pale band broken by the tooth, harder at one end. At light pressure only one end touches, so bands start and end in a wedge.
-- `compressed_tip`, `compressed_side`: dense near-black lines and bands. They bind to the paper, so erasing them leaves a ghost.
+- `compressed_tip`, `compressed_side`: dense near-black lines and bands (at most about L* 24, the darkest the measured conté and charcoal drawings reach: charcoal is a matte black, not a screen black). They bind to the paper, so erasing them leaves a ghost.
 - `pencil`: a charcoal pencil. A fine, controlled dark line, at most 8 px.
 - `white_chalk`: white chalk or Conté for added lights, mainly on toned paper.
 - `stump`, `tortillon` (small): rolled-paper blenders. They blur and spread the loose dust into a smooth tone that fills the hollows, so a rubbed passage reads deeper and smoother. They pick up very little.
@@ -27,6 +27,8 @@
 - Felt state: fast, agitated strokes press less and break up more; slow, careful strokes are fuller.
 - `size`: the mark width. For a broad mass use a `*_side` tool with a large size. For `match`, side tools at 20–60 px block in big masses, and tips at 4–12 px draw.
 
+**Hatching** (`"type": "hatch"`). Use the tip tools. The studio's sheet is 1200 px = 48 cm (2.5 px/mm), and the real charcoal and conté hatching measured for the calibration is 1-2 mm apart with 0.5 mm lines: `"spacing": 4`–`5`, `"size": 1.5`–`2`. The core's defaults (spacing 9, size 3) give a coarse 3.6 mm hatch. The colour is the value of each line (`#000000` presses as hard as the stick can), and `layers` are absolute values, so on toned paper set them below the paper's value.
+
 **Glaze.** `glaze` is a veil of powdered charcoal laid lightly with the side of the stick and partly rubbed in: tone on the peaks plus a soft, even film, capped at the value of the colour you give. Use it to tone the paper before drawing (the classic start), or to unify a passage.
 
 **Time.** Nothing dries, and `dry` does nothing. Unfixed charcoal stays loose dust that any later blender can move and any eraser can lift.
@@ -39,28 +41,20 @@
 
 **Order of work.** Tone the paper with `glaze`, or start white. Block in the big shapes with `vine_side`, then rub with the stump or finger. Draw into it with `vine_tip`. Take out the lights with `kneaded` and `eraser`. Put the darkest darks in with `compressed_*`, add `white_chalk` on toned paper, then `finish lift`, `finish accents` and `finish fixative`.
 
-**Limits.** The paper's tooth is a texture (a fine noise, the laid lines on Ingres), not real fibres, so at close range the grain can look slightly regular. There is no stick wear or breakage, and there is no water (no wash with compressed charcoal). The darkening that fixative causes is a fixed small value. Charcoal can't make colour: blue and red come out as their values. `sign` signs the same way as in oil.
+**Limits.** The paper's tooth is a texture (pixel-scale grain with short fibres, the laid lines on Ingres), not real fibres; the real tooth is finer than a pixel, so it shows as a fine speckle, not as visible cells. Hatched passages still look a little cleaner and more contrasted than real ones (no dust settling between the lines). There is no stick wear or breakage, and there is no water (no wash with compressed charcoal). The darkening that fixative causes is a fixed small value. Charcoal can't make colour: blue and red come out as their values. `sign` signs the same way as in oil.
 
 ## Calibration
 
-**What comes from research.** Everything here is qualitative or structural. I searched for numbers and found none I could use (see "Searched, not found" below).
-- The structure of the model is Sousa & Buchanan's observational model of pencil on paper [S27] ([Graphics Interface 1999](https://graphicsinterface.org/wp-content/uploads/gi1999-21.pdf)): the paper as a height field, deposit capped by how much the tooth can hold, a blender that picks dust up and lays it down again, and erasers that lift. That paper gives the structure but not usable numbers; most of its coefficients were also lost in the PDF's text extraction.
-- The behaviour comes from MEDIA.md [S12][S13]. Vine charcoal is lighter, irregular and nearly fully erasable. Compressed charcoal is denser and blacker, harder to erase, and leaves ghosts. Light pressure marks the peaks first, a full tooth takes no more charcoal, and charcoal has a velvety, matte, non-reflective black.
-- The direction of fixative darkening comes from FINISHING.md: fixative darkens charcoal slightly, and less than pastel [S11][S12]. The size, 4% at strength 1, is FINISHING.md's own "engineering starting value", not a measurement.
+Calibrated against the Met charcoal, black chalk and conté references (Nov 25, 2026); the full report, with the targets, the before and after numbers and the method, is `docs/calibration/charcoal.md`.
 
-**Hand-tuned by eye** (starting values, to be replaced by the museum-crop calibration):
-- Pigment colours: vine `(0.215, 0.205, 0.20)`, compressed `(0.055, 0.052, 0.058)`, charcoal pencil 0.09, white chalk `(0.95, 0.94, 0.90)`.
-- Coverage per deposit `KC = 3.5`, so one heavy pass reaches about 96% coverage.
-- Tooth capacity per support (`cap`: drawing 1.0, toned 1.0, Ingres 0.85), catch softness `w` (0.38, 0.32) and `grab`.
-- Pressure → reach `(0.1 + 1.25·p)·reach_tool`; the "crushed dust in the hollows" term `0.22·p²`; how hard the hand presses for an asked value `p·(0.5 + 0.75·want)`; the per-pixel overshoot 0.12 past the asked value.
-- Per-tool flow, reach, loose and stain fractions (the table in `Charcoal.TOOLS`). Bound-pigment erasability 0.55.
-- Blender blur, drag and pick-up rates, and the spreading boost (capped at 1.6×; its physical basis is that an even film covers more than the same dust in clumps, but the size is tuned). Eraser lift rates.
-- The paper textures: the noise scales (0.85, 2.2 and 8 px), the laid-line period of 4.3 px and the chain-line spacing of 112 px. These assume about 0.4 mm per pixel, which is also an assumption.
-- Render: the grain relief ±3.5% and the 6% "velvet" deepening of dense darks.
-- The size caps (26 px for a tip, 140 px for a side) assume about 0.4 mm/px and typical stick sizes.
+**Set from data** (the references, measured with `tools/calibrate_media.py` and hand-chosen crops at the studio scale):
+- Darkest values: compressed charcoal L* 24 (conté, Millet: 23.8; charcoal, Degas: 21.9; black chalk, de la Fosse: 25.6), vine L* 29 (the lighter charcoal sheets: Mauve 28.9, Melbye 26.9). They were L* 4 and 23. The charcoal pencil (L* 26) is placed between them by eye.
+- The paper's tooth: the light specks inside real marks are 0.06-0.15 mm, below one studio pixel, so the tooth is pixel-scale grain (it was a mix of 0.85, 2.2 and 8 px noise that read as camouflage blobs). Laid lines every 0.9 mm and chain lines every 35 mm (measured on laid sheets; they were 1.7 mm and 45 mm).
+- The paper's grain in the render: about 1 L* on blank paper (references 0.5-1.1; it was 2.1).
+- Line edges: a 10-90% rise of 0.75 mm (Millet, de la Fosse), where the tip was a hard 1 px edge.
+- The catch's softness (a pixel is partly covered because it holds many tooth cells): fitted to the grain inside hatched passages.
+- The stated scale (2.5 px/mm) and the hatch spacing advice (1-2 mm, measured by eye on mm-ruled zooms).
 
-**Searched, not found.** No published reflectance for vine or compressed charcoal. The Getty "Noir" project and Trentelman et al. 2019 ([Heritage Science](https://link.springer.com/10.1186/s40494-019-0286-6)) analyse black drawing media spectroscopically, but they report no usable values and say the media differ only subtly to the eye. No measured fixative colour change on charcoal or pastel. No profilometry of artists' papers (roughness Ra) that I could reach. The museum-crop step should fit:
-1. the darkest value of each tool;
-2. coverage against pressure (the fraction of bare paper in mid-tones);
-3. the size of the grain against the paper's texture scale;
-4. the value shift caused by fixative.
+**Still tuned by eye:** coverage `KC = 3.5`; tooth capacities (`cap`) and `grab`; the pressure-to-reach curve and the crushed-dust term; how hard the hand presses for an asked value and the overshoot on the peaks (now scaled down for values near the paper's); per-tool flow, loose and stain; blender, eraser and fixative rates (fixative 4% is FINISHING.md's starting value); the velvet render; fibre length and cloud scale; the side stroke's streaks, its smooth wobble and its soft wedge-shaped landing and lift (they replace the hard square ends that made blocks in `match`); the size caps.
+
+**Not measurable here:** reflectance of vine vs compressed charcoal as materials (the references are not labelled, and photographs of drawings give what a viewer sees, not the material), fixative darkening, coverage against pressure (needs swatches drawn at known pressure). Structure from Sousa & Buchanan [S27]; behaviour from MEDIA.md [S12][S13].

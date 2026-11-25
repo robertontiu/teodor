@@ -20,6 +20,8 @@
 
 **Parameters that matter.** `pressure` sets how deep the colour goes into the tooth: about 0.3–0.4 scumbles over the peaks, and 0.85 or more covers. The felt state matters too: fast strokes break up more. Work hard to soft and dark to light. Soft pastel fills the tooth, so save it for the later layers.
 
+**Hatching** (`"type": "hatch"`). Give `colors`: pastel is not monochrome, and the core's default is a dark grey. The sheet is stated as 1200 px = 48 cm (2.5 px/mm); Degas's hatched and broken strokes are 4-6 mm wide, laid side by side: with `hard_tip`, `"size": 8`–`12`, `"spacing": 10`–`14`.
+
 **Glaze.** A light veil of colour laid with the side of a stick and partly rubbed in: broken over the peaks, with a soft film between. It does not tint like a transparent glaze. Use it for a coloured underlayer or to cool or warm a passage.
 
 **Time.** Nothing dries, and `dry` does nothing.
@@ -31,26 +33,25 @@
 
 **Order of work.** Choose the paper tone. Lay big masses with `hard_side`, or with `glaze`. Build from dark to light and from hard to soft, using a workable `fixative` in a region where the tooth is full. Rub only where you want it soft. Finish with `soft_tip` lights and then `finish accents`.
 
-**Limits.** Each pixel holds one apparent colour, so lifting the top layer reveals the paper rather than the layer below it. Oil pastel is simplified: no solvent wash, no warmth or blending by heat, and its sheen is faint. The tooth is a texture, not fibres.
+**Limits.** Each pixel holds one apparent colour, so lifting the top layer reveals the paper rather than the layer below it. Oil pastel is simplified: no solvent wash, no warmth or blending by heat, and its sheen is faint. The tooth is a texture (pixel-scale grain, honeycomb cells of 0.8 mm, laid lines), not fibres.
 
 ## Calibration
 
-**What comes from research.**
-- The model's structure is shared with the other dry media (Sousa & Buchanan [S27], [GI 1999](https://graphicsinterface.org/wp-content/uploads/gi1999-21.pdf)).
-- The mixing rule is optical: coverage-weighted and linear, not Kubelka-Munk, because pastel particles sit side by side (MEDIA.md, "Engine model (pastel)").
-- The behaviour comes from MEDIA.md [S11]. Pastel has very little binder, so it stays chalky, matte and bright. Colour builds optically, with the paper tone showing through. Sanded paper holds many layers. A full tooth makes new colour slide. Fixative darkens pastel and dulls its brightness, which is why the last bright touches are left unfixed and why Degas fixed only selected areas.
-- The fixative amounts (value −8%, chroma −10%, tooth +30%) are FINISHING.md's engineering starting values, not measurements.
+Calibrated against the Met pastel references (Nov 25, 2026); the full report is `docs/calibration/pastel.md` (shared engine changes in `docs/calibration/charcoal.md`).
 
-**Hand-tuned by eye:**
-- The paper tones `#857b6d`, `#b4a184` and `#9b9384`, and the tooth capacities: toned 1.7, sanded 3.4, Ingres 1.2. Their ratio (sanded holds about twice as much) follows the sources; the numbers are tuned.
-- Per-stick flow, reach, loose, stain and "grip" (how much fresh pastel catches on pastel already in the tooth: 0.5 for soft, 0.3 for hard).
-- The slide/smear rate on a full tooth (0.12).
-- Coverage `KC = 3.5`.
+**Set from data:**
+- Stroke edges: 10-90% rise 1.0 mm (Degas, *The Singer in Green*: 0.98 mm; others 1.4-2.2), the softest of the dry media.
+- The catch softness from the coarser tooth of pastel papers (paper specks inside strokes 0.2-0.4 mm).
+- Laid lines (Ingres) at 0.9 mm and chain lines at 35 mm; the pixel-scale grain and the paper relief in the render, as in charcoal.
+- Checked against the data, not changed: the darkest pastel values (three heavy passes of a near-black stick render at L* 10.4; the references' blacks are L* 9.6-13.4), and the share of paper left in a drawing (0.03 in the test drawing; the references 0.04).
+- The stated scale (2.5 px/mm) and the stroke width advice for hatching.
+
+**Still tuned by eye:**
+- The paper tones `#857b6d`, `#b4a184` and `#9b9384`, and the tooth capacities: toned 1.7, sanded 3.4, Ingres 1.2. Their ratio (sanded holds about twice as much) follows the sources; the numbers are tuned. The honeycomb cell size (0.8 mm).
+- Per-stick flow, reach, loose, stain and "grip" (0.5 soft, 0.3 hard); the slide/smear rate on a full tooth (0.12); `KC = 3.5`.
 - The powder lift in the render: `+0.05·cov·(1−v)²`.
 - Oil pastel's subtractive blend `0.25·p`, its film floor (0.45) and its sheen.
-- Blender and eraser rates; the size caps (28 px for the end, 120 px for the side).
+- The side strokes' streaks, smooth wobble and wedge-shaped landing (they replace the hard rectangles `match` used to make).
+- Blender and eraser rates; the fixative amounts (value −8%, chroma −10%, tooth +30%: FINISHING.md's starting values); the size caps (28 px for the end, 120 px for the side).
 
-**Searched, not found.** No measured colour change of pastel after fixative that I could reach. One promising Heritage Science article (DOI 10.1186/s40494-020-00396-x) could not be opened, and a pastel-practice paper on La Tour and Valade (ICOM-CC 2017) gives no numbers. No opacity measurements for soft pastel against tooth fill. These are worth fitting from real crops:
-1. the share of paper visible against pressure and layer count;
-2. scumble coverage;
-3. value and chroma shift after fixative, from before/after photos if a conservation study provides them.
+**Searched, not found.** No measured colour change of pastel after fixative that I could reach (Heritage Science DOI 10.1186/s40494-020-00396-x could not be opened; the ICOM-CC 2017 paper on La Tour and Valade gives no numbers). No opacity measurements for soft pastel against tooth fill. The grain inside soft-pastel strokes is now lower than in Degas's broken strokes; fitting it needs single strokes at known pressure. Structure from Sousa & Buchanan [S27]; behaviour and optical mixing from MEDIA.md [S11].

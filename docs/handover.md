@@ -2,7 +2,13 @@
 
 Written at the end of the long chat session that built most of this (Nov 22–24, 2026) so that a fresh Claude Code session can carry on. Read `AGENTS.md` first. This file adds the current state, Robert's preferences and the open threads.
 
-## State (Nov 24, 2026)
+## State (Nov 26, 2026)
+
+- **Studio v8 is built** (`studio/v8/`, manual in `docs/MANUAL.md`): a medium-agnostic core with nine media (oil, watercolour, ink, charcoal, graphite, pastel, gouache, egg tempera, woodblock), 15 researched currents in `studio/styles.json` (docs in `docs/styles/`), measured style targets for 9 of them (`studio/targets.json`, `report` command), and a v8 brief made with `tools/make_brief.py`. `oil-v7` reproduces v7 exactly for comparison.
+- **Every medium is calibrated against real data** (reports in `docs/calibration/`): pigments from published measurements (`studio/pigments.json`), mark statistics from public-domain Met works (`studio/calibration_refs.json`). Oil now mixes with a spectral Kubelka-Munk model (`media/spectral.py`).
+- **No painting has been made with v8 yet.** The next round should be the end-to-end test: a new current and medium, `report`, finishing.
+
+### Earlier state (Nov 24, 2026)
 
 - **Seventeen paintings**, rounds 0–15, with round 14 painted twice (`14-…` by Opus 5.5 and `14b-…` by Fable 5.2). Every round folder has `painting.jpg` and, where one exists, `feeling.md`, `journal.md`, `brief.md`, `handoff.md`, critiques, scenes or schemas, helper scripts and `timelapse.mp4`.
 - **Site:** live at https://teodor.robertontiu.com, deployed by Vercel from `site/` on every push that touches it. Newest painting first; each painting has its own page `/rN/` with a share preview; the model that painted it is shown next to the title.
@@ -30,13 +36,12 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 2. **Craft is now the ceiling,** for both models:
    - Figures still read as mannequins: faces near-identical, hands like tubes or mitts, stiff gestures. Teodor wrote his own helpers for this (`rounds/13-black-noon/tools/p3/facegen.py` for shaded heads; Fable's figure rig in `rounds/14b-…/tools/pose2.py`). Folding a better figure and face builder into the studio would help every painting.
    - The surface reads as "a digital filter": square dabs everywhere and uniform edges. The stroke vocabulary needs variety in width, pressure and direction within one stroke.
-3. **Studio gaps painters worked around** (worth fixing in `studio/v7` or a v8):
+3. **Studio gaps painters worked around in v7.** Fixed in v8: `act @file`; `free`/`blend` take a number or a range; `transfer` picks a line colour that shows on the ground; hatch seams. Still open:
    - The 3D camera can't roll and the mannequin can't lie down; two painters wrote their own compositing to get an overhead view of a lying figure (`rounds/14-…/tools/compose.py`, `rounds/14b-…/tools/compose.py`).
-   - Long stroke lists hit the shell's "argument list too long"; painters pass acts through a JSON file instead (`tools/actf.py`, `tools/ep.py`). `studio.py act` could read from a file natively.
-   - `free` needs `length` as a `[min, max]` range (a number crashes it), and `blend` needs `size` and `length` as ranges.
-   - `color_shift` values multiply the color rather than shifting it (a value of −0.25 turned a corner black).
-   - `transfer` lines (#4a3a2e) are invisible on dark grounds.
-4. **Maybe later:** Robert has mentioned a Ko-fi / Buy Me a Coffee page for Teodor and its sister project Spectre (an AI music producer built the same way: github.com/robertontiu/spectre), run as a private person. Not started.
+   - `color_shift` `value` and `sat` are multipliers (1 = unchanged), not offsets; a negative value turns colour black.
+   - `base.kmix` (gouache, tempera, pastel) is not yet spectral; lead white and earth pigments lack K and S data.
+4. **Elevate plan leftovers** (`docs/proposals-v8.md`): element-clarity view, revision tools, a stronger hand, layers with roles.
+5. **Maybe later:** Robert has mentioned a Ko-fi / Buy Me a Coffee page for Teodor and its sister project Spectre (an AI music producer built the same way: github.com/robertontiu/spectre), run as a private person. Not started.
 
 ## Session notes
 

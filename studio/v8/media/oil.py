@@ -12,7 +12,13 @@ What it models (docs/MEDIA.md "Engine model (oil)", docs/FINISHING.md "Oil"):
   (rigger), palette knife (slabs with crisp edges; a nearly empty knife scrapes back to the layer
   beneath), rag (wipes wet paint out toward the layer beneath), finger smudge, soft blender, scraper
   (sgraffito through wet paint).
-- Glazes are transparent Kubelka-Munk films (km_layer) over what is there, pooling in hollows.
+- Colour mixing in pigment space (media/spectral.py): every colour is unmixed into measured oil paints
+  (Revigo: spectral two-constant Kubelka-Munk K and S, plus zinc white and bone black), mixed by
+  concentration and turned back into RGB, so each pigment keeps its tinting strength (docs/calibration/colour.md).
+  Paint mixes into wet paint; over dry paint (or the ground) it lies on top as a spectral film.
+  The canvas keeps the pigment mixture of the paint laid on it while a command runs.
+- Glazes are spectral Kubelka-Munk films of the glaze paint (thickness in units of the measured 100 um
+  film) over what is there, pooling in hollows.
 - Oil content (`fat`) and gloss (`sheen`): wet paint looks glossy; lean or thin paint over an absorbent
   layer sinks in and dries dull. Lean-over-fat is reported as a craft warning.
 - Finishing: retouch, oil-out, glaze and varnish (gloss/satin/matte; refuses while wet).
@@ -24,7 +30,8 @@ import math
 import numpy as np
 from scipy.ndimage import gaussian_filter
 from PIL import Image, ImageDraw
-from .base import Medium, kmix, hx, pigment_from_hex, km_layer, noise_field
+from .base import Medium, hx, noise_field
+from . import spectral
 
 
 # ---------------------------------------------------------------- supports
@@ -62,6 +69,13 @@ def weave(h, w, seed=7, period=4.0):
     return np.clip(0.75 * n(tw) + 0.15 * n(fine) + 0.10 * n(wob(4, 1)), 0, 1).astype(np.float32)
 
 ABSORB = {"canvas": 0.25, "panel": 0.4}
+# glaze film thickness per unit of `opacity`, in units of the Revigo drawdown (100 um wet): opacity 1 is a 30 um
+# film, 0.25 a 7.5 um one. The range is measured (glaze layers of 10-50 um, a translucent layer of 30-40 um in a
+# cross-section: docs/media-data.md [O1]); mapping `opacity` onto it is a judgement. The glaze colour is what the
+# film shows over white at opacity 1 (spectral.glaze_paint: transparent pigments thinned with oil for dark and
+# saturated colours, white for light ones).
+GLAZE_FILM = 0.3
+MIX_MIN = 1e-3          # mixing amounts below this are skipped (a 0.1% change; tuned for speed)
 
 
 def _ensure(cv):
@@ -271,7 +285,9 @@ class Brush:
         # colour: each clump's paint, partly lost into the wet paint beneath (wet-in-wet)
         cover = self.cover * (1.2 if kind in ("knife", "bright") else 1.0)
         t = np.clip(a * 3.2 * cover * (1 - np.clip(w * self.wetmix, 0, 0.8) * 0.45), 0, 1)
-        cv.col[sl] = kmix(c, self.bcol[inear], t[..., None])
+        if getattr(self, "_latsrc", None) is not self.bcol:                # the clumps' paint, unmixed into pigments
+            self._lat, self._latsrc = spectral.latent(self.bcol), self.bcol
+        spectral.mix_window(cv, sl, t, self._lat, index=inear, thr=MIX_MIN, wet=w)
         # height: the film's top carries the furrows, a small ridge at each side, and the lift ridge
         hd = cv.hdry[sl]
         hw = np.maximum(cv.ht[sl] - hd, 0)
@@ -347,7 +363,7 @@ class Brush:
             if self.carry is None:
                 self.carry = local.copy()
             amt = np.clip(m * (0.2 + 0.65 * w) * 0.75 * min(1, f * 1.5), 0, 1)
-            cv.col[sl] = kmix(c, self.carry[None, None, :], amt[..., None])
+            spectral.mix_window(cv, sl, amt, self.carry, thr=MIX_MIN)
             ck = min(0.5, 0.3 * (self.step or 1.0) / max(self.size * 0.3, 1.0))
             self.carry = self.carry * (1 - ck) + local * ck
             cv.ht[sl] = hd + hw * (1 - amt * 0.35 * w)
@@ -363,8 +379,8 @@ class Brush:
             # folds of the cloth (streaks along the wipe), its crumpled contact (mottling) and the weave
             cloth = self.dens[inear] * np.clip(0.2 + 1.3 * mot[sl], 0, 1.2) * (0.75 + 0.5 * tooth)
             amt = np.clip(m * cloth * 0.9 * min(1, f * 1.2), 0, 1) * np.clip(w * 1.4, 0, 1) ** 0.8
-            tgt = kmix(under, self.carry[None, None, :], 0.12)    # a little of what the cloth holds smears back
-            cv.col[sl] = kmix(c, tgt, amt[..., None])
+            tgt = spectral.mix(under, self.carry[None, None, :], 0.12)    # a little of what the cloth holds smears back
+            spectral.mix_window(cv, sl, amt, tgt, thr=MIX_MIN)
             sa_ = amt.sum()
             if sa_ > 0.01:
                 self.carry = self.carry * 0.9 + 0.1 * (c * amt[..., None]).sum((0, 1)) / sa_
@@ -375,7 +391,7 @@ class Brush:
             return
         if kind == "scraper":
             amt = np.clip(m * 1.2 * min(1, f * 2.0), 0, 1) * np.clip(w * 1.5, 0, 1) ** 0.5
-            cv.col[sl] = kmix(c, under, amt[..., None])
+            spectral.mix_window(cv, sl, amt, under, thr=MIX_MIN)
             pushed = float((hw * amt).sum())
             rim = np.exp(-((np.abs(s) - 1.3) / 0.35) ** 2) * (np.abs(u) < 2 * max(la, 1)) * (w > 0.2)
             h2 = hd + hw * (1 - amt * 0.95) + rim * pushed / (rim.sum() + 1e-6) * 0.8
@@ -385,7 +401,7 @@ class Brush:
             return
         if kind == "knife":   # scraping with the flat of the blade: paint stays in the weave's hollows
             amt = np.clip(m * min(1, f * 1.3) * (0.45 + 0.55 * tooth), 0, 1) * np.clip(w * 1.3, 0, 1)
-            cv.col[sl] = kmix(c, kmix(under, self.carry[None, None, :], 0.18), amt[..., None] * 0.9)
+            spectral.mix_window(cv, sl, amt * 0.9, spectral.mix(under, self.carry[None, None, :], 0.18), thr=MIX_MIN)
             ms = m.sum() + 1e-6
             local = (c * m[..., None]).sum((0, 1)) / ms
             self.carry = self.carry * 0.85 + local * 0.15
@@ -456,18 +472,23 @@ class Oil(Medium):
     def glaze(self, cv, mask, col, op):
         _ensure(cv)
         col = np.asarray(col, np.float32)
-        lum = float(col @ np.array([0.3, 0.55, 0.15], np.float32))
-        # dark, saturated colours act as glazing pigments (lakes, transparent earths); light colours carry
-        # white and veil like a scumble
-        opacity = float(np.clip(0.05 + max(0.0, lum - 0.5) * 1.1, 0.05, 0.6))
-        K, S = pigment_from_hex(col, opacity)
+        # the glaze paint is unmixed into the measured pigments: transparent lakes and ultramarine stay clear,
+        # opaque paints (vermilion, chrome yellow, bone black) and white (a veil, scumble) cover more; the
+        # film is laid over the colour beneath band by band (spectral Kubelka-Munk, media/spectral.py)
         hs = self._surface(cv)
         hollow = np.clip((gaussian_filter(hs, 2.5) - hs) * 6, -0.5, 1)   # a glaze pools in the hollows
-        x = mask * op * 1.3 * (1 + 0.5 * hollow)
+        x = mask * op * GLAZE_FILM * (1 + 0.5 * hollow)
         before = cv.col
-        film = km_layer(before, K, S, x)
+        film = spectral.glaze(before, col, x, ref=GLAZE_FILM)
         w = cv.wet
-        mixed = kmix(before, col[None, None, :], np.clip(mask * op * 0.8, 0, 1)[..., None])
+        # over wet paint the glaze's pigments (not its oil) partly mix in
+        cg, med = spectral.glaze_paint(col, GLAZE_FILM)
+        tm = np.clip(mask * op * 0.8 * (1 - med), 0, 1)
+        mixed = before.copy()
+        sel = (w > 0.005) & (tm > MIX_MIN)
+        if sel.any():
+            gpaint = spectral.forward(cg / max(float(cg.sum()), 1e-6))
+            mixed[sel] = spectral.mix(before[sel], gpaint, tm[sel][:, None])
         ww = np.clip(w * 0.6, 0, 0.6)[..., None]                         # over wet paint it partly mixes in
         cv.under = np.where((w < 0.15)[..., None], before, cv.under)
         cv.hdry = np.where(w < 0.15, cv.ht, cv.hdry)

@@ -1278,14 +1278,15 @@
      150,
      93
     ],
-    "px_per_mm": 27.84,
+    "px_per_mm": 25.0,
     "px_per_mm_note": "inconsistent (h 15.9, w 39.8): image may include frame/mount or dims are of the sheet",
     "crop_xywh": [
      819,
      921,
      715,
      715
-    ]
+    ],
+    "scale_note": "image height/width are swapped relative to the sheet; ~25 px/mm (dry-media calibration)"
    },
    {
     "objectID": 436166,
@@ -1604,14 +1605,15 @@
      140,
      109
     ],
-    "px_per_mm": 23.76,
+    "px_per_mm": 14.2,
     "px_per_mm_note": "inconsistent (h 22.0, w 25.5): image may include frame/mount or dims are of the sheet",
     "crop_xywh": [
      825,
      1665,
      834,
      834
-    ]
+    ],
+    "scale_note": "photo includes the mount; 14.2 px/mm measured on the sheet (dry-media calibration)"
    },
    {
     "objectID": 345512,

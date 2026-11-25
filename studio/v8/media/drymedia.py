@@ -27,7 +27,7 @@ values. docs/manual/{charcoal,graphite,pastel}.md list them under "Calibration".
 """
 import math
 import numpy as np
-from scipy.ndimage import gaussian_filter, distance_transform_edt
+from scipy.ndimage import gaussian_filter, gaussian_filter1d, distance_transform_edt, convolve
 from PIL import Image, ImageDraw
 from .base import Medium, hx, noise_field, kmix
 
@@ -41,29 +41,66 @@ def _eq(a):
     return np.interp(a, q, np.linspace(0, 1, 513)).astype(np.float32)
 
 
-def paper_texture(h, w, kind, seed=11):
-    n = lambda s, k: noise_field(h, w, s, seed + k)
-    if kind == "laid":                  # Ingres: fine laid lines, chain lines every ~110 px
+def _zn(h, w, sigma, rng):
+    """Gaussian-filtered white noise, zero mean and unit std (so weights are amplitudes)."""
+    n = gaussian_filter(rng.standard_normal((h, w)).astype(np.float32), sigma) if sigma > 0 else rng.standard_normal((h, w)).astype(np.float32)
+    return (n - n.mean()) / (n.std() + 1e-6)
+
+
+def _fibres(h, w, rng, length_px, density=0.035):
+    """Short fibres at random orientations: sparse seeds drawn out along 4 directions (felted paper)."""
+    L = int(np.clip(round(length_px), 3, 9)) | 1
+    out = np.zeros((h, w), np.float32)
+    c = L // 2
+    for k in range(4):
+        a = math.radians(45 * k + rng.uniform(-15, 15))
+        ker = np.zeros((L, L), np.float32)
+        for t in np.linspace(-c, c, 4 * L):
+            ker[int(round(c + t * math.sin(a))), int(round(c + t * math.cos(a)))] = 1.0
+        ker /= ker.sum()
+        s = (rng.random((h, w)) < density / 4).astype(np.float32)
+        out += convolve(s, ker, mode="wrap")
+    return (out - out.mean()) / (out.std() + 1e-6)
+
+
+def paper_texture(h, w, kind, ppm=2.5, seed=11):
+    """The paper's tooth as a height field, at the studio's stated scale `ppm` (px per mm).
+
+    Measured on the Met references (docs/calibration/charcoal.md): the tooth of drawing papers shows as
+    light specks of 0.06-0.15 mm inside marks (the photographs' resolution limit), i.e. below one studio
+    pixel; blank paper at the studio scale has a grain std of 0.5-1.1 L* with a correlation length of
+    one pixel. So the height field is dominated by pixel-scale grain (no mm-sized blobs: the old
+    0.85/2.2/8 px mixture read as camouflage), with fibres and a faint formation cloud. Laid papers:
+    laid lines every 0.9 mm (two sheets measured: 0.90 and 0.91 mm; a third 1.23 mm) and chain lines
+    about every 35 mm (32.8 and 37.3 mm, weak peaks). The mixing weights are tuned to the measured grain
+    statistics; the fibre length (1.5 mm) and the cloud scale are tuned by eye."""
+    rng = np.random.default_rng(seed)
+    grain = _zn(h, w, 0.5, rng) + 0.45 * _zn(h, w, 1.0, rng)
+    fib = _fibres(h, w, rng, 1.5 * ppm)
+    cloud = _zn(h, w, 1.5 * ppm, rng)
+    if kind == "laid":
         y, x = np.mgrid[0:h, 0:w].astype(np.float32)
-        lines = 0.5 + 0.5 * np.sin(2 * np.pi * (y + 1.3 * np.sin(x / 37.0) + 0.8 * (n(6, 3) - 0.5) * 6) / 4.3)
-        cx = (x + 3 * np.sin(y / 90.0)) % 112.0
-        chain = np.exp(-((cx - 56) ** 2) / 8.0)
-        t = 0.42 * lines + 0.4 * n(0.7, 0) + 0.18 * n(2.5, 1) - 0.22 * chain
-    elif kind == "honeycomb":           # pastel paper's honeycomb side: cells with raised rims
-        rng = np.random.default_rng(seed)
-        k = int(h * w / 26)
+        per = 0.9 * ppm                                   # measured laid-line period
+        wob = 0.25 * per * _zn(h, w, 6 * ppm, rng)
+        lines = np.sin(2 * np.pi * (y + wob) / per)
+        cper = 35.0 * ppm                                 # measured chain-line spacing
+        cx = (x + 0.04 * cper * np.sin(y / (0.8 * cper))) % cper
+        chain = np.exp(-((cx - cper / 2) ** 2) / (2 * (0.25 * ppm) ** 2))
+        t = grain + 0.5 * fib + 0.9 * lines - 1.2 * chain + 0.3 * cloud
+    elif kind == "honeycomb":           # pastel paper's honeycomb side: cells with raised rims, ~0.8 mm
+        cell = max(2.0, 0.8 * ppm)
+        k = int(h * w / cell ** 2)
         seeds = np.ones((h, w), bool)
         seeds[rng.integers(0, h, k), rng.integers(0, w, k)] = False
         d = distance_transform_edt(seeds).astype(np.float32)
-        d = gaussian_filter(d, 0.6)
-        d = (d - d.min()) / (d.max() - d.min() + 1e-6)
-        t = 0.55 * np.sqrt(d) + 0.33 * n(0.6, 0) + 0.12 * n(3.0, 1)
-    elif kind == "sanded":              # dense fine grit
-        t = 0.8 * n(0.5, 0) + 0.2 * n(1.6, 1)
-    elif kind == "smooth":              # bristol: barely any tooth
-        t = 0.55 * n(0.6, 0) + 0.45 * n(4.0, 1)
-    else:                               # drawing paper: fine irregular tooth, a little cloudiness
-        t = 0.55 * n(0.85, 0) + 0.33 * n(2.2, 1) + 0.12 * n(8.0, 2)
+        d = (d - d.mean()) / (d.std() + 1e-6)
+        t = 0.8 * d + grain + 0.4 * fib + 0.3 * cloud
+    elif kind == "sanded":              # dense fine grit: almost pure pixel-scale grain
+        t = grain + 0.15 * cloud
+    elif kind == "smooth":              # bristol: little tooth, a smoother, cloudier surface
+        t = 0.6 * grain + 0.3 * fib + 0.8 * _zn(h, w, 0.6 * ppm, rng)
+    else:                               # drawing paper: fine irregular tooth, fibres, a faint cloud
+        t = grain + 0.6 * fib + 0.35 * cloud
     return _eq(t)
 
 
@@ -77,7 +114,13 @@ def _cov(d):
 
 # ---------------------------------------------------------------- the hand's tools
 class DryTool:
-    """One stick, blender, eraser or stylus. The core sets .size, .step, .speedfx while playing."""
+    """One stick, blender, eraser or stylus. The core sets .size, .step, .speedfx while playing.
+
+    A stick does not lay its dust dab by dab: it records the contacts along the stroke and lays the
+    whole stroke when the stroke ends (`end`, which the core calls after every stroke). Per pixel the
+    stroke gives the deepest reach into the tooth (which hollows it touched) and the summed rubbing
+    (how much dust it left), then the tooth, the asked value and the colour are applied once. Same
+    physics as one dab at a time, about five times faster, so hatching and `match` stay quick."""
 
     def __init__(self, medium, spec, size, color, rng, it):
         self.m, self.spec, self.rng = medium, dict(spec), rng
@@ -90,25 +133,40 @@ class DryTool:
         self.liner = spec.get("liner", False)
         self.first = True
         self.wear = 0.0
+        self.q = []
+        self.edge_px = max(1.0, spec.get("edge_mm", medium.EDGE_MM) * medium.PPM / 0.8)
+        # the broken face of the stick: a fixed relief along its length, so a side stroke is streaked
+        # along its direction (tuned by eye: real side strokes show such striations)
+        self.face = gaussian_filter1d(rng.standard_normal(64), 2.0).astype(np.float32)
+        self.face = self.face / (np.abs(self.face).max() + 1e-6)
 
     # -- contact shapes
-    def mask(self, r, u, v):
+    def mask(self, r, u, v, pe=None, j0=0.0, j1=0.0):
         sh = self.spec["shape"]
-        if sh == "tip":                  # round end of a stick or pencil point: crisp, antialiased
+        if pe is None:
+            pe = getattr(self, "_pe", 0.7)
+        if sh == "tip":                  # round end of a stick or pencil point
+            # the dust thins out over the line's edge: a ramp whose 10-90% width is the medium's measured
+            # edge rise (EDGE_MM; at least the 1 px of antialiasing)
             d = np.sqrt(u * u * 1.15 + v * v)
-            return np.clip(r - d + 0.5, 0, 1)
+            wd = self.edge_px
+            return np.clip((r - d) / wd + 0.5, 0, 1)
         if sh == "side":                 # stick laid on its side, across the stroke
             along = np.clip(1 - np.abs(u) / max(2.5, r * 0.22), 0, 1)
-            # light pressure: only the end the hand tilts onto touches (wedge-shaped starts and ends);
-            # the stick's broken ends make ragged band edges
-            c = float(np.clip(0.15 + 0.85 * self._pe / 0.8, 0.15, 1.0))
+            # light pressure: only the end the hand tilts onto touches (wedge-shaped starts and ends).
+            # The ends of the contact drift smoothly along the stroke (j0, j1: a broken stick's ends),
+            # and the pressure falls off toward them (a stick is not flat): soft, wobbly band edges
+            c = float(np.clip(0.15 + 0.85 * pe / 0.8, 0.15, 1.0))
             sgn = 1.0 if self.tilt >= 0 else -1.0
             lo, hi = (-r, -r + 2 * r * c) if sgn > 0 else (r - 2 * r * c, r)
-            lo += self.rng.normal(0, 0.06) * r; hi += self.rng.normal(0, 0.06) * r
-            e = max(1.0, 0.15 * r)
-            across = np.clip(np.minimum(v - lo, hi - v) / e, 0, 1) ** 0.8
+            lo += j0 * r; hi += j1 * r
+            e = max(1.5, 0.3 * r, self.edge_px)
+            across = np.clip(np.minimum(v - lo, hi - v) / e, 0, 1)
+            across = across * across * (3 - 2 * across)
             prof = np.clip(1 + self.tilt * (v / max(r, 1)) * sgn * -1, 0.3, 1.3)
-            return along * across * prof
+            k = np.clip((v / max(r, 1) + 1) * 31.5, 0, 63).astype(np.int32)
+            streak = 1 + 0.35 * self.face[k]
+            return along * across * prof * streak
         if sh == "blade":
             along = np.clip(0.9 - np.abs(u) + 0.5, 0, 1)
             return along * np.clip(r - np.abs(v) + 0.5, 0, 1)
@@ -134,10 +192,20 @@ class DryTool:
             self.spec["auto"] = True
             self.spec["mono"] = True
 
+    def _ext(self, r):
+        sh = self.spec["shape"]
+        return max(2.5, r * 0.22) if sh == "side" else (1.4 if sh == "blade" else r)
+
     def dab(self, cv, x, y, ang, press, rscale=1.0):
         if self.first:
             self._first(cv)
         r = max(0.6, self.size / 2 * rscale)
+        if self.kind == "stick":         # recorded; laid at the end of the stroke
+            self.q.append((float(x), float(y), float(ang), float(press), r, float(getattr(self, "step", 1.0)),
+                           float(getattr(self, "speedfx", 0.0))))
+            if len(self.q) > 4000:       # a very long stroke: lay what we have
+                self.end(cv)
+            return
         R = int(math.ceil(r)) + 2
         x0, x1 = max(0, int(x) - R), min(cv.W, int(x) + R + 1)
         y0, y1 = max(0, int(y) - R), min(cv.H, int(y) + R + 1)
@@ -155,73 +223,144 @@ class DryTool:
             return
         sl = (slice(y0, y1), slice(x0, x1))
         pe = float(press) * (1 - 0.55 * min(1.0, getattr(self, "speedfx", 0.0)))
-        sh = self.spec["shape"]
-        ext = max(2.5, r * 0.22) if sh == "side" else (1.4 if sh == "blade" else r)
-        ds = min(1.0, getattr(self, "step", 1.0) / max(ext, 1.0))
+        ds = min(1.0, getattr(self, "step", 1.0) / max(self._ext(r), 1.0))
         getattr(self, "_" + self.kind)(cv, sl, m, pe, ds, r)
 
-    # -- a stick lays dust on the tooth
-    def _stick(self, cv, sl, m, pe, ds, r):
+    def end(self, cv):
+        if self.kind == "stick" and self.q:
+            q, self.q = self.q, []
+            self._stroke(cv, q)
+
+    # -- a stick lays dust on the tooth (one whole stroke)
+    def _stroke(self, cv, q):
         sp, M = self.spec, self.m
         sup = M.sup(cv)
+        Q = np.asarray(q, np.float32)
+        xs, ys, angs, press, rs, steps, sfx = Q.T
+        Rmax = int(math.ceil(float(rs.max()))) + 2
+        x0, x1 = max(0, int(xs.min()) - Rmax), min(cv.W, int(xs.max()) + Rmax + 1)
+        y0, y1 = max(0, int(ys.min()) - Rmax), min(cv.H, int(ys.max()) + Rmax + 1)
+        if x0 >= x1 or y0 >= y1:
+            return
+        h, w = y1 - y0, x1 - x0
+        A = np.zeros((h, w), np.float32)        # summed rubbing (amount of dust offered)
+        RE = np.zeros((h, w), np.float32)       # deepest reach into the tooth
+        P2 = np.zeros((h, w), np.float32)       # heaviest pressure (crushed dust, oil-pastel blending)
+        BU = np.zeros((h, w), np.float32) if sp.get("burnish") else None
+        SL = np.zeros((h, w), np.float32) if sp.get("slide") else None
+        P = self.color if sp.get("P") is None else np.asarray(sp["P"], np.float32)
+        mono = bool(sp.get("mono"))
+        if mono:
+            t, Pl = float(_lum(self.color)), float(_lum(P))
+            want = float(np.clip((t - self.pl) / (Pl - self.pl), 0, 1)) if abs(Pl - self.pl) > 1e-3 else 0.0
+            pmul = 0.5 + 0.75 * want            # the hand presses as hard as the asked value needs
+        else:
+            pmul = 1.0
+        rk, grab = sp["reach"], sup["grab"]
+        n = len(q)
+        if sp["shape"] == "side":               # smooth drift of the contact's ends along the stroke
+            sig = max(2.0, float(np.median(rs)) * 0.6 / max(float(np.median(steps)), 0.3))
+            jit = [gaussian_filter1d(self.rng.standard_normal(n), sig, mode="nearest") for _ in range(2)]
+            jit = [0.08 * j / (j.std() + 1e-6) for j in jit]
+        else:
+            jit = [np.zeros(n), np.zeros(n)]
+        clip = cv.clip[y0:y1, x0:x1] if cv.clip is not None else None
+        if sp["shape"] == "side":
+            # the side of a stick lands and lifts over a stretch of travel: the contact builds up and
+            # fades instead of starting and stopping on a straight cut (short side strokes in `match`
+            # read as hard-edged blocks otherwise); while it lands and lifts only the end the hand tilts onto
+            # touches, so the band's ends are wedges, not square cuts. Fade length 1.0 r: tuned by eye.
+            arc = np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(xs), np.diff(ys)))])
+            Lf = max(2.0, 1.0 * float(np.median(rs)))
+            sm = lambda z: z * z * (3 - 2 * z)
+            fade = sm(np.clip(arc / Lf, 0, 1)) * sm(np.clip((arc[-1] - arc) / Lf, 0, 1))
+            fade = np.maximum(fade, 0.15)
+        else:
+            fade = np.ones(n, np.float32)
+        for i in range(n):
+            x, y, ang, pr, r = float(xs[i]), float(ys[i]), float(angs[i]), float(press[i]), float(rs[i])
+            R = int(math.ceil(r)) + 2
+            a0, a1 = max(x0, int(x) - R), min(x1, int(x) + R + 1)
+            b0, b1 = max(y0, int(y) - R), min(y1, int(y) + R + 1)
+            if a0 >= a1 or b0 >= b1:
+                continue
+            dx = (np.arange(a0, a1, dtype=np.float32) - x)[None, :]
+            dy = (np.arange(b0, b1, dtype=np.float32) - y)[:, None]
+            ca, sa = math.cos(ang), math.sin(ang)
+            u, v = dx * ca + dy * sa, -dx * sa + dy * ca
+            m = self.mask(r, u, v, pr * (0.3 + 0.7 * float(fade[i])), float(jit[0][i]), float(jit[1][i]))
+            if clip is not None:
+                m = m * clip[b0 - y0:b1 - y0, a0 - x0:a1 - x0]
+            pe = pr * (1 - 0.55 * min(1.0, float(sfx[i]))) * pmul
+            ds = min(1.0, float(steps[i]) / max(self._ext(r), 1.0))
+            s = (slice(b0 - y0, b1 - y0), slice(a0 - x0, a1 - x0))
+            m = m * float(fade[i])
+            A[s] += m * (ds * (0.25 + 0.75 * pe))
+            reach = min(1.3, (0.1 + 1.25 * pe) * rk * grab)
+            np.maximum(RE[s], np.clip(m * 2.0, 0, 1) * reach, out=RE[s])
+            np.maximum(P2[s], np.clip(m * 2.0, 0, 1) * pe, out=P2[s])
+            if BU is not None and pe > 0.82:
+                BU[s] += m * ((pe - 0.82) * ds * 2.5)
+            if SL is not None:
+                SL[s] += m * (ds * pe * 0.12)
+        self.wear += 0.002 * float(np.minimum(1.0, steps / 2.0).sum())
+        live = A > 1e-4
+        if not live.any():
+            return
+        sl = (slice(y0, y1), slice(x0, x1))
         tex = cv.tex[sl]
         ind = getattr(cv, "indent", None)
         if ind is not None:
             tex = tex - 1.6 * ind[sl]
-        col, dep, paper = cv.col[sl], cv.dep[sl], cv.paper[sl]
-        P = self.color if sp.get("P") is None else np.asarray(sp["P"], np.float32)
-        if sp.get("mono"):          # the hand presses as hard as the asked value needs
-            t, Pl = float(_lum(self.color)), float(_lum(P))
-            want = float(np.clip((t - self.pl) / (Pl - self.pl), 0, 1)) if abs(Pl - self.pl) > 1e-3 else 0.0
-            pe = pe * (0.5 + 0.75 * want)
-        reach = min(1.3, (0.1 + 1.25 * pe) * sp["reach"] * sup["grab"])
-        catch = np.clip((tex - (1 - reach)) / (sup["w"] * sp.get("w", 1.0)), 0, 1)
-        catch = catch + (1 - catch) * 0.22 * pe * pe * sp.get("smear", 1.0)    # crushed dust in the hollows
+        col, dep = cv.col[sl], cv.dep[sl]
+        catch = np.clip((tex - (1 - RE)) / (sup["w"] * sp.get("w", 1.0) * M.W_SUB), 0, 1)
+        catch = catch + (1 - catch) * 0.22 * P2 * P2 * sp.get("smear", 1.0)    # crushed dust in the hollows
         cap = sup["cap"] + cv.xcap[sl]
         left = np.clip((cap - dep) / cap, 0, 1)
         if sp.get("oily"):
             left = np.maximum(left, 0.45)          # wax rides over full tooth as a film
         elif sp.get("grip"):
             left = np.maximum(left, sp["grip"] * (dep > 0.05))   # pastel grips pastel a little
-        a = m * catch * sp["flow"] * ds * 0.5 * (0.25 + 0.75 * pe) * left
+        a = A * catch * (sp["flow"] * 0.5) * left
         f = 1 - np.exp(-KC * a)
         if sp.get("oily"):                          # oil pastel blends subtractively by pressure
-            loc = (col * m[..., None]).sum((0, 1)) / (m.sum() + 1e-6)
-            P = kmix(P[None, None, :], loc[None, None, :], 0.25 * pe)[0, 0]
-        if sp.get("mono"):                          # monochrome: work toward the asked value only
+            Pp = kmix(np.broadcast_to(P, col.shape), col, (0.25 * P2)[..., None])
+        else:
+            Pp = P[None, None, :]
+        if mono:                                    # monochrome: work toward the asked value only
             # peaks may go a little past the asked value; the area as a whole stops at it
             L = _lum(col); d = Pl - L
             sg = 1.0 if Pl < self.pl else -1.0
-            tp = t - sg * 0.12
+            tp = t - sg * 0.12 * min(1.0, 4 * want)     # a value at the paper's own tone leaves (almost) nothing
             ok = np.abs(d) > 1e-3
             fmax = np.clip(np.where(ok, (tp - L) / np.where(ok, d, 1), 0), 0, 1)
             f0 = f
             f = np.minimum(f, fmax)
-            w8 = m > 0.05
-            if w8.any():
-                Lm = float(L[w8].mean()); dl = float((f * d)[w8].mean()); room = t - Lm
-                sc = float(np.clip(room / dl, 0, 1)) if abs(dl) > 1e-6 else 0.0
-                f = f * sc
+            w8 = (A > 0.02).astype(np.float32)
+            sg2 = max(1.0, float(np.median(rs)))
+            gw = gaussian_filter(w8, sg2) + 1e-6
+            Lm = gaussian_filter(L * w8, sg2) / gw
+            dl = gaussian_filter(f * d * w8, sg2) / gw
+            sc = np.where(np.abs(dl) > 1e-6, np.clip((t - Lm) / np.where(np.abs(dl) > 1e-6, dl, 1), 0, 1), 0.0)
+            f = f * sc
             a = a * f / np.maximum(f0, 1e-6)
-        cv.col[sl] = col * (1 - f[..., None]) + P[None, None, :] * f[..., None]
+        cv.col[sl] = col * (1 - f[..., None]) + Pp * f[..., None]
         cv.dep[sl] = dep + a
         cv.loose[sl] = cv.loose[sl] + a * sp["loose"]
         cv.fix[sl] = cv.fix[sl] + a * sp["stain"]
         if hasattr(cv, "sheen") and sp.get("sheen", 0) > 0:
-            cv.sheen[sl] = np.clip(cv.sheen[sl] + a * sp["sheen"] * (0.4 + pe), 0, 1.5)
-        if sp.get("burnish") and pe > 0.82:         # graphite: hard pressure flattens the tooth, slick dark
-            b = m * (pe - 0.82) * ds * 2.5
-            cv.dep[sl] = cv.dep[sl] + b * np.clip(cap - cv.dep[sl], 0, None)
+            cv.sheen[sl] = np.clip(cv.sheen[sl] + a * sp["sheen"] * (0.4 + P2), 0, 1.5)
+        if BU is not None and BU.max() > 0:         # graphite: hard pressure flattens the tooth, slick dark
+            cv.dep[sl] = cv.dep[sl] + BU * np.clip(cap - cv.dep[sl], 0, None)
             if hasattr(cv, "sheen"):
-                cv.sheen[sl] = np.clip(cv.sheen[sl] + b * 0.6 * _cov(cv.dep[sl]), 0, 1.5)
-        if sp.get("slide"):                         # pastel on a full tooth slides and smears
-            s = m * ds * pe * (1 - left) * 0.12
+                cv.sheen[sl] = np.clip(cv.sheen[sl] + BU * 0.6 * _cov(cv.dep[sl]), 0, 1.5)
+        if SL is not None:                          # pastel on a full tooth slides and smears
+            s = np.clip(SL * (1 - left), 0, 0.6)
             if s.max() > 0.01:
                 c2 = cv.col[sl]
-                loc = (c2 * m[..., None]).sum((0, 1)) / (m.sum() + 1e-6)
+                loc = (c2 * s[..., None]).sum((0, 1)) / (s.sum() + 1e-6)     # the colour the stick drags along
                 tgt = loc * 0.75 + self.color * 0.25
                 cv.col[sl] = c2 + (tgt[None, None, :] - c2) * s[..., None]
-        self.wear += ds * 0.002
 
     # -- blenders move the loose dust and fill the hollows
     def _smudge(self, cv, sl, m, pe, ds, r):
@@ -327,6 +466,12 @@ class DryMedium(Medium):
     bound_erase = 0.55
     MAXSIZE = {}             # widest mark per contact shape (px): a pencil point is not a brush
     veil = None              # pigment of the broad veil (glaze); None = the asked colour
+    PPM = 2.5                # the stated scale: px per mm of the sheet (1200 px = 48 cm)
+    EDGE_MM = 0.75           # 10-90% edge rise of a stick's line (mm), measured on the references
+    # softness of the catch: the tooth (0.06-0.15 mm specks) is finer than a pixel, so a pixel is partly
+    # covered. Fitted to the grain std inside hatched passages at the studio scale (docs/calibration/); the
+    # ratio between media follows the number of tooth cells per pixel (about 16 at 0.4 mm, 4 at 0.2 mm)
+    W_SUB = 3.0
     veil_mono = True
 
     @property
@@ -344,7 +489,7 @@ class DryMedium(Medium):
 
     def texture(self, h, w, support):
         s = self.SUP.get(support, next(iter(self.SUP.values())))
-        return paper_texture(h, w, s["tex"])
+        return paper_texture(h, w, s["tex"], self.PPM)
 
     def init_state(self, cv, ground):
         s = self.sup(cv)
@@ -384,7 +529,7 @@ class DryMedium(Medium):
         op = float(np.clip(op, 0, 1))
         reach = min(1.1, (0.3 + 0.6 * op) * s["grab"])
         tex = cv.tex - 1.6 * getattr(cv, "indent", 0)
-        catch = np.clip((tex - (1 - reach)) / s["w"], 0, 1)
+        catch = np.clip((tex - (1 - reach)) / (s["w"] * self.W_SUB), 0, 1)
         cap = s["cap"] + cv.xcap
         left = np.clip((cap - cv.dep) / cap, 0, 1)
         base = mask * op * left
@@ -417,7 +562,9 @@ class DryMedium(Medium):
         light = self._grain(cv)
         s = self.sup(cv)
         fill = np.clip(cv.dep / (s["cap"] + cv.xcap), 0, 1)
-        shade = 1 + np.clip(light * s.get("relief", 1.0) * 0.55, -0.035, 0.035) * (1 - 0.6 * fill)
+        # the paper's grain under the light: blank paper at the studio scale measures 0.5-1.1 L* (std of the
+        # fine texture; four reference sheets), so the relief is scaled to about 0.8 L* on drawing paper
+        shade = 1 + np.clip(light * s.get("relief", 1.0) * 0.33, -0.02, 0.02) * (1 - 0.6 * fill)
         img = self.optics(cv, cv.col * shade[..., None], light, fill)
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
 
@@ -534,8 +681,25 @@ def _eraser(desc, shape, lift, sizef=1.0, **kw):
     return d
 
 
-VINE = (0.215, 0.205, 0.2)
-COMP = (0.055, 0.052, 0.058)
+def _srgb_of_L(L):
+    """sRGB value (0..1, the engine's colour convention) of a neutral grey of CIE lightness L*."""
+    Y = ((L + 16) / 116) ** 3 if L > 8 else L / 903.3
+    return 1.055 * Y ** (1 / 2.4) - 0.055 if Y > 0.0031308 else 12.92 * Y
+
+
+def _grey(L, tint=(1.0, 1.0, 1.0)):
+    v = _srgb_of_L(L)
+    return tuple(round(v * k, 4) for k in tint)
+
+
+# Darkest values, measured on the Met references (the darkest 0.1% of each sheet, docs/calibration/charcoal.md):
+# conté (Millet) L* 23.8, charcoal (Degas, Two Dancers) 21.9, black chalk (de la Fosse) 25.6,
+# charcoal sketches (Mauve 28.9, Melbye 26.9). Full coverage of a stick renders at its pigment value,
+# so compressed charcoal is set to L* 24 and vine to L* 29 (vine lighter: the sources; its number is the
+# lighter end of the measured charcoal sheets). The old values (L* 4 and 23) were far too black.
+VINE = _grey(29.0, (1.0, 0.985, 0.97))
+COMP = _grey(24.0, (1.0, 0.985, 1.02))
+CPENCIL = _grey(26.0)
 
 
 class Charcoal(DryMedium):
@@ -550,7 +714,7 @@ class Charcoal(DryMedium):
         "vine_side": _stick("vine charcoal on its side: broad pale band broken by the tooth", "side", VINE, 0.65, 0.58, 0.9, 0.03, mono=True),
         "compressed_tip": _stick("compressed charcoal, the end: dense velvety black line, harder to erase", "tip", COMP, 1.05, 0.95, 0.5, 0.22, mono=True),
         "compressed_side": _stick("compressed charcoal on its side: broad dense dark band", "side", COMP, 0.95, 0.75, 0.55, 0.2, mono=True),
-        "pencil": _stick("charcoal pencil: fine controlled dark line (at most 8 px)", "tip", (0.09, 0.088, 0.09), 0.85, 0.75, 0.4, 0.25, mono=True, maxsize=8),
+        "pencil": _stick("charcoal pencil: fine controlled dark line (at most 8 px)", "tip", CPENCIL, 0.85, 0.75, 0.4, 0.25, mono=True, maxsize=8),
         "white_chalk": _stick("white chalk / Conte: added lights, best on toned paper", "tip", (0.95, 0.94, 0.9), 0.85, 0.72, 0.7, 0.1),
         "stump": _blend("paper stump: smooth blended tone, fills the tooth", 0.8, 0.22, 0.03, 0.3),
         "tortillon": _blend("tortillon: small pointed blender for detail", 0.75, 0.2, 0.03, 0.3, sizef=0.6),
@@ -580,12 +744,22 @@ class Charcoal(DryMedium):
 GRADES = ["6H", "4H", "2H", "H", "HB", "B", "2B", "3B", "4B", "5B", "6B", "7B", "8B", "9B"]
 
 
+# Lightness (L*) of a full cover of each grade. Measured anchors (docs/calibration/graphite.md): the darkest
+# graphite in the references is L* 32.5-34.7 (Lachaise, Grandville: dense soft-pencil passages) -> 9B 32.5,
+# 6B 35; the darkest of Ingres's fine portrait (hard pencils) is L* 55 -> about H. The other grades are
+# interpolated by eye: no per-grade measurement was found.
+# The values are of the pigment; the render's sheen lifts a dense soft dark by about 3.5 L*, so the soft end
+# sits that much below the measured anchors (8B three heavy passes renders at L* 33-34, darkest 0.1%).
+GRADE_L = {"6H": 72.0, "4H": 66.0, "2H": 60.0, "H": 55.0, "HB": 49.0, "B": 44.5, "2B": 41.0, "3B": 38.0,
+           "4B": 35.5, "5B": 33.5, "6B": 32.0, "7B": 30.8, "8B": 29.8, "9B": 29.0}
+
+
 def grade_spec(g):
     g = str(g).upper()
     if g not in GRADES:
         g = "2B"
     i = GRADES.index(g) / (len(GRADES) - 1)          # 0 hardest .. 1 softest
-    lum = 0.6 - 0.44 * i ** 0.8
+    lum = _srgb_of_L(GRADE_L[g])
     return dict(P=(lum * 0.97, lum * 0.98, lum * 1.03), flow=0.45 + 0.75 * i, reach=0.42 + 0.75 * i,
                 loose=0.1 + 0.4 * i, stain=0.12 - 0.08 * i, sheen=0.25 + 0.75 * i, grade=g)
 
@@ -617,6 +791,9 @@ class Graphite(DryMedium):
     }
     DEFAULT = {"tip": "pencil", "side": "side"}
     MAXSIZE = {"tip": 10, "side": 36}
+    PPM = 5.0                # graphite sheets are smaller: 1200 px = 24 cm
+    W_SUB = 1.6
+    EDGE_MM = 0.3            # graphite lines are crisper (Delacroix's hatching: 0.31 mm)
     finishes = {"fixative": "optional fixative {strength (0.5), region}: no more smudging, dulls the shine ~20%",
                 "lift": "eraser highlights {points: [[x,y,r],...], kind: kneaded|eraser}",
                 "clean": "clean the margins {margin} or outside {region}",
@@ -652,6 +829,8 @@ class Pastel(DryMedium):
                           tone="#b4a184", cap=3.4, grab=1.25, w=0.38, relief=0.8),
            "ingres": dict(desc="Ingres laid paper, toned: modest tooth, laid lines show", tex="laid", tone="#9b9384",
                           cap=1.2, grab=0.95, w=0.3, relief=1.2)}
+    W_SUB = 1.2              # pastel papers have a coarser tooth (specks 0.2-0.4 mm)
+    EDGE_MM = 1.0            # pastel strokes are softest (Degas, The Singer in Green: 0.98 mm)
     TOOLS = {
         "soft_side": _stick("soft pastel on its side: rich broad colour broken by the tooth; fills it fast", "side", None, 1.0, 0.8, 0.85, 0.04, slide=True, grip=0.5),
         "soft_tip": _stick("soft pastel, the end: thick opaque strokes, the brightest accents", "tip", None, 1.1, 0.88, 0.85, 0.04, slide=True, grip=0.5),

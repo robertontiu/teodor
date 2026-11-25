@@ -282,13 +282,21 @@ def palette(it):
 
 
 # ---------------------------------------------------------------- intentions
+def rng2(v, default):
+    """A [min, max] parameter that also accepts a single number (min = max)."""
+    v = default if v is None else v
+    if isinstance(v, (int, float)):
+        return float(v), float(v)
+    return float(v[0]), float(v[-1])
+
+
 def do_free(cv, it, felt, rng):
     reg = it.get("region", {"type": "canvas"})
     cv.clip = region_mask(reg, cv.W, cv.H) if it.get("clip") else None
     mask = region_mask(reg, cv.W, cv.H)
     cols, w = palette(it)
-    smin, smax = it.get("size", [8, 14])
-    lmin, lmax = it.get("length", [20, 60])
+    smin, smax = rng2(it.get("size"), [8, 14])
+    lmin, lmax = rng2(it.get("length"), [20, 60])
     jit = it.get("color_jitter", 0.035) * (1.2 - 0.6 * felt.care)
     for _ in range(int(it.get("count", 10))):
         x, y = sample_in(mask, reg, rng, cv.W, cv.H)
@@ -329,7 +337,7 @@ def do_match(cv, it, felt, rng):
     reg = it.get("region", {"type": "canvas"})
     mask = region_mask(reg, cv.W, cv.H)
     cv.clip = mask if it.get("clip") else None
-    smin, smax = it.get("size", [20, 40])
+    smin, smax = rng2(it.get("size"), [20, 40])
     size = (smin + smax) / 2
     sig = max(1.0, size / 3)
     refb = np.stack([gaussian_filter(cv.ref[..., i], sig) for i in range(3)], -1)
@@ -355,7 +363,7 @@ def do_match(cv, it, felt, rng):
         det = np.clip(det / (np.percentile(det, 97) + 1e-6), 0, 1)
     cols, w = palette(it) if it.get("colors") else (None, None)
     cs = it.get("color_shift", {})
-    lmin, lmax = it.get("length", [size * 1.5, size * 5])
+    lmin, lmax = rng2(it.get("length"), [size * 1.5, size * 5])
     for _, r, c in cells:
         sub = errp[r * g:(r + 1) * g, c * g:(c + 1) * g]
         iy, ix = np.unravel_index(np.argmax(sub), sub.shape)
@@ -441,13 +449,15 @@ def do_hatch(cv, it, felt, rng):
         while off < R:
             sp = spacing * rng.uniform(0.85, 1.15)
             px, py = cx + nx * off, cy + ny * off
-            t, run = -R, []
+            # each line starts its pieces at its own offset and length, so piece ends never line up into seams
+            t, run = -R - rng.uniform(0, seg_max), []
+            seg_here = seg_max * rng.uniform(0.6, 1.4)
             while t <= R:
                 x, y = px + dx * t, py + dy * t
                 ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and val[int(y), int(x)] < level
                 if ok:
                     run.append([x, y])
-                if (not ok or len(run) * 3 >= seg_max) and len(run) >= 3:
+                if (not ok or len(run) * 3 >= seg_here) and len(run) >= 3:
                     a, b = run[0], run[-1]
                     a = [a[0] + rng.normal(0, 1.5), a[1] + rng.normal(0, 1.5)]
                     ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8), (a[1] + b[1]) / 2 + rng.normal(0, 0.8)], b]
@@ -456,6 +466,7 @@ def do_hatch(cv, it, felt, rng):
                     play(cv, br, gesture_path(ctrl, felt, rng, size), felt, it.get("pressure", 0.8), rng)
                     n += 1
                     run = []
+                    seg_here = seg_max * rng.uniform(0.6, 1.4)
                 elif not ok:
                     run = []
                 t += 3
@@ -536,7 +547,9 @@ def simplify(cv, fx, fy, groups=4, radius=0.25, keep=1.0):
     set_ref(cv, P("simplified.png"))
 
 
-def transfer(cv, strength, color="#4a3a2e"):
+def transfer(cv, strength, color=None):
+    if color is None:  # a line that shows on the ground: warm dark on light grounds, warm light on dark ones
+        color = "#4a3a2e" if float(cv.col.mean()) > 0.45 else "#d8c8a8"
     lum = gaussian_filter(cv.ref.mean(-1), 1.5)
     e = np.hypot(sobel(lum, 0), sobel(lum, 1))
     e = np.clip(e / (np.percentile(e, 99) + 1e-6), 0, 1) ** 1.5
@@ -684,7 +697,7 @@ if __name__ == "__main__":
     if cmd == "transfer" and hasattr(cv.medium, "transfer"):
         cv.medium.transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else None)
     elif cmd == "transfer":
-        transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else "#4a3a2e")
+        transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else None)
     elif cmd == "sign":
         if hasattr(cv.medium, "sign"):
             cv.medium.sign(cv, sys.argv[2] if len(sys.argv) > 2 else "auto")
