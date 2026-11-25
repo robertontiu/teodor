@@ -1,19 +1,27 @@
-"""Measured style targets: what each current measures like, from public-domain works in the Art
-Institute of Chicago's open-access collection (https://api.artic.edu; images CC0 via its IIIF server).
+"""Measured style targets: what each current measures like, from public-domain works in The Met's
+open-access collection (Open Access API, collectionapi.metmuseum.org; images and data CC0).
 Spectre does the same for music (tools/refcurve.py: era target curves from catalogue data).
 
-For every current in studio/styles.json that has a query below, the tool downloads up to N images
-(843 px wide), measures each with studio/v8/eyes.py, deletes the image, and writes the mean and
-standard deviation of every measure to studio/targets.json, with provenance: the query, the number of
-works and their AIC ids. No images are kept; only statistics are versioned.
+How it works:
+  1. `index`: list the object ids of a few departments and fetch each record once (cached in
+     ~/.cache/teodor/met/, never committed). The Met has no movement labels, so
+  2. each current is selected by a RULE on the records (date range, artist nationality or culture,
+     classification, medium keywords), written below and stored with the result as provenance.
+  3. `measure`: up to N matching public-domain works per current are downloaded (the Met's
+     "web-large" image), measured with studio/v8/eyes.py and deleted. The mean and standard deviation
+     of every measure go to studio/targets.json with the rule, n and the Met object ids.
+     Only statistics are versioned, never images.
 
-  python3 tools/measure_targets.py [style ...] [--n 60]
+  python3 tools/measure_targets.py index [--limit 4000]
+  python3 tools/measure_targets.py measure [style ...] [--n 60]
 
-Queries use the AIC's own style labels where it has them, and otherwise place, date and classification
-as a proxy (marked "proxy" in the provenance). Currents whose works are still in copyright
-(surrealism, abstract-expressionism) have no public-domain sample and are left unmeasured.
+A rule is a proxy for a movement, not a curator's label: "Dutch paintings 1600-1690" is mostly but
+not only the Dutch Golden Age. Currents still in copyright (surrealism, abstract-expressionism)
+have no public-domain sample and stay unmeasured. (The Art Institute of Chicago labels works by
+style, but its image server refused the workspace's requests; the Met's search endpoint is retired,
+so this tool reads department listings and object records instead.)
 """
-import io, json, os, sys, time, urllib.request
+import io, json, os, random, sys, time, urllib.request
 import numpy as np
 from PIL import Image
 
@@ -21,104 +29,156 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, os.path.join(ROOT, "studio", "v8"))
 import eyes  # noqa: E402
 
-API = "https://api.artic.edu/api/v1/artworks/search"
-IIIF = "https://www.artic.edu/iiif/2/{}/full/843,/0/default.jpg"
-UA = "Mozilla/5.0 (compatible; TeodorResearch/1.0; +https://github.com/robertontiu/teodor)"
-
-PAINT = {"terms": {"classification_title.keyword": ["painting", "oil on canvas"]}}
-
-
-def rng(a, b):
-    return {"range": {"date_start": {"gte": a, "lte": b}}}
+API = "https://collectionapi.metmuseum.org/public/collection/v1/"
+UA = "TeodorResearch/1.0 (https://github.com/robertontiu/teodor)"
+CACHE = os.path.expanduser("~/.cache/teodor/met")
+DEPARTMENTS = {11: "European Paintings", 6: "Asian Art", 17: "Medieval Art", 1: "The American Wing"}
+FIELDS = ("objectID", "isPublicDomain", "primaryImageSmall", "department", "classification",
+          "objectBeginDate", "objectEndDate", "artistNationality", "culture", "medium")
 
 
-def place(*p):
-    return {"terms": {"place_of_origin.keyword": list(p)}}
-
-
-def style(*s):
-    return {"terms": {"style_title.keyword": list(s)}}
-
-
-def cls(*c):
-    return {"terms": {"classification_title.keyword": list(c)}}
-
-
-QUERIES = {
-    "byzantine-icon": {"must": [style("byzantine"), cls("painting", "icon")], "kind": "label"},
-    "renaissance": {"must": [style("Renaissance", "15th century", "sixteenth century", "16th Century"), PAINT, rng(1400, 1560)], "kind": "label+date"},
-    "baroque": {"must": [PAINT, rng(1600, 1700), place("Italy", "Spain", "Flanders", "France")], "kind": "proxy: Italian, Spanish, Flemish, French paintings 1600-1700"},
-    "dutch-golden-age": {"must": [PAINT, rng(1600, 1690), place("Netherlands", "Holland", "Haarlem", "Amsterdam", "Utrecht", "Leiden", "Delft")], "kind": "proxy: Dutch paintings 1600-1690"},
-    "romanticism": {"must": [PAINT, rng(1790, 1850), place("England", "Germany", "France", "United States")], "kind": "proxy: English, German, French, American paintings 1790-1850"},
-    "realism": {"must": [style("Realism"), PAINT], "kind": "label"},
-    "impressionism": {"must": [style("Impressionism"), PAINT], "kind": "label"},
-    "post-impressionism": {"must": [style("Post-Impressionism"), PAINT], "kind": "label"},
-    "fauvism": {"must": [PAINT, rng(1904, 1910), place("France")], "kind": "proxy: French paintings 1904-1910"},
-    "expressionism": {"must": [PAINT, rng(1905, 1925), place("Germany", "Austria")], "kind": "proxy: German and Austrian paintings 1905-1925"},
-    "cubism": {"must": [PAINT, rng(1908, 1920), place("France", "Spain")], "kind": "proxy: French and Spanish paintings 1908-1920 (few public-domain works; weak)"},
-    "ukiyo-e": {"must": [cls("print", "woodblock print", "color woodblock print"), place("Japan"), rng(1700, 1868)], "kind": "proxy: Japanese prints 1700-1868"},
-    "east-asian-ink": {"must": [cls("painting", "hanging scroll", "handscroll", "album leaf"), place("China", "Japan"), rng(1300, 1900)], "kind": "proxy: Chinese and Japanese paintings 1300-1900"},
-}
-
-
-def fetch(url, data=None):
-    req = urllib.request.Request(url, data=data, headers={"User-Agent": UA, "Content-Type": "application/json"})
+def get(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
     for attempt in range(4):
         try:
             return urllib.request.urlopen(req, timeout=60).read()
-        except Exception as e:
+        except Exception:
             if attempt == 3:
                 raise
-            time.sleep(2 + 3 * attempt)
+            time.sleep(1 + 2 * attempt)
 
 
-def find(q, n):
-    body = {"query": {"bool": {"must": [{"term": {"is_public_domain": True}}, {"exists": {"field": "image_id"}}] + q["must"]}},
-            "fields": ["id", "image_id", "date_start", "classification_title", "style_title"], "limit": min(100, n * 2)}
-    d = json.loads(fetch(API, json.dumps(body).encode()))
-    return [x for x in d["data"] if x.get("image_id")][:n]
+def index(limit):
+    os.makedirs(CACHE, exist_ok=True)
+    path = os.path.join(CACHE, "records.jsonl")
+    seen = os.path.join(CACHE, "seen.txt")
+    have = set(open(seen).read().split()) if os.path.exists(seen) else set()
+    with open(path, "a") as f, open(seen, "a") as fs:
+        for dep, name in DEPARTMENTS.items():
+            ids = json.loads(get(API + f"objects?departmentIds={dep}"))["objectIDs"] or []
+            random.Random(dep).shuffle(ids)
+            ids = [i for i in ids[:limit] if str(i) not in have]
+            print(f"{name}: fetching {len(ids)} records", flush=True)
+            for k, i in enumerate(ids):
+                try:
+                    o = json.loads(get(API + f"objects/{i}"))
+                except Exception:
+                    continue
+                fs.write(f"{i}\n")
+                if o.get("isPublicDomain") and o.get("primaryImageSmall"):
+                    f.write(json.dumps({k2: o.get(k2) for k2 in FIELDS}) + "\n")
+                if k % 200 == 0:
+                    f.flush(); fs.flush(); print(f"  {k}", flush=True)
+                time.sleep(0.03)
 
 
-def measure_style(sid, n):
-    q = QUERIES[sid]
-    works = find(q, n)
+def records():
+    path = os.path.join(CACHE, "records.jsonl")
+    return [json.loads(l) for l in open(path)] if os.path.exists(path) else []
+
+
+def has(text, *words):
+    t = (text or "").lower()
+    return any(w in t for w in words)
+
+
+def date_in(o, a, b):
+    return o.get("objectBeginDate") is not None and a <= o["objectBeginDate"] <= b
+
+
+def painting(o):
+    return has(o.get("classification"), "painting") or has(o.get("medium"), "oil on", "tempera on", "on canvas", "on wood", "on panel")
+
+
+def eu(o):
+    return o.get("department") == "European Paintings"
+
+
+# current -> (description of the rule, predicate)
+RULES = {
+    "byzantine-icon": ("Medieval Art and European Paintings: Byzantine, Greek, Cretan or Russian painted works (tempera, icons), 1200-1800",
+                       lambda o: has(o.get("culture"), "byzantine", "greek", "cretan", "russian") and painting(o) and date_in(o, 1200, 1800)),
+    "renaissance": ("European Paintings 1400-1560 by Italian, Netherlandish, Flemish or German artists",
+                    lambda o: eu(o) and date_in(o, 1400, 1560) and has(o.get("artistNationality"), "italian", "netherlandish", "flemish", "german")),
+    "baroque": ("European Paintings 1600-1700 by Italian, Spanish, Flemish or French artists",
+                lambda o: eu(o) and date_in(o, 1600, 1700) and has(o.get("artistNationality"), "italian", "spanish", "flemish", "french")),
+    "dutch-golden-age": ("European Paintings 1600-1690 by Dutch artists",
+                         lambda o: eu(o) and date_in(o, 1600, 1690) and has(o.get("artistNationality"), "dutch")),
+    "romanticism": ("European and American paintings 1790-1850 by British, German, French or American artists",
+                    lambda o: painting(o) and date_in(o, 1790, 1850) and has(o.get("artistNationality"), "british", "english", "german", "french", "american")),
+    "realism": ("European Paintings 1840-1880 by French artists (Realism and the Barbizon generation)",
+                lambda o: eu(o) and date_in(o, 1840, 1880) and has(o.get("artistNationality"), "french")),
+    "impressionism": ("European Paintings 1865-1895 by French artists, oil",
+                      lambda o: eu(o) and date_in(o, 1865, 1895) and has(o.get("artistNationality"), "french") and has(o.get("medium"), "oil")),
+    "post-impressionism": ("European Paintings 1885-1905 by French or Dutch artists",
+                           lambda o: eu(o) and date_in(o, 1885, 1905) and has(o.get("artistNationality"), "french", "dutch")),
+    "fauvism": ("European Paintings 1904-1910 by French artists (few public-domain works; weak)",
+                lambda o: eu(o) and date_in(o, 1904, 1910) and has(o.get("artistNationality"), "french")),
+    "expressionism": ("Paintings 1905-1925 by German or Austrian artists (few public-domain works; weak)",
+                      lambda o: painting(o) and date_in(o, 1905, 1925) and has(o.get("artistNationality"), "german", "austrian")),
+    "ukiyo-e": ("Asian Art: Japanese woodblock prints, 1700-1868",
+                lambda o: o.get("department") == "Asian Art" and has(o.get("culture"), "japan") and has(o.get("classification"), "print") and date_in(o, 1700, 1868)),
+    "east-asian-ink": ("Asian Art: Chinese and Japanese paintings in ink, 1300-1900",
+                       lambda o: o.get("department") == "Asian Art" and has(o.get("culture"), "china", "japan") and has(o.get("classification"), "painting")
+                       and has(o.get("medium"), "ink") and date_in(o, 1300, 1900)),
+}
+
+
+def measure_style(sid, n, recs):
+    desc, rule = RULES[sid]
+    pool = [o for o in recs if rule(o)]
+    random.Random(sid).shuffle(pool)
     ms, ids = [], []
-    for w in works:
+    for o in pool:
+        if len(ms) >= n:
+            break
         try:
-            img = Image.open(io.BytesIO(fetch(IIIF.format(w["image_id"]))))
+            img = Image.open(io.BytesIO(get(o["primaryImageSmall"])))
+            if min(img.size) < 200:
+                continue
             ms.append(eyes.measure(img))
-            ids.append(w["id"])
+            ids.append(o["objectID"])
         except Exception as e:
-            print(f"  skip {w['id']}: {e}", file=sys.stderr)
-        time.sleep(0.3)
+            print(f"  skip {o['objectID']}: {e}", file=sys.stderr)
+        time.sleep(0.1)
     if len(ms) < 5:
-        return None
-    t = {"_n": len(ms), "_source": "Art Institute of Chicago open access (api.artic.edu), public-domain works",
-         "_query": q["kind"], "_aic_ids": ids, "_measured": time.strftime("%Y-%m-%d")}
+        return None, len(pool)
+    t = {"_n": len(ms), "_pool": len(pool), "_source": "The Met Open Access (CC0), public-domain works",
+         "_rule": desc, "_met_object_ids": ids, "_measured": time.strftime("%Y-%m-%d")}
     for k in ms[0]:
         v = np.array([m[k] for m in ms], float)
         v = v[np.isfinite(v)]
         t[k] = {"mean": round(float(v.mean()), 4), "sd": round(float(v.std()), 4)}
-    return t
+    return t, len(pool)
 
 
 if __name__ == "__main__":
     argv = sys.argv[1:]
-    n = 60
-    if "--n" in argv:
-        i = argv.index("--n"); n = int(argv[i + 1]); del argv[i:i + 2]
-    args = argv
+
+    def opt(name, default):
+        if name in argv:
+            i = argv.index(name); v = argv[i + 1]; del argv[i:i + 2]; return int(v)
+        return default
+    if not argv or argv[0] not in ("index", "measure"):
+        sys.exit(__doc__)
+    if argv[0] == "index":
+        index(opt("--limit", 4000)); sys.exit()
+    n = opt("--n", 60)
+    recs = records()
+    if not recs:
+        sys.exit("No records cached yet: run `index` first.")
     out = os.path.join(ROOT, "studio", "targets.json")
-    targets = json.load(open(out)) if os.path.exists(out) else {"_about": __doc__.strip().split("\n\n")[0]}
-    for sid in (args or list(QUERIES)):
+    targets = json.load(open(out)) if os.path.exists(out) else {}
+    targets["_about"] = "Measured style targets (statistics only) from public-domain works in The Met's Open Access collection; see tools/measure_targets.py and docs/MANUAL.md, 'Report'."
+    for sid in (argv[1:] or list(RULES)):
         print(f"{sid} ...", flush=True)
-        t = measure_style(sid, n)
+        t, pool = measure_style(sid, n, recs)
         if t is None:
-            print(f"  too few works, left unmeasured")
+            print(f"  only {pool} matching works: left unmeasured")
             continue
         targets[sid] = t
-        print(f"  {t['_n']} works: key {t['value_mean']['mean']:.0f}±{t['value_spread']['mean']:.0f}, chroma {t['chroma_mean']['mean']:.0f}, "
-              f"edges {t['edge_density']['mean']:.2f}, slope {t['spectral_slope']['mean']:.2f}")
+        print(f"  {t['_n']} of {pool}: key {t['value_mean']['mean']:.0f}, spread {t['value_spread']['mean']:.0f}, chroma {t['chroma_mean']['mean']:.0f}, "
+              f"edges {t['edge_density']['mean']:.2f}, hard {t['hard_edge_share']['mean']:.2f}, slope {t['spectral_slope']['mean']:.2f}", flush=True)
         tmp = out + ".tmp"
         json.dump(targets, open(tmp, "w"), indent=1)
         os.replace(tmp, out)
