@@ -27,7 +27,7 @@ def sheet(medium, support=None, out=None):
         for f in os.listdir(HERE):
             if f.endswith(".py"):
                 shutil.copy(os.path.join(HERE, f), w)
-        shutil.copytree(os.path.join(HERE, "media"), os.path.join(w, "media"))
+        shutil.copytree(os.path.join(HERE, "media"), os.path.join(w, "media"), ignore=shutil.ignore_patterns("__pycache__", ".*"))
         S = lambda *a: subprocess.run(["python3", os.path.join(w, "studio.py"), *a], check=True, env=env, capture_output=True, text=True)
         ground = "#efe9dc"
         S("new", ground if ground.startswith("#") else "#efe9dc", str(W), str(H), "--medium", medium, *(["--support", support] if support else []))

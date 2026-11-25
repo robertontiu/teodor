@@ -97,6 +97,7 @@ class Canvas:
         cv.save()
 
     def save(self):
+        json.dump(self.meta, open(P("meta.json"), "w"))
         np.save(P("col.npy"), np.clip(self.col, 0, 1).astype(np.float16))
         for a in self.medium.arrays:
             if a != "col":
@@ -622,7 +623,9 @@ if __name__ == "__main__":
         a = sys.argv[2:]
         simplify(cv, float(a[0]), float(a[1]), int(a[2]) if len(a) > 2 else 4, float(a[3]) if len(a) > 3 else 0.25)
         look(cv, "ref", []); sys.exit()
-    if cmd == "transfer":
+    if cmd == "transfer" and hasattr(cv.medium, "transfer"):
+        cv.medium.transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else None)
+    elif cmd == "transfer":
         transfer(cv, float(sys.argv[2]) if len(sys.argv) > 2 else 0.35, sys.argv[3] if len(sys.argv) > 3 else "#4a3a2e")
     elif cmd == "sign":
         if hasattr(cv.medium, "sign"):

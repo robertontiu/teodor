@@ -23,7 +23,8 @@ def run(studio_dir, work, medium=None, support=None, episodes=EPISODES, extra=No
         if f.endswith(".py"):
             shutil.copy(os.path.join(studio_dir, f), work)
     if os.path.isdir(os.path.join(studio_dir, "media")):
-        shutil.copytree(os.path.join(studio_dir, "media"), os.path.join(work, "media"), dirs_exist_ok=True)
+        shutil.copytree(os.path.join(studio_dir, "media"), os.path.join(work, "media"), dirs_exist_ok=True,
+                        ignore=shutil.ignore_patterns("__pycache__", ".*"))
     env = dict(os.environ, CANVAS="t")
     cmd = ["python3", os.path.join(work, "studio.py"), "new", "#d8cfc0", "600", "800"]
     if medium:
