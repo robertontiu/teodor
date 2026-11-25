@@ -6,7 +6,7 @@
 #
 # Setup (once): in Vercel, Project Settings -> Git -> Deploy Hooks, create a hook for
 # branch "main"; in GitHub, Settings -> Secrets and variables -> Actions, add its URL
-# as the secret VERCEL_DEPLOY_HOOK_URL.
+# as the secret VERCEL_DEPLOY_HOOK.
 name: Deploy site
 
 on:
@@ -34,10 +34,10 @@ jobs:
         run: sleep 300
       - name: Trigger the Vercel Deploy Hook
         env:
-          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
           if [ -z "$HOOK" ]; then
-            echo "::error::Secret VERCEL_DEPLOY_HOOK_URL is not set (see the setup note at the top of this file)."
+            echo "::error::Secret VERCEL_DEPLOY_HOOK is not set (see the setup note at the top of this file)."
             exit 1
           fi
           curl --fail --silent --show-error -X POST "$HOOK"
