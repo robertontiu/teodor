@@ -23,7 +23,25 @@ from scipy.ndimage import gaussian_filter, zoom, distance_transform_edt, sobel
 from PIL import Image, ImageDraw
 from .base import Medium, kmix, hx, noise_field, pigment_from_hex, km_layer
 
+BINDER = {"gouache": "gum arabic", "tempera": "egg tempera", "fresco": "fresco"}
+
+
+def binder_palette(binder="egg tempera", names=None):
+    """Historical pigments as hex colours in one binder, from the Pigments Checker FORS masstones in
+    studio/pigments.json ("masstone_by_binder"; docs/media-data.md). The HUE is measured; lightness and chroma
+    come from a relative scale normalised by hand (lamp black 0.03, titanium white 0.90), so treat value and
+    chroma as approximate and judge them on the canvas."""
+    from .base import load_pigments
+    out = {}
+    for p in load_pigments():
+        for name, bd in (p.get("masstone_by_binder") or {}).items():
+            if binder in bd and (names is None or name in names):
+                out[name] = "#%02x%02x%02x" % tuple(int(round(min(max(v, 0), 1) * 255)) for v in bd[binder]["srgb"])
+    return out
+
+
 GOLD = hx("#c9a24a")
+BOLE = hx("#8a4a2e")   # by eye: Armenian bole, the red clay under water gilding
 
 
 def _lum(c):
@@ -84,7 +102,7 @@ class GouacheBrush:
             self.bristles = np.clip(rng.normal(1.0, 0.08 + 0.1 * self.water, k), 0.7, 1.1)
         self.bristles = gaussian_filter(self.bristles.astype(np.float32), 0.6)
         # creamy gouache covers; diluted gouache turns into a streaky semi-transparent wash
-        self.cover = float(np.clip(0.99 - 0.75 * self.water ** 1.5, 0.2, 0.99))
+        self.cover = float(np.clip(0.995 - 1.1 * max(self.water - 0.15, 0) ** 1.5, 0.2, 0.995))
         self.cov = None
         self.flick = None
 
@@ -102,6 +120,8 @@ class GouacheBrush:
             a = r * 0.3 + 0.6
             q = (np.abs(u) / a) ** 4 + (np.abs(v) / (r + 0.5)) ** 4
             m = np.clip((1 - q) * min(a, r) * 0.9, 0, 1)
+            if self.kind == "flat":   # creamy paint fills between the bristles; diluted paint streaks
+                br = 1 - (1 - br) * float(np.clip(2.5 * self.water, 0.2, 1.0))
             return (m * br).astype(np.float32)
         d = np.sqrt(u * u + v * v)
         m = np.clip(r + 0.6 - d, 0, 1)
@@ -115,7 +135,7 @@ class GouacheBrush:
         if self.cov is None:
             self.cov = np.zeros((cv.H, cv.W), np.float32)
         u, v = _uv(x0, x1, y0, y1, x, y, ang)
-        m = self.mask(r, u, v) * min(1.0, 0.45 + press * 0.8)
+        m = self.mask(r, u, v) * min(1.0, 0.6 + press * 0.8)
         if cv.clip is not None:
             m = m * cv.clip[y0:y1, x0:x1]
         tex = cv.tex[y0:y1, x0:x1]
@@ -175,6 +195,7 @@ class Gouache(Medium):
     finishes = {"dry": "let all paint dry fully (applies the drying shift: darks lighter, lights slightly darker)",
                 "protect": "a light protective matte spray; no varnish (gouache is framed under glass)"}
 
+    BODY = 0.5    # paint-body mottle, set from flat gouache crops (docs/calibration/gouache.md)
     SHIFT = 0.1   # value shift on drying, ~3-5% at the extremes [MEDIA.md S18]
 
     def texture(self, h, w, support):
@@ -246,7 +267,11 @@ class Gouache(Medium):
         body = gaussian_filter(cv.thick, 1.0)
         gy, gx = np.gradient(body)
         relief = 1 + np.clip(-gx * 0.5 - gy * 0.7, -0.03, 0.03)   # paint has a little body, no shine
-        img = cv.col * (tooth * relief)[..., None]
+        if getattr(self, "_bkey", None) != (cv.H, cv.W):   # uneven pigment/chalk density of the dried body
+            self._bkey = (cv.H, cv.W)
+            self._body = (0.6 * noise_field(cv.H, cv.W, 1.2, 41) + 0.4 * noise_field(cv.H, cv.W, 4.0, 42) - 0.5).astype(np.float32)
+        body_n = 1 + self.BODY * self._body * cover
+        img = cv.col * (tooth * relief * body_n)[..., None]
         # matte: diffuse surface scatter lifts the deepest darks a touch; no specular at all
         img = img + 0.025 * (1 - _lum(img))[..., None] ** 3
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
@@ -300,6 +325,9 @@ def _tempera_pigment(color, opacity=None):
 
 
 class TemperaHatch:
+    # angle scatter of the lines (radians): per line and per stroke of the hand; lowers the orientation
+    # coherence of a dense hatched field toward the flesh references (docs/calibration/tempera.md)
+    JITTER, TILT = 0.08, 0.2
     """A small fine round making short parallel strokes. The path is the hand's travel across the
     passage; every few pixels of travel it lays one short line across it (hatch_angle, default 75
     degrees to the travel). size = the length of each hatched stroke."""
@@ -318,6 +346,7 @@ class TemperaHatch:
         self.dir = None
         # a painter's hand has its own natural hatching slant; lines lean toward it (axial average)
         self.hand, self.hand_a = float(np.clip(hand, 0, 1)), math.radians(hand_angle)
+        self.tilt = float(rng.normal(0, self.TILT))   # each stroke of the hand sets the lines at a slightly new angle
 
     def dab(self, cv, x, y, ang, press, rscale=1.0):
         self.travel += getattr(self, "step", 0.0)
@@ -343,7 +372,7 @@ class TemperaHatch:
             vx = (1 - h) * math.cos(2 * a) + h * math.cos(2 * self.hand_a)
             vy = (1 - h) * math.sin(2 * a) + h * math.sin(2 * self.hand_a)
             a = math.atan2(vy, vx) / 2
-        a += rng.normal(0, 0.04 + 0.3 * fx)
+        a += self.tilt + rng.normal(0, self.JITTER + 0.3 * fx)
         if self.cross and self.n % 2:
             a += math.radians(55)
         self.n += 1
@@ -428,7 +457,10 @@ class TemperaBrush:
 
 class Tempera(Medium):
     name = "tempera"
-    arrays = ("col", "gold", "leaf", "burnish", "punch", "film", "sheen")
+    # gold texture, set from the gold-ground references (docs/calibration/tempera.md): with `finish age` the
+    # flat-field std L* of the gold is 5.2 at 4 px/mm (references 5.3, IQR 5.0-6.4, n=3); new leaf alone ~1.5
+    LEAF_GRAIN, CRACK_DARK = 3.0, 0.8
+    arrays = ("col", "gold", "leaf", "burnish", "punch", "film", "sheen", "age")
     supports = {"gesso_panel": "wooden panel with gesso sanded smooth: brilliant white, absorbent, no tooth",
                 "gold_ground": "panel water-gilt all over (gold leaf on bole, burnished): paint over it, or leave it as metal"}
     tools = {"hatch": "small fine round making many short parallel strokes across the path (size = stroke length); tone builds by passes",
@@ -439,7 +471,8 @@ class Tempera(Medium):
                 "oil-glaze": "a transparent oil glaze (params: color, opacity, region); it sinks the lights below, restore them with hatch-lights",
                 "punch": "punchwork in the gold (params: pattern border|stipple|rosette, region, radius, spacing)",
                 "burnish": "burnish the gold with the agate (params: region, amount)",
-                "sheen": "set the satin sheen of the surface (params: amount, default 0.35); no varnish"}
+                "sheen": "set the satin sheen of the surface (params: amount, default 0.35); no varnish",
+                "age": "the look of a panel centuries old: craquelure in the gesso and gold rubbed through to the red bole (params: amount 0..1, cell in px)"}
 
     def texture(self, h, w, support):
         n = noise_field(h, w, 0.7, 7)
@@ -449,7 +482,7 @@ class Tempera(Medium):
 
     def init_state(self, cv, ground):
         z = lambda: np.zeros((cv.H, cv.W), np.float32)
-        cv.gold, cv.leaf, cv.burnish, cv.punch, cv.film = z(), z(), z(), z(), z()
+        cv.gold, cv.leaf, cv.burnish, cv.punch, cv.film, cv.age = z(), z(), z(), z(), z(), z()
         cv.sheen = np.full((cv.H, cv.W), 0.35, np.float32)
         if cv.meta.get("support") == "gold_ground":
             cv.gold[:] = 1.0
@@ -517,8 +550,11 @@ class Tempera(Medium):
             leaf = noise_field(H, W, 0.6, 17)
             col_ = ((xx + (row * 0.37 % 1) * s) // s).astype(int)
             tile = np.random.default_rng(23).normal(0, 1, (row.max() + 2, col_.max() + 2)).astype(np.float32)
-            leaf = leaf + 0.4 * tile[row, col_]   # every square of leaf sits at its own slight angle
-            self._envkey, self._envv = key, (e.astype(np.float32), seam.astype(np.float32), overlap, leaf)
+            leaf = (leaf - 0.5) * self.LEAF_GRAIN + 0.5 + 0.4 * tile[row, col_]   # every square of leaf sits at its own slight angle
+            # wear of the leaf: fine abrasion and rubbed patches where the red bole shows through
+            rub = 0.55 * noise_field(H, W, 1.0, 29) + 0.45 * noise_field(H, W, 7.0, 30)
+            rub = (rub - rub.mean()) / (rub.std() + 1e-6)
+            self._envkey, self._envv = key, (e.astype(np.float32), seam.astype(np.float32), overlap, leaf, rub.astype(np.float32))
         return self._envv
 
     def render(self, cv):
@@ -532,7 +568,7 @@ class Tempera(Medium):
         img = img * (0.992 + 0.016 * cv.tex)[..., None]
         g = cv.gold
         if g.max() > 0.01:
-            e, seam, overlap, leaf = self._env(cv.H, cv.W)
+            e, seam, overlap, leaf, rub = self._env(cv.H, cv.W)
             b = cv.burnish
             contrast = 0.15 + 0.35 * b
             lf = 1 + contrast * (e - 0.5) * 1.2
@@ -541,10 +577,16 @@ class Tempera(Medium):
             metal = metal + hi[..., None] * np.array([0.3, 0.27, 0.12], np.float32)
             grain = (leaf - 0.5) * (0.035 + 0.05 * (1 - b))
             metal = metal * (1 + (grain + overlap * 0.025 - seam * 0.045))[..., None]
+            wear = float(cv.meta.get("wear", 0.0))
+            if wear > 0:   # aged leaf (finish age): rubbed through to the bole in speckle and soft patches
+                w = np.clip((rub - (3.0 - 1.2 * wear)) * 0.8, 0, 0.85)[..., None]
+                metal = metal * (1 - w) + BOLE * w
             p = gaussian_filter(cv.punch, 0.6)
             py, px = np.gradient(p)
             metal = metal * (1 - 0.3 * p + np.clip(-px * 1.6 - py * 2.2, -0.5, 0.6))[..., None]
             img = img + g[..., None] * (metal - GOLD)
+        if cv.age.max() > 0:   # craquelure: the gesso cracks in a network and the cracks hold dirt
+            img = img * (1 - self.CRACK_DARK * cv.age)[..., None]
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
 
     # ------------------------------------------------------------ the last stage
@@ -571,6 +613,8 @@ class Tempera(Medium):
             cv.sheen = np.full((cv.H, cv.W), float(params.get("amount", 0.35)), np.float32)
         elif op == "punch":
             self._punch(cv, params, rng)
+        elif op == "age":
+            self._age(cv, params, rng)
         else:
             super().finish(cv, op, params)
 
@@ -643,6 +687,25 @@ class Tempera(Medium):
             if cv.gold[min(int(y), cv.H - 1), min(int(x), cv.W - 1)] < 0.4:
                 continue   # paint over the leaf here: the punch would not show (punching is done before painting)
             cv.punch[y0:y1, x0:x1] = np.maximum(cv.punch[y0:y1, x0:x1], m)
+
+    def _age(self, cv, params, rng):
+        """Craquelure: a network of cracks around irregular cells (the gesso shrinks and splits), drawn as the
+        boundaries between the nearest and second-nearest of random seeds, ragged with noise; plus wear of the
+        leaf (rendered from cv.meta["wear"])."""
+        from scipy.spatial import cKDTree
+        amt = float(np.clip(params.get("amount", 1.0), 0, 1))
+        cell = float(params.get("cell", 40))
+        n = max(8, int(cv.H * cv.W / cell ** 2))
+        seeds = rng.random((n, 2)) * [cv.H, cv.W]
+        st = 1
+        yy, xx = np.mgrid[0:cv.H:st, 0:cv.W:st].astype(np.float32)
+        warp = (noise_field(cv.H, cv.W, cell / 3, 51)[::st, ::st] - 0.5) * cell * 0.8
+        d, _ = cKDTree(seeds).query(np.stack([yy.ravel() + warp.ravel(), xx.ravel() - warp.ravel()], -1), k=2)
+        gap = (d[:, 1] - d[:, 0]).reshape(yy.shape)
+        crack = np.clip(1.0 - gap / 2.0 / 0.7, 0, 1)      # about 1 px wide along the cell walls
+        crack = crack * np.clip(noise_field(cv.H, cv.W, cell / 2, 52) * 2.2 - 0.4, 0, 1)   # not every cell wall opens
+        cv.age = np.maximum(cv.age, (crack * amt).astype(np.float32))
+        cv.meta["wear"] = max(float(cv.meta.get("wear", 0.0)), amt)
 
     @staticmethod
     def _spread(cands, sp, rng, shuffle=False):

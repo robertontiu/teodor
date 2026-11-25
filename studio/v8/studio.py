@@ -82,6 +82,8 @@ class Canvas:
         rng = np.random.default_rng(1)
         n = gaussian_filter(rng.random((h, w, 3)).astype(np.float32), (40, 40, 0))
         n = (n - n.mean()) / (n.std() + 1e-6)
+        if medium != "oil-v7":  # a ground's unevenness is in value, not hue (v7's coloured blotches kept only for the reference)
+            n = n.mean(-1, keepdims=True) * 1.7
         col = np.clip(col + n * 0.012, 0, 1)
         json.dump({"medium": medium, "support": support, "ground": ground}, open(P("meta.json"), "w"))
         np.save(P("col.npy"), col.astype(np.float16))

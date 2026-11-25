@@ -4,18 +4,25 @@ printed once, as a whole, when the hand lifts (at the next tool, glaze or episod
 
 - key:     the keyblock line. A brush-drawn line (swells with pressure, tapers at the ends) that the
            carver leaves standing; printed dense and crisp, in register (no slip).
-- block:   a colour block. The union of the stroke's dabs is the carved shape; it prints as a flat,
-           slightly uneven transparent film (KM layer) with baren mottle, wood grain, paper fibre,
-           pigment pooling at the block's edge and a registration slip of 0-2 px.
+- block:   a colour block, one carved plank printed once. With a schema (match) the stroke marks which
+           area: the carver cuts the schema's connected area of that colour, bounded by the keyline; without
+           one, the stroke's area is carved. Strokes of the same colour (or over an area that block already
+           printed) add to the same block instead of printing over it. It prints as a flat, slightly uneven
+           transparent film (KM layer) with baren mottle, wood grain, paper fibre, pigment pooling at the
+           block's edge and a registration slip of 0-2 px. Texture amplitudes are set from Met ukiyo-e
+           prints (docs/calibration/woodblock.md).
 - bokashi: a block whose colour is wiped into water: full strength where the stroke starts, fading to
            nothing where it ends (or as "fade" says), with the brush's unevenness.
 - gouge:   cuts white out of a black block (woodcut): V-gouge wedges or U-gouge channels with splintery,
            grain-torn edges; the cut shows the paper.
-State: col (apparent colour), inked (total film printed per pixel), emb (paper relief for karazuri).
+State: col (apparent colour), inked (total film printed per pixel), emb (paper relief for karazuri),
+blk/blkc (which colour block printed a pixel and how fully), keyf (keyblock film); the block table
+(colour, film, registration, wood offset) is kept in the canvas meta as "blocks".
 """
 import math, os, sys
 import numpy as np
-from scipy.ndimage import gaussian_filter
+from scipy.ndimage import gaussian_filter, label, binary_dilation, zoom
+from scipy.spatial import cKDTree
 from PIL import Image, ImageDraw, ImageFont
 from .base import Medium, hx, pigment_from_hex, km_layer
 
@@ -44,15 +51,25 @@ def _fields(H, W, support):
     rings = 0.5 + 0.5 * np.sin(2 * math.pi * (y + 60 * warp + 4 * np.sin(x / 140.0)) / period)
     rings = rings ** (3 if coarse else 4)
     streak = _z(gaussian_filter(rng.random((h, w)).astype(np.float32), (0.7, 30 if coarse else 22)))
-    grain = _norm(0.55 * rings + 0.45 * streak)
+    grain = _norm(0.3 * rings + 0.7 * streak)   # by eye: the references show streaky figure more than regular rings
     # baren: mid-frequency mottle plus fine speckle
-    mot = _z(0.65 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), 4.0))
-             + 0.35 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), 1.0)), 2.0)
+    mot = _z(0.45 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), 4.0))
+             + 0.55 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), 1.0)), 2.0)   # by eye: more fine speckle
     # splinters: torn along the grain
     spl = 0.6 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), (0.7, 4.0)), 1.5) \
         + 0.4 * _z(gaussian_filter(rng.random((h, w)).astype(np.float32), (1.2, 14.0)), 1.5)
     _CACHE[key] = (P, grain, mot, spl)
     return _CACHE[key]
+
+
+def _lab(rgb):
+    """sRGB (0..1) to CIE L*a*b* (D65), for colour tolerances in delta-E units."""
+    c = np.asarray(rgb, np.float32)
+    lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    M = np.array([[0.4124, 0.3576, 0.1805], [0.2126, 0.7152, 0.0722], [0.0193, 0.1192, 0.9505]], np.float32)
+    xyz = lin @ M.T / np.array([0.9505, 1.0, 1.089], np.float32)
+    f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16 / 116)
+    return np.stack([116 * f[..., 1] - 16, 500 * (f[..., 0] - f[..., 1]), 200 * (f[..., 1] - f[..., 2])], -1).astype(np.float32)
 
 
 def _z(a, spread=2.5):
@@ -120,7 +137,7 @@ class Cut:
         if self.cov is None:
             self.cov = np.zeros((cv.H, cv.W), np.float32)
             if self.kind == "bokashi":
-                self.arc = np.full((cv.H, cv.W), -1.0, np.float32)
+                self.arc = []        # the path (x, y, distance along it): the wipe runs along the stroke
             self.med._pending = (self, cv)
         r = max(0.6, self.size / 2 * rscale)
         p = min(press, 1.2)
@@ -147,9 +164,7 @@ class Cut:
             m = m * cv.clip[y0:y1, x0:x1]
         c = self.cov[y0:y1, x0:x1]
         if self.arc is not None:
-            a = self.arc[y0:y1, x0:x1]
-            new = (m > 0.3) & (a < 0)
-            a[new] = self.dist
+            self.arc.append((x, y, self.dist))
         np.maximum(c, m, out=c)
         b = self.bb
         b[0], b[1], b[2], b[3] = min(b[0], y0), min(b[1], x0), max(b[2], y1), max(b[3], x1)
@@ -157,7 +172,7 @@ class Cut:
 
 class Woodblock(Medium):
     name = "woodblock"
-    arrays = ("col", "inked", "emb")
+    arrays = ("col", "inked", "emb", "blk", "blkc", "keyf")
     supports = {"washi": "hosho washi: soft kozo-fibre paper sized with dosa, printed damp; long fibres and a cloudy formation show in flat colour",
                 "coarse": "heavier, coarser paper for the black-and-white woodcut: a grainy tooth that starves the ink in its hollows"}
     tools = {"key": "keyblock line: a brush-drawn line (swelling with pressure, tapering at the ends) carved and printed crisp and dense",
@@ -198,12 +213,15 @@ class Woodblock(Medium):
     def _paper(self, cv, ys, xs):
         g = hx(cv.meta.get("ground", "#f1ead9"))
         t = cv.tex[ys, xs]
-        k = 0.09 if cv.meta.get("support") == "coarse" else 0.07
+        k = 0.09 if cv.meta.get("support") == "coarse" else self.PAPER_K
         return np.clip(g[None, None, :] * (1 - k * 0.6 + k * t)[..., None], 0, 1).astype(np.float32)
 
     def init_state(self, cv, ground):
         cv.inked = np.zeros((cv.H, cv.W), np.float32)
         cv.emb = np.zeros((cv.H, cv.W), np.float32)
+        cv.blk = np.zeros((cv.H, cv.W), np.float32)    # which colour block (id + 1) printed each pixel last
+        cv.blkc = np.zeros((cv.H, cv.W), np.float32)   # how much of that block's area covers the pixel (0..1)
+        cv.keyf = np.zeros((cv.H, cv.W), np.float32)   # keyblock film (colour blocks stop at the keyline)
         cv.col = self._paper(cv, slice(None), slice(None))
 
     # --- tools
@@ -247,9 +265,11 @@ class Woodblock(Medium):
             cv.col[ys, xs] = cv.col[ys, xs] * (1 - cut[..., None]) + pc * cut[..., None]
             cv.inked[ys, xs] *= (1 - cut)
             return
+        it = t.it
+        if t.kind == "block":
+            return self._print_block(t, cv, cov, y0, y1, x0, x1, coarse)
         shape = gaussian_filter(cov, 0.7)
         shape = np.clip((shape - 0.5) * 2.5 + 0.5, 0, 1)
-        it = t.it
         press = t.psum / max(t.n, 1)
         baren = 0.82 + 0.22 * min(press, 1.1)
         if t.kind == "key":
@@ -261,16 +281,21 @@ class Woodblock(Medium):
             dens = it.get("density", 1.0) * baren
             if t.kind == "block" and "density" not in it:
                 dens = self._aim(cv, shape, y0, y1, x0, x1, t.off, t.color, op, baren)
-            gstr = it.get("grain", 0.38 if coarse else 0.2)
-            mstr = 0.22
+            gstr = it.get("grain", self.GRAIN_COARSE if coarse else self.GRAIN)
+            mstr = self.MOTTLE
         x = self._impression(cv, shape, y0, y1, x0, x1, gy, gx, dens, gstr, mstr, coarse, t.rng,
-                             pool=(0.12 if t.kind == "key" else 0.45))
+                             pool=(0.12 if t.kind == "key" else self.POOL))
         if t.kind == "bokashi":
-            arc = t.arc[y0:y1, x0:x1]
-            w = (arc >= 0).astype(np.float32)
-            s = max(1.5, t.size / 4)
-            tt = gaussian_filter(np.maximum(arc, 0) * w, s) / (gaussian_filter(w, s) + 1e-4)
-            tt = tt / max(t.dist, 1.0)
+            # distance along the stroke of the nearest point of its path: the colour fades along the
+            # stroke's direction, not with the round footprint of its first dab
+            pts = np.asarray(t.arc, np.float32)
+            st = 4
+            gy_, gx_ = np.mgrid[y0:y1:st, x0:x1:st].astype(np.float32)
+            _, ix = cKDTree(pts[:, :2]).query(np.stack([gx_.ravel(), gy_.ravel()], -1))
+            arc = pts[ix, 2].reshape(gy_.shape)
+            arc = zoom(arc, (st, st), order=1)[:y1 - y0, :x1 - x0]
+            arc = np.pad(arc, ((0, y1 - y0 - arc.shape[0]), (0, x1 - x0 - arc.shape[1])), mode="edge")
+            tt = gaussian_filter(arc, max(1.5, min(t.size / 4, 40))) / max(t.dist, 1.0)
             tt = np.clip(tt + 0.06 * (_sl(mot, P, y0, y1, x0, x1, -gy, gx) - 0.5), 0, 1)
             fade = it.get("fade", "start")
             if fade == "end":
@@ -280,6 +305,139 @@ class Woodblock(Medium):
             ramp = np.clip(1 - tt, 0, 1) ** 1.6
             x = x * ramp
         self._print(cv, x, y0, y1, x0, x1, t.off, t.color, op)
+        if t.kind == "key":
+            cv.keyf[y0:y1, x0:x1] = np.maximum(cv.keyf[y0:y1, x0:x1], shape)
+
+    # ------------------------------------------------------------------ colour blocks
+    # A colour block is one carved plank, printed once per sheet. The carver cuts it from the artist's
+    # colour notes on a keyblock proof, so its area is a flat field bounded by the keyline, not the
+    # trace of a brush. Two things follow and are modelled here:
+    #  1. carving: with a schema (match), the block's shape is the area of the schema around the stroke
+    #     that has the block's colour (within `tolerance` delta-E), stopping at printed keylines; the
+    #     stroke only says which area. Without a schema, or with "carve": "stroke", the stroke's own
+    #     area is carved.
+    #  2. one block per colour: strokes whose colour is within BLOCK_DE of an earlier block are more of
+    #     the same plank: they add only the area that block has not printed yet, with its film,
+    #     registration and wood, so a field built of many strokes prints as one even impression
+    #     instead of a pile of overlapping shapes. "reprint": true forces a second impression.
+    # flat-field texture, set from hand-chosen flat passages of 8 Met ukiyo-e prints at 4 px/mm (std L* 2.9,
+    # IQR 2.6-3.4) and a bare margin (std L* 1.3): GRAIN, MOTTLE, FIBRE, PAPER_K. GRAIN_COARSE and POOL by eye.
+    GRAIN, GRAIN_COARSE, MOTTLE, POOL, FIBRE, PAPER_K = 0.3, 0.38, 0.55, 0.45, 0.5, 0.22
+    BLOCK_DE = 8.0       # by eye: two colours closer than this are mixed from the same inks
+    TOLERANCE = 12.0     # by eye: colour distance in the schema that the carver treats as the same area
+    REGION_MAX = 1600    # px: the largest half-window searched for the area (a speed bound for very large canvases)
+
+    def _ref_lab(self, cv):
+        if getattr(self, "_rlk", None) is not cv.ref:
+            r = np.stack([gaussian_filter(cv.ref[..., i], 1.0) for i in range(3)], -1)
+            self._rlk, self._rl = cv.ref, _lab(r)
+        return self._rl
+
+    def _find_block(self, cv, color):
+        lab = _lab(np.asarray(color, np.float32))
+        best, bi = 1e9, -1
+        for i, b in enumerate(cv.meta.get("blocks", [])):
+            d = float(np.linalg.norm(np.asarray(b.get("lab") or _lab(np.asarray(b["c"], np.float32)).tolist(), np.float32) - lab))
+            if d < best:
+                best, bi = d, i
+        return bi if best < self.BLOCK_DE else -1
+
+    def _carve(self, t, cv, cov, y0, y1, x0, x1):
+        """The block's carved area around the stroke: the connected area of the schema that has the colour
+        under the stroke. Returns (area, window, colour) or None (carve the stroke's own area)."""
+        it = t.it
+        mode = it.get("carve", "region" if it.get("type") == "match" else "stroke")
+        if mode != "region" or cv.ref is None:
+            return None
+        rl = self._ref_lab(cv)
+        seedm = cov > 0.5
+        if seedm.sum() < 3:
+            return None
+        seed_lab = np.median(rl[y0:y1, x0:x1][seedm], axis=0)
+        # what the painter asked for beyond the schema (palette, colour shift) rides on the area's colour
+        seed_rgb = np.median(cv.ref[y0:y1, x0:x1][seedm], axis=0)
+        # only when the painter asked for it (palette or colour shift); match's own sampling noise is not a request
+        shift = np.clip(t.color - seed_rgb, -0.25, 0.25) if (it.get("colors") or it.get("color_shift")) else np.zeros(3, np.float32)
+        bi = -1 if it.get("reprint") else self._find_block(cv, np.clip(seed_rgb + shift, 0, 1))
+        if bi >= 0:                     # already carved and printed here: nothing to do (cheap exit)
+            done = (cv.blk[y0:y1, x0:x1] == bi + 1) & (cv.blkc[y0:y1, x0:x1] > 0.5)
+            if done[seedm].mean() > 0.8:
+                return "done"
+        R = int(min(self.REGION_MAX, max(cv.H, cv.W)))
+        cy, cx = (y0 + y1) // 2, (x0 + x1) // 2
+        wy0, wy1, wx0, wx1 = max(0, cy - R), min(cv.H, cy + R), max(0, cx - R), min(cv.W, cx + R)
+        tol = float(it.get("tolerance", self.TOLERANCE))
+        same = np.linalg.norm(rl[wy0:wy1, wx0:wx1] - seed_lab, axis=-1) < tol
+        same &= cv.keyf[wy0:wy1, wx0:wx1] < 0.5
+        if cv.clip is not None:
+            same &= cv.clip[wy0:wy1, wx0:wx1] > 0.5
+        seed = np.zeros_like(same)
+        seed[y0 - wy0:y1 - wy0, x0 - wx0:x1 - wx0] = seedm
+        if not (seed & same).any():
+            return None
+        lb, n = label(same)
+        ids = np.unique(lb[seed & same])
+        area = np.isin(lb, ids[ids > 0])
+        colour = np.clip(cv.ref[wy0:wy1, wx0:wx1][area].mean(0) + shift, 0, 1).astype(np.float32)
+        # the colour block runs into the middle of the keyline, so no paper shows between them
+        area |= binary_dilation(area, iterations=2) & (cv.keyf[wy0:wy1, wx0:wx1] >= 0.5)
+        return area.astype(np.float32), (wy0, wy1, wx0, wx1), colour
+
+    def _print_block(self, t, cv, cov, y0, y1, x0, x1, coarse):
+        it = t.it
+        carved = self._carve(t, cv, cov, y0, y1, x0, x1)
+        if carved == "done":
+            return
+        color = t.color
+        if carved is not None:
+            area, (y0, y1, x0, x1), color = carved      # area in the search window's coordinates
+            ys, xs = np.nonzero(area)
+            ys, xs = ys + y0, xs + x0
+            pad = 6
+            by0, by1 = max(y0, ys.min() - pad), min(y1, ys.max() + 1 + pad)
+            bx0, bx1 = max(x0, xs.min() - pad), min(x1, xs.max() + 1 + pad)
+            cov = area[by0 - y0:by1 - y0, bx0 - x0:bx1 - x0]
+            y0, y1, x0, x1 = by0, by1, bx0, bx1
+        shape = gaussian_filter(cov, 0.7)
+        shape = np.clip((shape - 0.5) * 2.5 + 0.5, 0, 1)
+        blocks = cv.meta.setdefault("blocks", [])
+        bi = -1 if it.get("reprint") else self._find_block(cv, color)
+        if bi < 0 and carved is not None and not it.get("reprint"):
+            # an area already carved and printed is that block, not a new one
+            ids = cv.blk[y0:y1, x0:x1][(cov > 0.5) & (cv.blkc[y0:y1, x0:x1] > 0.5)].astype(int)
+            if ids.size > 0.5 * max((cov > 0.5).sum(), 1):
+                k = int(np.bincount(ids).argmax())
+                if k > 0 and np.mean(ids == k) > 0.6:
+                    bi = k - 1           # the same carved area is the same block ("reprint": true prints over it)
+        press = t.psum / max(t.n, 1)
+        baren = 0.82 + 0.22 * min(press, 1.1)
+        op = it.get("opacity", 0.3)
+        if bi >= 0:
+            b = blocks[bi]
+            same = (cv.blk[y0:y1, x0:x1] == bi + 1)
+            prev = np.where(same, cv.blkc[y0:y1, x0:x1], 0.0)
+            new = np.clip(shape - prev, 0, 1)
+            if new.max() < 0.05 or new.sum() < 4:
+                return                       # this part of the block is already printed
+            union = np.maximum(shape, prev)
+            color, dens, off, g, op = np.asarray(b["c"], np.float32), b["d"], tuple(b["off"]), tuple(b["g"]), b["op"]
+        else:
+            new, union, off, g = shape, shape, t.off, t.goff
+            dens = it.get("density", None)
+            dens = dens * baren if dens is not None else self._aim(cv, shape, y0, y1, x0, x1, off, color, op, baren)
+            blocks.append({"c": [round(float(v), 4) for v in color], "lab": [round(float(v), 2) for v in _lab(color)],
+                           "d": round(float(dens), 4), "off": list(off),
+                           "g": list(g), "op": op})
+            bi = len(blocks) - 1
+        gstr = it.get("grain", self.GRAIN_COARSE if coarse else self.GRAIN)
+        x = self._impression(cv, union, y0, y1, x0, x1, g[0], g[1], dens, gstr, self.MOTTLE, coarse, t.rng, pool=self.POOL)
+        x = x * np.where(union > 1e-3, new / np.maximum(union, 1e-3), 0)
+        self._print(cv, x, y0, y1, x0, x1, off, color, op)
+        upd = new > 0.02
+        sub_b, sub_c = cv.blk[y0:y1, x0:x1], cv.blkc[y0:y1, x0:x1]
+        keep = sub_b == bi + 1
+        sub_c[:] = np.where(upd, np.where(keep, np.maximum(sub_c, union), union), sub_c)
+        sub_b[upd] = bi + 1
 
     def _aim(self, cv, shape, y0, y1, x0, x1, off, color, op, baren):
         """The printer mixes the ink for the colour the artist asked for: choose the film thickness
@@ -309,7 +467,7 @@ class Woodblock(Medium):
         if coarse:
             x = x * np.clip(0.55 + 0.75 * tex, 0, 1.15)
         else:
-            x = x * (0.84 + 0.32 * tex)
+            x = x * (1 - self.FIBRE / 2 + self.FIBRE * tex)
         return x.astype(np.float32)
 
     def _print(self, cv, x, y0, y1, x0, x1, off, color, op):
@@ -336,7 +494,8 @@ class Woodblock(Medium):
         shape = gaussian_filter(shape[y0:y1, x0:x1], 0.6)
         coarse = cv.meta.get("support") == "coarse"
         g = (int(rng.integers(-60, 61)), int(rng.integers(-60, 61)))
-        x = self._impression(cv, shape, y0, y1, x0, x1, g[0], g[1], 1.6 * op, 0.36 if coarse else 0.18, 0.2, coarse, rng)
+        x = self._impression(cv, shape, y0, y1, x0, x1, g[0], g[1], 1.6 * op, self.GRAIN_COARSE if coarse else self.GRAIN,
+                             self.MOTTLE, coarse, rng)
         a = rng.uniform(0, 2 * math.pi)
         d = min(2.0, abs(rng.normal(0.9, 0.6)))
         self._print(cv, x, y0, y1, x0, x1, (int(round(d * math.sin(a))), int(round(d * math.cos(a)))), col, 0.3)

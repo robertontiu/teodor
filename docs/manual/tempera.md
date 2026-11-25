@@ -7,7 +7,7 @@
 - `gold_ground`: the whole panel is water-gilt (gold leaf on bole, burnished). Leave it bare where the gold should stay. Paint over it elsewhere; opaque light colours need several passes to hide the gold, as they would in reality.
 
 **Tools** (`"brush": ...`):
-- `hatch` (default, so `match` and `free` hatch unless told otherwise): a small fine round that lays short parallel strokes. The path is the hand travelling across the passage. Every couple of line widths it lays one short line across the path. Each line lands a little blunt and flicks off thin. `size` is the length of each line. One pass leaves visible strokes on the panel, and tone deepens with each pass. Parameters:
+- `hatch` (default, so `match` and `free` hatch unless told otherwise): a small fine round that lays short parallel strokes. The path is the hand travelling across the passage. Every couple of line widths it lays one short line across the path; each stroke of the hand sets its lines at a slightly new angle (about 11 degrees of scatter), and each line scatters a little more (about 5 degrees). Each line lands a little blunt and flicks off thin. `size` is the length of each line. One pass leaves visible strokes on the panel, and tone deepens with each pass. Parameters:
   - `hatch_angle` (degrees to the path, default 75)
   - `hand` (0 to 1, default 0.5): how much the lines lean toward the painter's own natural slant.
   - `hand_angle` (default -60): that natural slant.
@@ -25,7 +25,7 @@
 **Intentions.**
 - `match` with `hatch` builds the schema up gradually. Expect three or more passes at falling sizes (for example 22 to 34, then 10 to 16) before a region reaches its value. Use `clip: true` with a region to keep hatching off the gold. A 1200x1600 panel takes about 6 to 8 seconds per 400-stroke pass.
 - `match` with `round` (size 20 to 30) is a quick way to lay flat underlayers.
-- `glaze` lays a thin translucent tempera layer (little white, more water). Use it for verdaccio (green earth, for example `#6b7650`) under flesh, and for tinting skies and grounds.
+- `glaze` lays a thin translucent tempera layer (little white, more water). Use it for verdaccio (green earth, for example `#76744c`: the hue of green earth in egg tempera) under flesh, and for tinting skies and grounds.
 - Felt state: careful hatching stays parallel and even; agitated hatching gets longer, looser and broken.
 
 **Order of work** (after Cennini): drawing (`transfer`); `gilding` and `finish punch` while the gold is bare; thin underlayers and background (`glaze`, `round`); `glaze` verdaccio under the flesh; then flesh and forms hatched in several premixed values, from dark to light; fine accents last. Optionally finish with `oil-glaze` on robes, then `hatch-lights` to restore the highlights it sank.
@@ -38,6 +38,14 @@
 - `finish punch '{"pattern": "border", "radius": 3, "spacing": 10}'`: punchwork in the gold. `border` lays rows of ring punches just inside every edge of the leaf (halo rims, frame borders); `rows` gives their distances from the edge. `rosette` adds scattered six-petal rosettes. `stipple` makes a granular field of small dots (`density`, default 0.01). Punches only show where the gold is not painted over. They are meant to be made before painting.
 - `finish burnish '{"region": {...}, "amount": 1.0}'`: burnish the leaf (everywhere if no region is given) for a brighter, more mirror-like gold.
 - `finish sheen '{"amount": 0.35}'`: sets the satin sheen of the whole surface. There is no varnish by default.
+- `finish age '{"amount": 1.0, "cell": 40}'`: the look of a panel centuries old. A network of cracks in the gesso (craquelure, cells about `cell` px across) darkens paint and gold alike, and the gold is rubbed through to the red bole in places. New panels have neither; every museum photograph of a gold ground shows both.
+
+**Calibration** (Nov 2026; report: `docs/calibration/tempera.md`). Measured against 8 Met gold-ground panels (Duccio, Daddi, Gaddi, Fra Angelico, Lorenzetti, Sassetta, Giovanni da Milano, Crivelli), automatic crops plus hand-chosen crops of hatched flesh (Duccio, Crivelli; n = 7) and of plain gold (n = 3), at full resolution and at the canvas scale of 4 px/mm.
+- Set from data: the scatter of the hatch angle (`TemperaHatch.JITTER` 0.08 and `TILT` 0.2 rad) toward the orientation coherence of hatched flesh (0.65, IQR 0.62-0.75 at 4 px/mm); a dense one-direction field now measures 0.71-0.90 (before 0.76-0.96): lower still only when passes change direction, as the painter's do. Gold texture: leaf grain `LEAF_GRAIN` 3 and crack darkness `CRACK_DARK` 0.8 so that an aged gold ground (`finish age`) has the references' flat-field std L* (5.3, IQR 5.0-6.4, n = 3; rendered 4.9; new leaf 1.5, before 0.6) and orientation coherence (0.57, IQR 0.47-0.60; rendered 0.61).
+- Checked against data, unchanged: hatch spacing (Crivelli flesh 0.7-1.2 mm at full resolution; rendered 0.8-1.2 mm), line width (0.33 mm, at the canvas's 1-px floor: 0.25 mm), width variation along lines (flesh CV 0.26, IQR 0.23-0.41; rendered 0.30-0.41).
+- Still by eye: the opacity rule (light mixes opaque, darks translucent), film per line, the hand's slant, the gold colour and burnish, the leaf squares, punch sizes, the oil glaze, the crack pattern.
+- Colours: historical pigments in egg tempera from `studio/pigments.json` (FORS masstones; hue measured, value and chroma approximate: judge them on the canvas). In Python: `media.opaque.binder_palette("egg tempera")`. madder lake `#8f3935`, ultramarine `#2c3d66`, azurite `#1e415c`, vine black `#30302e`, raw umber `#45361f`, burnt sienna `#623733`, verdigris `#0a5240`, green earth `#575643`, malachite `#477562`, red ochre `#6c3c37`, vermilion `#9e3b36`, lead white `#f1ebe0`, yellow ochre `#ac723d`, lead-tin yellow I `#e5e297`. The default verdaccio follows green earth's hue (105 degrees; it was 120); the highlight `#f3ead6` agrees with lead white (90 degrees).
+- Not calibrated: hatch stroke length (an autocorrelation proxy gives 1.5 mm, IQR 1.1-2.3, in the references, but it is disturbed by crossing lines and cracks; the sizes recommended above are unchanged); flesh texture (references std L* 4.3, IQR 3.8-4.7; a three-pass hatched test 2.2-3.5, which depends on the painter's values); chroma of the gold (references 42, rendered 54: the photographed gold is aged and dirty).
 
 **Limits.**
 - Gold is drawn for one fixed light: burnish shows as a soft, steady play of light and dark, not as a reflection that changes when you move.
