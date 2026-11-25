@@ -7,11 +7,13 @@ from .base import Medium
 MEDIA = {}
 _here = os.path.dirname(os.path.abspath(__file__))
 _order = ["oil"] + sorted(f[:-3] for f in os.listdir(_here)
-                          if f.endswith(".py") and f[:-3] not in ("__init__", "base", "oil"))
+                          if f.endswith(".py") and not f.startswith(".") and f[:-3] not in ("__init__", "base", "oil"))
 for _mod in _order:
     try:
         m = importlib.import_module(f".{_mod}", __name__)
-    except ModuleNotFoundError:
+    except Exception as e:  # a medium being written by someone else must not break the others
+        import sys
+        print(f"[media] skipped {_mod}: {type(e).__name__}: {e}", file=sys.stderr)
         continue
     for _, cls in inspect.getmembers(m, inspect.isclass):
         if issubclass(cls, Medium) and cls is not Medium and cls.__module__ == m.__name__ and getattr(cls, "name", "base") != "base":

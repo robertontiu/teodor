@@ -85,3 +85,45 @@ class Medium:
     def finish(self, cv, op, params):
         """Finishing operations particular to the medium (varnish, fixative...)."""
         raise SystemExit(f"{self.name} has no finishing step '{op}'. Available: {', '.join(self.finishes) or 'none'}")
+
+
+# ---------------------------------------------------------------- transparent films (Kubelka-Munk layers)
+def pigment(over_white, over_black):
+    """Absorption K and scattering S per channel (for unit thickness) from a pigment's appearance as a
+    film over white and over black (Curtis et al. 1997, section 5.2). Both are RGB arrays 0..1;
+    over_black must be darker than over_white. A transparent pigment is nearly black over black; an
+    opaque one looks almost the same over both."""
+    Rw = np.clip(np.asarray(over_white, np.float64), 0.02, 0.98)
+    Rb = np.clip(np.asarray(over_black, np.float64), 0.005, None)
+    Rb = np.minimum(Rb, Rw - 0.01)
+    a = 0.5 * (Rw + (Rb - Rw + 1) / Rb)
+    b = np.sqrt(np.maximum(a * a - 1, 1e-9))
+    x = (b * b - (a - Rw) * (a - 1)) / (b * (1 - Rw))
+    x = np.maximum(x, 1 + 1e-6)
+    S = (1 / b) * 0.5 * np.log((x + 1) / (x - 1))
+    K = S * (a - 1)
+    return K.astype(np.float32), S.astype(np.float32)
+
+
+def pigment_from_hex(color, opacity=0.3):
+    """A convenient pigment from one colour: opacity 0 = a pure transparent dye, 1 = fully opaque.
+    Over black it shows as color * opacity * 0.9 (a judgement call, not a measurement)."""
+    w = hx(color) if isinstance(color, str) else np.asarray(color, np.float32)
+    return pigment(w, np.clip(w * (0.04 + 0.86 * opacity), 0.005, None))
+
+
+def km_layer(R0, K, S, x):
+    """Composite a pigment film of thickness x (H, W) with constants K, S (3,) over a substrate of
+    reflectance R0 (H, W, 3), using the Kubelka-Munk layer equations: the film's own reflectance
+    R = sinh(bSx)/c and transmittance T = b/c, then R_total = R + T^2 R0 / (1 - R R0)."""
+    K = np.asarray(K, np.float32); S = np.maximum(np.asarray(S, np.float32), 1e-4)
+    x = np.maximum(np.asarray(x, np.float32), 0)[..., None]
+    a = (S + K) / S
+    b = np.sqrt(np.maximum(a * a - 1, 1e-6))
+    bSx = np.minimum(b * S * x, 30)
+    sh, ch = np.sinh(bSx), np.cosh(bSx)
+    c = a * sh + b * ch
+    R = sh / c
+    T = b / c
+    R0 = np.clip(R0, 0, 1)
+    return np.clip(R + T * T * R0 / (1 - R * R0 + 1e-6), 0, 1).astype(np.float32)

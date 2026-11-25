@@ -39,17 +39,19 @@ def run(studio_dir, work, medium=None, support=None, episodes=EPISODES, extra=No
 def oil_matches_v7():
     with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
         c7 = run(V7, a)
-        c8 = run(HERE, b, "oil")
+        c8 = run(HERE, b, "oil-v7")
         d = float(np.abs(c7 - c8).max())
-        print(f"oil v8 vs v7: max difference {d:.6f}")
+        print(f"oil-v7 in v8 vs studio v7: max difference {d:.6f}")
         return d == 0.0
 
 
-def every_medium_runs():
+def every_medium_runs(only=None):
     sys.path.insert(0, HERE)
     from media import MEDIA
     ok = True
     for name, m in MEDIA.items():
+        if only and name not in only:
+            continue
         for sup in (m.supports or {None: ""}):
             eps = [{"felt": {"arousal": 0.5, "tension": 0.3, "care": 0.5},
                     "do": [{"type": "strokes", "brush": t, "colors": ["#3a4a6a"],
@@ -69,7 +71,9 @@ def every_medium_runs():
 
 
 if __name__ == "__main__":
-    r1 = oil_matches_v7()
-    r2 = every_medium_runs()
+    # python3 test_v8.py [--only medium1,medium2]   (--only skips the v7 regression)
+    only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
+    r1 = oil_matches_v7() if not only else True
+    r2 = every_medium_runs(only)
     print("PASS" if (r1 and r2) else "FAIL")
     sys.exit(0 if (r1 and r2) else 1)

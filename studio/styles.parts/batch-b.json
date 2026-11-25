@@ -499,5 +499,117 @@
       "https://www.museothyssen.org/en/node/25199",
       "https://courtauld.ac.uk/wp-content/uploads/2021/04/Report-Derain-by-F-Whitlum-Cooper-and-Cleo-Nisse.compressed.pdf"
     ]
+  },
+  "expressionism": {
+    "name": "German Expressionism (Brücke)",
+    "doc": "docs/styles/expressionism.md",
+    "period": "Germany (Dresden, Berlin), 1905-1920s",
+    "media": [
+      "oil",
+      "charcoal",
+      "ink"
+    ],
+    "media_notes": {
+      "ink": "the woodcut look: flat black relief on paper; no relief-print medium exists yet"
+    },
+    "support": {
+      "oil": "canvas",
+      "charcoal": "paper",
+      "ink": "paper-wove"
+    },
+    "ground": "#efe9dc",
+    "ground_by_medium": {
+      "oil": "#efe9dc",
+      "charcoal": "#e6dfcf",
+      "ink": "#ece4d0"
+    },
+    "technique": [
+      "underdrawing",
+      "thin lean matte colour (little binder, wax in benzine)",
+      "hatching",
+      "dark angular contours",
+      "woodcut: gouged whites, black relief, wood grain"
+    ],
+    "palette": {
+      "principle": "vivid non-naturalistic high-chroma colour for tension and contrast; aniline colours; matte not glossy; black for contour and woodcut",
+      "colors": [
+        "#7cc242",
+        "#f0c419",
+        "#e2382a",
+        "#d23c8c",
+        "#ef7a1e",
+        "#2a3a9e",
+        "#1e3a5f",
+        "#6a3a8c",
+        "#141210",
+        "#efe9dc"
+      ],
+      "avoid": [
+        "glossy depth",
+        "browns as harmonisers",
+        "naturalistic flesh",
+        "smooth gradations",
+        "thick shiny impasto"
+      ]
+    },
+    "light": "no consistent source; high value and colour contrast; flickering lights without sources; woodcut two values only",
+    "value_key": "contrasting",
+    "composition": "crowded city streets with compressed space, or nudes in nature; rhythm of figures by repeated marks; woodcut compositions reversed",
+    "drawing": "simplified, distorted, angular forms; underdrawn and planned, but forms change during work",
+    "edges": "hard, angular, splintered contours; hatching edges",
+    "marks": {
+      "tools": [
+        "flat",
+        "round",
+        "liner"
+      ],
+      "length": "medium-long",
+      "direction": "hatched diagonals and sharp rays; angular",
+      "visible": true
+    },
+    "process": [
+      "seeds: sketchbook impressions, charcoal, pastel colour trials, prints of the motif",
+      "underdrawing on canvas",
+      "thin lean vivid colour fields, drying matte",
+      "rework and restate; forms change in the process",
+      "hatching and dark contours last (judgement)",
+      "charcoal: broad strokes, hatched contours, wash or stumping, emphasis lines, fixative",
+      "woodcut look: flat black masses, then hard white cuts painted over (Teodor proxy)"
+    ],
+    "finishing": [
+      "no varnish: the Brücke painters avoided gloss",
+      "no glaze; matte surface",
+      "process energy left visible within a planned image",
+      "woodcut: grain and uneven inking accepted; charcoal: fixative"
+    ],
+    "pitfalls": [
+      "horror-poster pastiche (green faces, screaming masks as a filter)",
+      "glossy thick oil impasto",
+      "random scribble instead of planned energy",
+      "Fauvist joy, generic angst, or Teodor's hushed bittersweet habit"
+    ],
+    "felt_bias": {
+      "arousal": 0.4,
+      "tension": 0.5,
+      "care": -0.2
+    },
+    "engine_gaps": [
+      "no woodcut / relief-print medium; no subtractive cut; no wood-grain texture",
+      "charcoal medium not built yet",
+      "no matte surface parameter (render adds specular on height)",
+      "Der Blaue Reiter needs its own entry"
+    ],
+    "sources": [
+      "https://www.tate.org.uk/art/art-terms/g/german-expressionism",
+      "https://www.tate.org.uk/art/art-terms/e/expressionism",
+      "https://www.tate.org.uk/art/art-terms/b/brucke",
+      "https://www.tate.org.uk/art/art-terms/w/woodcut",
+      "https://www.moma.org/momaorg/shared/pdfs/docs/learn/courses/Kirchner.pdf",
+      "https://www.staedelmuseum.de/en/mysteries-material",
+      "https://rheinneckarblog.de/10/die-maltechnik-von-kirchner/65884.html",
+      "https://artdaily.com/news/70440/images/close.gif",
+      "https://collections.lacma.org/object/71942",
+      "https://www.theartstory.org/movement/die-brucke/"
+    ]
   }
 }
