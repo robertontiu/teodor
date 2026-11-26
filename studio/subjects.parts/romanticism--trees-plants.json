@@ -1,0 +1,66 @@
+{
+ "styles": {
+  "romanticism": {
+   "trees-plants": {
+    "doc": "docs/styles/subjects/romanticism--trees-plants.md",
+    "scope": "grass and low vegetation in wind (first entry); trees in storm noted briefly",
+    "rules": [
+     "Make the wind visible: every blade, reed and tuft leans the same way as the rain and cloud (Leypold, Cox, Martin, Cole, Church)",
+     "Grass bank as one dark mass with a ragged top; single blades only at the crest edge against light and in the nearest tufts (Leypold, Cox; Cox 1813 on foreground drawing)",
+     "Flattened grass as long, curved, combed drags along the slope; standing tufts as tapered flicks downwind (judgement call from Martin and Cox)",
+     "Lights sparse and late: short strokes along the lean on tips facing the break, clustered where the light rakes, never an even scatter (Constable's flecks, Tate; Leypold; Cox)",
+     "Watercolour grass lights are scraped, lifted, reserved or added in body colour (Met medium lines: Cox Journey Home, Driving sheep; Martin)",
+     "Colour ochre, straw, russet, olive: warm in the light, cool olive-brown between tufts; no saturated green (Cox 1813; measured #a98466, #7b6752, #9b7a5d)",
+     "Order: dark mass, then mid-tone strokes in the wind direction, then lights (Cox 1813 method)",
+     "Trees in storm lean or are broken, with foliage swept one way, silhouetted against the break (Cole, Church, Leypold, Cox)"
+    ],
+    "keep": [
+     "blades taper and grow from dark bases",
+     "texture shrinks with distance",
+     "lights face the light source",
+     "branch thickness and sky holes (layer 1) for any tree"
+    ],
+    "avoid": [
+     "upright, evenly spaced blades",
+     "every blade drawn across the bank",
+     "even dot texture ('spotting the foreground all over', a contemporary complaint)",
+     "saturated green",
+     "grass leaning against the wind shown in the sky"
+    ],
+    "measured": {
+     "hex": {
+      "cox_lit_grass": "#a98466",
+      "cox_grass_shadow": "#7b6752",
+      "martin_heath": "#9b7a5d",
+      "leypold_lit_grass": "#5e401d",
+      "michel_lit_grass": "#37352b"
+     }
+    },
+    "works": [
+     "Cox, Journey Home (Met 894574); On the Thames (CMA 2005.201); Driving sheep (Met 709059)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Martin, View on the South Downs (Met 895898)",
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Constable, Branch Hill Pond (CMA 1972.48); Harrow (CMA 1916.1027)",
+     "Church, Storm in the Mountains (CMA 1969.52)",
+     "Cole, The Oxbow (Met 10497)"
+    ],
+    "judgement_calls": [
+     "lean angles 30-60 deg judged by eye",
+     "combed drags for flattened grass",
+     "lights as strokes along the lean",
+     "late-season colour",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "Met, Cox, Journey Home: https://www.metmuseum.org/art/collection/search/894574",
+     "Met, Martin, View on the South Downs: https://www.metmuseum.org/art/collection/search/895898",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   }
+  }
+ }
+}

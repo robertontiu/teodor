@@ -1,0 +1,74 @@
+{
+ "styles": {
+  "romanticism": {
+   "landscape": {
+    "doc": "docs/styles/subjects/romanticism--landscape.md",
+    "rules": [
+     "Land is the lower third to half; weather overrides Carlson's plane values: dark foreground, one lit patch in the middle ground, a low grey far band",
+     "Foreground (bottom 15%) is the darkest band: median L* 11-25 in the storm oils (measured)",
+     "Lit patch where the break falls: land 90th percentile L* 37-54 against medians 12-30 (measured; Cox 1813 'fleeting lights of the sunbeams')",
+     "Rounded crests as one or two long, smooth convex arcs, often tilted across the frame; fewer, larger masses than layer 1 (Martin, Dahl, Michel; judgement call as a rule)",
+     "Far hills and coast by their outline only, no ridges (Cox 1813: 'the extreme Outline'); a far coast is a thin, nearly level band",
+     "Warm earths (ochre, russet, olive, brown) under a cool sky; warm lights; no saturated green (Cox 1813; measured #9b7a5d, #a98466, #7b6752, #35291c)",
+     "Thick, directional strokes following the slope in the foreground only; flat, thin, horizontal washes or scumbles in the distance (Cox 1813; Tate on Constable)",
+     "The crest's silhouette against the distance is the strongest edge in the lower half, broken by grass"
+    ],
+    "keep": [
+     "aerial recession: cooler and lower in contrast with each band back",
+     "cloud shadows follow the terrain and match the sky",
+     "paths follow contours and narrow",
+     "texture shrinks with distance",
+     "convex crest: top edge catches the most light"
+    ],
+    "avoid": [
+     "even, mapped detail everywhere",
+     "lumpy repeated bumps on a crest",
+     "bright green turf (Burke: a gloomy mountain is grander than bright green turf)",
+     "lit land not explained by the sky's break",
+     "a lone figure from behind unless the brief asks (style doc)"
+    ],
+    "measured": {
+     "foreground_median_Lstar": {
+      "Dahl": 11,
+      "Branch Hill": 12,
+      "Michel": 19,
+      "Harrow": 23,
+      "Oxbow": 25,
+      "Hadleigh": 25
+     },
+     "land_p90_Lstar_oils": [
+      37,
+      54
+     ],
+     "far_land_band_hex": "#5a6061"
+    },
+    "works": [
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Martin, View on the South Downs (Met 895898); Valley of the Tyne (CMA 1997.138)",
+     "Cox, Journey Home (Met 894574)",
+     "Constable, Harrow (CMA 1916.1027); Branch Hill Pond (CMA 1972.48)",
+     "Dahl, Mother and Child by the Sea (Met 438954); View over Hallingdal (Met 441967)",
+     "Cole, The Oxbow (Met 10497)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Girtin, Tynemouth (CMA 1940.557)"
+    ],
+    "judgement_calls": [
+     "fewer, larger masses as a rule",
+     "tilted crests",
+     "crest as repoussoir lit at its top",
+     "figures for scale",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "Met, Martin, View on the South Downs: https://www.metmuseum.org/art/collection/search/895898",
+     "Met, Cole, The Oxbow: https://www.metmuseum.org/art/collection/search/10497",
+     "Burke 1757, Enquiry, part II, Colour considered as productive of the sublime: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   }
+  }
+ }
+}

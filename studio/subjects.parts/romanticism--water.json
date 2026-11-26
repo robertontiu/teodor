@@ -1,0 +1,90 @@
+{
+ "styles": {
+  "romanticism": {
+   "water": {
+    "doc": "docs/styles/subjects/romanticism--water.md",
+    "rules": [
+     "Distant sea is a thin strip subordinate to the sky (Cox 1813: 'every other subject … subservient'); near water is a separate subject",
+     "Horizon is a dead-level, crisp, ruled line: the one long hard edge; only rain or mist may cut it (Dahl, Delacroix, Atkins, Cotman)",
+     "Far sea darker than the sky just above it: 9-15 L* in daylight works, more under the storm (measured; departs from layer 1's mirror equality; ruffled facets reflect the higher, darker sky, a judgement call)",
+     "Exactly one lit band where the break's light touches the sea: horizontal, brightest at the horizon, fading toward the viewer, broken ends; placed by the glitter-path geometry (Dahl, Lucas, Isabey, Cotman)",
+     "Lit band made of short horizontal touches: impasto flecks in oil, reserved or scratched paper in watercolour (Dahl; Met Cotman medium line)",
+     "No wave shapes on the far strip: only horizontal value bands",
+     "Colour low-chroma, near the cloud's, slightly bluer or greener and darker; no saturated blue or turquoise far off (measured #7e8886, #918b7a)",
+     "Rain veils cross the strip at the sky's rain angle and soften the horizon locally"
+    ],
+    "keep": [
+     "level horizon at eye level",
+     "lit band under the light source on the line to the viewer, long and narrow for a low light",
+     "sea darks agree with the sky above",
+     "one wind across sea and sky"
+    ],
+    "avoid": [
+     "wave scallops on distant water",
+     "the sea as light as or lighter than the sky above it (outside the lit band)",
+     "more than one lit band",
+     "a soft or tilted horizon",
+     "saturated blue sea under a storm",
+     "white dashes for water"
+    ],
+    "measured": {
+     "sky_above_vs_sea_below_Lstar": {
+      "Constable cloud study": [
+       72,
+       57
+      ],
+      "Delacroix Dieppe": [
+       83,
+       73
+      ],
+      "Girtin Tynemouth": [
+       67,
+       58
+      ]
+     },
+     "lit_band_range_Lstar": {
+      "Dahl": [
+       16,
+       55
+      ],
+      "Lucas Hadleigh": [
+       25,
+       69
+      ]
+     },
+     "hex": {
+      "dark_sea_watercolour": "#7e8886",
+      "cotman_far_sea": "#918b7a",
+      "dahl_lit_band": "#856956",
+      "dahl_dark_sea": "#2e2724"
+     }
+    },
+    "works": [
+     "Dahl, Mother and Child by the Sea (Met 438954)",
+     "Cotman, Boats off the coast, storm approaching (Met 746834)",
+     "Constable, Cloud study (Met 727706)",
+     "Lucas after Constable, Hadleigh Castle (Met 649970)",
+     "Girtin, Tynemouth (CMA 1940.557)",
+     "Delacroix, The Sea at Dieppe (Met 336528)",
+     "Atkins, The Fleet off the Coast, Beachy Head (CMA 2011.411)",
+     "Isabey, A Storm off the Normandy Coast (Met 438950)",
+     "Turner, Whalers (Met 437854)"
+    ],
+    "judgement_calls": [
+     "near vs far water split",
+     "physical reading of the darker far sea",
+     "impasto vs reserve equivalence",
+     "sails as scale",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Met, Cotman, Boats off the coast, storm approaching: https://www.metmuseum.org/art/collection/search/746834",
+     "Met Heilbrunn Timeline, John Constable: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   }
+  }
+ }
+}

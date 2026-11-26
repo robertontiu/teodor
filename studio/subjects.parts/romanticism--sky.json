@@ -1,0 +1,97 @@
+{
+ "styles": {
+  "romanticism": {
+   "sky": {
+    "doc": "docs/styles/subjects/romanticism--sky.md",
+    "rules": [
+     "Sky is the subject: horizon 0.51-0.83 of the height down (median ~0.57), sky at least half the picture (measured on 12 Met/CMA works, 7 artists)",
+     "One storm mass, not a field of clouds: a single dark body over the top or one side, lower edge level or one long diagonal; small clouds only as torn fragments streaming off it (works sample; Cox 1813 'broad masses')",
+     "Darkest at the top, one bright break low under the cloud edge: break ~25-30 L* lighter than the mass (measured, Constable Harrow, Dahl)",
+     "Land darker than any sky: brightest sky band 22-38 L* above the land median in the oils (measured)",
+     "Cloud darks are coloured mid-darks (~L* 25-40), never black (measured #544c46, #564e41, #595b5c; style doc)",
+     "Colour low-chroma: a 'slate-indigo' storm is indigo greyed with earth; no saturated blue (measured; flags any brief asking for a strong indigo)",
+     "Break is silver (cool) or cream (warm), never pure white; cool sky over warm land (Cox 1813)",
+     "Rain veils: parallel streaks hanging from the cloud base, leaning with the wind, lighter where they cross the break (works sample; value logic is a judgement call)",
+     "Edges: mass lost and wet-in-wet; the torn edge against the break and the lit rims are the hardest edges in the sky",
+     "Strokes run with the weather: long horizontal drags for streaming cloud, dragged verticals for rain; impasto only on the lights (Met Constable essay; Tate)",
+     "Oil on a warm-dark ground for storms (V&A: Constable's brown ground for a stormy day)"
+    ],
+    "keep": [
+     "one wind for all cloud, rain and torn edges",
+     "cloud bases on one receding level, crowding toward the horizon",
+     "rain falls from the dark base, never from the break",
+     "land lit from the break's side, lit patches under the break",
+     "aerial perspective at the horizon"
+    ],
+    "avoid": [
+     "many separate cotton-ball clouds",
+     "pure black or saturated indigo cloud",
+     "even dabbing with no direction",
+     "a white break or a visible sun disc in the storm",
+     "the sky lighter at the top than at the break",
+     "generic orange sunset vortex (style doc pastiche)"
+    ],
+    "measured": {
+     "horizon_from_top": {
+      "min": 0.51,
+      "median": 0.57,
+      "max": 0.83
+     },
+     "break_minus_mass_Lstar": [
+      25,
+      30
+     ],
+     "break_minus_land_median_Lstar": [
+      22,
+      38
+     ],
+     "cloud_dark_hex": [
+      "#544c46",
+      "#544840",
+      "#564e41",
+      "#595b5c"
+     ],
+     "break_hex": "#b2ac9e",
+     "rain_veil_hex": "#76695f",
+     "watercolour_slate_hex": [
+      "#8e8d87",
+      "#677278"
+     ]
+    },
+    "works": [
+     "Constable, Hampstead Heath looking toward Harrow (CMA 1916.1027)",
+     "Constable, Branch Hill Pond (CMA 1972.48)",
+     "Constable, Cloud study (Met 727706)",
+     "Cotman, Boats off the coast, storm approaching (Met 746834)",
+     "Cox, Journey Home (Met 894574); Study of clouds (Met 697200)",
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Dahl, Mother and Child by the Sea (Met 438954); View over Hallingdal (Met 441967)",
+     "Cole, The Oxbow (Met 10497); Clouds (Met 21693)",
+     "Martin, Valley of the Tyne (CMA 1997.138)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Barber, Storm Over a Lake (Met 340873)",
+     "Lucas after Constable, Departing Storm (Met 679718); Hadleigh Castle (Met 649970)"
+    ],
+    "judgement_calls": [
+     "cloud-genus reading",
+     "break as the leading feature",
+     "rain-veil value logic",
+     "silver vs warm break by pole",
+     "engine tool mapping"
+    ],
+    "sources": [
+     "Met Heilbrunn Timeline, John Constable: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Burke 1757, Enquiry, part II, Colour considered as productive of the sublime: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "V&A, Constable's oil sketches: https://www.vam.ac.uk/articles/constables-oil-sketches",
+     "Met, Cotman, Boats off the coast, storm approaching: https://www.metmuseum.org/art/collection/search/746834",
+     "Met, Cole, The Oxbow: https://www.metmuseum.org/art/collection/search/10497",
+     "Met, Cox, Journey Home: https://www.metmuseum.org/art/collection/search/894574",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   }
+  }
+ }
+}
