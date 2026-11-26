@@ -1,5 +1,5 @@
 {
- "_about": "Measured style targets (statistics only) from public-domain works in The Met's Open Access collection; see tools/measure_targets.py and docs/MANUAL.md, 'Report'.",
+ "_about": "Measured style targets (statistics only) from public-domain works in The Met's and the Cleveland Museum of Art's Open Access collections; see tools/measure_targets.py and docs/MANUAL.md, 'Report'.",
  "renaissance": {
   "_n": 60,
   "_pool": 436,
@@ -41,12 +41,10 @@
    440209,
    437250,
    436488,
-   436422,
    437017,
    436476,
    436096,
    437231,
-   436770,
    436510,
    437207,
    435731,
@@ -65,104 +63,110 @@
    435951,
    436311,
    436662,
-   436287
+   436287,
+   438385,
+   436913
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   436422,
+   436770
+  ],
   "value_mean": {
-   "mean": 32.0498,
-   "sd": 13.1112
+   "mean": 31.6999,
+   "sd": 12.9366
   },
   "value_spread": {
-   "mean": 19.7289,
-   "sd": 5.2634
+   "mean": 19.3719,
+   "sd": 4.9914
   },
   "value_p5": {
-   "mean": 4.5478,
-   "sd": 6.2086
+   "mean": 4.4374,
+   "sd": 6.2559
   },
   "value_p95": {
-   "mean": 66.0153,
-   "sd": 16.102
+   "mean": 65.0512,
+   "sd": 15.551
   },
   "value_dark": {
-   "mean": 0.5565,
-   "sd": 0.2273
+   "mean": 0.5582,
+   "sd": 0.2283
   },
   "value_light": {
-   "mean": 0.1038,
-   "sd": 0.1256
+   "mean": 0.0955,
+   "sd": 0.1187
   },
   "value_middle": {
-   "mean": 0.3397,
-   "sd": 0.1678
+   "mean": 0.3463,
+   "sd": 0.1708
   },
   "value_murky": {
-   "mean": 0.1979,
-   "sd": 0.1025
+   "mean": 0.2014,
+   "sd": 0.1042
   },
   "notan_dark_share": {
-   "mean": 0.5733,
-   "sd": 0.162
+   "mean": 0.5704,
+   "sd": 0.164
   },
   "value_groups": {
-   "mean": 1.75,
-   "sd": 0.7444
+   "mean": 2.8333,
+   "sd": 0.7341
   },
   "chroma_mean": {
-   "mean": 15.7673,
-   "sd": 8.1163
+   "mean": 16.5658,
+   "sd": 7.7178
   },
   "chroma_p90": {
-   "mean": 31.9927,
-   "sd": 13.3914
+   "mean": 33.3783,
+   "sd": 12.166
   },
   "hue_spread": {
-   "mean": 0.4558,
-   "sd": 0.1664
+   "mean": 0.4737,
+   "sd": 0.1439
   },
   "warm_share": {
-   "mean": 0.3688,
-   "sd": 0.186
+   "mean": 0.3894,
+   "sd": 0.1782
   },
   "cool_share": {
-   "mean": 0.0321,
-   "sd": 0.0537
+   "mean": 0.0334,
+   "sd": 0.0536
   },
   "edge_density": {
-   "mean": 0.3196,
-   "sd": 0.1565
+   "mean": 0.3128,
+   "sd": 0.1505
   },
   "hard_edge_share": {
-   "mean": 0.165,
-   "sd": 0.0766
+   "mean": 0.1615,
+   "sd": 0.0756
   },
   "detail_energy": {
-   "mean": 3.7581,
-   "sd": 1.8736
+   "mean": 3.6724,
+   "sd": 1.7591
   },
   "texture_variation": {
-   "mean": 0.4237,
-   "sd": 0.1844
+   "mean": 0.4225,
+   "sd": 0.1847
   },
   "spectral_slope": {
-   "mean": -1.1986,
-   "sd": 0.1383
+   "mean": -1.1945,
+   "sd": 0.1373
   },
   "focal_x": {
-   "mean": 0.4674,
-   "sd": 0.1552
+   "mean": 0.463,
+   "sd": 0.1559
   },
   "focal_y": {
-   "mean": 0.5119,
-   "sd": 0.2058
+   "mean": 0.5127,
+   "sd": 0.2048
   },
   "hard_edges_near_focus": {
-   "mean": 0.1595,
-   "sd": 0.1004
+   "mean": 0.1559,
+   "sd": 0.1028
   },
   "contrast_concentration": {
-   "mean": 1.3085,
-   "sd": 0.4193
+   "mean": 1.2979,
+   "sd": 0.4243
   }
  },
  "baroque": {
@@ -173,8 +177,6 @@
   "_met_object_ids": [
    438112,
    437174,
-   437781,
-   435808,
    437535,
    437868,
    436347,
@@ -189,19 +191,15 @@
    437594,
    437763,
    436424,
-   436426,
    436182,
    436253,
    437919,
    626692,
    816522,
-   437972,
    435906,
    647338,
-   437725,
    437875,
    769297,
-   437750,
    442491,
    816520,
    435756,
@@ -230,104 +228,118 @@
    435813,
    437769,
    436183,
-   438407
+   438407,
+   437523,
+   436252,
+   436995,
+   439933,
+   437969,
+   436078
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   437781,
+   435808,
+   436426,
+   437972,
+   437725,
+   437750
+  ],
   "value_mean": {
-   "mean": 24.9572,
-   "sd": 12.3175
+   "mean": 22.792,
+   "sd": 8.9067
   },
   "value_spread": {
-   "mean": 16.0072,
-   "sd": 5.3611
+   "mean": 15.0307,
+   "sd": 4.0318
   },
   "value_p5": {
-   "mean": 4.6511,
-   "sd": 4.5053
+   "mean": 4.1831,
+   "sd": 4.491
   },
   "value_p95": {
-   "mean": 54.9228,
-   "sd": 16.1249
+   "mean": 52.0835,
+   "sd": 12.7031
   },
   "value_dark": {
-   "mean": 0.7341,
-   "sd": 0.2109
+   "mean": 0.7647,
+   "sd": 0.1788
   },
   "value_light": {
-   "mean": 0.0579,
-   "sd": 0.1239
+   "mean": 0.0332,
+   "sd": 0.0752
   },
   "value_middle": {
-   "mean": 0.2081,
-   "sd": 0.1448
+   "mean": 0.2021,
+   "sd": 0.1416
   },
   "value_murky": {
-   "mean": 0.1249,
-   "sd": 0.1038
+   "mean": 0.12,
+   "sd": 0.1
   },
   "notan_dark_share": {
-   "mean": 0.6735,
-   "sd": 0.1505
+   "mean": 0.6868,
+   "sd": 0.1483
   },
   "value_groups": {
-   "mean": 1.3333,
-   "sd": 0.5055
+   "mean": 2.5667,
+   "sd": 0.5588
   },
   "chroma_mean": {
-   "mean": 12.449,
-   "sd": 7.1459
+   "mean": 13.4445,
+   "sd": 6.0004
   },
   "chroma_p90": {
-   "mean": 24.4652,
-   "sd": 11.7756
+   "mean": 26.6455,
+   "sd": 8.7452
   },
   "hue_spread": {
-   "mean": 0.3204,
-   "sd": 0.1512
+   "mean": 0.3597,
+   "sd": 0.1142
   },
   "warm_share": {
-   "mean": 0.358,
-   "sd": 0.2439
+   "mean": 0.3842,
+   "sd": 0.2206
   },
   "cool_share": {
-   "mean": 0.0076,
-   "sd": 0.0236
+   "mean": 0.0089,
+   "sd": 0.0246
   },
   "edge_density": {
-   "mean": 0.2554,
-   "sd": 0.1147
+   "mean": 0.2391,
+   "sd": 0.0967
   },
   "hard_edge_share": {
-   "mean": 0.1249,
-   "sd": 0.0619
+   "mean": 0.1182,
+   "sd": 0.0516
   },
   "detail_energy": {
-   "mean": 2.9105,
-   "sd": 1.4
+   "mean": 2.6166,
+   "sd": 1.0151
   },
   "texture_variation": {
-   "mean": 0.4511,
-   "sd": 0.1283
+   "mean": 0.448,
+   "sd": 0.1086
   },
   "spectral_slope": {
-   "mean": -1.1858,
-   "sd": 0.1622
+   "mean": -1.2017,
+   "sd": 0.1529
   },
   "focal_x": {
-   "mean": 0.5094,
-   "sd": 0.1356
+   "mean": 0.4992,
+   "sd": 0.1489
   },
   "focal_y": {
-   "mean": 0.5303,
-   "sd": 0.1438
+   "mean": 0.5225,
+   "sd": 0.155
   },
   "hard_edges_near_focus": {
-   "mean": 0.1632,
-   "sd": 0.1345
+   "mean": 0.1582,
+   "sd": 0.1319
   },
   "contrast_concentration": {
-   "mean": 1.2894,
-   "sd": 0.4219
+   "mean": 1.2651,
+   "sd": 0.3615
   }
  },
  "dutch-golden-age": {
@@ -397,7 +409,7 @@
    436624,
    436626
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
   "value_mean": {
    "mean": 23.2323,
    "sd": 12.8279
@@ -435,8 +447,8 @@
    "sd": 0.2308
   },
   "value_groups": {
-   "mean": 1.2667,
-   "sd": 0.4422
+   "mean": 2.3167,
+   "sd": 0.532
   },
   "chroma_mean": {
    "mean": 10.5392,
@@ -511,7 +523,6 @@
    437495,
    437515,
    17517,
-   437863,
    436408,
    437355,
    435780,
@@ -529,7 +540,6 @@
    438950,
    439337,
    436455,
-   10991,
    437853,
    438617,
    435962,
@@ -544,7 +554,6 @@
    436850,
    436686,
    435967,
-   436027,
    436279,
    11675,
    437494,
@@ -553,111 +562,121 @@
    436116,
    436631,
    435922,
-   437642,
    439065,
    926221,
    13047,
    437581,
    438818,
    436971,
-   438099
+   438099,
+   747559,
+   437516,
+   11215,
+   436853
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   437863,
+   10991,
+   436027,
+   437642,
+   435701
+  ],
   "value_mean": {
-   "mean": 31.2195,
-   "sd": 12.6377
+   "mean": 30.4501,
+   "sd": 11.9619
   },
   "value_spread": {
-   "mean": 18.3647,
-   "sd": 5.1368
+   "mean": 18.0665,
+   "sd": 4.8925
   },
   "value_p5": {
-   "mean": 6.8525,
-   "sd": 6.5305
+   "mean": 6.9052,
+   "sd": 6.5989
   },
   "value_p95": {
-   "mean": 63.7503,
-   "sd": 15.3084
+   "mean": 62.5536,
+   "sd": 14.9467
   },
   "value_dark": {
-   "mean": 0.6273,
-   "sd": 0.2161
+   "mean": 0.6399,
+   "sd": 0.2105
   },
   "value_light": {
-   "mean": 0.1136,
-   "sd": 0.1689
+   "mean": 0.104,
+   "sd": 0.1554
   },
   "value_middle": {
-   "mean": 0.259,
-   "sd": 0.1205
+   "mean": 0.2561,
+   "sd": 0.1198
   },
   "value_murky": {
-   "mean": 0.1465,
-   "sd": 0.0875
+   "mean": 0.1439,
+   "sd": 0.0871
   },
   "notan_dark_share": {
-   "mean": 0.6169,
-   "sd": 0.1559
+   "mean": 0.6294,
+   "sd": 0.1546
   },
   "value_groups": {
-   "mean": 1.65,
-   "sd": 0.6278
+   "mean": 2.8,
+   "sd": 0.6272
   },
   "chroma_mean": {
-   "mean": 12.7212,
-   "sd": 5.6216
+   "mean": 13.6544,
+   "sd": 4.7516
   },
   "chroma_p90": {
-   "mean": 24.5522,
-   "sd": 11.5166
+   "mean": 26.0487,
+   "sd": 9.9158
   },
   "hue_spread": {
-   "mean": 0.3419,
-   "sd": 0.1614
+   "mean": 0.3622,
+   "sd": 0.1377
   },
   "warm_share": {
-   "mean": 0.3119,
-   "sd": 0.2111
+   "mean": 0.3344,
+   "sd": 0.2065
   },
   "cool_share": {
    "mean": 0.0156,
-   "sd": 0.0465
+   "sd": 0.0464
   },
   "edge_density": {
-   "mean": 0.2485,
-   "sd": 0.103
+   "mean": 0.2385,
+   "sd": 0.097
   },
   "hard_edge_share": {
-   "mean": 0.1403,
-   "sd": 0.0654
+   "mean": 0.1381,
+   "sd": 0.0637
   },
   "detail_energy": {
-   "mean": 2.9265,
-   "sd": 1.1446
+   "mean": 2.8095,
+   "sd": 1.0862
   },
   "texture_variation": {
-   "mean": 0.4412,
-   "sd": 0.1167
+   "mean": 0.4427,
+   "sd": 0.1248
   },
   "spectral_slope": {
-   "mean": -1.1722,
-   "sd": 0.1747
+   "mean": -1.1797,
+   "sd": 0.179
   },
   "focal_x": {
-   "mean": 0.5349,
+   "mean": 0.5388,
    "sd": 0.1333
   },
   "focal_y": {
-   "mean": 0.45,
-   "sd": 0.1657
+   "mean": 0.4452,
+   "sd": 0.1698
   },
   "hard_edges_near_focus": {
-   "mean": 0.1257,
-   "sd": 0.1212
+   "mean": 0.1285,
+   "sd": 0.1507
   },
   "contrast_concentration": {
-   "mean": 1.1325,
-   "sd": 0.4619
+   "mean": 1.1833,
+   "sd": 0.7587
   }
  },
  "realism": {
@@ -696,7 +715,6 @@
    436946,
    435966,
    436142,
-   436027,
    436150,
    436949,
    439631,
@@ -725,104 +743,108 @@
    435702,
    436084,
    437896,
-   441354
+   441354,
+   437991
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   436027
+  ],
   "value_mean": {
-   "mean": 32.6304,
-   "sd": 10.2177
+   "mean": 32.5814,
+   "sd": 10.1957
   },
   "value_spread": {
-   "mean": 18.0855,
-   "sd": 4.8237
+   "mean": 17.9784,
+   "sd": 4.6951
   },
   "value_p5": {
-   "mean": 6.6338,
-   "sd": 7.3315
+   "mean": 6.7116,
+   "sd": 7.324
   },
   "value_p95": {
-   "mean": 63.8817,
-   "sd": 13.3882
+   "mean": 63.7906,
+   "sd": 13.2849
   },
   "value_dark": {
    "mean": 0.548,
    "sd": 0.2187
   },
   "value_light": {
-   "mean": 0.075,
-   "sd": 0.1047
+   "mean": 0.0731,
+   "sd": 0.1031
   },
   "value_middle": {
-   "mean": 0.377,
-   "sd": 0.1976
+   "mean": 0.3789,
+   "sd": 0.1975
   },
   "value_murky": {
-   "mean": 0.2385,
-   "sd": 0.1511
+   "mean": 0.2404,
+   "sd": 0.1508
   },
   "notan_dark_share": {
-   "mean": 0.5755,
-   "sd": 0.181
+   "mean": 0.5753,
+   "sd": 0.1811
   },
   "value_groups": {
-   "mean": 1.7833,
-   "sd": 0.6854
+   "mean": 2.8,
+   "sd": 0.6272
   },
   "chroma_mean": {
-   "mean": 13.9411,
-   "sd": 5.0942
+   "mean": 14.1987,
+   "sd": 4.763
   },
   "chroma_p90": {
-   "mean": 25.8286,
-   "sd": 9.4721
+   "mean": 26.3114,
+   "sd": 8.8624
   },
   "hue_spread": {
-   "mean": 0.355,
-   "sd": 0.1651
+   "mean": 0.3627,
+   "sd": 0.159
   },
   "warm_share": {
-   "mean": 0.3434,
-   "sd": 0.2261
+   "mean": 0.3477,
+   "sd": 0.222
   },
   "cool_share": {
-   "mean": 0.033,
-   "sd": 0.0966
+   "mean": 0.0331,
+   "sd": 0.0965
   },
   "edge_density": {
-   "mean": 0.2545,
-   "sd": 0.0986
+   "mean": 0.2516,
+   "sd": 0.0954
   },
   "hard_edge_share": {
-   "mean": 0.131,
-   "sd": 0.0603
+   "mean": 0.1318,
+   "sd": 0.0602
   },
   "detail_energy": {
-   "mean": 2.9948,
-   "sd": 1.0438
+   "mean": 2.9666,
+   "sd": 1.0214
   },
   "texture_variation": {
-   "mean": 0.4128,
-   "sd": 0.1386
+   "mean": 0.4116,
+   "sd": 0.1392
   },
   "spectral_slope": {
-   "mean": -1.1667,
-   "sd": 0.1537
+   "mean": -1.1705,
+   "sd": 0.1561
   },
   "focal_x": {
-   "mean": 0.5195,
-   "sd": 0.1651
+   "mean": 0.5209,
+   "sd": 0.1645
   },
   "focal_y": {
-   "mean": 0.4652,
-   "sd": 0.2052
+   "mean": 0.4575,
+   "sd": 0.2095
   },
   "hard_edges_near_focus": {
-   "mean": 0.1178,
-   "sd": 0.1235
+   "mean": 0.1176,
+   "sd": 0.1236
   },
   "contrast_concentration": {
-   "mean": 1.0689,
-   "sd": 0.4006
+   "mean": 1.0722,
+   "sd": 0.3998
   }
  },
  "impressionism": {
@@ -892,7 +914,7 @@
    438016,
    435708
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
   "value_mean": {
    "mean": 33.8411,
    "sd": 11.4536
@@ -930,7 +952,7 @@
    "sd": 0.1859
   },
   "value_groups": {
-   "mean": 1.5667,
+   "mean": 2.7667,
    "sd": 0.6155
   },
   "chroma_mean": {
@@ -1057,7 +1079,7 @@
    437838,
    436173
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
   "value_mean": {
    "mean": 42.3768,
    "sd": 11.579
@@ -1095,8 +1117,8 @@
    "sd": 0.1895
   },
   "value_groups": {
-   "mean": 1.6,
-   "sd": 0.7348
+   "mean": 2.6667,
+   "sd": 0.5676
   },
   "chroma_mean": {
    "mean": 17.2299,
@@ -1222,7 +1244,7 @@
    36957,
    54832
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
   "value_mean": {
    "mean": 68.2847,
    "sd": 10.096
@@ -1260,8 +1282,8 @@
    "sd": 0.1609
   },
   "value_groups": {
-   "mean": 1.7167,
-   "sd": 0.7093
+   "mean": 2.6667,
+   "sd": 0.5963
   },
   "chroma_mean": {
    "mean": 15.898,
@@ -1336,7 +1358,6 @@
    40353,
    51497,
    845138,
-   54476,
    53565,
    45676,
    45095,
@@ -1369,7 +1390,6 @@
    48982,
    49058,
    36114,
-   40336,
    670907,
    57275,
    36184,
@@ -1385,104 +1405,1033 @@
    670922,
    671045,
    737738,
-   829412
+   829412,
+   36156,
+   44593
   ],
-  "_measured": "2026-11-25",
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   54476,
+   40336
+  ],
   "value_mean": {
-   "mean": 58.6269,
-   "sd": 14.6791
+   "mean": 58.6691,
+   "sd": 14.7046
   },
   "value_spread": {
-   "mean": 15.9237,
-   "sd": 5.9173
+   "mean": 15.6781,
+   "sd": 6.0479
   },
   "value_p5": {
-   "mean": 28.5742,
-   "sd": 19.7134
+   "mean": 29.1017,
+   "sd": 20.2293
   },
   "value_p95": {
-   "mean": 78.0737,
-   "sd": 13.3352
+   "mean": 77.6126,
+   "sd": 12.8036
   },
   "value_dark": {
-   "mean": 0.1202,
-   "sd": 0.1562
+   "mean": 0.1192,
+   "sd": 0.1569
   },
   "value_light": {
-   "mean": 0.4206,
-   "sd": 0.3242
+   "mean": 0.424,
+   "sd": 0.3276
   },
   "value_middle": {
-   "mean": 0.4592,
-   "sd": 0.2773
+   "mean": 0.4568,
+   "sd": 0.2792
   },
   "value_murky": {
-   "mean": 0.3018,
-   "sd": 0.2511
+   "mean": 0.3002,
+   "sd": 0.2523
   },
   "notan_dark_share": {
-   "mean": 0.3777,
-   "sd": 0.2437
+   "mean": 0.378,
+   "sd": 0.2442
   },
   "value_groups": {
-   "mean": 1.65,
-   "sd": 0.6788
+   "mean": 2.4333,
+   "sd": 0.4955
   },
   "chroma_mean": {
-   "mean": 16.6093,
-   "sd": 7.739
+   "mean": 17.1553,
+   "sd": 7.1
   },
   "chroma_p90": {
-   "mean": 24.2752,
-   "sd": 11.5486
+   "mean": 24.948,
+   "sd": 10.6706
   },
   "hue_spread": {
-   "mean": 0.1724,
-   "sd": 0.1478
+   "mean": 0.1734,
+   "sd": 0.1467
   },
   "warm_share": {
-   "mean": 0.5824,
-   "sd": 0.2997
+   "mean": 0.6095,
+   "sd": 0.2821
   },
   "cool_share": {
    "mean": 0.008,
    "sd": 0.03
   },
   "edge_density": {
-   "mean": 0.2046,
-   "sd": 0.0928
+   "mean": 0.2028,
+   "sd": 0.094
   },
   "hard_edge_share": {
-   "mean": 0.168,
-   "sd": 0.1021
+   "mean": 0.1612,
+   "sd": 0.1033
   },
   "detail_energy": {
-   "mean": 2.928,
-   "sd": 1.2486
+   "mean": 2.8795,
+   "sd": 1.2589
   },
   "texture_variation": {
-   "mean": 0.5798,
-   "sd": 0.2395
+   "mean": 0.5768,
+   "sd": 0.24
   },
   "spectral_slope": {
-   "mean": -0.9084,
-   "sd": 0.1569
+   "mean": -0.9055,
+   "sd": 0.1571
   },
   "focal_x": {
-   "mean": 0.5476,
-   "sd": 0.197
+   "mean": 0.5619,
+   "sd": 0.1849
   },
   "focal_y": {
-   "mean": 0.4799,
-   "sd": 0.1451
+   "mean": 0.4891,
+   "sd": 0.1441
   },
   "hard_edges_near_focus": {
-   "mean": 0.1924,
-   "sd": 0.1859
+   "mean": 0.1989,
+   "sd": 0.1882
   },
   "contrast_concentration": {
-   "mean": 1.4074,
-   "sd": 0.5856
+   "mean": 1.4068,
+   "sd": 0.5847
+  }
+ },
+ "byzantine-icon": {
+  "_n": 10,
+  "_pool": 22,
+  "_source": "The Met Open Access (CC0), public-domain works; Cleveland Museum of Art Open Access (CC0 works)",
+  "_rule": "Paintings (Met: any department; Cleveland: type Painting) in tempera (egg tempera, tempera and gold) on wood, panel or linen, begun 1100-1850, whose culture or artist nationality is Byzantine, Greek/Cretan, Russian or Balkan Orthodox (Byzant-, Greek, Greece, Cret-, Russia-, Balkan, Bulgaria, Serbia, Romania, Macedonia, Cyprus, Novgorod, Moscow, Pskov, Yaroslavl); oil paintings (e.g. El Greco's Spanish work), mosaics, metalwork, textiles and manuscripts on parchment excluded",
+  "_met_object_ids": [
+   26485,
+   435828,
+   437567,
+   437578,
+   437558,
+   479796,
+   831188
+  ],
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   437858,
+   437564,
+   436578,
+   437554,
+   437856,
+   437566,
+   437552,
+   437555,
+   437857,
+   437557,
+   437556,
+   437569
+  ],
+  "_cma_object_ids": [
+   168322,
+   97138,
+   283088
+  ],
+  "_pool_by_source": {
+   "met": 19,
+   "cma": 3
+  },
+  "_works": [
+   {
+    "source": "cma",
+    "id": 168322,
+    "accession": "2010.154",
+    "date": 1420,
+    "medium": "tempera and gold on wood",
+    "url": "https://clevelandart.org/art/2010.154",
+    "image": "https://openaccess-cdn.clevelandart.org/2010.154/2010.154_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 26485,
+    "accession": null,
+    "date": 1200,
+    "medium": "Wood, canvas, gesso, tempera",
+    "url": "https://www.metmuseum.org/art/collection/search/26485",
+    "image": "https://images.metmuseum.org/CRDImages/aa/web-large/DP156967.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 97138,
+    "accession": "1916.778",
+    "date": 1400,
+    "medium": "tempera and gold on wood",
+    "url": "https://clevelandart.org/art/1916.778",
+    "image": "https://openaccess-cdn.clevelandart.org/1916.778/1916.778_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 435828,
+    "accession": null,
+    "date": 1400,
+    "medium": "Tempera on wood, gold ground",
+    "url": "https://www.metmuseum.org/art/collection/search/435828",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DT242201.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437567,
+    "accession": null,
+    "date": 1600,
+    "medium": "Tempera on wood, gold ground",
+    "url": "https://www.metmuseum.org/art/collection/search/437567",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/EP484.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437578,
+    "accession": null,
+    "date": 1470,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/437578",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DT238453.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437558,
+    "accession": null,
+    "date": 1500,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/437558",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/EP446.jpg"
+   },
+   {
+    "source": "met",
+    "id": 479796,
+    "accession": null,
+    "date": 1400,
+    "medium": "Tempera and gold on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/479796",
+    "image": "https://images.metmuseum.org/CRDImages/md/web-large/DP-14093-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 283088,
+    "accession": "2016.32",
+    "date": 1445,
+    "medium": "Tempera and gold on wood panel (poplar)",
+    "url": "https://clevelandart.org/art/2016.32",
+    "image": "https://openaccess-cdn.clevelandart.org/2016.32/2016.32_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 831188,
+    "accession": null,
+    "date": 1200,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/831188",
+    "image": "https://images.metmuseum.org/CRDImages/md/web-large/DP-22753-001.jpg"
+   }
+  ],
+  "value_mean": {
+   "mean": 43.5964,
+   "sd": 13.7477
+  },
+  "value_spread": {
+   "mean": 17.8832,
+   "sd": 3.9356
+  },
+  "value_p5": {
+   "mean": 12.1111,
+   "sd": 9.3626
+  },
+  "value_p95": {
+   "mean": 70.4606,
+   "sd": 13.8761
+  },
+  "value_dark": {
+   "mean": 0.3513,
+   "sd": 0.1716
+  },
+  "value_light": {
+   "mean": 0.2157,
+   "sd": 0.2712
+  },
+  "value_middle": {
+   "mean": 0.433,
+   "sd": 0.1435
+  },
+  "value_murky": {
+   "mean": 0.2558,
+   "sd": 0.0949
+  },
+  "notan_dark_share": {
+   "mean": 0.4555,
+   "sd": 0.1585
+  },
+  "value_groups": {
+   "mean": 2.6,
+   "sd": 0.4899
+  },
+  "chroma_mean": {
+   "mean": 22.683,
+   "sd": 8.055
+  },
+  "chroma_p90": {
+   "mean": 41.9466,
+   "sd": 12.2355
+  },
+  "hue_spread": {
+   "mean": 0.368,
+   "sd": 0.0703
+  },
+  "warm_share": {
+   "mean": 0.576,
+   "sd": 0.2042
+  },
+  "cool_share": {
+   "mean": 0.0015,
+   "sd": 0.0028
+  },
+  "edge_density": {
+   "mean": 0.3939,
+   "sd": 0.1809
+  },
+  "hard_edge_share": {
+   "mean": 0.1568,
+   "sd": 0.0715
+  },
+  "detail_energy": {
+   "mean": 5.2065,
+   "sd": 2.8825
+  },
+  "texture_variation": {
+   "mean": 0.3758,
+   "sd": 0.4649
+  },
+  "spectral_slope": {
+   "mean": -0.9892,
+   "sd": 0.1675
+  },
+  "focal_x": {
+   "mean": 0.4509,
+   "sd": 0.0678
+  },
+  "focal_y": {
+   "mean": 0.5788,
+   "sd": 0.2119
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.1246,
+   "sd": 0.1068
+  },
+  "contrast_concentration": {
+   "mean": 1.2855,
+   "sd": 0.8434
+  }
+ },
+ "expressionism": {
+  "_n": 25,
+  "_pool": 25,
+  "_source": "The Met Open Access (CC0), public-domain works; Cleveland Museum of Art Open Access (CC0 works)",
+  "_rule": "Paintings, drawings and prints in colour (oil, tempera, watercolour, gouache, pastel, coloured chalk or crayon, colour prints) begun 1905-1925 by artists whose first-named nationality is German or Austrian (Met and Cleveland; postcards and other sheets under 16 cm, Met prints without a catalogued size, ornament and design drawings excluded, which removes the Wiener Werkstaette postcards); black-and-white prints and drawings (black chalk, crayon, charcoal, woodcut) are excluded because they would set the colour measures, not the current",
+  "_met_object_ids": [
+   483434,
+   483454,
+   483381,
+   483436,
+   483438,
+   334899,
+   485728,
+   483451,
+   437848,
+   483458,
+   483437,
+   436819,
+   335408,
+   483445,
+   919350,
+   483459
+  ],
+  "_measured": "2026-11-26",
+  "_cma_object_ids": [
+   136592,
+   146911,
+   149565,
+   136366,
+   156570,
+   140334,
+   135691,
+   142792,
+   144705
+  ],
+  "_pool_by_source": {
+   "met": 16,
+   "cma": 9
+  },
+  "_works": [
+   {
+    "source": "met",
+    "id": 483434,
+    "accession": null,
+    "date": 1917,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483434",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279448.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483454,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483454",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-1586-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483381,
+    "accession": null,
+    "date": 1912,
+    "medium": "Blue pastel on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483381",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/LC-1984_433_243-overall-20241204-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 136592,
+    "accession": "1961.154",
+    "date": 1923,
+    "medium": "color lithograph",
+    "url": "https://clevelandart.org/art/1961.154",
+    "image": "https://openaccess-cdn.clevelandart.org/1961.154/1961.154_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483436,
+    "accession": null,
+    "date": 1908,
+    "medium": "Gouache and watercolor over graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483436",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DT7919.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483438,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor, graphite, and gouache on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483438",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279450.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 146911,
+    "accession": "1972.314",
+    "date": 1912,
+    "medium": "brush and black wash and  black gouache with green-yellow gouache",
+    "url": "https://clevelandart.org/art/1972.314",
+    "image": "https://openaccess-cdn.clevelandart.org/1972.314/1972.314_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 149565,
+    "accession": "1979.14",
+    "date": 1915,
+    "medium": "oil on canvas",
+    "url": "https://clevelandart.org/art/1979.14",
+    "image": "https://openaccess-cdn.clevelandart.org/1979.14/1979.14_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 136366,
+    "accession": "1960.238",
+    "date": 1916,
+    "medium": "color woodcut",
+    "url": "https://clevelandart.org/art/1960.238",
+    "image": "https://openaccess-cdn.clevelandart.org/1960.238/1960.238_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 334899,
+    "accession": null,
+    "date": 1905,
+    "medium": "Colored pencil",
+    "url": "https://www.metmuseum.org/art/collection/search/334899",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP819711.jpg"
+   },
+   {
+    "source": "met",
+    "id": 485728,
+    "accession": null,
+    "date": 1913,
+    "medium": "Gouache, watercolor, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/485728",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DT6691.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483451,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483451",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13070-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 156570,
+    "accession": "1992.277",
+    "date": 1924,
+    "medium": "pastel",
+    "url": "https://clevelandart.org/art/1992.277",
+    "image": "https://openaccess-cdn.clevelandart.org/1992.277/1992.277_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 140334,
+    "accession": "1964.285",
+    "date": 1916,
+    "medium": "Gouache, watercolor, and graphite",
+    "url": "https://clevelandart.org/art/1964.285",
+    "image": "https://openaccess-cdn.clevelandart.org/1964.285/1964.285_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437848,
+    "accession": null,
+    "date": 1910,
+    "medium": "Oil on canvas",
+    "url": "https://www.metmuseum.org/art/collection/search/437848",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DP355176.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 135691,
+    "accession": "1959.228",
+    "date": 1914,
+    "medium": "color woodcut",
+    "url": "https://clevelandart.org/art/1959.228",
+    "image": "https://openaccess-cdn.clevelandart.org/1959.228/1959.228_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483458,
+    "accession": null,
+    "date": 1914,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483458",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13960-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483437,
+    "accession": null,
+    "date": 1912,
+    "medium": "Watercolor, graphite, and gouache on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483437",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13958-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 436819,
+    "accession": null,
+    "date": 1912,
+    "medium": "Oil on canvas",
+    "url": "https://www.metmuseum.org/art/collection/search/436819",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DP243354.jpg"
+   },
+   {
+    "source": "met",
+    "id": 335408,
+    "accession": null,
+    "date": 1908,
+    "medium": "Brush and black ink, white gouache (whiteout, white paint) Touches of silver paint(?), graphite(?)",
+    "url": "https://www.metmuseum.org/art/collection/search/335408",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP803838.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 142792,
+    "accession": "1966.49",
+    "date": 1909,
+    "medium": "oil on canvas",
+    "url": "https://clevelandart.org/art/1966.49",
+    "image": "https://openaccess-cdn.clevelandart.org/1966.49/1966.49_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 144705,
+    "accession": "1969.46",
+    "date": 1923,
+    "medium": "watercolor",
+    "url": "https://clevelandart.org/art/1969.46",
+    "image": "https://openaccess-cdn.clevelandart.org/1969.46/1969.46_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483445,
+    "accession": null,
+    "date": 1914,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483445",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279455.jpg"
+   },
+   {
+    "source": "met",
+    "id": 919350,
+    "accession": null,
+    "date": 1912,
+    "medium": "Color lithograph",
+    "url": "https://www.metmuseum.org/art/collection/search/919350",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP-43421-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483459,
+    "accession": null,
+    "date": 1917,
+    "medium": "Gouache, watercolor, and charcoal on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483459",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13072-001.jpg"
+   }
+  ],
+  "value_mean": {
+   "mean": 65.8797,
+   "sd": 16.2986
+  },
+  "value_spread": {
+   "mean": 14.8873,
+   "sd": 6.6223
+  },
+  "value_p5": {
+   "mean": 39.4811,
+   "sd": 18.0054
+  },
+  "value_p95": {
+   "mean": 84.7824,
+   "sd": 11.8828
+  },
+  "value_dark": {
+   "mean": 0.142,
+   "sd": 0.2182
+  },
+  "value_light": {
+   "mean": 0.6168,
+   "sd": 0.3066
+  },
+  "value_middle": {
+   "mean": 0.2413,
+   "sd": 0.16
+  },
+  "value_murky": {
+   "mean": 0.1471,
+   "sd": 0.1148
+  },
+  "notan_dark_share": {
+   "mean": 0.3351,
+   "sd": 0.2072
+  },
+  "value_groups": {
+   "mean": 2.6,
+   "sd": 0.5657
+  },
+  "chroma_mean": {
+   "mean": 16.1271,
+   "sd": 6.6721
+  },
+  "chroma_p90": {
+   "mean": 25.0796,
+   "sd": 11.2685
+  },
+  "hue_spread": {
+   "mean": 0.3204,
+   "sd": 0.2349
+  },
+  "warm_share": {
+   "mean": 0.5047,
+   "sd": 0.3489
+  },
+  "cool_share": {
+   "mean": 0.0506,
+   "sd": 0.0983
+  },
+  "edge_density": {
+   "mean": 0.2162,
+   "sd": 0.1194
+  },
+  "hard_edge_share": {
+   "mean": 0.152,
+   "sd": 0.1168
+  },
+  "detail_energy": {
+   "mean": 2.7777,
+   "sd": 1.9643
+  },
+  "texture_variation": {
+   "mean": 0.5146,
+   "sd": 0.2071
+  },
+  "spectral_slope": {
+   "mean": -1.1073,
+   "sd": 0.2585
+  },
+  "focal_x": {
+   "mean": 0.475,
+   "sd": 0.1513
+  },
+  "focal_y": {
+   "mean": 0.4543,
+   "sd": 0.1402
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.1947,
+   "sd": 0.1549
+  },
+  "contrast_concentration": {
+   "mean": 1.4281,
+   "sd": 0.5477
+  }
+ },
+ "pen-and-ink-illustration": {
+  "_n": 52,
+  "_pool": 58,
+  "_source": "The Met Open Access (CC0), public-domain works",
+  "_rule": "Drawings in pen and ink without wash, colour, chalk or charcoal, 1875-1920 (any department but Modern and Contemporary Art; trade designs titled 'Design for' or numbered '#' excluded): the illustrators' originals",
+  "_met_object_ids": [
+   363870,
+   365762,
+   365768,
+   365763,
+   365760,
+   335009,
+   753519,
+   753525,
+   423581,
+   365766,
+   363866,
+   386528,
+   373923,
+   753518,
+   365772,
+   335537,
+   334139,
+   365759,
+   337708,
+   336684,
+   334355,
+   343482,
+   753522,
+   348959,
+   389149,
+   753521,
+   364045,
+   365765,
+   376161,
+   420542,
+   406021,
+   335035,
+   365771,
+   888859,
+   336706,
+   343081,
+   341362,
+   428618,
+   393291,
+   343348,
+   365767,
+   771722,
+   384297,
+   459738,
+   365764,
+   365758,
+   363867,
+   635819,
+   768347,
+   365761,
+   365770,
+   365769
+  ],
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   385174,
+   385173,
+   368341,
+   373922,
+   385166,
+   385172
+  ],
+  "value_mean": {
+   "mean": 76.8178,
+   "sd": 8.2869
+  },
+  "value_spread": {
+   "mean": 14.4886,
+   "sd": 5.7921
+  },
+  "value_p5": {
+   "mean": 47.3638,
+   "sd": 17.4329
+  },
+  "value_p95": {
+   "mean": 91.4482,
+   "sd": 4.1421
+  },
+  "value_dark": {
+   "mean": 0.0538,
+   "sd": 0.0999
+  },
+  "value_light": {
+   "mean": 0.8273,
+   "sd": 0.1561
+  },
+  "value_middle": {
+   "mean": 0.1188,
+   "sd": 0.0988
+  },
+  "value_murky": {
+   "mean": 0.065,
+   "sd": 0.052
+  },
+  "notan_dark_share": {
+   "mean": 0.1577,
+   "sd": 0.1338
+  },
+  "value_groups": {
+   "mean": 2.3269,
+   "sd": 0.6421
+  },
+  "chroma_mean": {
+   "mean": 12.1967,
+   "sd": 5.478
+  },
+  "chroma_p90": {
+   "mean": 15.2026,
+   "sd": 6.2159
+  },
+  "hue_spread": {
+   "mean": 0.1256,
+   "sd": 0.0897
+  },
+  "warm_share": {
+   "mean": 0.4335,
+   "sd": 0.3688
+  },
+  "cool_share": {
+   "mean": 0.0,
+   "sd": 0.0
+  },
+  "edge_density": {
+   "mean": 0.2831,
+   "sd": 0.1462
+  },
+  "hard_edge_share": {
+   "mean": 0.162,
+   "sd": 0.0987
+  },
+  "detail_energy": {
+   "mean": 4.5803,
+   "sd": 2.5008
+  },
+  "texture_variation": {
+   "mean": 0.7158,
+   "sd": 0.2946
+  },
+  "spectral_slope": {
+   "mean": -0.729,
+   "sd": 0.1637
+  },
+  "focal_x": {
+   "mean": 0.4995,
+   "sd": 0.1239
+  },
+  "focal_y": {
+   "mean": 0.5249,
+   "sd": 0.1408
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.2646,
+   "sd": 0.1809
+  },
+  "contrast_concentration": {
+   "mean": 1.9183,
+   "sd": 0.8407
+  }
+ },
+ "etching-engraving": {
+  "_n": 60,
+  "_pool": 715,
+  "_source": "The Met Open Access (CC0), public-domain works",
+  "_rule": "Drawings and Prints: intaglio prints whose medium begins 'Engraving' (1480-1900) or 'Etching' (1500-1925), black and white (no wood engraving, stipple, mezzotint, aquatint, crayon manner, roulette, soft-ground, colour or hand colouring)",
+  "_met_object_ids": [
+   660566,
+   361671,
+   361496,
+   430487,
+   363894,
+   373065,
+   342656,
+   383065,
+   393017,
+   653206,
+   419013,
+   681884,
+   343132,
+   401579,
+   841613,
+   369233,
+   376642,
+   422512,
+   369547,
+   717091,
+   354640,
+   393880,
+   362472,
+   403605,
+   391276,
+   657124,
+   651962,
+   415669,
+   339436,
+   415673,
+   412317,
+   398429,
+   398761,
+   423601,
+   342641,
+   424385,
+   367175,
+   695343,
+   401208,
+   399357,
+   650768,
+   412252,
+   650106,
+   391230,
+   398969,
+   421361,
+   342904,
+   364717,
+   668099,
+   390100,
+   732480,
+   789512,
+   391354,
+   770579,
+   398957,
+   773256,
+   812688,
+   835095,
+   412367,
+   403571
+  ],
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   357115
+  ],
+  "value_mean": {
+   "mean": 66.9168,
+   "sd": 8.8249
+  },
+  "value_spread": {
+   "mean": 19.0878,
+   "sd": 3.6946
+  },
+  "value_p5": {
+   "mean": 32.2901,
+   "sd": 10.0505
+  },
+  "value_p95": {
+   "mean": 90.5151,
+   "sd": 3.087
+  },
+  "value_dark": {
+   "mean": 0.0887,
+   "sd": 0.0708
+  },
+  "value_light": {
+   "mean": 0.5862,
+   "sd": 0.1912
+  },
+  "value_middle": {
+   "mean": 0.3251,
+   "sd": 0.1489
+  },
+  "value_murky": {
+   "mean": 0.1985,
+   "sd": 0.0955
+  },
+  "notan_dark_share": {
+   "mean": 0.3611,
+   "sd": 0.1455
+  },
+  "value_groups": {
+   "mean": 2.5833,
+   "sd": 0.5257
+  },
+  "chroma_mean": {
+   "mean": 9.2847,
+   "sd": 3.0125
+  },
+  "chroma_p90": {
+   "mean": 12.4842,
+   "sd": 3.8166
+  },
+  "hue_spread": {
+   "mean": 0.1488,
+   "sd": 0.1024
+  },
+  "warm_share": {
+   "mean": 0.2168,
+   "sd": 0.2477
+  },
+  "cool_share": {
+   "mean": 0.0,
+   "sd": 0.0
+  },
+  "edge_density": {
+   "mean": 0.4354,
+   "sd": 0.1406
+  },
+  "hard_edge_share": {
+   "mean": 0.1632,
+   "sd": 0.0668
+  },
+  "detail_energy": {
+   "mean": 6.6976,
+   "sd": 2.2813
+  },
+  "texture_variation": {
+   "mean": 0.4418,
+   "sd": 0.2272
+  },
+  "spectral_slope": {
+   "mean": -0.8158,
+   "sd": 0.1325
+  },
+  "focal_x": {
+   "mean": 0.5293,
+   "sd": 0.1236
+  },
+  "focal_y": {
+   "mean": 0.5562,
+   "sd": 0.1535
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.1949,
+   "sd": 0.1382
+  },
+  "contrast_concentration": {
+   "mean": 1.4346,
+   "sd": 0.5187
   }
  }
 }

@@ -10,7 +10,10 @@
   "charcoal": "tooth speckle, smudged tone, eraser lifts (black chalk and Conte included, as catalogued)",
   "graphite": "hatching, line width, tooth fill, sheen not visible in diffuse photography",
   "pastel": "broken colour over tooth, hatching, paper tone showing",
-  "ukiyoe": "keyline width, flat fields with baren mottle and wood grain, bokashi gradients, registration"
+  "ukiyoe": "keyline width, flat fields with baren mottle and wood grain, bokashi gradients, registration",
+  "pen_illustration": "line width and its variation along a line, free-end taper, hatch spacing, crossing angle and cross-hatched share per value band, ink and paper colour (tools/calibrate_media.py refs pen_illustration --kind line --file this file)",
+  "engraving": "burin line width, swell and taper, hatch spacing, crossing angle, cross-hatched share per value band (--kind line)",
+  "etching": "needle line width (bite), its spread (p90 / median), hatch spacing and crossings per value band, ink colour (--kind line)"
  },
  "media": {
   "oil": [
@@ -2129,6 +2132,795 @@
      783
     ]
    }
+  ],
+  "pen_illustration": [
+   {
+    "objectID": 365759,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The jovial monarch caught Mrs. Russell's hand in his, and proceeded to dance, illustration to \"A Castle in Spain: A Novel\"",
+    "objectDate": "1880\u201383",
+    "medium": "Pen and ink",
+    "dimensions": "sheet: 14 x 14 1/2 in. (35.6 x 36.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365759",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30142-001.jpg",
+    "image_px": [
+     3127,
+     2977
+    ],
+    "size_mm_hw": [
+     356,
+     368
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.43,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1692,
+     1280,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365760,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The Sunday Walk, illustration to \"Sally in Our Alley\"",
+    "objectDate": "ca. 1886",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 3/8 x 12 3/8 in. (44.1 x 31.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365760",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30143-001.jpg",
+    "image_px": [
+     2367,
+     3320
+    ],
+    "size_mm_hw": [
+     441,
+     314
+    ],
+    "scale_from": "?",
+    "px_per_mm": 7.53,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1528,
+     712,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365761,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "And none knew why he fed them both with his own hands, illustration to \"Quince\"",
+    "objectDate": "1888",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 7/8 x 13 1/8 in. (45.4 x 33.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365761",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30144-001.jpg",
+    "image_px": [
+     2743,
+     3665
+    ],
+    "size_mm_hw": [
+     454,
+     333
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.15,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     508,
+     852,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365762,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "He went to Tonson, illustration to \"The Noble Patron\"",
+    "objectDate": "1888",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 3/4 x 11 1/4 in. (45.1 x 28.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365762",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30145-001.jpg",
+    "image_px": [
+     2373,
+     3585
+    ],
+    "size_mm_hw": [
+     451,
+     286
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.12,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1684,
+     2088,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365764,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The bird to others flew, illustration to \"A Love Song\"",
+    "objectDate": "1887",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 19 3/8 x 15 in. (49.2 x 38.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365764",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30147-001.jpg",
+    "image_px": [
+     2812,
+     3465
+    ],
+    "size_mm_hw": [
+     492,
+     381
+    ],
+    "scale_from": "?",
+    "px_per_mm": 7.21,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1580,
+     1940,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 373923,
+    "artistDisplayName": "Howard Pyle",
+    "title": "The Blacksmith Chooses Ye Raven and Runs Away With It, for \"The Wonder Clock\"",
+    "objectDate": "1887",
+    "medium": "Pen and black ink",
+    "dimensions": "sheet: 6 5/8 x 6 3/8 in. (16.8 x 16.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/373923",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP883287.jpg",
+    "image_px": [
+     2521,
+     2361
+    ],
+    "size_mm_hw": [
+     168,
+     162
+    ],
+    "scale_from": "?",
+    "px_per_mm": 14.81,
+    "px_per_mm_note": "inconsistent (10% between height and width): photo may include margins beyond the '?' size",
+    "crop_xywh": [
+     280,
+     280,
+     516,
+     516
+    ]
+   },
+   {
+    "objectID": 753521,
+    "artistDisplayName": "Aubrey Vincent Beardsley",
+    "title": "The Fall of the House of Usher, for Edgar Allan Poe\u2019s \u201cTales of Mystery and the Imagination,\u201d Chicago, 1895\u201396",
+    "objectDate": "1894",
+    "medium": "Pen, brush and India ink over graphite",
+    "dimensions": "Sheet: 10 in. \u00d7 6 3/8 in. (25.4 \u00d7 16.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/753521",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-21096-001.jpg",
+    "image_px": [
+     2314,
+     3645
+    ],
+    "size_mm_hw": [
+     254,
+     162
+    ],
+    "scale_from": "?",
+    "px_per_mm": 14.32,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1312,
+     1708,
+     500,
+     500
+    ]
+   },
+   {
+    "objectID": 363870,
+    "artistDisplayName": "Phil May",
+    "title": "The Hoffman House Saloon, New York",
+    "objectDate": "ca. 1895",
+    "medium": "Pen and black ink",
+    "dimensions": "sheet: 9 15/16 x 12 3/16 in. (25.2 x 31 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/363870",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP804731.jpg",
+    "image_px": [
+     3546,
+     2891
+    ],
+    "size_mm_hw": [
+     252,
+     310
+    ],
+    "scale_from": "?",
+    "px_per_mm": 11.46,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     592,
+     344,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 364045,
+    "artistDisplayName": "Sir (Edward) Linley Sambourne",
+    "title": "Father Thames and Henley Naiads (Cartoon published in Punch, February 26, 1898)",
+    "objectDate": "Febuary 18, 1898",
+    "medium": "Pen and black ink over graphite",
+    "dimensions": "sheet: 9 x 11 9/16 in. (22.9 x 29.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/364045",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP805058.jpg",
+    "image_px": [
+     3368,
+     2606
+    ],
+    "size_mm_hw": [
+     229,
+     294
+    ],
+    "scale_from": "?",
+    "px_per_mm": 11.42,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1852,
+     1060,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 771722,
+    "artistDisplayName": "George Du Maurier",
+    "title": "Our Drawing-room Pets\u2013with 'Kangaroo Jim, the Champion Australian boomerang-thrower', for \"Punch\"",
+    "objectDate": "July 2, 1887",
+    "medium": "Pen and brown ink",
+    "dimensions": "Image: 8 3/8 in. \u00d7 9 in. (21.2 \u00d7 22.8 cm)\r\nSheet: 8 3/4 \u00d7 9 1/4 in. (22.2 \u00d7 23.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/771722",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP878724.jpg",
+    "image_px": [
+     2833,
+     2662
+    ],
+    "size_mm_hw": [
+     222,
+     235
+    ],
+    "scale_from": "?",
+    "px_per_mm": 12.02,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     928,
+     1216,
+     420,
+     420
+    ]
+   }
+  ],
+  "engraving": [
+   {
+    "objectID": 391256,
+    "artistDisplayName": "Albrecht D\u00fcrer",
+    "title": "Melencolia I",
+    "objectDate": "1514",
+    "medium": "Engraving",
+    "dimensions": "Sheet: 9 1/2 \u00d7 7 5/16 in. (24.1 \u00d7 18.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/391256",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP815743.jpg",
+    "image_px": [
+     2828,
+     3653
+    ],
+    "size_mm_hw": [
+     241,
+     186
+    ],
+    "scale_from": "?",
+    "px_per_mm": 15.18,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2088,
+     2540,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 391230,
+    "artistDisplayName": "Albrecht D\u00fcrer",
+    "title": "Virgin on the Crescent with Scepter and Starry Crown",
+    "objectDate": "1516",
+    "medium": "Engraving",
+    "dimensions": "Sheet: 4 5/8 \u00d7 2 15/16 in. (11.8 \u00d7 7.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/391230",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP815892.jpg",
+    "image_px": [
+     2552,
+     4000
+    ],
+    "size_mm_hw": [
+     118,
+     75
+    ],
+    "scale_from": "?",
+    "px_per_mm": 33.96,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     304,
+     596,
+     848,
+     848
+    ]
+   },
+   {
+    "objectID": 398211,
+    "artistDisplayName": "Hendrick Goltzius",
+    "title": "Christ on the Cross, from \"The Passion of Christ\"",
+    "objectDate": "1596\u201398",
+    "medium": "Engraving",
+    "dimensions": "sheet: 8 1/8 x 5 1/2 in. (20.6 x 13.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/398211",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP820989.jpg",
+    "image_px": [
+     2368,
+     3489
+    ],
+    "size_mm_hw": [
+     206,
+     139
+    ],
+    "scale_from": "?",
+    "px_per_mm": 16.99,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1316,
+     2080,
+     424,
+     424
+    ]
+   },
+   {
+    "objectID": 397373,
+    "artistDisplayName": "Jacques de Gheyn II",
+    "title": "A soldier blowing on a match, from the Musketeers series, plate 40, in \"Wapenhandelinghe van Roers Musquetten Ende Spiessen\" (The Exercise of Arms)",
+    "objectDate": "",
+    "medium": "Engraving; third state of five (New Hollstein)",
+    "dimensions": "plate: 10 9/16 x 7 1/2 in. (26.9 x 19.1 cm)\r\nsheet: 13 13/16 x 10 1/2 in. (35.1 x 26.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/397373",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP828803.jpg",
+    "image_px": [
+     2681,
+     3732
+    ],
+    "size_mm_hw": [
+     269,
+     191
+    ],
+    "scale_from": "?",
+    "px_per_mm": 13.96,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     732,
+     1792,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 434382,
+    "artistDisplayName": "Jacques de Gheyn II",
+    "title": "Naphthali, from \"The Twelve Sons of Jacob\"",
+    "objectDate": "",
+    "medium": "Engraving",
+    "dimensions": "Sheet: 6 3/16 \u00d7 4 3/16 in. (15.7 \u00d7 10.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/434382",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP873213.jpg",
+    "image_px": [
+     1426,
+     1981
+    ],
+    "size_mm_hw": [
+     157,
+     106
+    ],
+    "scale_from": "?",
+    "px_per_mm": 13.04,
+    "px_per_mm_note": "inconsistent (6% between height and width): photo may include margins beyond the '?' size",
+    "crop_xywh": [
+     332,
+     752,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 397370,
+    "artistDisplayName": "Jacques de Gheyn II",
+    "title": "Soldier, Armed with Broadsword and Shield, from \"Officers and Soldiers\"",
+    "objectDate": "1587",
+    "medium": "Engraving; first state of two (New Hollstein)",
+    "dimensions": "sheet: 8 7/16 x 6 1/8 in. (21.5 x 15.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/397370",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP828785.jpg",
+    "image_px": [
+     2650,
+     3653
+    ],
+    "size_mm_hw": [
+     215,
+     155
+    ],
+    "scale_from": "?",
+    "px_per_mm": 17.04,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1224,
+     880,
+     424,
+     424
+    ]
+   },
+   {
+    "objectID": 391400,
+    "artistDisplayName": "Albrecht D\u00fcrer",
+    "title": "Christ before Caiaphas, from \"The Passion\"",
+    "objectDate": "1512",
+    "medium": "Engraving",
+    "dimensions": "Sheet: 4 11/16 \u00d7 2 15/16 in. (11.9 \u00d7 7.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/391400",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP815560.jpg",
+    "image_px": [
+     2451,
+     3822
+    ],
+    "size_mm_hw": [
+     119,
+     75
+    ],
+    "scale_from": "?",
+    "px_per_mm": 32.4,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1060,
+     2700,
+     808,
+     808
+    ]
+   },
+   {
+    "objectID": 343567,
+    "artistDisplayName": "Hendrick Goltzius",
+    "title": "Lot's Flight from Sodom",
+    "objectDate": "1582",
+    "medium": "Engraving",
+    "dimensions": "13 7/16 x 15 3/4 in.  (34.2 x 40 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/343567",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/MM84992.jpg",
+    "image_px": [
+     4000,
+     3479
+    ],
+    "size_mm_hw": [
+     342,
+     400
+    ],
+    "scale_from": "?",
+    "px_per_mm": 10.09,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     2072,
+     1060,
+     400,
+     400
+    ]
+   }
+  ],
+  "etching": [
+   {
+    "objectID": 370478,
+    "artistDisplayName": "Adriaen van Ostade",
+    "title": "The Painter in His Studio",
+    "objectDate": "ca. 1667",
+    "medium": "Etching",
+    "dimensions": "sheet: 8 1/4 x 6 5/8 in. (21 x 16.9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/370478",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP821918.jpg",
+    "image_px": [
+     2774,
+     3440
+    ],
+    "size_mm_hw": [
+     210,
+     169
+    ],
+    "scale_from": "?",
+    "px_per_mm": 16.4,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     468,
+     924,
+     408,
+     408
+    ]
+   },
+   {
+    "objectID": 377346,
+    "artistDisplayName": "Charles Meryon",
+    "title": "La Rue des Toiles, Bourges",
+    "objectDate": "1853",
+    "medium": "Etching with drypoint",
+    "dimensions": "Plate: 8 3/8 x 4 5/8 in. (21.3 x 11.7 cm)\r\nSheet: 13 1/4 in. \u00d7 9 in. (33.7 \u00d7 22.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/377346",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP813132.jpg",
+    "image_px": [
+     1562,
+     2588
+    ],
+    "size_mm_hw": [
+     213,
+     117
+    ],
+    "scale_from": "?",
+    "px_per_mm": 12.75,
+    "px_per_mm_note": "inconsistent (9% between height and width): photo may include margins beyond the '?' size",
+    "crop_xywh": [
+     972,
+     664,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 372520,
+    "artistDisplayName": "James McNeill Whistler",
+    "title": "Rotherhithe (Wapping)",
+    "objectDate": "1860",
+    "medium": "Etching and drypoint, printed in black ink on thick ivory laid paper; sixth state of six, from the cancelled plate",
+    "dimensions": "Plate: 10 3/4 \u00d7 7 7/8 in. (27.3 \u00d7 20 cm)\r\nSheet: 14 3/4 \u00d7 10 9/16 in. (37.5 \u00d7 26.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/372520",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP813347.jpg",
+    "image_px": [
+     2648,
+     3624
+    ],
+    "size_mm_hw": [
+     273,
+     200
+    ],
+    "scale_from": "?",
+    "px_per_mm": 13.26,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     316,
+     2376,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365466,
+    "artistDisplayName": "Giovanni Battista Piranesi",
+    "title": "Imaginery ancient temple designed in the style of those built in honor of the Goddess Vesta... (Tempio antico inventato e disegnato alla maniera di quelli che si fabbricavano in onore della Dea Vesta...), from \"Prima Parte di Architettura, e Prospettive\"",
+    "objectDate": "ca. 1750",
+    "medium": "Etching",
+    "dimensions": "Plate: 15 11/16 \u00d7 9 15/16 in. (39.8 \u00d7 25.3 cm)\r\nSheet: 19 7/16 \u00d7 13 1/4 in. (49.4 \u00d7 33.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365466",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP827976.jpg",
+    "image_px": [
+     2371,
+     3692
+    ],
+    "size_mm_hw": [
+     398,
+     253
+    ],
+    "scale_from": "?",
+    "px_per_mm": 9.32,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1228,
+     2700,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 397633,
+    "artistDisplayName": "Giovanni Domenico Tiepolo",
+    "title": "Bearded man wearing a turban, depicted in bust length from behind in three-quarters view, from \"Collection of heads\" (Raccolta di teste)",
+    "objectDate": "ca. 1770",
+    "medium": "Etching",
+    "dimensions": "sheet: 7 1/2 x 4 13/16 in. (19 x 12.3 cm)\r\nplate: 4 13/16 x 3 9/16 in. (12.3 x 9.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/397633",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP832518.jpg",
+    "image_px": [
+     1259,
+     1691
+    ],
+    "size_mm_hw": [
+     123,
+     91
+    ],
+    "scale_from": "?",
+    "px_per_mm": 13.79,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     252,
+     332,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 384663,
+    "artistDisplayName": "F\u00e9lix Bracquemond",
+    "title": "Portrait of F\u00e9lix Bracquemond, from \"L'Art\"",
+    "objectDate": "1878",
+    "medium": "Etching",
+    "dimensions": "Sheet: 12 5/8 \u00d7 9 9/16 in. (32 \u00d7 24.3 cm)\r\nPlate: 9 3/4 \u00d7 7 1/4 in. (24.7 \u00d7 18.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/384663",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP814028.jpg",
+    "image_px": [
+     2699,
+     3598
+    ],
+    "size_mm_hw": [
+     247,
+     184
+    ],
+    "scale_from": "?",
+    "px_per_mm": 14.62,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1576,
+     2744,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 384547,
+    "artistDisplayName": "Anders Zorn",
+    "title": "At the Piano",
+    "objectDate": "1900",
+    "medium": "Etching; second state of two",
+    "dimensions": "Plate: 7 7/8 \u00d7 5 7/8 in. (20 \u00d7 15 cm)\r\nSheet: 13 1/8 \u00d7 11 7/8 in. (33.4 \u00d7 30.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/384547",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP878293.jpg",
+    "image_px": [
+     3303,
+     3644
+    ],
+    "size_mm_hw": [
+     334,
+     302
+    ],
+    "scale_from": "?",
+    "px_per_mm": 10.92,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1932,
+     2428,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 829968,
+    "artistDisplayName": "Charles Jacque",
+    "title": "New Year's Day Morning",
+    "objectDate": "1865",
+    "medium": "Etching",
+    "dimensions": "Sheet: 18 1/2 \u00d7 12 13/16 in. (47 \u00d7 32.5 cm)\r\nPlate: 8 11/16 \u00d7 5 7/8 in. (22 \u00d7 15 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/829968",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP886992.jpg",
+    "image_px": [
+     2023,
+     2474
+    ],
+    "size_mm_hw": [
+     470,
+     325
+    ],
+    "scale_from": "?",
+    "px_per_mm": 5.74,
+    "px_per_mm_note": "inconsistent (15% between height and width): photo may include margins beyond the '?' size",
+    "crop_xywh": [
+     1240,
+     240,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 768311,
+    "artistDisplayName": "Alphonse Legros",
+    "title": "Portrait Head of Edward D. Adams",
+    "objectDate": "1892",
+    "medium": "Etching and drypoint; second state",
+    "dimensions": "Sheet: 11 7/8 \u00d7 8 11/16 in. (30.2 \u00d7 22 cm)\r\nPlate: 7 3/8 \u00d7 5 in. (18.8 \u00d7 12.7 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/768311",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP877175.jpg",
+    "image_px": [
+     2589,
+     3547
+    ],
+    "size_mm_hw": [
+     302,
+     220
+    ],
+    "scale_from": "?",
+    "px_per_mm": 11.76,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1448,
+     2036,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 835095,
+    "artistDisplayName": "Charles Jacque",
+    "title": "Une Amiti\u00e9",
+    "objectDate": "1867",
+    "medium": "Etching and drypoint",
+    "dimensions": "Plate: 7 1/16 \u00d7 4 3/4 in. (18 \u00d7 12 cm)\r\nImage: 4 9/16 \u00d7 3 9/16 in. (11.6 \u00d7 9 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/835095",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP888832.jpg",
+    "image_px": [
+     1666,
+     2153
+    ],
+    "size_mm_hw": [
+     116,
+     90
+    ],
+    "scale_from": "?",
+    "px_per_mm": 18.54,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1008,
+     240,
+     460,
+     460
+    ]
+   },
+   {
+    "objectID": 372558,
+    "artistDisplayName": "James McNeill Whistler",
+    "title": "Old Battersea Bridge",
+    "objectDate": "1879",
+    "medium": "Etching and drypoint, printed in dark brown ink on ivory laid paper; seventh state of seven (Glasgow)",
+    "dimensions": "Plate: 7 13/16 \u00d7 11 5/8 in. (19.9 \u00d7 29.5 cm)\r\nSheet: 7 13/16 \u00d7 11 5/8 in. (19.9 \u00d7 29.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/372558",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP813588.jpg",
+    "image_px": [
+     3652,
+     2512
+    ],
+    "size_mm_hw": [
+     199,
+     295
+    ],
+    "scale_from": "?",
+    "px_per_mm": 12.5,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     400,
+     768,
+     400,
+     400
+    ]
+   }
   ]
  },
  "excluded": [
@@ -2147,6 +2939,31 @@
   {
    "objectID": 36145,
    "reason": "image only 904 px"
+  },
+  {
+   "objectID": 368341,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution",
+   "group": "pen_illustration"
+  },
+  {
+   "objectID": 385166,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution",
+   "group": "pen_illustration"
+  },
+  {
+   "objectID": 385174,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution",
+   "group": "pen_illustration"
   }
- ]
+ ],
+ "about_by_group": {
+  "pen_illustration": "Public-domain (CC0) pen-and-ink illustration drawings, c. 1880-1911, at The Met, for calibrating the ink medium's pen (studio/v8/media/ink.py). Images are not versioned: download primaryImage, measure crop_xywh (full-resolution px). px_per_mm = image px / the catalogued size that best fits the photo's aspect; crops chosen automatically (local detail in mid values, away from margins) and checked by eye. Drawings for process reproduction were made 1.5-4x larger than printed (Harper 1894), so these are drawing-scale marks.",
+  "engraving": "Public-domain (CC0) intaglio prints at The Met for calibrating the ink medium's burin, etching needle and print finish (studio/v8/media/ink.py): burin engravings 1512-1598 and etchings (some with drypoint) c. 1667-1900. Images are not versioned: download primaryImage, measure crop_xywh (full-resolution px). px_per_mm = image px / the catalogued size (plate or sheet) that best fits the photo's aspect; crops chosen automatically (local detail in mid values, away from margins) and checked by eye.",
+  "etching": "Public-domain (CC0) intaglio prints at The Met for calibrating the ink medium's burin, etching needle and print finish (studio/v8/media/ink.py): burin engravings 1512-1598 and etchings (some with drypoint) c. 1667-1900. Images are not versioned: download primaryImage, measure crop_xywh (full-resolution px). px_per_mm = image px / the catalogued size (plate or sheet) that best fits the photo's aspect; crops chosen automatically (local detail in mid values, away from margins) and checked by eye."
+ },
+ "source_by_group": {
+  "pen_illustration": "The Met Collection API, https://collectionapi.metmuseum.org/public/collection/v1/objects/{id} (records and images CC0); candidates from MetObjects.csv (github.com/metmuseum/openaccess)",
+  "engraving": "The Met Collection API, https://collectionapi.metmuseum.org/public/collection/v1/objects/{id} (records and images CC0); candidates from MetObjects.csv (github.com/metmuseum/openaccess)",
+  "etching": "The Met Collection API, https://collectionapi.metmuseum.org/public/collection/v1/objects/{id} (records and images CC0); candidates from MetObjects.csv (github.com/metmuseum/openaccess)"
+ }
 }

@@ -326,7 +326,11 @@ def greyscale(img):
 
 def measure_style(sid, n, recs):
     desc, rule = RULES[sid]
-    pool = [o for o in recs if rule(o)]
+    # Cleveland's cache holds only what CMA_QUERIES fetched for the currents listed there; for any other current a
+    # Cleveland record matching the rule is an accident of those queries, not a sample of Cleveland's holdings
+    # (2026-11-26: 34 Cleveland drawings, 31 of them one artist's 1914 brush-and-ink series, had entered the
+    # pen-and-ink pool through the Expressionism and Fauvism queries). So Cleveland records count only there.
+    pool = [o for o in recs if rule(o) and (source(o) == "met" or sid in CMA_QUERIES)]
     random.Random(sid).shuffle(pool)
     ms, used, grey = [], [], []
     for o in pool:
