@@ -1,0 +1,59 @@
+{
+ "styles": {
+  "romanticism": {
+   "drapery": {
+    "doc": "docs/styles/subjects/romanticism--drapery.md",
+    "summary": "Cloth carries the weather and the feeling: fewer, bigger folds as broad colour planes in loaded strokes, bellying and streaming with one wind; deep saturated colour; gravity and support points kept.",
+    "rules": [
+     "Cloth carries the weather and the feeling: show wind direction and force before fabric construction (Delacroix, Christ Asleep, Met 29.100.131; Faust lithograph, Met 62.617.1; Martin, CMA 1997.138)",
+     "Fewer, bigger folds: one or two fold systems per cloth mass, secondary folds as single strokes, no small wrinkles (observed across Delacroix, Gericault, Martin)",
+     "Wind-filled cloth is a convex pocket or sail: lit belly, dark hollow, carried by silhouette; the belly may be exaggerated (judgement, from Christ Asleep and the Faust cape)",
+     "Flag folds stream as one long taut tapering shape from the anchor, not many small flutters (Faust cape; Martin shawl)",
+     "Colour over line: each cloth plane in one loaded stroke, drawing sacrificed to drama (L'Artiste 1832 via OpenLearn; Smarthistory/McCoy)",
+     "Cloth holds the strongest local colour, deep not gay: deep reds and blues against earths and storm greys (Burke II.17: no 'gay or gaudy drapery', 'except perhaps a strong red'; observed Christ Asleep, Rebecca)",
+     "Heavy wool hangs plumb in long pipe folds and barely lifts; light cloth (capes, shawls, sails, sheets) shows the wind (Gericault, Return from Russia, CMA 1931.48)",
+     "White cloth (sails, laundry, dresses) is the brightest note on the land, still below the sky's brightest (measured: Whalers Met 96.29; Flers CMA 1980.259; Oxbow umbrella Met 08.228)",
+     "Edges crisp on the lit belly, lost into the storm on the shadow side; in prints hatching follows the wind (Rebecca Met 03.30; Faust)",
+     "At landscape scale a figure's clothing is two or three strokes, one light and one dark shape streaming the same way (Martin, CMA 1997.138)"
+    ],
+    "keep": [
+     "support points and gravity from layer 1: cloaks hang from shoulders, sheets from pegs, sag between pegs",
+     "wind plus gravity gives a diagonal; heavy cloth lifts less than light",
+     "windward side presses and reveals the body, leeward side billows",
+     "one wind for cloth, hair, grass, smoke and trees",
+     "wet cloth darker, heavier, clinging; translucency per layer 1 (no Romantic convention found: judgement)"
+    ],
+    "avoid": [
+     "many small even wrinkles, stitching or texture inventories",
+     "fold lines drawn over flat colour",
+     "pastel or gaudy cloth colour",
+     "cloth flapping in several directions",
+     "Neoclassical sculptural wet drapery on a still idealised body",
+     "cloth brighter than the sky's brightest light"
+    ],
+    "flags": [
+     "translucent wet linen: no Romantic convention found; layer 1 governs it"
+    ],
+    "case_notes": [
+     "gale: heavy wool skirt pressed against the legs as one connected mass, no fluttering hem; shawl as one long dark streaming flag (judgement from Gericault, Martin, Faust)",
+     "wet linen sheets: big lit bellies with 2-3 fold lines from each peg, heavy sagging bottom edge; the torn-free sheet a twisting flag, leading edge crisp, trailing edge lost in haze (judgement)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/drapery.md",
+     "OpenLearn, Delacroix 2.10 Colour versus line: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.10",
+     "Burke, Enquiry II.17: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "McCoy, Eugene Delacroix an introduction (Smarthistory): https://uen.pressbooks.pub/arth2720/chapter/eugene-delacroix-an-introduction/",
+     "https://www.metmuseum.org/art/collection/search/436176",
+     "https://www.metmuseum.org/art/collection/search/438814",
+     "https://www.metmuseum.org/art/collection/search/337093",
+     "https://www.metmuseum.org/art/collection/search/437854",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.clevelandart.org/art/1931.48",
+     "https://www.clevelandart.org/art/1997.138",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/2022.249"
+    ]
+   }
+  }
+ }
+}

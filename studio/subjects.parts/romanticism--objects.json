@@ -1,0 +1,59 @@
+{
+ "styles": {
+  "romanticism": {
+   "objects": {
+    "doc": "docs/styles/subjects/romanticism--objects.md",
+    "summary": "Everyday objects small, used, weathered and summary: picturesque roughness, uprights against the sky, white things as the land's brightest accents, all bearing the same weather and light.",
+    "rules": [
+     "Everyday objects are small traces of ordinary life inside the vastness, 'a reminder of the reality of the scene' (CMA, Turner Fluelen 1954.129); 'the minute with the infinite' (CMA 2010.147)",
+     "Picturesque character: weathered, irregular, rough, mended; 'roughness ... sudden variation ... irregularity'; mossy rough-hewn pales of unequal heights, not neat post-and-rail (Price 1794)",
+     "Summarise detail: a few loaded strokes, material shown by one or two lights on the lit side; kept 'at a picturesque distance' (CMA, Constable Branch Hill 1972.48; Flers CMA 1980.259)",
+     "Objects bear the weather: they agree with the wind and the single light (Constable, Mill Near Colchester, Met 2007.41; Oxbow umbrella Met 08.228)",
+     "Uprights against the sky: posts, masts, mill sails, blasted trees; 'a perpendicular has more force ... than an inclined plane', rugged beats smooth (Burke II.8)",
+     "White things (cloth, a white horse, a wall) are the brightest small accents on the land, placed in the light and kept below the sky (measured: Branch Hill, Flers, Oxbow, Mill)",
+     "Objects are in use or just left, not arranged as still life (observed: cart loading, linen bleaching, abandoned easel, fallen arms in Rebecca Met 03.30)",
+     "Small warm or red accents in the earth-grey land (Branch Hill harness, Flers, Mill sail)",
+     "Silhouette crisp against the sky on the lit side, lost into dark ground (Mill; Oxbow)"
+    ],
+    "keep": [
+     "correct construction: wheel and basket ellipses, post taper and lean, line sag between supports",
+     "real scale against the figure (peg about a hand's width, basket 50-70 cm, post about 2 m: judgement)",
+     "contact shadows; objects sit on the ground"
+    ],
+    "avoid": [
+     "new, neat or symmetrical objects (straight painted post, uniform pegs)",
+     "still-life gloss and reflections",
+     "detail legible beyond what the light picks out",
+     "outlines",
+     "objects that ignore the wind",
+     "objects brighter than the sky",
+     "an object as large or finished as the figure unless it is the subject"
+    ],
+    "flags": [
+     "object sizes are real-world judgement, not from a Romantic source"
+    ],
+    "case_notes": [
+     "post: weathered, slightly leaning, silver on the lit face, the one strong vertical against the sky, lost at the base",
+     "line: one fine sagging stroke, lost across darks, crisp against light sky; pegs: a few dark notches, one light touch each",
+     "basket: low rough wicker lump, one lit side, contact shadow, correct ellipse, holding a pale linen accent"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/objects.md",
+     "Price, Essay on the Picturesque (extracts): https://www.lancaster.ac.uk/users/philosophy/awaymave/onlineresources/price3.htm",
+     "Tate, Picturesque: https://www.tate.org.uk/art/art-terms/p/picturesque",
+     "Constable to Fisher 1821, 'old rotten planks, slimy posts' (secondary): https://www.shafe.co.uk/wp-content/uploads/21-08-Romanticism-John-Constable.pdf",
+     "Burke, Enquiry II.8: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.8.htm",
+     "https://www.clevelandart.org/art/1954.129",
+     "https://www.clevelandart.org/art/2010.147",
+     "https://www.clevelandart.org/art/1972.48",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/1975.78",
+     "https://www.clevelandart.org/art/2022.249",
+     "https://www.metmuseum.org/art/collection/search/375834",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/438814"
+    ]
+   }
+  }
+ }
+}

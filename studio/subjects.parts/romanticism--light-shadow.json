@@ -1,0 +1,152 @@
+{
+ "styles": {
+  "romanticism": {
+   "light-shadow": {
+    "doc": "docs/styles/subjects/romanticism--light-shadow.md",
+    "summary": "One cloud-break light on a minority of the land; the sky holds the light, storm cloud ~L*30 never black, shadowed land darker than the cloud, lit land below the sky; warm dark earth shadows under storm.",
+    "rules": [
+     "Light a place, not the scene: one cloud-break patch on about 4-26% of the land (median 13%), the rest one connected shadow family (measured, 14 works)",
+     "The sky holds the light: most of the brightest pixels above the horizon, sky mean about 20 L* above the land (measured; Constable: sky the 'chief organ of sentiment', Met essay)",
+     "The lit land stays below the sky's brightest: about 25 L* lower in storm oils, 2-8 in luminous watercolours (measured)",
+     "Storm cloud darks about L* 28-32, never black; the shadowed land is darker than the darkest cloud (L* 5-18) (measured, 5 storm oils)",
+     "Light often lands in the middle distance with a dark foreground; keep aerial perspective in the darks, which lift toward the horizon (measured: Branch Hill, Hampstead, Flers, Oxbow)",
+     "Storm edge: dark mass on one side, light falling beyond (Met, The Oxbow 08.228; Michel CMA 1975.78; Hampstead CMA 1916.1027)",
+     "Quick transition from light to dark is the strongest value step (Burke II.15); on the ground the patch edge stays soft like a cloud shadow, cloud rims crisper (judgement)",
+     "Light colour: cool silver-white or warm gold both belong; a cold-white storm light is within the current (measured)",
+     "Shadows under storm are warm dark earth, not blue: lit by grey cloud and brown bounce (measured ground darks; judgement for reading, consistent with layer 1)",
+     "Visible shafts of light or rain from the cloud break are allowed (Hampstead; Moel Cynwich CMA 2010.147; Oxbow)",
+     "Plan three value families: sky, lit patch (below sky), shadowed land (below darkest cloud) (judgement from measurements)"
+    ],
+    "keep": [
+     "one dominant light; cast shadows and terminators agree with it",
+     "light-family / shadow-family rule inside the lit patch, with terminator, core and reflected light",
+     "low light gives long raking shadows",
+     "translucent things glow when backlit (layer 1; no Romantic convention found for wet linen)",
+     "aerial perspective in darks and saturation"
+    ],
+    "avoid": [
+     "even daylight with land as bright as sky",
+     "black storm clouds",
+     "hard-edged spotlight on the ground",
+     "several competing light patches",
+     "blue shadows under a storm sky",
+     "modelling every form in the shadow family",
+     "generic orange sunset vortex"
+    ],
+    "measured": {
+     "method": "Met/CMA open-access web images, frames cropped, sRGB to CIE L*, horizon read on a 10% grid; varnished originals, so hue is only relative",
+     "works": 14,
+     "lit_ground_fraction": {
+      "range": [
+       0.04,
+       0.26
+      ],
+      "median": 0.13,
+      "definition": "ground pixels > ground median + 15 L*"
+     },
+     "brightest_15pct_in_sky": "71-100% in 13 of 14 works (89%+ in nine); exception Isabey night storm 32%",
+     "sky_minus_ground_mean_L": {
+      "range": [
+       11,
+       46
+      ],
+      "median": 20
+     },
+     "sky_light_minus_ground_light_L": {
+      "storm_oils": [
+       11,
+       43
+      ],
+      "storm_oils_median": 25,
+      "luminous_turner_and_watercolour": [
+       2,
+       8
+      ]
+     },
+     "storm_cloud_dark_L": [
+      28,
+      32
+     ],
+     "land_dark_L": [
+      5,
+      18
+     ],
+     "dark_ladder_near_mid_far_L": {
+      "Oxbow": [
+       8,
+       11,
+       20
+      ],
+      "Branch Hill": [
+       2,
+       7,
+       14
+      ],
+      "Hampstead": [
+       15,
+       16,
+       20
+      ]
+     },
+     "lit_sky_rgb_cool_white": {
+      "Michel": [
+       207,
+       208,
+       198
+      ],
+      "Moel Cynwich": [
+       217,
+       213,
+       200
+      ]
+     },
+     "ground_dark_rgb": {
+      "Oxbow": [
+       41,
+       36,
+       12
+      ],
+      "Branch Hill": [
+       27,
+       22,
+       14
+      ],
+      "Michel": [
+       37,
+       33,
+       28
+      ]
+     }
+    },
+    "flags": [
+     "no Romantic public-domain work in the sample shows translucent wet linen; layer 1 governs it",
+     "photographed varnish warms measured hues; trust value relations more than hue"
+    ],
+    "case_notes": [
+     "targets (judgement, scaled from measurements): storm sky ~L*30, cloud break ~80, lit patch 45-65, shadowed land 8-20; lit patch 10-25% of the ground with figure and sheets in it",
+     "backlit wet linen is the brightest land shape but below the sky break; cold light makes lit planes cooler than the warm brown shadows (judgement)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/light-shadow.md",
+     "Met, John Constable essay: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Constable to Fisher 23 Oct 1821 (transcription): https://lacrank.blogspot.com/2025/08/john-constable-letter-about-clouds.html",
+     "Burke, Enquiry II.15: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.15.htm",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/375834",
+     "https://www.metmuseum.org/art/collection/search/441967",
+     "https://www.metmuseum.org/art/collection/search/438950",
+     "https://www.metmuseum.org/art/collection/search/437854",
+     "https://www.clevelandart.org/art/1972.48",
+     "https://www.clevelandart.org/art/1916.1027",
+     "https://www.clevelandart.org/art/1975.78",
+     "https://www.clevelandart.org/art/2019.76",
+     "https://www.clevelandart.org/art/1954.129",
+     "https://www.clevelandart.org/art/1942.647",
+     "https://www.clevelandart.org/art/2010.147",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/1917.1335"
+    ]
+   }
+  }
+ }
+}

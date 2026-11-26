@@ -1,0 +1,100 @@
+{
+ "styles": {
+  "romanticism": {
+   "space": {
+    "doc": "docs/styles/subjects/romanticism--space.md",
+    "summary": "Space from a big sky (median horizon 0.55 from top) and horizontal value bands; asymmetric with one cropped dark side; figures either tiny or large at the picture plane; aerial perspective kept in the darks.",
+    "rules": [
+     "Build space from the sky and 3-5 horizontal value bands of land, not from vanishing points (measured: Michel, Hampstead, Hallingdal; Martin)",
+     "Sky about half the height or more; median horizon 0.55 from top, range 0.48-0.72 (measured, 12 works); the sky is 'the standard of scale' (Constable 1821)",
+     "Asymmetry: one dark mass cut by a side edge, the other side open to the distance (measured 11 of 14; Oxbow storm-left/sun-right, Met 08.228)",
+     "Two figure scales: tiny in the landscape branch (2-8% of height) or large near the picture plane, heads against the sky (Gericault CMA 1931.48)",
+     "Depth by diagonal sweeps of road, river and slope ('curving arcs ... swirl', Martin CMA 1997.138)",
+     "Contrast the minute with the infinite (CMA 2010.147; Burke II.8 on littleness)",
+     "Aerial perspective kept in the darks and in cooling toward the horizon, even when the light falls in the middle distance (measured: Oxbow, Branch Hill, Moel Cynwich, Hallingdal)",
+     "Little ruled perspective: overlap, size, height in the field and air carry depth (judgement; layer 1 vista-space cues)"
+    ],
+    "keep": [
+     "one horizon at eye level; figures keyed to it",
+     "size diminution and 1/D^2 compression of ground bands",
+     "clear overlap, no tangents",
+     "Koschmieder contrast loss for darks and saturation"
+    ],
+    "avoid": [
+     "centred horizon with symmetrical classical wings",
+     "ruled grid as the main depth cue",
+     "blue haze on near ground",
+     "sky under half the height in a storm picture",
+     "lone figure from behind as default (Teodor habit)"
+    ],
+    "measured": {
+     "horizon_from_top": {
+      "median": 0.55,
+      "range": [
+       0.48,
+       0.72
+      ],
+      "n": 12,
+      "values": {
+       "Moel Cynwich": 0.48,
+       "Branch Hill": 0.5,
+       "Oxbow": 0.52,
+       "Michel": 0.53,
+       "Burning": 0.53,
+       "Isabey": 0.55,
+       "Flers": 0.55,
+       "Hampstead": 0.58,
+       "Whalers": 0.62,
+       "Fluelen": 0.63,
+       "Mill Near Colchester": 0.71,
+       "Return from Russia": 0.72
+      }
+     },
+     "skyline_mountain_works": {
+      "Hallingdal": 0.45,
+      "Schroon": 0.45,
+      "Feige": 0.4
+     },
+     "one_side_cropped_mass": "11 of 14 landscapes",
+     "elevated_viewpoint": "5 of 12 (all wide panoramas)",
+     "figure_height_fraction": {
+      "landscape_branch": [
+       0.02,
+       0.08
+      ],
+      "german_contemplative": [
+       0.15,
+       0.25
+      ],
+      "figure_branch": "about 0.75 (Gericault)"
+     }
+    },
+    "flags": [
+     "horizon at 0.75 (sky three-quarters) exceeds every measured work (max 0.72; median 0.55) but is within the current (Constable watercolour 0.71, Gericault ~0.72, Monk by the Sea per style doc): allowed as a stated choice",
+     "low viewpoint is the figure branch's device; the landscape panoramas mostly look down from a height (Burke II.8 prefers depth, 'not very positive')"
+    ],
+    "case_notes": [
+     "low viewpoint belongs to the figure branch: horizon at the figure's knees to hips, figure 50-75% of the height, centre about a third in from one side (judgement from Gericault)",
+     "cropped edge on the heavy dark side, opposite the open low distance (measured convention)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md (incl. Smarthistory, Monk by the Sea); docs/subjects/space.md",
+     "Constable to Fisher 23 Oct 1821 (transcription): https://lacrank.blogspot.com/2025/08/john-constable-letter-about-clouds.html",
+     "Met, Romanticism essay: https://www.metmuseum.org/essays/romanticism",
+     "Burke, Enquiry II.8 and II.9: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.8.htm, https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.9.htm",
+     "Met, Friedrich: The Soul of Nature: https://www.metmuseum.org/exhibitions/caspar-david-friedrich-the-soul-of-nature/inside-the-exhibition",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/436176",
+     "https://www.metmuseum.org/art/collection/search/337093",
+     "https://www.metmuseum.org/art/collection/search/435922",
+     "https://www.metmuseum.org/art/collection/search/438417",
+     "https://www.metmuseum.org/art/collection/search/439344",
+     "https://www.clevelandart.org/art/1931.48",
+     "https://www.clevelandart.org/art/1997.138",
+     "https://www.clevelandart.org/art/2010.147",
+     "plus the measured landscapes listed under light-shadow"
+    ]
+   }
+  }
+ }
+}
