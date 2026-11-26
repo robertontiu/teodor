@@ -1,0 +1,15 @@
+{"style": "graphite-hyperrealism",
+ "subjects": [
+  {"id": "face", "note": "invented man about 45, near three-quarter seen from his side and a little above, lying on his back with the head tilted up; near eye clenched shut (crow's feet, bunched cheek), far eye open and aiming; closed-mouth grin pulled up at one corner; stubble; slightly out of the focal plane (soft, photographic depth of field)"},
+  {"id": "hands-feet", "note": "one hand held up at arm's length: loose fist, thumb extended with the nail toward his eye, as a sight to cover the moon; knuckle creases, nail edge and tendons are the focal plane (sharpest edges in the drawing)"},
+  {"id": "figure", "note": "lying supine on grass, arm straight up and taut along his line of sight, neck flexed a little to look along it; only head, shoulder and arm in frame"},
+  {"id": "sex-age", "note": "adult man in his mid-forties: stubble, a crisp brow and jaw, first lines at the eye corners, a few grey hairs at the temple; must not read as a boy or as a specific real person"},
+  {"id": "hair", "note": "short dark hair pressed into the grass, out of focus"},
+  {"id": "drapery", "note": "the sleeve of a pale cotton shirt slipping down the raised forearm, a few folds at the elbow"},
+  {"id": "trees-plants", "note": "grass blades very close to the lens at the frame's lower edge and around the head, blurred out of focus (bokeh), a few sharp ones at the head"},
+  {"id": "sky", "note": "clear afternoon sky as a filtered black-and-white photograph renders it: darker grey at the zenith to lighter toward the horizon, a few thin cirrus streaks so it is not an empty block"},
+  {"id": "moon", "note": "the daytime waxing gibbous moon, small (true angular size 0.5 degrees through the lens), the brightest and hardest-edged small shape; lit limb toward the sun's side, faint maria; it sits on the extension of the eye-thumb sightline (its vanishing point), visible to us though hidden to him"},
+  {"id": "light-shadow", "note": "one late-afternoon sun, low, from the side; soft penumbras on the face, the eye socket and nose shadow, the hand's cast shadow, skylight filling the shadows"},
+  {"id": "space", "note": "lens perspective of a close wide-angle shot: the head very near, the hand at arm's length, the moon at infinity; shallow depth of field with the focal plane on the hand"}
+ ]
+}

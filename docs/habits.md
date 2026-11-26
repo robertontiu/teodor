@@ -2,7 +2,7 @@
 
 A running list of what Teodor's paintings keep doing. Every new painting starts by reading this file and looking at the contact sheet of past work (`studio/contact_sheet.py`), and then deliberately breaking at least three of these habits. After each painting, the orchestrator updates this list (add new habits, note which ones were broken).
 
-Last updated after round 18 (and 17).
+Last updated after round 19.
 
 ## Recurring habits
 
@@ -23,9 +23,10 @@ Last updated after round 18 (and 17).
 - **A big empty block.** A large field of one color with nothing in it (the quilt in round 15, the audience band in round 12).
 - **Old beside young as the shorthand for life.** Rounds 4, 6, 15 and 16: age and youth (or an old couple) stand for the life cycle. Find another carrier.
 - **The open red laugh.** Rounds 15, 16 and 17: joy painted as a pale mask with a gaping red-lipped mouth, which reads as a leer or a grimace. Carry joy in the cheeks and the eyes, with the mouth closed or barely open.
-- **The flung or raised arm as the main gesture.** Rounds 12, 13, 16 and 17.
+- **The flung or raised arm as the main gesture.** Rounds 12, 13, 16, 17 and 19.
 - **Faces between expression and grimace.** An open mouth and shut eyes, painted as a mask, can read as a laugh or a scream (rounds 13, 15, 16). An expression needs the whole face (cheeks, crow's feet, light) and the body to agree.
-- **The tilted top-down view with the figure rotated across the frame.** Rounds 13, 14, 14b and 18. A high view is a choice, not a default.
+- **The tilted top-down view with the figure rotated across the frame.** Rounds 13, 14, 14b, 18 and 19 (a head upside down from above the crown).
+- **A lone figure turned toward a small, far light.** Rounds 04, 05, 08, 10 and 19. A high view is a choice, not a default.
 - **One warm accent as the emotional key** (a lit window, a doorway, an orange). Let the feeling live in more than one note.
 - **The signature in the same corner.** Bottom right every time; place it where the painting wants it.
 - **Portrait 3:4 every time.** (The canvas format is fixed by the studio; work against it with composition: a crop, a horizon, a figure too big for the frame.)
@@ -37,6 +38,7 @@ Last updated after round 18 (and 17).
 - Round 13 (*Black Noon*): broke the lone figure from behind (a crowd facing us), the dark warm room (glaring noon outdoors), eye level (worm's-eye, cropped hard), amber against violet, and the hushed mood (confronting). A first start that repeated the old pattern was thrown away.
 - Round 15: two people instead of one, a high-key pale interior, and a feeling that was not bittersweet. Kept: frontal figures, disc faces, round-dab stamping.
 - Round 17 (*The Washing Line at Squall Time*): broke the figure from behind (face lit and turned to us), eye level (worm's-eye view), the hushed bittersweet mood, amber against violet, and the radial burst. Kept: the open red laugh, the flung arm, a single figure against a big atmospheric field, evenly ragged handling, a figure ending in a vague mass at the bottom.
+- Round 19 (*The Thumbnail*): broke the figure from behind (he faces us), the hushed dusk, the radial burst and the open red laugh. Kept: the raised arm, the figure rotated across the frame, a small far light, a tilted ground band, fog.
 - Round 18 (*The Plum Crate at Noon*): broke the lone figure from behind, eye-level staging, warm light in a dark room, the hushed mood, the big empty block, old beside young, and the bottom-right signature (the seal sits upper right). Kept: the tilted top-down view with the figure rotated across the frame, a mask-like face with closed eyes and a fixed smile, one warm accent as the emotional key, weak hands, a secondary figure pushed to the frame's edge.
 - Round 16 (*Cold Water at the Landing Stage*): broke the lone figure from behind (two faces turned to us, really interacting), eye level (a high view from a jetty, hard crop), the warm dark room (daylight water), amber against violet (vermilion flesh against teal and ultramarine), the hushed mood (loud) and the radial burst (the spray travels sideways). Kept: old beside young, mask-like faces, uniform dab texture, a dark block in the lower third.
 - Round 14 (both models): broke the dark room, the amber palette and the hushed mood completely (high-key acid color, open daylight, rapture). Kept: one central figure, a radial pull, mannequin drawing.

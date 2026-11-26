@@ -176,3 +176,36 @@ In rounds 1–6 the orchestrator assigned the feeling at random: basic emotions 
     - `clip` on `strokes` is an on/off switch while the region goes under `region`, so a "clipped" bokashi band tinted the whole sheet in phase 1. The API should refuse a region given as `clip`.
     - The final bokashi printed at full strength because a failed cleanup command stopped an edit. A dry run would have caught it.
   - The pose still reads as propped. The figure rig helped with weight, but the seat needs a ground line, and in ukiyo-e that has to be a line or a flat tone, not a shadow.
+
+## Round 19: *The Thumbnail* (Teodor, v8, Opus 5.5; theme: Man and the Moon; style: graphite hyperrealism, 2400×3200 vellum)
+- **Setup:** the test of the engine's limits that Robert asked for, with graphite hyperrealism as the style. It was the first round to use everything built in this cycle together:
+  - the CC0 human mesh as the rendered "photograph";
+  - the detail pass (the fist at 4×, the face at 2–4×, the moon at 8×);
+  - twelve openly licensed references for the fist and the face;
+  - a new layer-1 page on the moon and 11 layer-2 pages for graphite hyperrealism, researched before drawing.
+  
+  Server restarts stopped the run three times; each phase was resumed from its journal.
+- **Run:** 83 episodes, 32 schema versions, and a camera solver to put the open eye, the thumb and the moon on one sightline.
+- **Feeling:** "sly delight: a grown man putting out the moon with his thumb". The nearest wrong feelings were a restful lazy afternoon, a generic thumbs-up, and wonder or awe.
+- **Image:** a man lies in afternoon grass, seen up close from beside his head, one eye squeezed shut, with his thumb raised against a sky that holds a small, true-size gibbous moon.
+- **The research changed the plan:**
+  - the moon is darker than lit skin and stays at its true size;
+  - f/16, so the hand and the moon are both crisp;
+  - no sharp blades in the near blur;
+  - a sharp cast shadow on the hand;
+  - an orange-filter sky.
+  
+  Teodor followed all of these, and twice refused a critic's request to enlarge or brighten the moon.
+- **Critics:**
+  - **Critic 1:** "a foggy, dreamlike loneliness… a hitchhiker's thumbs-up". The fist was still bare paper, and the face didn't read.
+  - **Critic 2:** "quiet, lonely longing". Rectangular seams in the chest, and a face reading as "a smudge with one dark eye socket".
+  - **The visitor:** "quiet, foggy, a bit wistful… reaching for something very far away". It read **a child of 6 to 10**, sex unclear, pointing up, with calm wonder. In its words, "the picture's whole meaning depends on someone looking, and right now that someone can't be read". Other weaknesses: values in a narrow mid-grey band with no true dark, edges airbrushed soft, a tube arm, a face of "mush", a phone-filter vignette.
+  - **On the contact sheet:** a departure in surface, but the same staging: an upside-down or foreshortened figure (13, 14, 18), a lone figure turned toward a small, far light (04, 05, 08, 10), the raised hand as the emotional point (12, 13, 17), a tilted ground band.
+  - **All three readings were wonder or longing.** The intended feeling did not land.
+- **Report:** key 52 (target 50); value spread 10 against 21 (z −2.1); no darks; murky middle 74%; hard edges in range overall but not gathered at the focus.
+- **Learned (a clear miss, and a useful one):**
+  1. **The order of work decides graphite hyperrealism.** The first sitting blended the whole sheet before laying any darks, and no later sitting could recover the value range. The style's own practice is to finish passage by passage from the darks out; the brief should require it for this style and others built on finish.
+  2. **The engine's darks floor (graphite about L* 36–41, carbon about 32) is a real ceiling for photographic work.** A photograph's darks sit near 9–17. The picture needs a darker medium path: carbon dust, compressed charcoal, or layered carbon over graphite, measured.
+  3. **The composition worked against the feeling.** A head seen upside down from above the crown reads slowly, and the thumb against a distant speck reads as reaching. The physics was right: from anywhere but his eye the moon is never under the thumb. But the joke needs the viewer near his sightline. Correct optics don't guarantee a readable idea, and the planning should test the reading of a thumbnail with a fresh eye before drawing.
+  4. **A large hand next to a small, blurred head reads as a child.** At this fidelity the age cues must be in focus somewhere.
+  5. **Server restarts:** long phases need to save state after every episode (they do), and the orchestrator should check in on a schedule (now done with a scheduled check-in).

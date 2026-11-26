@@ -74,3 +74,8 @@ If a research file is missing, rerun that research with the prompt shape in this
 - [x] Detail pass (paint a region at up to 8x; oil scale-aware; dry media in progress).
 - [x] People from a CC0 human mesh (MakeHuman) and openly licensed references (`tools/find_refs.py`).
 - [ ] From round 17's revision: `oil-out` does nothing on a varnished canvas (needs a "retouch varnish / oil-out over varnish" path); `model` strokes run out of their value bands under a strong side light; a region polygon traced from a mask touching the border closes across the picture; scraping a thin dry passage bares the ground instead of levelling it; the sturdy mesh woman seen three-quarter and tipped back has a face wider than tall; a detail's head can come back lighter and cooler than the body around it (check value and colour continuity at close).
+
+## After round 19
+- [ ] A darker path for graphite hyperrealism: carbon dust, compressed charcoal or layered carbon over graphite, measured against photographs' darks (L* 9-17); the current floor is about 32-36.
+- [ ] Brief: for styles built on finish (hyperrealism, Dutch, Renaissance), work passage by passage from the darks out, never blend the whole sheet before the darks are in.
+- [ ] Planning: a fresh-eye reading of the chosen thumbnail before drawing (does the idea read?), since correct optics can still read as the wrong feeling.
