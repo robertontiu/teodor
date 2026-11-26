@@ -56,11 +56,63 @@ Coherence depends on scale: the same sheets give 0.29 at full resolution (the to
 
 ## What remains uncalibrated, and why
 
-- **Grain contrast inside hatching is still 1.7x the references** (12.3 vs 7.4 L*). The lines are too uniform in darkness and the paper between them too clean: real hatching carries smudged dust between lines and lines of varying pressure. A model of loose dust settling around a line would be the next step; I did not invent one.
+- **Grain contrast inside hatching** was 1.7x the references (12.3 vs 7.4 L*): see "Charcoal dust" below (Nov 26, 2026) for the model that brought it to 0.8-1.5x.
 - **Vine vs compressed**: the references are not labelled vine or compressed; the vine value is the lighter end of the measured charcoal sheets, a reasonable assignment, not a measurement of vine itself.
 - **Everything not listed above stays tuned by eye**: KC = 3.5; tooth capacities; the pressure-to-reach curve; tool flow, loose and stain fractions; blender, eraser and fixative rates; the velvet render; fibre length and cloud scale; the side stroke's streaks, fade and wedge.
 - **The `match` drawing test is a weak ruler for the medium**: its coherence and paper share depend mostly on the core's matching (stroke lengths, thresholds), not on charcoal. It is used here to check by eye that side tools no longer make hard blocks, and for orders of magnitude.
 - **Core issues seen while calibrating (studio.py, not edited here):** `hatch` cuts every line into 140 px segments starting at the same offset, so the segment ends line up into visible seams across a hatched area; its default spacing (9 px) and size (3 px) are 3.6 mm and 1.2 mm at the charcoal scale, coarser than the measured 1-2 mm, and the default colour `#2a2a2a` makes monochrome tools press as hard as they can. Its `layers` are absolute values, so on toned paper they must be set below the paper's value.
+
+## Charcoal dust (Nov 26, 2026)
+
+**What the sources say about loose dust.**
+- A dry stick dragged over a rough surface breaks into fragments of every size: for graphite, fragments torn off by the cellulose fibres with "a scale-free, power-law size distribution spanning several decades", and the grey level of a drawing is the surface covered by fragments (V. Bertin, "The physics of pencil drawing", Research Square preprint, 2026, abstract only: https://www.researchsquare.com/article/rs-10448967/v1; seminar abstract https://www.loma.cnrs.fr/bertin-24-march-2026/: "sparse, heterogeneous deposition").
+- Charcoal has large particles and no binder: it "can be lifted easily" and its particles "readily crumble when spread" (The Met, "Materials and Techniques: Charcoal", https://www.metmuseum.org/perspectives/materials-and-techniques-drawing-charcoal). Its dust "catches in the paper's texture but can be easily wiped away unless fixed" and "can leave some staining due to dust getting trapped in the surface texture"; graphite "produces far less dust" (Jackson's [S13]). Vine "is easily removed by dusting" [S12].
+- Loose granular dust that a tool or hand sweeps pools in the low regions of the surface (a granular-media model for digital charcoal and chalk, US patent 11531450, "Digital imaging of granular media", https://image-ppubs.uspto.gov/dirsearch-public/print/downloadPdf/11531450; not a measurement). Sousa & Buchanan's blender pushes loose graphite into the hollows [S27].
+- Not found: any measurement of how much dust a stroke sheds or how far it travels. One reference (Heritage Science 10.1186/s40494-022-00649-x, charcoal underdrawing reconstructions: charcoal over gesso "easily dusted away by a feather") was read through its repository copy (https://dspace.uevora.pt/rdpc/bitstream/10174/35161/1/s40494-022-00649-x.pdf); it is about panel underdrawings, not paper.
+
+**Measured here: the haze around strokes.** On Millet's *A Seated Shepherd* (337802, conté), the paper's median optical density by distance from the nearest mark (marks: density above 0.12 after a 0.12 mm blur), relative to the crop's 95th-percentile luminance, at 2.5 and 10 px/mm, four crops:
+
+| distance from a mark | 0-0.6 mm | 0.6-1.2 | 1.2-2 | 2-3.2 | 3.2-6 | 6-12 |
+|---|---|---|---|---|---|---|
+| density (2.5 px/mm), four crops | 0.046-0.056 | 0.023-0.037 | 0.017-0.032 | 0.013-0.023 | 0.005-0.018 | 0.004-0.012 |
+| above the far floor, relative to the marks' density | 0.062 | 0.025 | 0.015 | 0.0075 | 0.0035 | 0 |
+
+So the paper carries a haze that thins over about 2-3 mm from each mark, and its mass is about a fifth of the line's.
+
+**The model** (`drymedia.py`, `DUST_*`, `DryTool._stroke`). A stick's stroke keeps `1 - dust` of what it rubs off in the line; the rest (`dust = DUST_K x the tool's loose fraction`) lands around it as two Gaussian hazes, sigma 0.5 mm (45% of it) and 2.6 mm (55%), settling more into the hollows (x0.6 on the peaks to x1.4 in the deepest hollows) and never into an indented groove or outside a clip mask. The haze is loose dust: blenders spread it, erasers lift it, fixative locks it. Charcoal `DUST_K = 0.55` (vine sheds 0.48 of a stroke, compressed 0.28, the charcoal pencil 0.22, white chalk 0.39). Kernel widths, weights and `DUST_K` were fitted to the profile above with sparse compressed strokes (0.6-0.9 mm wide): the render gives 0.047, 0.025, 0.017, 0.012, 0.004 (relative, same bins) against 0.062, 0.025, 0.015, 0.0075, 0.0035. The fraction per tool (in proportion to `loose`) is a judgement: only conté was measured.
+
+A crumbling-stick term (pressure varying along each line, for the "lines too even" diagnosis) was tried and left out: at the same tone it **raised** the grain in hatching (compressed hatch 9.6 -> 10.1 L*, vine 5.6 -> 6.3), so the even lines are not what makes the grain too high; the clean paper between them is.
+
+**Before and after** (studio scale 2.5 px/mm, photo blur on the renders; my measuring script reproduces the earlier reference numbers within 0.3-0.8 L*: Millet dark hatching 7.06 here, 7.4 in the table above):
+
+| statistic | reference | before | after |
+|---|---|---|---|
+| vine hatch at 1.75 mm, 2 layers (`#000000`): grain in tone, L* (mean L*) | 7.06 (Millet dark hatching, L* 64) | 12.9 (69) | **6.8** (66) |
+| same: hard-edge share | 0.24 | 0.64 | 0.48 |
+| compressed hatch, same settings: grain (mean L*) | 7.06 (64) | 15.9 (58) | **11.1** (55) |
+| same: hard-edge share | 0.24 | 0.68 | 0.63 |
+| same: paper in marks | 0.004-0.014 (Millet), 0.12 (de la Fosse) | 0.17 | 0.11 |
+| vine light hatch, 1 layer (`#606060`): grain (mean L*) | 5.45 (Millet light strokes, L* 75) | 10.4 (82) | **6.1** (80) |
+| sparse compressed strokes: hard-edge share | 0.17-0.28 (Millet crops) | 0.64 | **0.18** |
+| darkest compressed, three heavy passes, L* (0.1%) | 21.9-28.9 | 24.6 | 24.6 |
+| Millet-schema drawing (below, 2 seeds): grain / hard-edge share / paper share / coherence | 7.2 / 0.17 / 0.38 / 0.60 | 10.0 / 0.43 / 0.45 / 0.35 (v8 hand) | 5.4 / 0.18 / 0.32 / 0.32 |
+
+Sheet: `docs/gallery/charcoal_dust.jpg` (Millet's hatching at the studio scale beside vine and compressed hatches before and after). Still off: compressed hatching stays 1.5x the conté reference in grain and keeps too many hard edges (its lines are darker than Millet's, 0.86 against about 0.6 in density); the Millet drawing's grain now falls under the reference (5.4 vs 7.2), and its coherence is the core `match`'s, not charcoal's.
+
+## The v8 hand (Nov 26, 2026)
+
+The core's v8 hand (`play_v8`: articulations, the pressure wave, drift; role and focus sizes) arrived after this calibration. The Millet-schema drawing (the sheet greyed and normalised to the paper's tone as the schema; `match` with `vine_side` 16-32 px, `vine_tip` 3-8 px, `compressed_tip` 2-5 px; central 60% measured), two seeds, before the dust model:
+
+| hand | grain | hard-edge share | paper share | coherence |
+|---|---|---|---|---|
+| reference (the sheet) | 7.2 | 0.17 | 0.38 | 0.60 |
+| v7 stroke (plain, no role sizes, no wave) | 8.3 | 0.31 | 0.36 | 0.32 |
+| v8 hand | 10.0 | 0.43 | 0.45 | 0.35 |
+| v8 hand without the wave | 10.2 | 0.39 | 0.45 | 0.35 |
+| v8 hand with plain articulation | 10.3 | 0.45 | 0.43 | 0.36 |
+| v8 hand without role sizes | 8.4 | 0.34 | 0.40 | 0.29 |
+
+The drift comes from the role sizes (a `drawing`-role stroke is drawn at 0.6 of the asked width, which narrows calibrated sticks), not from the articulations or the wave. The dry media now opt out of the role sizes (`DryMedium.hand_defaults`: `"role_scale": false` under `match`, `free`, `strokes`, `model`, `blend`; an intention's own key wins) and keep the rest of the hand. Graphite (Grandville sheet, one seed): v8 hand grain 7.9, hard 0.35; without role sizes 7.1, 0.27; v7 stroke 6.9, 0.21 (reference 5.2, 0.16). Pastel (Singer, one seed): v8 hand coherence 0.24, hard 0.08; without role sizes 0.27, 0.10 (reference 0.30, 0.14): no drift away from the reference, the opt-out applies anyway.
 
 ## Reproducing
 

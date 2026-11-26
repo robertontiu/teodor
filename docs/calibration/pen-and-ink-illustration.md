@@ -75,3 +75,20 @@ Same ruler, same procedure: a 420 × 420 px patch at 6 px/mm, hatched with the c
 - **Too few lines in the half-lights and lights** (0.86 / 0 lines per mm against 1.21 / 0.26), **too few crossings** (0.19 against 0.38) and **too many edges** (eyes 0.54 against 0.30). These come from how the core `hatch` builds tone: one direction per value layer over the whole picture, a level cut-off, and pieces with seams. It is the hatching intention, not the pen. A form-following, value-graded hatch in `studio.py` (`do_hatch`) would close this; see the report's list of requested changes.
 - Hard-edge share 0.53-0.70 against 0.43: the renders are cleaner than photographs of 130-year-old ink on aged board, which has bled slightly, faded and lost contrast. Not tuned away.
 - Not modelled: reduction for print (lines thickening and greys closing up in the block), Chinese white, clay-board, scraping as a drawing tool.
+
+## 6. The v8 hand and the line tools (Nov 26, 2026)
+
+The core's v8 hand (`play_v8`) adds articulations (a swell, a flick, a drag), a slow pressure wave and size by role and focus to `match`, `free`, `strokes` and `model`. Measured with the same ruler (crops resampled to 9.8 px/mm, blurred σ 0.6 px in linear light), two seeds each:
+
+| crowquill, `match` on a softened Met drawing (365760), sizes 6-12, `jiao` | width, mm | widest tenth / median | width CV | free-end ratio |
+|---|---|---|---|---|
+| plain stroke, no role size (the calibrated behaviour) | 0.39 | 1.83 | 0.24 | 0.74 |
+| v8 defaults (auto articulation, role size "drawing" ×0.6) | 0.31 | 1.78 | 0.24 | 0.68 |
+| auto articulation only | 0.37 | 1.90 | 0.25 | 0.68 |
+| role size only | 0.34 | 1.72 | 0.24 | 0.74 |
+| **after the opt-out (defaults)** | **0.40** | 1.86 | 0.25 | **0.76** |
+| references | 0.39 (0.36-0.49) | 2.19 | 0.32 | 0.76 |
+
+The v8 defaults drifted out of the reference range (width 20% narrow, ends too pointed). So ink's line tools (`nib`, `stipple`, `burin`, `needle`, `drypoint`) opt out (`Ink.hand_defaults`, a new core hook: `"articulation": "plain"`, `"role_scale": false`, `"focus_scale": false` as defaults the intention can override; the tool sets `.wave = 0`, also a new hook, because `PEN_RHYTHM` already is the hand's swell). `strokes` patches (30 parallel lines, pressure 0.75): before the opt-out auto vs plain 0.335 vs 0.357 mm; after, both 0.346 mm. An explicit `"articulation": "swell"` is honoured (0.37 mm, end ratio 0.66 in the `match` test).
+
+**Revision and finishing** (`Ink.revise`, `Ink.finish_check`; manual/ink.md): paintout lays Chinese white (`#f4f1ea`, the style's judgement) on bristol, illustration board and laid paper, a near-opaque film (opacity 0.85, about 1.6 units per full strength): eye. Blotting lifts 35-80% of the wet carbon by support (`BLOT_LIFT`): eye. The finishing check's line gain in reduction (0.04 mm per side at two thirds: Maginnis says lines thicken; the amount is eye) and its thresholds (grey wash 1.5% of the sheet, 25% of hatched greys closing, four value groups from Maginnis's "few and positive") are judgements.

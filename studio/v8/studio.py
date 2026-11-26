@@ -222,10 +222,74 @@ def play(cv, brush, path, felt, base_press, rng):
 
 
 # ---------------------------------------------------------------- regions, sampling, directions
+_SEG_CACHE = {}
+
+
+def _schema_for_segments(W, H):
+    """The current canvas's schema (its ref.npy), cached by modification time, for `segment` regions."""
+    rp = P("ref.npy")
+    if not os.path.exists(rp):
+        sys.exit("a 'segment' region needs a schema: set one with the ref command first.")
+    k = (rp, os.path.getmtime(rp))
+    if _SEG_CACHE.get("key") != k:
+        _SEG_CACHE.clear()
+        _SEG_CACHE["key"] = k
+        _SEG_CACHE["ref"] = np.load(rp).astype(np.float32)
+    ref = _SEG_CACHE["ref"]
+    if ref.shape[:2] != (H, W):
+        sys.exit(f"a 'segment' region: the schema is {ref.shape[1]}x{ref.shape[0]}, the canvas {W}x{H}.")
+    return ref
+
+
+def segment_mask(reg, W, H):
+    """A region cut from the schema: the connected area of similar value (or colour) around one or more points.
+    {"type": "segment", "at": [x, y] | [[x, y], ...], "by": "value" | "colour", "tol": 0.08 (value, 0-1) or 10
+    (colour, CIELAB delta E), "blur": 2 (px, smooths the schema first), "grow": 0 (px; negative shrinks),
+    "holes": false (true fills the holes inside the area)}. Each point's area is the 8-connected set of pixels within
+    `tol` of the schema's value or colour at that point; several points join their areas. Defaults are judgements."""
+    from scipy.ndimage import label, binary_fill_holes, binary_dilation, binary_erosion
+    ref = _schema_for_segments(W, H)
+    pts = reg.get("at")
+    if not pts:
+        sys.exit('a segment region needs "at": [x, y] (a point inside the area), or a list of points.')
+    pts = [pts] if isinstance(pts[0], (int, float)) else pts
+    by = str(reg.get("by", "value")).lower()
+    bl = float(reg.get("blur", 2.0))
+    ck = ("seg", by, bl)
+    if ck not in _SEG_CACHE:
+        if by.startswith("col"):
+            import eyes
+            L, a, b = eyes._srgb_to_lab(np.clip(ref, 0, 1))
+            f = np.stack([L, a, b], -1).astype(np.float32)
+        else:
+            f = ref.mean(-1, keepdims=True)
+        _SEG_CACHE[ck] = np.stack([gaussian_filter(f[..., i], bl) for i in range(f.shape[-1])], -1) if bl > 0 else f
+    f = _SEG_CACHE[ck]
+    tol = float(reg.get("tol", 10.0 if by.startswith("col") else 0.08))
+    out = np.zeros((H, W), bool)
+    for p in pts:
+        x, y = int(np.clip(round(p[0]), 0, W - 1)), int(np.clip(round(p[1]), 0, H - 1))
+        seed = np.median(f[max(0, y - 1):y + 2, max(0, x - 1):x + 2].reshape(-1, f.shape[-1]), 0)
+        near = np.sqrt(((f - seed) ** 2).sum(-1)) <= tol
+        lab, _ = label(near, structure=np.ones((3, 3)))
+        if lab[y, x]:
+            out |= lab == lab[y, x]
+    if reg.get("holes"):
+        out = binary_fill_holes(out)
+    g = int(reg.get("grow", 0))
+    if g > 0:
+        out = binary_dilation(out, iterations=g)
+    elif g < 0:
+        out = binary_erosion(out, iterations=-g)
+    return out
+
+
 def region_mask(reg, W, H, feather=1.0):
     t = reg.get("type", "canvas")
     if t == "canvas":
         return None
+    if t == "segment":
+        return gaussian_filter(segment_mask(reg, W, H).astype(np.float32), feather)
     m = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(m)
     if t == "ellipse":
@@ -248,6 +312,15 @@ def sample_in(mask, reg, rng, W, H):
         elif t == "poly":
             xs, ys = [p[0] for p in reg["pts"]], [p[1] for p in reg["pts"]]
             x, y = rng.uniform(min(xs), max(xs)), rng.uniform(min(ys), max(ys))
+        elif t == "segment" and mask is not None:
+            # a point of the segment itself (a small segment would rarely be hit by sampling the whole canvas)
+            if _SEG_CACHE.get("pts_mask") is not mask:          # (holding the mask keeps its identity unique)
+                _SEG_CACHE["pts_mask"], _SEG_CACHE["pts"] = mask, np.nonzero(mask > 0.5)
+            yy, xx = _SEG_CACHE["pts"]
+            if len(xx) == 0:
+                return W / 2, H / 2
+            i = int(rng.integers(len(xx)))
+            x, y = float(xx[i]) + rng.random(), float(yy[i]) + rng.random()
         else:
             x, y = rng.random() * W, rng.random() * H
         if 0 <= x < W and 0 <= y < H and (mask is None or mask[int(y), int(x)] > 0.5):
@@ -751,6 +824,7 @@ def play_v8(cv, brush, path, felt, base_press, rng, art="plain", wave=WAVE):
     """play() with an articulation: pressure, width, load and dry-brush that change along the stroke, a slow
     pressure wave, and tremor in pressure that is smooth along the stroke instead of new noise per dab.
     With art "plain" and no wave it is exactly play()."""
+    wave = getattr(brush, "wave", wave)     # a tool with its own calibrated swell opts out of the core's wave (ink line tools)
     if art == "plain" and not wave:
         return play(cv, brush, path, felt, base_press, rng)
     n = len(path)
@@ -1380,9 +1454,118 @@ def do_hatch(cv, it, felt, rng):
     it.setdefault("max_strokes", HATCH_MAX)
     if it.get("follow") != "form":
         if not it.get("regular"):
-            return do_hatch_v7(cv, it, felt, rng)
+            return _hatch_free(cv, it, felt, rng)
         return _hatch_regular(cv, it, felt, rng)
     return _hatch_form(cv, it, felt, rng)
+
+
+# Feathered value bands (v8). A layer that stops dead where the schema crosses its level lays a smooth gradient as
+# steps (docs/calibration/graphite-hyperrealism.md: faint diagonal steps on the wall and the egg). A draughtsman
+# lightens the pressure as the tone thins out, so each layer's pressure falls off across its level over a band
+# `feather` wide (in the schema's value, 0-1): full pressure below level - feather/2, none above level + feather/2.
+# The default for the freehand hatch is HATCH_FEATHER, or 0.6 of the smallest gap between the layers when that is
+# smaller (eye); "feather": 0 restores the hard stop. Ruled (`regular`) and contour (`follow: form`) hatching keep
+# the hard stop unless `feather` is given, because their media were calibrated on it (engraving, pen).
+HATCH_FEATHER = 0.08
+
+
+def _hatch_feather(it, layers, default):
+    f = it.get("feather")
+    if f is None:
+        if not default:
+            return 0.0
+        gaps = [abs(a - b) for a, b in zip(layers, layers[1:])]
+        return min(HATCH_FEATHER, 0.6 * min(gaps)) if gaps else HATCH_FEATHER
+    return max(0.0, float(f))
+
+
+def _band_pressure(val, level, fw):
+    """Pressure factor (0..1) of one value layer: 1 well inside the band, a smooth fall across its level."""
+    if fw <= 0:
+        return (val < level).astype(np.float32)
+    t = np.clip((level + fw / 2 - val) / fw, 0, 1)
+    return (t * t * (3 - 2 * t)).astype(np.float32)
+
+
+class _Pressed:
+    """A tool whose pressure is scaled by a per-pixel field where it touches (a feathered hatch layer)."""
+
+    def __init__(self, b, field):
+        self.__dict__["_b"], self.__dict__["_f"] = b, field
+
+    def dab(self, cv, x, y, ang, press, rscale=1.0):
+        f = self._f
+        k = float(f[min(f.shape[0] - 1, max(0, int(y))), min(f.shape[1] - 1, max(0, int(x)))])
+        self._b.dab(cv, x, y, ang, press * k, rscale)
+
+    def __getattr__(self, k):
+        return getattr(self._b, k)
+
+    def __setattr__(self, k, v):
+        setattr(self._b, k, v)
+
+
+def _hatch_free(cv, it, felt, rng):
+    """The freehand hatch of v7 (parallel lines at `angle`, `spacing`, in value `layers` turned by `cross`, spacing
+    and angle drifting a little, staggered piece ends), with feathered bands (`feather`, above)."""
+    reg = it.get("region", {"type": "canvas"})
+    mask = region_mask(reg, cv.W, cv.H)
+    cv.clip = mask if it.get("clip") else None
+    if cv.ref is None and "value" not in it:
+        sys.exit("hatch needs a schema (ref) or a flat 'value' (0 dark .. 1 light).")
+    val = gaussian_filter(cv.ref.mean(-1), 3) if cv.ref is not None and "value" not in it else np.full((cv.H, cv.W), float(it["value"]), np.float32)
+    layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
+    fw = _hatch_feather(it, layers, True)
+    cross = it.get("cross", 45)
+    spacing = it.get("spacing", 9)
+    size = float(np.mean(it.get("size", [3, 3]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3))
+    seg_max = it.get("length", 140)
+    cols, w = palette(it) if it.get("colors") else ([hx("#2a2a2a")], np.array([1.0]))
+    if mask is not None:
+        ys, xs = np.nonzero(mask > 0.5)
+        if len(xs) == 0:
+            return
+        x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
+    else:
+        x0, x1, y0, y1 = 0, cv.W - 1, 0, cv.H - 1
+    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+    R = math.hypot(x1 - x0, y1 - y0) / 2 + spacing
+    n = 0
+    for li, level in enumerate(layers):
+        pf = _band_pressure(val, level, fw)
+        ang = math.radians(it.get("angle", 50) + li * cross + rng.normal(0, 2))
+        dx, dy = math.cos(ang), math.sin(ang)
+        nx, ny = -dy, dx
+        off = -R + rng.uniform(0, spacing)
+        while off < R:
+            sp = spacing * rng.uniform(0.85, 1.15)
+            px, py = cx + nx * off, cy + ny * off
+            # each line starts its pieces at its own offset and length, so piece ends never line up into seams
+            t, run = -R - rng.uniform(0, seg_max), []
+            seg_here = seg_max * rng.uniform(0.6, 1.4)
+            while t <= R:
+                x, y = px + dx * t, py + dy * t
+                ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and pf[int(y), int(x)] > 0.02
+                if ok:
+                    run.append([x, y])
+                if (not ok or len(run) * 3 >= seg_here) and len(run) >= 3:
+                    a, b = run[0], run[-1]
+                    a = [a[0] + rng.normal(0, 1.5), a[1] + rng.normal(0, 1.5)]
+                    ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8), (a[1] + b[1]) / 2 + rng.normal(0, 0.8)], b]
+                    col = np.clip(cols[rng.choice(len(cols), p=w)] + rng.normal(0, 0.01, 3), 0, 1)
+                    br = make_brush(it, size * rng.uniform(0.85, 1.15), col, rng, cv)
+                    if fw > 0:
+                        br = _Pressed(br, pf)
+                    play(cv, br, gesture_path(ctrl, felt, rng, size), felt, it.get("pressure", 0.8), rng)
+                    n += 1
+                    run = []
+                    seg_here = seg_max * rng.uniform(0.6, 1.4)
+                elif not ok:
+                    run = []
+                t += 3
+            off += sp
+            if n > it.get("max_strokes", 1500):
+                return
 
 
 def _hatch_setup(cv, it):
@@ -1397,18 +1580,22 @@ def _hatch_setup(cv, it):
     return mask, val, size, cols, w
 
 
-def _hatch_line(cv, it, felt, rng, pts, size, cols, w, regular):
+def _hatch_line(cv, it, felt, rng, pts, size, cols, w, regular, pf=None):
     if len(pts) < 2:
         return
     if regular:   # a steady hand: no tremor, no scatter, the line's own shape kept
         ctrl = pts if len(pts) <= 24 else pts[::max(1, len(pts) // 24)] + [pts[-1]]
         col = cols[rng.choice(len(cols), p=w)]
         br = make_brush(it, size, col, rng, cv)
+        if pf is not None:
+            br = _Pressed(br, pf)
         steady = Felt({"arousal": 0.0, "tension": 0.0, "valence": 0.5, "care": 1.0})
         play(cv, br, gesture_path(ctrl, steady, rng, size), steady, it.get("pressure", 0.8), rng)
     else:
         col = np.clip(cols[rng.choice(len(cols), p=w)] + rng.normal(0, 0.01, 3), 0, 1)
         br = make_brush(it, size * rng.uniform(0.9, 1.1), col, rng, cv)
+        if pf is not None:
+            br = _Pressed(br, pf)
         play(cv, br, gesture_path(pts, felt, rng, size), felt, it.get("pressure", 0.8), rng)
 
 
@@ -1424,7 +1611,10 @@ def _hatch_regular(cv, it, felt, rng):
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
     R = math.hypot(x1 - x0, y1 - y0) / 2 + spacing
     n = 0
+    fw = _hatch_feather(it, layers, False)
     for li, level in enumerate(layers):
+        pf = _band_pressure(val, level, fw)
+        pw = pf if fw > 0 else None
         ang = math.radians(it.get("angle", 50) + li * it.get("cross", 45))
         dx, dy, nx, ny = math.cos(ang), math.sin(ang), -math.sin(ang), math.cos(ang)
         off = -R + (li * spacing / max(len(layers), 1)) % spacing
@@ -1433,16 +1623,16 @@ def _hatch_regular(cv, it, felt, rng):
             t, run = -R, []
             while t <= R + 2:
                 x, y = px + dx * t, py + dy * t
-                ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and val[int(y), int(x)] < level
+                ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and pf[int(y), int(x)] > 0.02
                 if ok:
                     run.append([x, y])
                 elif len(run) >= 3:
-                    _hatch_line(cv, it, felt, rng, run, size, cols, w, True); n += 1; run = []
+                    _hatch_line(cv, it, felt, rng, run, size, cols, w, True, pw); n += 1; run = []
                 else:
                     run = []
                 t += 2
             if len(run) >= 3:
-                _hatch_line(cv, it, felt, rng, run, size, cols, w, True); n += 1
+                _hatch_line(cv, it, felt, rng, run, size, cols, w, True, pw); n += 1
             off += spacing
             if n > it["max_strokes"]:
                 return
@@ -1459,7 +1649,10 @@ def _hatch_form(cv, it, felt, rng):
     n = 0
     cell = max(1.0, spacing * 0.5)
     gh, gw = int(cv.H / cell) + 1, int(cv.W / cell) + 1
+    fw = _hatch_feather(it, layers, False)
     for li, level in enumerate(layers):
+        pf = _band_pressure(val, level, fw)
+        pw = pf if fw > 0 else None
         turn = math.radians(it.get("angle", 0) + li * it.get("cross", 45)) if li or "angle" in it else 0.0
         key = round(turn, 3)
         if key not in ffs:
@@ -1467,7 +1660,7 @@ def _hatch_form(cv, it, felt, rng):
         ff = ffs[key]
         ct, st = math.cos(turn), math.sin(turn)
         occ = np.zeros((gh, gw), bool)
-        ok = lambda x, y: 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and val[int(y), int(x)] < level
+        ok = lambda x, y, pf=pf: 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and pf[int(y), int(x)] > 0.02
 
         def free(x, y):
             i, j = int(y / cell), int(x / cell)
@@ -1503,7 +1696,7 @@ def _hatch_form(cv, it, felt, rng):
                 continue
             for px, py in line:
                 occ[min(gh - 1, int(py / cell)), min(gw - 1, int(px / cell))] = True
-            _hatch_line(cv, it, felt, rng, line[::max(1, len(line) // 24)] + [line[-1]], size, cols, w, regular)
+            _hatch_line(cv, it, felt, rng, line[::max(1, len(line) // 24)] + [line[-1]], size, cols, w, regular, pw)
             n += 1
             if n > it["max_strokes"]:
                 return
@@ -2017,6 +2210,9 @@ if __name__ == "__main__":
             kind = intent_kind(it)
             if kind not in INTENT:
                 sys.exit(f"Unknown intention '{kind}'. Intentions: {', '.join(INTENT)}")
+            hd = getattr(cv.medium, "hand_defaults", None)     # a medium's defaults for this intention (explicit keys win)
+            if hd is not None and not legacy(cv):
+                it = dict(hd(it, kind) or {}, **it)
             role = infer_role(cv, it, kind)
             pre = cv.col.copy()
             INTENT[kind](cv, dict(it, _role=role) if role else it, felt, rng)

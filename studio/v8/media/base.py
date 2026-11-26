@@ -94,6 +94,10 @@ class Medium:
         the same name, then its default). Raise SystemExit with a clear reason when the medium can't do it."""
         return NotImplemented
 
+    # hand_defaults(it, kind) -> dict may be defined: defaults the core merges under an intention before it runs
+    # (the intention's own keys win), e.g. {"articulation": "plain", "role_scale": False} for tools calibrated on the
+    # plain stroke (ink's line tools). A tool may also set `.wave = 0` to opt out of the core's slow pressure wave.
+
     # finish_check(cv) -> (lines, flags) may be defined by a medium for `report finish` (docs/FINISHING.md);
     # without it the core runs its own default checks.
 

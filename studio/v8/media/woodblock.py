@@ -27,6 +27,16 @@ from PIL import Image, ImageDraw, ImageFont
 from .base import Medium, hx, pigment_from_hex, km_layer
 
 _CACHE = {}
+# The key line (docs/calibration/woodblock.md, "Key line": public-domain Met ukiyo-e figure and landscape prints, their
+# widths along lines; the tool measured on its key film): width = size/2 x weight x (KEY_MIN + (1.06 - KEY_MIN) p^KEY_EXP)
+# x a slow swell.
+KEY_MIN, KEY_EXP = 0.28, 1.0     # pressure response (unchanged from before; eye)
+KEY_RHYTHM = 0.5                 # amplitude of the along-line swell (data: width CV along key lines)
+KEY_WAVE = (10.0, 18.0)          # its wavelength, in brush sizes (eye)
+PX_PER_MM = 4.0                  # the canvas's scale unless `new --px-per-mm` says otherwise (1200 x 1600 = a 30 x 40 cm sheet)
+HAIR_SPACING_MM = 0.65           # centre-to-centre spacing of the hair strands (data, weak: 0.61-0.79 mm on three hair crops)
+KEY_UNIFORM = 1.6                # `report finish` flags a key line whose widest tenth / median is below this (judgement)
+KEY_WEIGHT = 0.4                 # spread (sd of log) of the weight from stroke to stroke (data: widest tenth / median)
 
 
 def _norm(a):
@@ -97,8 +107,8 @@ def _region(reg, W, H):
 
 
 def _font(px):
-    for f in ("/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc",
-              "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf"):
+    # Latin letters only: Teodor's own mark, never imitation Japanese or Chinese script (the brief forbids fake seals)
+    for f in ("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
         if os.path.exists(f):
             try:
                 return ImageFont.truetype(f, px)
@@ -123,7 +133,7 @@ class Cut:
         self.step = 1.0
         self.speedfx = 0.0
         self.vee = kind == "gouge" and it.get("cut", "v" if size < 14 else "u") == "v"
-        self.liner = kind == "key" or self.vee
+        self.liner = self.vee     # the key line's ends are the core's ordinary landing and lift (data: end ratio)
         reg = float(it.get("registration", 1.0))
         if kind in ("block", "bokashi"):
             a = rng.uniform(0, 2 * math.pi)
@@ -132,18 +142,45 @@ class Cut:
         else:
             self.off = (0, 0)
         self.goff = (int(rng.integers(-60, 61)), int(rng.integers(-60, 61)))
+        if kind == "key":
+            # the carved brush line (docs/calibration/woodblock.md, "Key line"): a slow swell along the line (two
+            # incommensurate waves, KEY_RHYTHM), and, with "lines": n, a bundle of n fine parallel lines (hair, kewari)
+            # `spacing` px apart that gather where the pressure is light, each line ending at its own point
+            self.ph = rng.uniform(0, 2 * math.pi, 2)
+            # each stroke of the brush drawing has its own weight (some pressed, some light): lognormal (KEY_WEIGHT)
+            ws = float(it.get("weight_spread", KEY_WEIGHT * (0.5 if int(it.get("lines", 1)) > 1 else 1.0)))   # a hair bundle varies less
+            self.wt = float(np.exp(np.clip(rng.normal(0, ws), -2.5, 2.5)))
+            self.fq = 2 * math.pi / (max(size, 3.0) * rng.uniform(KEY_WAVE[0], KEY_WAVE[1]) * np.array([1.0, 0.43]))
+            n = max(1, int(it.get("lines", 1)))
+            self.nl = n
+            if n > 1:
+                self.loff = (np.arange(n) - (n - 1) / 2) + rng.normal(0, 0.12, n)      # in units of the spacing
+                self.lw = np.clip(rng.lognormal(0, 0.25, n), 0.6, 1.6)
+                self.lcut = rng.uniform(0.12, 0.5, n)      # pressure below which each strand has ended (staggered ends)
+                self.lph = rng.uniform(0, 2 * math.pi, n)
 
     def dab(self, cv, x, y, ang, press, rscale=1.0):
         if self.cov is None:
             self.cov = np.zeros((cv.H, cv.W), np.float32)
+            if self.kind == "key":
+                ppm = float(cv.meta.get("px_per_mm", PX_PER_MM))
+                if "width_mm" in self.it:          # the line's width in mm at the print's scale
+                    self.size = float(self.it["width_mm"]) * ppm
+                if self.nl > 1:
+                    self.loff = self.loff * float(self.it.get("spacing", HAIR_SPACING_MM * ppm))
             if self.kind == "bokashi":
                 self.arc = []        # the path (x, y, distance along it): the wipe runs along the stroke
             self.med._pending = (self, cv)
         r = max(0.6, self.size / 2 * rscale)
         p = min(press, 1.2)
         if self.kind == "key":
-            r *= 0.28 + 0.78 * p
+            a = self.dist + (self.step if self.n else 0.0)
+            r *= self.wt * (KEY_MIN + (1.06 - KEY_MIN) * p ** KEY_EXP) * (1 + KEY_RHYTHM * 0.7 * (math.sin(a * self.fq[0] + self.ph[0])
+                                                                              + 0.6 * math.sin(a * self.fq[1] + self.ph[1])))
+            r = max(r, 0.55)          # a carved line thins but does not break into dashes
             soft = 0.55
+            if self.nl > 1:
+                return self._strands(cv, x, y, ang, p, r, soft)
         elif self.kind == "gouge":
             r *= min(1.0, 1.15 * p ** 1.4) if self.vee else min(1.0, 0.35 + 0.9 * p)
             soft = 2.2
@@ -169,6 +206,35 @@ class Cut:
         b = self.bb
         b[0], b[1], b[2], b[3] = min(b[0], y0), min(b[1], x0), max(b[2], y1), max(b[3], x1)
 
+    def _strands(self, cv, x, y, ang, p, r, soft):
+        """Hair as the carver cuts it: many fine parallel lines along the stroke, gathering toward its tapers."""
+        if self.cov is None:
+            return
+        self.dist += self.step if self.n else 0.0
+        self.psum += p; self.n += 1
+        nx, ny = -math.sin(ang), math.cos(ang)
+        gather = 0.35 + 0.65 * min(1.0, p)
+        for k in range(self.nl):
+            if p < self.lcut[k]:
+                continue
+            rk = max(0.5, r * self.lw[k] * (1 + 0.15 * math.sin(self.dist * self.fq[0] * 1.7 + self.lph[k])))
+            o = self.loff[k] * gather
+            cx, cy = x + nx * o, y + ny * o
+            R = int(math.ceil(rk + 2 * soft)) + 1
+            x0, x1 = max(0, int(cx) - R), min(cv.W, int(cx) + R + 1)
+            y0, y1 = max(0, int(cy) - R), min(cv.H, int(cy) + R + 1)
+            if x0 >= x1 or y0 >= y1:
+                continue
+            yy, xx = np.ogrid[y0:y1, x0:x1]
+            d = np.sqrt((xx - cx) ** 2 + (yy - cy) ** 2, dtype=np.float32)
+            m = np.clip(0.5 + (rk - d) / (2 * soft), 0, 1)
+            if cv.clip is not None:
+                m = m * cv.clip[y0:y1, x0:x1]
+            c = self.cov[y0:y1, x0:x1]
+            np.maximum(c, m, out=c)
+            b = self.bb
+            b[0], b[1], b[2], b[3] = min(b[0], y0), min(b[1], x0), max(b[2], y1), max(b[3], x1)
+
 
 class Woodblock(Medium):
     name = "woodblock"
@@ -179,7 +245,7 @@ class Woodblock(Medium):
              "block": "colour block: the stroke's area is carved and printed as a flat, slightly uneven transparent film with wood grain, baren mottle, edge pooling and a small registration slip",
              "bokashi": "graded block: colour wiped into water, full where the stroke starts and fading to the paper where it ends (\"fade\": start|end|both)",
              "gouge": "woodcut gouge: cuts white out of a black block; V-gouge wedges (\"cut\": \"v\", default under size 14) or U-gouge channels (\"u\"), splintery along the grain"}
-    finishes = {"seal": "print a red seal block (cinnabar, carved text in white): params text, at (br|bl|tr|tl or [x, y]), size, color",
+    finishes = {"seal": "print Teodor's mark as a block: a red seal with TEO/DOR cut out in white (Latin letters only; params text, at br|bl|tr|tl|[x, y], size, color), or {\"mark\": \"signature\"}: his signature carved in the keyblock",
                 "impression": "the final pressing: printed areas sink slightly into the damp paper; with a region, blind embossing (karazuri) raises it without ink"}
 
     def __init__(self):
@@ -325,12 +391,16 @@ class Woodblock(Medium):
     GRAIN, GRAIN_COARSE, MOTTLE, POOL, FIBRE, PAPER_K = 0.3, 0.38, 0.55, 0.45, 0.5, 0.22
     BLOCK_DE = 8.0       # by eye: two colours closer than this are mixed from the same inks
     TOLERANCE = 12.0     # by eye: colour distance in the schema that the carver treats as the same area
+    FLAT_DE = 3.0        # by eye: seed pixels must lie inside an area of the schema, not on its anti-aliased edge
     REGION_MAX = 1600    # px: the largest half-window searched for the area (a speed bound for very large canvases)
 
     def _ref_lab(self, cv):
         if getattr(self, "_rlk", None) is not cv.ref:
             r = np.stack([gaussian_filter(cv.ref[..., i], 1.0) for i in range(3)], -1)
             self._rlk, self._rl = cv.ref, _lab(r)
+            # interior pixels of the schema's areas (no anti-aliased boundary colours): Lab gradient < FLAT_DE per px
+            g = sum(np.hypot(np.gradient(self._rl[..., i], axis=0), np.gradient(self._rl[..., i], axis=1)) ** 2 for i in range(3))
+            self._flat = np.sqrt(g) < self.FLAT_DE
         return self._rl
 
     def _find_block(self, cv, color):
@@ -350,23 +420,47 @@ class Woodblock(Medium):
         if mode != "region" or cv.ref is None:
             return None
         rl = self._ref_lab(cv)
-        seedm = cov > 0.5
+        tol = float(it.get("tolerance", self.TOLERANCE))
+        # the seed: the pixels under the stroke that are not keyline, and of those the colour most of them share
+        # (a small area such as an ear is smaller than the brush: the stroke's median would mix it with its
+        # surround and the keyline, and find no area of that colour)
+        kf = (cv.keyf[y0:y1, x0:x1] < 0.5)
+        if (kf & self._flat[y0:y1, x0:x1] & (cov > 0.05)).sum() >= 2:
+            kf = kf & self._flat[y0:y1, x0:x1]
+        seedm = (cov > 0.5) & kf
         if seedm.sum() < 3:
+            seedm = (cov > 0.05) & kf
+        if seedm.sum() < 1:
+            self._miss(t, cov, y0, x0, "lies on the keyline")
             return None
+        # first choice: the pixels with the stroke's own colour (match samples it where the stroke starts; a painter
+        # names it); otherwise the colour most of the seed pixels share
+        want = np.linalg.norm(rl[y0:y1, x0:x1] - _lab(np.clip(t.color, 0, 1)), axis=-1) < tol * 0.5
+        if (seedm & want).sum() >= 2:
+            seedm = seedm & want
+        else:
+            labs = rl[y0:y1, x0:x1][seedm]
+            sub = labs[::max(1, len(labs) // 400)]
+            near = np.linalg.norm(sub[:, None, :] - sub[None, :, :], axis=-1) < tol * 0.5
+            mode = sub[int(np.argmax(near.sum(1)))]
+            seedm = seedm & (np.linalg.norm(rl[y0:y1, x0:x1] - mode, axis=-1) < tol * 0.5)
         seed_lab = np.median(rl[y0:y1, x0:x1][seedm], axis=0)
         # what the painter asked for beyond the schema (palette, colour shift) rides on the area's colour
         seed_rgb = np.median(cv.ref[y0:y1, x0:x1][seedm], axis=0)
         # only when the painter asked for it (palette or colour shift); match's own sampling noise is not a request
         shift = np.clip(t.color - seed_rgb, -0.25, 0.25) if (it.get("colors") or it.get("color_shift")) else np.zeros(3, np.float32)
-        bi = -1 if it.get("reprint") else self._find_block(cv, np.clip(seed_rgb + shift, 0, 1))
-        if bi >= 0:                     # already carved and printed here: nothing to do (cheap exit)
-            done = (cv.blk[y0:y1, x0:x1] == bi + 1) & (cv.blkc[y0:y1, x0:x1] > 0.5)
+        bi = self._find_block(cv, np.clip(seed_rgb + shift, 0, 1))
+        if bi >= 0:                     # already carved and printed here (in this pass, for a reprint): nothing to do
+            if it.get("reprint"):
+                pc = self._pass_cov(t, bi, cv, create=False)
+                done = (pc[y0:y1, x0:x1] > 0.5) if pc is not None else np.zeros_like(seedm)
+            else:
+                done = (cv.blk[y0:y1, x0:x1] == bi + 1) & (cv.blkc[y0:y1, x0:x1] > 0.5)
             if done[seedm].mean() > 0.8:
                 return "done"
         R = int(min(self.REGION_MAX, max(cv.H, cv.W)))
         cy, cx = (y0 + y1) // 2, (x0 + x1) // 2
         wy0, wy1, wx0, wx1 = max(0, cy - R), min(cv.H, cy + R), max(0, cx - R), min(cv.W, cx + R)
-        tol = float(it.get("tolerance", self.TOLERANCE))
         same = np.linalg.norm(rl[wy0:wy1, wx0:wx1] - seed_lab, axis=-1) < tol
         same &= cv.keyf[wy0:wy1, wx0:wx1] < 0.5
         if cv.clip is not None:
@@ -374,6 +468,7 @@ class Woodblock(Medium):
         seed = np.zeros_like(same)
         seed[y0 - wy0:y1 - wy0, x0 - wx0:x1 - wx0] = seedm
         if not (seed & same).any():
+            self._miss(t, cov, y0, x0, "found no area of its colour in the schema")
             return None
         lb, n = label(same)
         ids = np.unique(lb[seed & same])
@@ -401,8 +496,10 @@ class Woodblock(Medium):
         shape = gaussian_filter(cov, 0.7)
         shape = np.clip((shape - 0.5) * 2.5 + 0.5, 0, 1)
         blocks = cv.meta.setdefault("blocks", [])
-        bi = -1 if it.get("reprint") else self._find_block(cv, color)
-        if bi < 0 and carved is not None and not it.get("reprint"):
+        rp = it.get("reprint")
+        nimp = (1 if rp is True else max(0, int(rp))) if rp else 0     # extra impressions of the block
+        bi = self._find_block(cv, color)
+        if bi < 0 and carved is not None:
             # an area already carved and printed is that block, not a new one
             ids = cv.blk[y0:y1, x0:x1][(cov > 0.5) & (cv.blkc[y0:y1, x0:x1] > 0.5)].astype(int)
             if ids.size > 0.5 * max((cov > 0.5).sum(), 1):
@@ -412,6 +509,27 @@ class Woodblock(Medium):
         press = t.psum / max(t.n, 1)
         baren = 0.82 + 0.22 * min(press, 1.1)
         op = it.get("opacity", 0.3)
+        if nimp and bi >= 0:
+            # a reprint is the same carved plank inked and printed again: one more impression of the block per
+            # reprint intention, however many strokes (seeds) mark its areas. Every stroke of this intention adds
+            # only the area this pass has not printed yet.
+            b = blocks[bi]
+            pc = self._pass_cov(t, bi, cv)
+            prev = pc[y0:y1, x0:x1]
+            new = np.clip(shape - prev, 0, 1)
+            if new.max() < 0.05 or new.sum() < 4:
+                return
+            union = np.maximum(shape, prev)
+            color, off, g, op = np.asarray(b["c"], np.float32), tuple(b["off"]), tuple(b["g"]), b["op"]
+            dens = float(it["density"]) * baren if it.get("density") is not None else b["d"] * nimp
+            gstr = it.get("grain", self.GRAIN_COARSE if coarse else self.GRAIN)
+            x = self._impression(cv, union, y0, y1, x0, x1, g[0], g[1], dens, gstr, self.MOTTLE, coarse, t.rng, pool=self.POOL)
+            x = x * np.where(union > 1e-3, new / np.maximum(union, 1e-3), 0)
+            self._print(cv, x, y0, y1, x0, x1, off, color, op)
+            pc[y0:y1, x0:x1] = union
+            return
+        if nimp:
+            print("[woodblock] reprint: no block of this colour was printed yet, so this is its first impression")
         if bi >= 0:
             b = blocks[bi]
             same = (cv.blk[y0:y1, x0:x1] == bi + 1)
@@ -438,6 +556,33 @@ class Woodblock(Medium):
         keep = sub_b == bi + 1
         sub_c[:] = np.where(upd, np.where(keep, np.maximum(sub_c, union), union), sub_c)
         sub_b[upd] = bi + 1
+
+    def _pass_cov(self, t, bi, cv, create=True):
+        """The area of block bi printed in the current reprint pass. A pass is one intention: the strokes of one
+        intention share its random generator (t.rng), so a new generator starts a new pass; the episode's end
+        closes it."""
+        rp = getattr(self, "_rp", None)
+        if rp is None or rp["rng"] is not t.rng:
+            if not create:
+                return None
+            rp = self._rp = {"rng": t.rng, "cov": {}}
+        if bi not in rp["cov"]:
+            if not create:
+                return None
+            rp["cov"][bi] = np.zeros((cv.H, cv.W), np.float32)
+        return rp["cov"][bi]
+
+    def _miss(self, t, cov, y0, x0, why):
+        ys, xs = np.nonzero(cov > 0.05)
+        at = (int(x0 + xs.mean()), int(y0 + ys.mean())) if len(xs) else (x0, y0)
+        self.__dict__.setdefault("_misses", []).append((at, "#%02x%02x%02x" % tuple(int(v * 255) for v in np.clip(t.color, 0, 1)), why))
+
+    def _report_misses(self):
+        ms = self.__dict__.pop("_misses", [])
+        if ms:
+            show = "; ".join(f"({x}, {y}) {c} {w}" for (x, y), c, w in ms[:8]) + (f"; and {len(ms) - 8} more" if len(ms) > 8 else "")
+            print(f"[woodblock] {len(ms)} block seed(s) carved the stroke's own area instead of a schema area: {show}. "
+                  "Put the stroke inside the area it means (off the keyline), or carve it with \"carve\": \"stroke\".")
 
     def _aim(self, cv, shape, y0, y1, x0, x1, off, color, op, baren):
         """The printer mixes the ink for the colour the artist asked for: choose the film thickness
@@ -503,6 +648,8 @@ class Woodblock(Medium):
     # --- time: water-based colour on damp paper; nothing flows once printed
     def episode_end(self, cv):
         self.flush()
+        self._rp = None
+        self._report_misses()
 
     def dry(self, cv, amount):
         self.flush()
@@ -520,6 +667,7 @@ class Woodblock(Medium):
 
     # --- revision: a print can't be taken back
     glaze_role = "body"
+    first_role = "body"          # every colour block is body colour, printed once (ukiyo-e: drawing, body, contour)
 
     def revise(self, cv, op, mask, it, felt, rng, core):
         raise SystemExit(f"woodblock can't {op}: a printed impression is in the paper's fibres and the inks are "
@@ -527,10 +675,33 @@ class Woodblock(Medium):
                          "block: recarve it (a new schema version) and print the corrected block, or start a new impression.")
 
     def finish_check(self, cv):
+        """Is the print finished (docs/FINISHING.md "Woodblock print": complete when the last block is printed; the
+        signature and seal are blocks)? Signed or sealed; for ukiyo-e on washi, a key line whose width varies like a
+        carved brush line: the widest tenth of its width over the median, measured on the key film along its medial
+        line (references 2.6-2.7 on Met prints, docs/calibration/woodblock.md; a single even wire reads as a vector
+        drawing: flagged below 1.6, a judgement)."""
+        from scipy.ndimage import distance_transform_edt, maximum_filter
+        self.flush()
         ops = [f["op"] for f in cv.meta.get("finishes", [])]
-        lines, flags = ["woodblock: " + (", ".join(ops) or "no finishing steps")], []
-        if "seal" not in ops and not cv.meta.get("signed"):
-            flags.append("no seal or signature: a print is signed with a seal block (finish seal or sign)")
+        nb = len(cv.meta.get("blocks", []))
+        lines, flags = [f"woodblock: {nb} colour blocks; " + (", ".join(ops) or "no finishing steps")
+                        + f"; signed: {cv.meta.get('signed') or 'no'}"], []
+        if not cv.meta.get("signed") and "seal" not in ops:
+            flags.append("no seal or signature: a print is signed in its blocks (finish seal, or sign: the signature cut in the keyblock)")
+        key = cv.keyf > 0.5
+        if cv.meta.get("support") != "coarse" and key.mean() > 0.002:
+            dt = distance_transform_edt(key)
+            ridge = key & (dt >= maximum_filter(dt, 3) - 0.75) & (dt >= 1)
+            w = 2 * dt[ridge] - 1
+            if w.size > 50:
+                ratio = float(np.percentile(w, 90) / max(np.median(w), 1e-6))
+                ppm = float(cv.meta.get("px_per_mm", PX_PER_MM))
+                lines.append(f"key line: median {np.median(w) / ppm:.2f} mm, widest tenth / median {ratio:.1f} (Met prints 2.6-2.7)")
+                if ratio < KEY_UNIFORM:
+                    flags.append(f"key line nearly uniform (widest tenth / median {ratio:.1f}): ukiyo-e key lines swell and taper, finer on "
+                                 "faces and hands, heavier on outer contours and drapery; one even wire reads as a flat vector drawing")
+        elif cv.meta.get("support") != "coarse":
+            flags.append("no key line printed (the keyblock carries the drawing in ukiyo-e)")
         return lines, flags
 
     # --- finishing: nothing beyond the impression
@@ -548,7 +719,16 @@ class Woodblock(Medium):
         return super().finish(cv, op, params)
 
     def _seal(self, cv, p):
-        s = int(p.get("size", max(28, min(cv.W, cv.H) // 18)))
+        """Teodor's own mark printed as a block: a red seal with TEO / DOR cut out in white (Latin letters; no imitation
+        Japanese or Chinese script, which the brief forbids), or ("mark": "signature") his signature carved in the
+        keyblock. The worn border and uneven stamp are eye."""
+        text = str(p.get("text", "TEO\nDOR"))
+        if any(ord(ch) > 0x2FF for ch in text):
+            raise SystemExit("woodblock can't cut that seal: Teodor's seal carries his own name in Latin letters (default "
+                             "TEO/DOR); imitation Japanese or Chinese characters are a fake seal, which the brief forbids.")
+        if p.get("mark") == "signature":
+            return self.sign(cv, p.get("at", "auto"), color=p.get("color"))
+        s = int(p.get("size", max(28, min(cv.W, cv.H) // 16)))
         at = p.get("at", "br")
         mg = int(max(cv.W, cv.H) * 0.035)
         if isinstance(at, (list, tuple)):
@@ -557,23 +737,21 @@ class Woodblock(Medium):
             x0 = mg if "l" in at else cv.W - mg - s
             y0 = mg if "t" in at else cv.H - mg - s
         x0, y0 = max(0, min(cv.W - s, x0)), max(0, min(cv.H - s, y0))
-        text = str(p.get("text", "T"))
-        im = Image.new("L", (s, s), 0)
+        S = s * 4
+        im = Image.new("L", (S, S), 0)
         d = ImageDraw.Draw(im)
-        rr = max(2, s // 10)
-        d.rounded_rectangle([0, 0, s - 1, s - 1], radius=rr, fill=255)
-        f = _font(int(s * (0.72 if len(text) == 1 else 0.82 / math.sqrt(len(text)))))
-        if len(text) <= 2:
-            bb = d.textbbox((0, 0), text, font=f)
-            d.text(((s - (bb[2] - bb[0])) / 2 - bb[0], (s - (bb[3] - bb[1])) / 2 - bb[1]), text, font=f, fill=0)
-        else:  # two columns, read top-right first like a Japanese seal
-            half = (len(text) + 1) // 2
-            for ci, col in enumerate((text[:half], text[half:])):
-                for k, ch in enumerate(col):
-                    bb = d.textbbox((0, 0), ch, font=f)
-                    cx = s * (0.72 if ci == 0 else 0.28) - (bb[2] - bb[0]) / 2 - bb[0]
-                    cy = s * (k + 0.5) / max(len(col), 1) - (bb[3] - bb[1]) / 2 - bb[1]
-                    d.text((cx, cy), ch, font=f, fill=0)
+        d.rounded_rectangle([0, 0, S - 1, S - 1], radius=max(2, S // 10), fill=255)
+        lines = [ln for ln in text.split("\n") if ln] or ["T"]
+        lh = S * 0.8 / len(lines)
+        f = _font(int(lh * 0.9))
+        for k, ln in enumerate(lines):
+            g = Image.new("L", (S, S), 0)
+            gd = ImageDraw.Draw(g)
+            bb = gd.textbbox((0, 0), ln, font=f)
+            gd.text((-bb[0], -bb[1]), ln, font=f, fill=255)
+            g = g.crop((0, 0, max(1, bb[2] - bb[0]), max(1, bb[3] - bb[1]))).resize((int(S * 0.8), int(lh * 0.86)))
+            im.paste(0, (int(S * 0.1), int(S * 0.1 + k * lh)), g)        # the letters are cut away: white in red
+        im = im.resize((s, s), Image.LANCZOS)
         shape = np.array(im, np.float32) / 255
         rng = np.random.default_rng(len(text) * 7 + s)
         # a worn seal: chipped border and an uneven stamp
@@ -583,7 +761,45 @@ class Woodblock(Medium):
         coarse = cv.meta.get("support") == "coarse"
         x = self._impression(cv, shape, y0, y0 + s, x0, x0 + s, 3, -5, 1.7, 0.12, 0.35, coarse, rng, pool=0.2)
         self._print(cv, x, y0, y0 + s, x0, x0 + s, (0, 0), hx(p.get("color", "#b8322a")), 0.55)
+        cv.meta["signed"] = cv.meta.get("signed") or "seal"     # the seal block is the print's signature (FINISHING.md)
 
+    def sign(self, cv, corner="auto", color=None):
+        """The signature carved in the keyblock and printed with it: Teodor's handwritten 'Teodor' (signature.GLYPH)
+        cut as a key line, in sumi unless a colour is given. Called by the core's `sign` command and by
+        `finish seal {"mark": "signature"}`."""
+        self.flush()
+        try:
+            from signature import GLYPH, _catmull
+        except ImportError:
+            sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            from signature import GLYPH, _catmull
+        sw = max(64, int(cv.W * 0.12)); sh = int(sw * 0.72)
+        mx, my = int(cv.W * 0.035), int(cv.H * 0.03)
+        spots = {"br": (cv.W - mx - sw, cv.H - my - sh), "bl": (mx, cv.H - my - sh),
+                 "tr": (cv.W - mx - sw, my), "tl": (mx, my)}
+        if corner not in spots:
+            # the calmer of the bottom corners (the least printed)
+            corner = min(("br", "bl"), key=lambda c: float(cv.inked[spots[c][1]:spots[c][1] + sh, spots[c][0]:spots[c][0] + sw].std()))
+        ox, oy = spots[corner]
+        cov = np.zeros((cv.H, cv.W), np.float32)
+        width = max(1.0, sw * 0.02)
+        im = Image.new("L", (cv.W, cv.H), 0)
+        d = ImageDraw.Draw(im)
+        for stroke in GLYPH:
+            path = _catmull([tuple(q) for q in np.array(stroke, np.float32)], n=14)
+            for a, b in zip(path[:-1], path[1:]):
+                w = width * (0.45 + 0.75 * (a[2] + b[2]) / 2)
+                d.line([(ox + a[0] * sw, oy + a[1] * sh), (ox + b[0] * sw, oy + b[1] * sh)], fill=255, width=max(1, int(round(w))))
+                r = w / 2
+                d.ellipse([ox + b[0] * sw - r, oy + b[1] * sh - r, ox + b[0] * sw + r, oy + b[1] * sh + r], fill=255)
+        cov = gaussian_filter(np.asarray(im, np.float32) / 255, 0.6)
+        y0, y1, x0, x1 = max(0, oy - 4), min(cv.H, oy + sh + 4), max(0, ox - 4), min(cv.W, ox + sw + 4)
+        shape = np.clip((cov[y0:y1, x0:x1] - 0.5) * 2.5 + 0.5, 0, 1)
+        coarse = cv.meta.get("support") == "coarse"
+        x = self._impression(cv, shape, y0, y1, x0, x1, 0, 0, 2.4, 0.10, 0.12, coarse, np.random.default_rng(7), pool=0.12)
+        self._print(cv, x, y0, y1, x0, x1, (0, 0), hx(color or "#1b1a1c"), 0.6)
+        cv.keyf[y0:y1, x0:x1] = np.maximum(cv.keyf[y0:y1, x0:x1], shape)
+        cv.meta["signed"] = cv.meta.get("signed") or "signature"
 
 class _Nothing:
     """Prints cannot be blended or smudged: the colours lie where the blocks put them."""

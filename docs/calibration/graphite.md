@@ -45,6 +45,23 @@ No published measurement of darkness per grade was found (searched: manufacturer
 ## What remains uncalibrated
 
 - The grade ramp between the measured ends (by eye, see above); the sheen strength and its raking light (a diffuse museum photograph cannot show gloss); burnish threshold; flow, reach, loose and stain per grade; blender, eraser and stylus rates; bristol's capacity.
-- Grain contrast in hatching is still about 1.5x the references (8.0 vs 5.2 L*): lines too even, paper between them too clean (no graphite haze).
+- Grain contrast in hatching was about 1.5x the references (8.0 vs 5.2 L*): see "Graphite haze" below (Nov 26, 2026).
 - The Grandville-schema drawing leaves much more paper (0.57 vs 0.20): that is the core's `match` stopping strokes early and the hatch levels used in the test, not the pencil.
 - Core `hatch` seams and coarse defaults: see `charcoal.md`. For graphite at 5 px/mm the data say spacing 4-5 px, size 1.5-2 px.
+
+## Graphite haze and the v8 hand (Nov 26, 2026)
+
+Graphite shares charcoal's dust model (`docs/calibration/charcoal.md`, "Charcoal dust": the line keeps `1 - dust` of its mass and the rest settles around it, sigma 0.5 mm and 2.6 mm). The sources say graphite "produces far less dust" than charcoal [S13], yet the references show a haze around graphite marks too (the paper's density by distance from the nearest mark at 5 px/mm, above the far floor, relative to the marks' density at 0.6-1.2 mm: Delacroix 355649 about 0.04, Bendemann 384261 0.04-0.16, Grandville noisy), probably from handling as much as from the lead. `Graphite.DUST_K = 0.5`, times each grade's `loose` (2H 0.08 of a stroke, 2B 0.14, 8B 0.24): chosen so that the dark cross-hatch's grain comes near the references; the per-grade shares follow `loose` (softer grades smudge more: the sources), by eye.
+
+| statistic (5 px/mm, photo blur) | reference | before | after |
+|---|---|---|---|
+| dark cross-hatch, 4B, 1 mm spacing, three layers: grain in tone, L* | 5.2 (3.7-5.7) | 8.7 | **6.3** |
+| same: hard-edge share | 0.05-0.16 | 0.39 | 0.38 |
+| same: paper in marks | 0-0.16 | 0.05 | 0.06 |
+| same: D50 | 0.53 (Grandville dense) | 0.52 | 0.39 |
+| sparse 2B lines: haze at 0.6-1.2 mm above the far floor, relative to the lines' density | 0.04-0.16 | 0.010 | 0.016 (graphite stays far less hazy than the references: the haze is set by the hatch grain, not by this profile) |
+| dense 8B (three cross layers at 0.4 mm), darkest 0.1%, L* | 32.5-34.7 | 34.9 | 35.3 |
+| Grandville-schema drawing (1 seed): grain / hard / paper share / coherence | 5.2 / 0.16 / 0.17 / 0.56 | 7.9 / 0.35 / 0.57 / 0.44 (v8 hand) | 6.8 / 0.14 / 0.53 / 0.34 |
+
+The dense 8B is now 0.6 L* above the measured range (the darkest pixels lose some of their density to the haze); left as is, inside the measurement's own spread. The dark hatch lost some density (D50 0.52 -> 0.39). The v8 hand's role sizes are switched off for graphite as for charcoal (numbers in charcoal.md, "The v8 hand"). The Grandville drawing still leaves far too much paper and its coherence fell: both are the core `match`'s (short marks, stopping early), as before.
+

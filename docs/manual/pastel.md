@@ -22,7 +22,14 @@
 
 **Hatching** (`"type": "hatch"`). Give `colors`: pastel is not monochrome, and the core's default is a dark grey. The sheet is stated as 1200 px = 48 cm (2.5 px/mm); Degas's hatched and broken strokes are 4-6 mm wide, laid side by side: with `hard_tip`, `"size": 8`–`12`, `"spacing": 10`–`14`.
 
-**Glaze.** A light veil of colour laid with the side of a stick and partly rubbed in: broken over the peaks, with a soft film between. It does not tint like a transparent glaze. Use it for a coloured underlayer or to cool or warm a passage.
+**Glaze.** A light veil of colour laid with the side of a stick and partly rubbed in: broken over the peaks, with a soft film between. It does not tint like a transparent glaze. Use it for a coloured underlayer or to cool or warm a passage. It is recorded as `scumble` (a broken layer over what is beneath); tag a coloured underlayer on bare paper `"role": "underpainting"`.
+
+**The hand.** Sticks keep the widths you ask for: the v8 hand's articulations, pressure wave and drift apply, its role sizes don't (as for charcoal and graphite; docs/calibration/pastel.md). `"role_scale": true` brings them back.
+
+**Revision** (`scrape`, `wipe`, `paintout`; docs/MANUAL.md):
+- `scrape`: a blade scrapes the built-up pastel off the tooth (loose dust first, then much of the bound) and cuts through oil pastel to the paper. Because each pixel holds one apparent colour, the passage goes back toward the paper, not to the layer beneath.
+- `wipe`: the chamois knocks the passage back, then the kneaded eraser lifts it.
+- `paintout`: pastel covers: the colour the surroundings have there (or `color`) is laid over the passage as a dust veil, `passes` times (default 2, `opacity` 0.9). On a full tooth little takes, and the studio says so: fix the region first (`finish fixative` with `kind: workable` and a `region`) to restore tooth.
 
 **Time.** Nothing dries, and `dry` does nothing.
 
@@ -31,9 +38,11 @@
 - `accents` `{"strokes": [{"pts": [...], "color": "#f4ecd8", "size": 8}], "n": 6}`: the final, brightest touches in soft pastel, laid after any fixative and left unfixed. It refuses more than `n` strokes.
 - Framing under glass is presentation only; there is no op for it.
 
+`report finish` checks: the last bright touches (`finish accents`) come after the last fixative, no final fixative over the whole sheet (Degas fixed selected areas only), and how much all fixative passes darkened the picture against one full pass of the studio's model (more than 1.5 passes' worth is flagged; no measurement exists). Thresholds are judgements.
+
 **Order of work.** Choose the paper tone. Lay big masses with `hard_side`, or with `glaze`. Build from dark to light and from hard to soft, using a workable `fixative` in a region where the tooth is full. Rub only where you want it soft. Finish with `soft_tip` lights and then `finish accents`.
 
-**Limits.** Each pixel holds one apparent colour, so lifting the top layer reveals the paper rather than the layer below it. Oil pastel is simplified: no solvent wash, no warmth or blending by heat, and its sheen is faint. The tooth is a texture (pixel-scale grain, honeycomb cells of 0.8 mm, laid lines), not fibres.
+**Limits.** Each pixel holds one apparent colour, so lifting the top layer reveals the paper rather than the layer below it. Colours laid over each other mix optically (side by side), and rubbed colours average linearly; a spectral model for rubbed pastel was not adopted because no measured pastel blends exist to validate it (docs/calibration/pastel.md). Loose pastel dust does not fall or haze around strokes. Oil pastel is simplified: no solvent wash, no warmth or blending by heat, and its sheen is faint. The tooth is a texture (pixel-scale grain, honeycomb cells of 0.8 mm, laid lines), not fibres.
 
 ## Calibration
 

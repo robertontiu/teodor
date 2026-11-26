@@ -17,11 +17,49 @@ Both keep cv.col as the apparent colour. Extra state:
   tempera: gold (visible gold leaf, 0..1), burnish (0..1), punch (punch dimples, 0..1),
            film (accumulated paint thickness, for the satin relief of the hatching), sheen (0..1)
 """
-import math
+import math, os
 import numpy as np
 from scipy.ndimage import gaussian_filter, zoom, distance_transform_edt, sobel
 from PIL import Image, ImageDraw
 from .base import Medium, kmix, hx, noise_field, pigment_from_hex, km_layer
+from . import spectral
+
+# Spectral mixing (docs/calibration/colour.md, section 6): gouache mixes wet paint, and tempera lays its films, in
+# pigment space with the measured palette, each medium with its own white and binder correction
+# (spectral.MEDIUM_PALETTE: gouache titanium white and gum arabic's S; tempera lead white and egg's S). Only the
+# pixels a dab touches are mixed (a windowed path). TEODOR_SPECTRAL=0 turns it off (base.kmix and RGB films, as before).
+SPECTRAL = os.environ.get("TEODOR_SPECTRAL", "1") != "0"
+SPECTRAL_MIN = 1e-3     # mix only where the share of the other paint exceeds this (as oil's MIX_MIN)
+# Tempera film thickness, in units of the measured 100 um drawdown, of one unit of the tools' `film`: 0.1 (10 um, so a
+# 0.55 hatch stroke lays 5.5 um). Fitted so that a stroke covers about as before over gesso, verdaccio, a dark and gold
+# (36 colour-substrate pairs: 0.08 and 0.1 tie at a median dE2000 of 9.7 from the old RGB film, which no fit removes
+# because the spectral paints differ; 0.1 keeps a test panel's mean L* within 1); thin, as tempera layers are, but the
+# number is a fit to the old look (tuned).
+TEMPERA_FILM = 0.1
+
+
+def _gouache_mix(a, c, t):
+    """kmix(a, c, t) for gouache: brush colour a (3,) with a fraction t (h, w) of the canvas colours c (h, w, 3),
+    spectral where t > SPECTRAL_MIN (titanium white palette, gum arabic's S), the brush colour elsewhere."""
+    if not SPECTRAL:
+        return kmix(a[None, None, :], c, t[..., None])
+    out = np.empty_like(c)
+    out[:] = a
+    m = t > SPECTRAL_MIN
+    if m.any():
+        out[m] = spectral.mix(a[None], c[m], t[m][:, None], pal=spectral.palette_for("gouache"))
+    return out
+
+
+def _tempera_film(cv, y0, y1, x0, x1, th, K, S, color=None):
+    """A tempera film of thickness th (the tools' units) over the window: spectral (lead white palette, egg's S)
+    when the paint's colour is known, else the RGB Kubelka-Munk film of K, S (an explicit `opacity_paint`)."""
+    if SPECTRAL and color is not None:
+        sl = (slice(y0, y1), slice(x0, x1))
+        spectral.mix_window(cv, sl, np.clip(th / 2, 0, 1), np.asarray(color, np.float32), thr=SPECTRAL_MIN / 2,
+                            wet=np.zeros(th.shape, np.float32), pal=spectral.palette_for("tempera"), film=2 * TEMPERA_FILM)
+    else:
+        cv.col[y0:y1, x0:x1] = km_layer(cv.col[y0:y1, x0:x1], K, S, th)
 
 BINDER = {"gouache": "gum arabic", "tempera": "egg tempera", "fresco": "fresco"}
 
@@ -171,7 +209,7 @@ class GouacheBrush:
             pk = min(0.3, self.pickup * (sw / ms) * step / max(self.size * 0.8, 1.0))
             self.color = self.color * (1 - pk) + under * pk
         wmob = np.clip(w * 0.7 * self.wetmix + (mob - w * 0.7).clip(0) * 0.35 * self.wetmix, 0, 0.6)
-        dep = kmix(self.color[None, None, :], c, wmob[..., None])
+        dep = _gouache_mix(self.color, c, wmob)
         cover = self.cover * min(1.0, self.paint * 1.5 + 0.35)
         t = np.clip(cover * delta / (1 - cover * cov + 1e-3), 0, 1)[..., None]
         cv.col[y0:y1, x0:x1] = c * (1 - t) + dep * t     # opaque paint hides what it covers (area, not mixing)
@@ -319,7 +357,7 @@ class Gouache(Medium):
 
 
 # =====================================================================================  EGG TEMPERA
-def tempera_line(cv, x, y, a, L, hw, dx, K, S, hide, rng, tex_break=0.0):
+def tempera_line(cv, x, y, a, L, hw, dx, K, S, hide, rng, tex_break=0.0, color=None):
     """One short hatched stroke: a thin film line from (x, y) along angle a, length L, half width hw,
     blunt where the brush lands and tapering where it flicks off. Dries instantly."""
     ca, sa = math.cos(a), math.sin(a)
@@ -341,7 +379,7 @@ def tempera_line(cv, x, y, a, L, hw, dx, K, S, hide, rng, tex_break=0.0):
     if m.max() <= 0.02:
         return
     th = dx * m
-    cv.col[y0:y1, x0:x1] = km_layer(cv.col[y0:y1, x0:x1], K, S, th)
+    _tempera_film(cv, y0, y1, x0, x1, th, K, S, color)
     cv.gold[y0:y1, x0:x1] *= np.exp(-hide * th)
     cv.film[y0:y1, x0:x1] += th
 
@@ -409,6 +447,7 @@ class TemperaHatch:
         # the line straddles the travel path
         sx, sy = x - math.cos(a) * L / 2 + rng.normal(0, 0.4), y - math.sin(a) * L / 2 + rng.normal(0, 0.4)
         K, S, hide = self.K, self.S, self.hide
+        col = self.color if self.opacity is None else None
         if self.sample:   # "blend" in tempera: hatch the in-between tone sampled from both sides
             R = int(L)
             x0, x1, y0, y1 = _patch(cv, x, y, R)
@@ -418,8 +457,9 @@ class TemperaHatch:
             col = np.clip(c.mean(0) + rng.normal(0, 0.01, 3), 0, 1)
             K, S, op = _tempera_pigment(col, self.opacity)
             hide = 0.8 + 2.0 * op
+            col = col if self.opacity is None else None
         tempera_line(cv, sx, sy, a, L, self.hw * (0.7 + 0.3 * min(press, 1.0)), self.film * min(1.0, 0.3 + press * 0.8),
-                     K, S, hide, rng, tex_break=min(0.6, fx * 0.8))
+                     K, S, hide, rng, tex_break=min(0.6, fx * 0.8), color=col)
 
 
 class TemperaBrush:
@@ -430,6 +470,7 @@ class TemperaBrush:
         self.kind, self.size, self.rng = kind, size, rng
         self.color = np.asarray(color, np.float32).copy()
         self.K, self.S, op = _tempera_pigment(self.color, opacity)
+        self.opacity = opacity
         self.hide = 0.8 + 2.0 * op
         self.film, self.gb = film, gild_burnish
         self.paint = 1.0
@@ -478,7 +519,7 @@ class TemperaBrush:
         if delta.max() <= 0.01:
             return
         th = self.film * delta
-        cv.col[y0:y1, x0:x1] = km_layer(cv.col[y0:y1, x0:x1], self.K, self.S, th)
+        _tempera_film(cv, y0, y1, x0, x1, th, self.K, self.S, self.color if self.opacity is None else None)
         cv.gold[y0:y1, x0:x1] *= np.exp(-self.hide * th)
         cv.film[y0:y1, x0:x1] += th
         self.cov[y0:y1, x0:x1] = np.maximum(cov, m)

@@ -34,7 +34,13 @@
 
 **Transfer.** `transfer [strength]` traces the schema's contours with a 2H pencil, lightly (as a hyperrealist grids or traces the outline): real pencil strokes on the tooth, which later tone covers. `strength` 0.3 gives a pale line.
 
-**Glaze.** A veil of graphite powder laid with the side of the lead and rubbed in, capped at the value of the colour you give. It's a quick way to lay a light general tone before hatching.
+**Glaze.** A veil of graphite powder laid with the side of the lead and rubbed in, capped at the value of the colour you give. It's a quick way to lay a light general tone before hatching. It is recorded as `glaze` (a unifying film, as docs/styles/graphite-hyperrealism.md maps it); the first marks on bare paper as `drawing`.
+
+**The hand.** Pencils keep the widths you ask for: the v8 hand's articulations, pressure wave and drift apply, its role sizes don't (they pushed graphite's marks away from the references: docs/calibration/charcoal.md, "The v8 hand"). `"role_scale": true` brings them back for one intention.
+
+**Haze.** Each grade sheds a little of what it lays as loose graphite around the line (2H about 8%, 2B 14%, 8B 24%), so hatching carries a faint haze between its lines, as real sheets do. Blenders spread it, erasers lift it.
+
+**Revision** (`scrape`, `wipe`, `paintout`; docs/MANUAL.md): `scrape` sweeps the hard eraser; `wipe` the kneaded eraser (graphite has little loose dust to knock back first); `paintout` erases the passage (kneaded, then hard eraser) and lays the surrounding tone again with `side` (or the `brush` you give): graphite can't cover a dark with a light. A ghost of the old marks stays, and a fixed passage is refused.
 
 **Time.** Nothing dries, and `dry` does nothing.
 
@@ -44,9 +50,11 @@
 - `clean` `{"margin": 30}` or `{"region": {...}}`: cleans the margins.
 - `accents` `{"strokes": [...], "n": 6, "tool": "pencil_8B"}`: the last darkest accents. It refuses more than `n` strokes.
 
+`report finish` checks: the `transfer` guide lines erased or covered (flagged when they still read along more than 15% of their length, darker than the tone around them by 3 L*), the sheen not overworked (more than 20% of the drawn area burnished to a strong shine reads as glare), the fixative's darkening against the studio's model, and smudges in margins the schema leaves bare. Thresholds are judgements.
+
 **Hyperrealism** (docs/styles/graphite-hyperrealism.md; the tested recipe and its numbers are in docs/calibration/graphite-hyperrealism.md):
 1. `new "#f7f6f2" 2400 3200 --support vellum`, a greyscale photograph or rendered scene as `ref`, `transfer 0.3`; indent white lines with `stylus` now.
-2. Tone in value bands, **darkest first**: one `hatch` per band, `"layers": [band]`, `"colors"` a little darker than the band (blending lightens a hatched band, because it averages the lines with the paper between them), `spacing` 3, a new `angle` per band, `clip: true` per part of the picture (wall, table, object...: a `poly` region; a part with a hole is one polygon with a slit to the hole). Grades: `carbon_pencil` below about 0.30 sRGB, `pencil` 8B to 0.37, `mech_05` 4B, 2B, HB, 2H toward the lights.
+2. Tone in value bands, **darkest first** (each band's pressure fades across its level, so the bands don't step: `feather`, docs/MANUAL.md): one `hatch` per band, `"layers": [band]`, `"colors"` a little darker than the band (blending lightens a hatched band, because it averages the lines with the paper between them), `spacing` 3, a new `angle` per band, `clip: true` per part of the picture (wall, table, object...: a `{"type": "segment", "at": [x, y]}` region cut from the schema around a point, holes included, or a `poly`). Grades: `carbon_pencil` below about 0.30 sRGB, `pencil` 8B to 0.37, `mech_05` 4B, 2B, HB, 2H toward the lights.
 3. Blend each part on its own: `hatch` with `"brush": "brush"`, `"value": 0`, `"layers": [1.0]`, `spacing` a third of the `size`, three angles, `clip: true`; a large brush (60-90 px) for out-of-focus passages, smaller on the subject.
 4. Look and correct, two or three rounds: `match` with `mech_05` (or `carbon_pencil` in the darks) `faithful: 1`, a falling `threshold` (0.06, 0.04, 0.03), `clip: true`, then the same masked blend, smaller each round. `report` and `look diff` between rounds.
 5. Lights: `match` with `kneaded` and `"seek": true` for soft lights, then `electric_eraser` or `precision_eraser` with `seek` for crisp ones; 2H over soft passages to fill their white flecks ("hard over soft").
@@ -56,9 +64,9 @@
 
 **Size and speed** (2 vCPU, Nov 2026; at 5 px/mm 2400 x 3200 is a 48 x 64 cm sheet): one empty episode (load, save, render) 0.7 s at 1200 x 1600 and 1.9 s at 2400 x 3200; a one-layer `hatch` with a 2 px pencil at 1 mm spacing over an eighth of the sheet 2.8 s and 10.9 s (it was 6.2 s and 26 s before the point's contacts were vectorised); a `stump` pass over the same area 6.7 s and 30 s. Time grows with the area. A full hyperrealist drawing at 2400 x 3200 took 70 minutes plus a 9-minute second sitting (calibration note); 1200 x 1600 is about four times faster. 3600 x 4800 runs, but every episode costs about 12 s before the first mark.
 
-**Limits for hyperrealism** (details in docs/calibration/graphite-hyperrealism.md): value bands laid with `hatch` step at their edges, and blending only softens the steps; graphite stops near L* 40 as an area and carbon near L* 32, far from a photograph's blacks; edges between two dark passages get lost; `match` leaves short marks that need blending.
+**Limits for hyperrealism** (details in docs/calibration/graphite-hyperrealism.md): value bands laid with `hatch` now fade into each other (feathered), but each band's grade and grain still show faintly after blending; graphite stops near L* 40 as an area and carbon near L* 32, far from a photograph's blacks; edges between two dark passages get lost; `match` leaves short marks that need blending.
 
-**Limits.** The shine is drawn into the image under one fixed raking light; there is no movable light. Lines thinner than about 2 px are soft ramps, not resolved into single flakes of graphite. There is no pencil wear (sharp vs blunt is just `size`). Hatched passages look a little cleaner and more contrasted than real ones (no graphite haze between the lines).
+**Limits.** The shine is drawn into the image under one fixed raking light; there is no movable light. Lines thinner than about 2 px are soft ramps, not resolved into single flakes of graphite. There is no pencil wear (sharp vs blunt is just `size`). Hatched passages are still a little more contrasted than real ones (grain 6.3 against 5.2 L* in the references; it was 8.7).
 
 ## Calibration
 

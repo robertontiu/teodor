@@ -65,3 +65,34 @@ Time for the scene (600 `match` strokes, bokashi, keylines, render) was 26 s bef
 ## Notes
 
 Flat crops (x, y, w, h at full resolution): 37224 (986,604,320,320) and (986,2056,…); 56188 (616,2091); 57052 (614,305) and (614,2162); 55740 (1008,229); 57062 (989,146); 45301 (617,2140); 56212 (227,30); bare paper 45301 (70,1400,100,500). Scratch statistics: `mottle` = std of L* smoothed at 0.25 mm minus L* smoothed at 6 mm, in flat passages; `levels` = number of 6-unit Lab cells covering 90 % of the area.
+
+## Key line (Nov 26, 2026)
+
+Round 18's critic read the print as "a friendly editorial illustration", and the painter named the cause: one even black outline round everything. Ukiyo-e key lines are a brush drawing carved in the block: they swell and taper, are finer on faces and hands, heavier on outer contours and drapery, and hair is cut as many fine parallel lines (kewari).
+
+**References.** 10 crops from 7 public-domain Met figure prints (Utamaro: 54860, 45100, 54859, 55043, 51137; Eishi: 53657; at 9.9-10.9 px/mm from their catalogued heights): 4 faces, 1 hand, 4 hair passages, 1 neck and collar contour; plus the 7 landscape references above. Solid black masses (hair masses, dark fields) were painted out to paper first (coverage over 0.5 surviving an opening of 0.6 mm), so the rulers see lines only. Two rulers: `tools/calibrate_media.py` `lines()` (equivalent width from integrated coverage) and the `strokes` method (Otsu threshold, width at the medial ridge, plus the widest tenth and the free-end ratio).
+
+| | width, mm (lines / threshold) | widest tenth / median | width CV along lines | free-end ratio, lower quartile |
+|---|---|---|---|---|
+| faces (n = 4) | 0.29 / 0.14 | 2.0 / 2.9 | 0.35 / 0.40 | 0.74 / 0.94 |
+| hands and fine contours (n = 2) | 0.21-0.22 / 0.10-0.19 | 2.8-3.2 / 1.9-4.7 | 0.36-0.38 / 0.37-0.40 | 0.74-0.77 / 0.76-0.81 |
+| hair (n = 4) | 0.39 / 0.18; spacing 0.61-0.79 mm | 2.2 / 2.6 | 0.34 / 0.37 | 0.74 / 0.87 |
+| landscapes (n = 7) | 0.46 / 0.18 | 2.1 / 2.6 | 0.35 / 0.41 | 0.77 / 0.81 |
+
+The threshold widths sit at the photographs' one-pixel floor (0.1 mm) for the finest face lines, so the finest lines are 0.1 mm or less. The `lines()` widths include the paper's texture: on the studio's own washi a constant 2 px line reads 5.3 px with a CV of 0.29, so that ruler cannot resolve the tool's changes; the tool was measured on its key film (`keyf`, no paper texture), which is how the numbers below were taken.
+
+**The tool, before and after** (40 curved `key` strokes of one size, auto articulation, care 0.8; key film at 20 px/mm, three seeds):
+
+| | before | after | references |
+|---|---|---|---|
+| widest tenth / median | 1.32 | 1.97 | 2.0-2.7 |
+| width CV along lines | 0.28 | 0.33 | 0.35-0.40 |
+| free-end ratio, lower quartile | 0.47 | 0.72 | 0.74-0.84 |
+
+Changes in `Cut` (woodblock.py): a slow swell along the line (`KEY_RHYTHM` 0.5, two incommensurate waves of 10-18 sizes and 0.43 of that: amplitude from the CV, wavelength by eye); a weight per stroke (`KEY_WEIGHT`, lognormal sd 0.4: from the widest tenth; the rest of the references' spread is the artist's choice of size by part); the core's ordinary landing and lift instead of the liner's long point (the end ratio: the old 0.47 was a brush point, the prints' ends are blunter, as a cut line); no break into dashes at light pressure. New: `"width_mm"` (the canvas's `px_per_mm`), and `"lines"`/`"spacing"` for hair (default spacing 0.65 mm: weak data, three hair crops; strands gather where the pressure is light and end one by one: eye). `report finish` measures the printed key line's widest tenth over its median and flags an even wire (below 1.6, a judgement).
+
+## Reprints, seeds and the seal (Nov 26, 2026)
+
+- **Reprint**: before, `"reprint": true` made every stroke a new block and printed its whole carved area, so a `match` with 70 seeds printed 70 impressions (round 18: the cat's head went maroon). Now a reprint is one more impression of the existing block per intention (`"reprint": n` for n), each stroke adding only the area this impression has not printed. Test (a 160 px disc, then a reprint `match` of 200 seeds, then a reprint of 3 strokes): the disc's colour went (0.77, 0.55, 0.30) → (0.70, 0.39, 0.16) → (0.64, 0.31, 0.12), one impression each.
+- **Seeds**: the seed now ignores keyline pixels and the schema's anti-aliased edges (Lab gradient under 3 per px, eye), and takes the area of the stroke's own colour when the stroke touches it, else the colour most of it covers. Before, the median colour under a stroke bigger than a small area mixed it with its surround and found nothing (round 18's ears). Seeds that still find no area carve the stroke's shape and are reported at the episode's end with their position and colour.
+- **Seal**: the brief forbids fake seals and fake Japanese signatures (`docs/styles/ukiyo-e.md`), and the manual had suggested a seal in Japanese script. The seal is now Teodor's own mark, TEO / DOR in Latin letters cut out of a red block; non-Latin text is refused. `sign` (and `finish seal {"mark": "signature"}`) cuts his handwritten signature in the keyblock.

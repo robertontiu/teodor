@@ -81,3 +81,9 @@ The first version had `BITE_LAT` 0.0045 mm/min, a 0.2 mm needle, four hatch laye
 - **Darks:** both tests are darker than the target (darks 0.20 and 0.27 against 0.09). The schemas are dark prints, and the test hatching's levels were not tuned to the target.
 - **The etching test's hard-edge share at eyes' scale** is 0.10 against 0.17: plate tone and retroussage soften more than the references show. Use less tone for a crisp impression.
 - Not modelled: aquatint, mezzotint, soft-ground, the reversal by the press, foul biting, the plate's wear across an edition, embossing of the lines themselves, chine collé.
+
+## 6. The v8 hand and the plate tools (Nov 26, 2026)
+
+`strokes` patches with the burin (30 parallel lines, pressure 0.75, 10 px/mm on `plate_laid`, measured at 16 px/mm), two seeds: plain 0.252 mm, auto articulation 0.237 mm, explicit swell 0.249; widest tenth / median 1.43-1.49, CV 0.26-0.28, end ratio 0.34-0.36 in every case. The burin normalises pressure by its own 90th percentile and takes its square root, so the v8 articulations barely move it; the drift is in `match` and `free` through the role size (see `pen-and-ink-illustration.md` §6). The plate tools take the same opt-out as the pen (plain stroke, no role or focus size, no core wave): after it, plain and auto are identical (0.256 mm, CV 0.27).
+
+**Revision and finishing** (manual/ink.md): `scrape` on a plate takes the lines out of the metal (lighter print, `etch` and `bite` reduced, so a later bite doesn't restore them); `wipe` lays the plate wipe in that passage; `paintout` is refused. `report finish` checks the platemark, that the plate was wiped, and plate tone evenness: the median tone between the lines in a 4 × 4 grid of the plate, flagged when one cell holds 4× another's (eye).

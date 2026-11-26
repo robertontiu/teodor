@@ -42,3 +42,7 @@ Target: std about 2.7-2.8 (two crops), within the automatic crops' 2.5-5.5 at fu
 - **Paper share, hard-edge share, stroke widths**: properties of the compositions (design drawings with ink outlines), not of the medium.
 - **Drying shift** (`SHIFT`): no measurement found.
 - Rendered fields still show faint lighter seams between strokes at 4 % paper; the dark field's coherence (0.75) stays at the top of the reference range.
+
+## Spectral mixing (Nov 26, 2026)
+
+Wet mixing is now spectral (titanium-white palette, gum arabic S ×1.03 from FORS; `opaque._gouache_mix`), windowed to the pixels where the canvas paint's share exceeds 0.001. No gouache tint data exists to validate it; the carry-over checks, the look and speed (3× the old `match` time; median ΔE2000 0.4 to the old render) and the binder factor are in `colour.md`, section 6. `TEODOR_SPECTRAL=0` restores kmix.

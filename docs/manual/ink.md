@@ -54,6 +54,18 @@ Oil brush names are accepted and mapped: `round`, `filbert` and `liner` go to `b
 - `glaze` is an ink wash laid flat over a region: the colour gives the tone (or a light colour), and `opacity` scales it. On raw xuan its edge feathers and the tone mottles slightly. On sized paper and bristol its edge darkens a little.
 - Over **dry** ink, every new layer adds: the overlap shows darker. Into **wet** ink, the same ink mostly re-wets what is there, so repeated strokes of one tone build up slowly instead of doubling. Fibres saturate at about scorched-ink density.
 
+**The line tools and the v8 hand.** `nib`, `stipple`, `burin`, `needle` and `drypoint` were calibrated on the plain stroke: their width in mm comes from the nib or the cut, and their swell along the line from their own measured rhythm. So with these tools `match`, `free`, `strokes` and `model` default to `"articulation": "plain"`, no role or focus size scaling and no extra pressure wave (with the v8 defaults a crowquill `match` came out 20% too narrow: 0.31 mm against 0.39). Ask for an articulation (`"swell"` for a calligraphic contour) or `"role_scale": true` and you get it.
+
+## Revision: scrape, wipe, paintout
+
+Ink is a carbon film in the paper's fibres, so what can be taken back depends on the support:
+
+| | paper (xuan, silk, bristol, illustration board, laid paper) | plate supports (`plate_wove`, `plate_laid`) |
+|---|---|---|
+| `scrape` | a knife takes carbon off the top fibres: lighter, uneven, the fibres raised (the same as `finish scrape`) | the scraper and burnisher take the lines out of the metal: the passage prints lighter, and a later `bite` does not deepen it |
+| `wipe` | blotting lifts ink that is **still wet** (water > 0): much on sized paper and board, little on raw xuan, where the ink sinks in at once. Dry ink is refused with the reason: wipe in the same episode, or scrape. | the printer wipes that passage of the plate: plate tone, cleaner in the lights (`tone`, `clean_lights`, `retroussage`, `angle`, as `finish wipe`) |
+| `paintout` | **Chinese white** on bristol, illustration board and laid paper: a near-opaque matte white (`#f4f1ea` unless `color` is given) brushed over the passage, the pen draughtsman's correction over waterproof ink (Harper 1894; Maginnis 1898). It shows on the drawing; a line block reproduces it as paper. On xuan and silk it is refused: ink painting is not corrected. | refused: scrape the lines out of the metal and engrave or etch again |
+
 ## Drying and time
 
 Water sinks into raw xuan fast: about 70% of the dampness is gone after each episode. Sized paper, silk and bristol stay damp longer. Strokes in the same episode are laid wet-in-wet and fuse. `dry 1` makes everything dry, so later strokes sit on top as separate layers. Nothing ever lifts: ink is permanent once laid, except by scraping.
@@ -61,7 +73,7 @@ Water sinks into raw xuan fast: about 70% of the dampness is gone after each epi
 ## Finishing (`finish <op> '<json>'`)
 
 - `dots`: the last dark accents (moss dots, eyes): short upright dabs of scorched ink. Give `{"pts": [[x, y], ...]}` or `{"region": {...}, "count": n}`, plus optional `size`, `tone` and `angle`. At most 40 (`max`); it refuses more, because accents are few.
-- `seal`: stamps the red cinnabar seal with an uneven, printed impression. `text` (default `"TEO\nDOR"`), `at` (`br`, `bl`, `tr`, `tl` or `[x, y]`), `size`, `style` (`baiwen`: white characters cut out of red, the default; `zhuwen`: red characters and border), `color`. The seal goes with or instead of `sign`.
+- `seal`: stamps the red cinnabar seal with an uneven, printed impression. `text` (default `"TEO\nDOR"`), `at` (`br`, `bl`, `tr`, `tl` or `[x, y]`), `size`, `style` (`baiwen`: white characters cut out of red, the default; `zhuwen`: red characters and border), `color`. The seal goes with or instead of `sign`: a sealed sheet counts as signed.
 - `erase-pencil`: removes the `pencil` construction lines wherever ink does not cover them.
 - `scrape`: scrapes ink off for a highlight: `{"region": {...}, "amount": 0.5}`. It is uneven and greyish, like real scraping.
 - `bite`: etching, a further biting stage. Every needle line inside `region` and/or where the schema is darker than `where_darker` bites `minutes` more (default 10). The rest counts as stopped out. Lines bitten in different stages keep their own depth. Lalanne's sequence: draw everything (`bite` 3-4), then for example `{"minutes": 6, "where_darker": 0.55}` and `{"minutes": 8, "where_darker": 0.33}`.
@@ -71,6 +83,11 @@ Water sinks into raw xuan fast: about 70% of the dampness is gone after each epi
 - `mount`: presentation only. Renders (looks, frames, the time-lapse) show the work mounted as a hanging `scroll` (default), an `album` leaf or a `mat`, with `color` for the silk. The painting itself is unchanged.
 
 There is no varnish or fixative for ink. The order for a print: `bite` stages and drypoint, then `lozenge` (engraving), `platemark`, `wipe`, `sign`.
+
+**The finishing check** (`report finish`) depends on the tradition, read from the support:
+- Chinese ink (xuan, silk): a seal or a signature, the last dark dots, no pencil showing.
+- Pen illustration (bristol, illustration board, laid paper): printable as a line block. It flags grey wash over 1.5% of the sheet ("a line block prints black or nothing", Harper), more than four value groups ("have the values few and positive", Maginnis: a light, one or two half-tones, a black), hatched greys that close into black when the lines thicken by 0.04 mm in a two-thirds reduction (over 25% of them; `"reduction"` in the meta sets another scale), and pencil still showing. The thresholds and the line gain are judgements.
+- Intaglio (plate papers): a platemark, the plate wiped (`finish wipe` or a `wipe` intention), and plate tone even across the plate (flagged when one part holds four times the tone of another).
 
 ## Scale, liquid and xuan type
 

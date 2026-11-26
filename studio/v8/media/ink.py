@@ -111,6 +111,18 @@ TREMOR_MM = 0.035   # an etching needle's slight tremble across the line; eye
 DRY_BURR = 0.9      # density of the burr's velvety ink beside a drypoint furrow, relative to a deep line; eye
 SOOT_STEPS = 30  # soot filtered out of the liquid moving through wet paper: 1/e per SOOT_STEPS front steps; by eye
 
+# ---- revision and the finishing check (eye unless noted)
+PLATE_SUPPORTS = ("plate_wove", "plate_laid")
+CHINESE_WHITE = ("bristol", "illustration_board", "laid_paper")   # Western drawing papers: Chinese white corrections (Harper; Maginnis)
+CHINESE_WHITE_HEX = "#f4f1ea"   # docs/styles/pen-and-ink-illustration.md (judgement)
+WIPE_WET = 0.02     # water above which ink still counts as wet for blotting
+BLOT_LIFT = {"xuan_raw": 0.35, "xuan_sized": 0.7, "silk": 0.7, "bristol": 0.8, "illustration_board": 0.8, "laid_paper": 0.6}  # eye
+REDUCTION = 2 / 3   # the drawing printed at two thirds ("a reduction in scale of one-third", Harper 1894); meta "reduction" overrides
+LINE_GAIN_MM = 0.04 # lines thicken by this much on each side in the line block, at the printed size; eye (Maginnis: lines thicken)
+PEN_WASH_MAX = 0.015      # share of the sheet in wide grey ink before the check flags it
+PEN_CLOSED_MAX = 0.25     # share of hatched greys that close into black in reduction before the check flags it
+PLATE_TONE_SPREAD = 4.0   # ratio of plate tone between parts of the plate before the check calls it uneven
+
 
 def _sh(a, dy, dx):
     """b[y, x] = a[y + dy, x + dx], zero outside (a neighbour's value)."""
@@ -209,6 +221,8 @@ class InkTool:
         self.blot = float(it.get("blots", 0.12))
         sz = max(self.size, 2.0)
         self.rh = (2 * math.pi / (max(sz, 12) * rng.uniform(5, 10)), rng.uniform(0, 6.283))
+        if kind in LINE_KINDS:
+            self.wave = 0.0     # the line tools carry their own calibrated swell (PEN_RHYTHM, BURIN_SWELL): no core wave
 
     # ------------------------------------------------------------------ setup on first contact
     def _begin(self, cv):
@@ -1114,10 +1128,11 @@ class Ink(Medium):
         r = cv.meta.get("platemark")
         return (0, 0, cv.W, cv.H) if not r else tuple(int(v) for v in r)
 
-    def _wipe(self, cv, params):
+    def _wipe(self, cv, params, mask=None):
         """Plate tone: the thin film of ink the printer leaves on the plate's surface when wiping (Met: "leave a thin
         layer of ink on the plate to create tone"), streaked by the hand and wiped cleaner in the lights; retroussage
-        draws ink out of the lines with a soft rag and spreads it along their edges (Lalanne, §89)."""
+        draws ink out of the lines with a soft rag and spreads it along their edges (Lalanne, §89). With a mask (the
+        `wipe` intention on a plate) only that passage is wiped this way."""
         x0, y0, x1, y1 = self.plate_rect(cv)
         sl = (slice(y0, y1), slice(x0, x1))
         h, w = y1 - y0, x1 - x0
@@ -1135,8 +1150,11 @@ class Ink(Medium):
         rt = float(params.get("retroussage", 0.0))
         if rt > 0:
             total = total + rt * 0.5 * gaussian_filter(np.clip(cv.ink[sl] / 3.0, 0, 1), max(0.8, 0.15 * self.ppm(cv)))
+        if mask is not None:
+            total = total * np.clip(mask[sl], 0, 1)
         kink = np.asarray(INKS.get(cv.meta.get("etch_ink", params.get("ink", "intaglio_black")), INKS["intaglio_black"]), np.float32)
         self._composite(cv, sl, total, float(cv.meta.get("etch_D", 3.6)), kink / kink.mean(), None)
+        cv.meta["plate_wiped"] = True
 
     def _platemark(self, cv, params):
         """The plate's outline pressed into the dampened paper (Met: "an outline of the outer edges of the metal plate
@@ -1286,6 +1304,206 @@ class Ink(Medium):
             d.rectangle([0, 0, W, rod // 2], fill=(90, 70, 50))
         return out
 
+    # ------------------------------------------------------------------ the hand and roles (core hooks)
+    glaze_role = "wash"          # an ink glaze is a wash (the core's default for ink, stated here)
+    first_role = "drawing"       # the first marks on bare paper: the outline (shuimo), the pen outline, the plate's lines
+
+    def hand_defaults(self, it, kind):
+        """Defaults the core merges under an intention (explicit keys win). The line tools (nib, stipple, burin,
+        needle, drypoint) were calibrated on the plain stroke (docs/calibration/pen-and-ink-illustration.md and
+        etching-engraving.md): their width in mm comes from the nib or the cut, and their along-line swell from
+        PEN_RHYTHM and BURIN_SWELL. The v8 hand's articulations and role sizes made `match` lines 20% narrower
+        (0.39 -> 0.31 mm, references 0.36-0.49) and blunted nothing but sharpened the ends (end ratio 0.74 -> 0.68,
+        references 0.76), so these tools default to the plain stroke at their own size. Ask for an articulation
+        (e.g. "swell" for a calligraphic contour) and it is honoured."""
+        if kind not in ("match", "free", "strokes", "model", "blend"):
+            return {}
+        raw = it.get("brush", "brush")
+        k = ALIAS.get(raw, raw)
+        if k == "pen" and it.get("nib") in NIBS:
+            k = "nib"
+        if k in LINE_KINDS:
+            return {"articulation": "plain", "role_scale": False, "focus_scale": False}
+        return {}
+
+    # ------------------------------------------------------------------ revision (core intentions scrape, wipe, paintout)
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Ink is a carbon film in the paper's fibres: what can be taken back depends on the support.
+        - scrape: paper: a knife takes carbon off the top fibres (the finishing scrape, through the hand's ragged
+          region). Plate: the scraper and burnisher take the lines out of the metal (the passage prints lighter and a
+          later bite does not deepen it).
+        - wipe: paper: blotting lifts ink that is still wet (water > 0); dry ink is refused. Plate: the printer wipes
+          that passage of the plate (plate tone, cleaner in the lights: the finishing wipe, inside the region).
+        - paintout: Chinese white over the passage on the Western drawing papers (Harper 1894, Maginnis 1898: the pen
+          draughtsman's correction over waterproof ink); refused on xuan and silk, and on plates.
+        Amounts are eye."""
+        self.flush()
+        sup = cv.meta.get("support", "xuan_raw")
+        st = float(it.get("strength", 0.7))
+        plate = sup in PLATE_SUPPORTS
+        if op == "scrape":
+            if plate:
+                a = np.clip(mask * st * (0.75 + 0.25 * gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 2.0)), 0, 0.97)
+                self._lighten(cv, a)
+                cv.etch = (cv.etch * (1 - a)).astype(np.float32)
+                cv.bite = (cv.bite * (1 - a)).astype(np.float32)
+                print("[ink] scrape on the plate: the scraper and burnisher take the lines out of the metal; the passage prints lighter")
+            else:
+                self._scrape_mask(cv, mask, st)
+            return True
+        if op == "wipe":
+            if plate:
+                p = {k: it[k] for k in ("tone", "clean_lights", "retroussage", "angle", "seed", "ink") if k in it}
+                self._wipe(cv, p, mask=mask)
+                print("[ink] wipe on the plate: that passage wiped by hand (plate tone, cleaner in the lights)")
+                return True
+            inm = mask > 0.5
+            wet = float((cv.water[inm] > WIPE_WET).mean()) if inm.any() else 0.0
+            if wet < 0.05:
+                raise SystemExit("ink can't be wiped once it is dry: the carbon is held in the paper's fibres. Blotting "
+                                 "lifts only wet ink (wipe in the same episode, or before the paper dries). Dry ink can be "
+                                 "scraped with a knife (scrape)" + (", or painted out with Chinese white (paintout)." if sup in CHINESE_WHITE else "."))
+            self._blot(cv, mask, st, rng)
+            if wet < 0.8:
+                print(f"[ink] wipe: only {wet:.0%} of the passage was still wet; the dry ink in it stays")
+            return True
+        if op == "paintout":
+            if plate:
+                raise SystemExit("ink can't paint out on a plate: a printed line is in the paper. Take the lines out of the "
+                                 "metal instead (scrape: scraper and burnisher) and engrave or etch the passage again.")
+            if sup not in CHINESE_WHITE:
+                raise SystemExit(f"ink can't paint out on {sup}: ink is permanent in the fibres and ink painting is not "
+                                 "corrected (light mineral colour is a colour, not a correction). Leave it, or start a fresh sheet. "
+                                 "(On bristol, illustration board and laid paper, paintout lays Chinese white.)")
+            self._chinese_white(cv, mask, it, rng)
+            print("[ink] paintout: Chinese white over the passage (it shows on the drawing as a matte white; a line block "
+                  "reproduces it as paper)")
+            return True
+        return NotImplemented
+
+    def _lighten(self, cv, a):
+        """Take carbon off: the colour goes toward the paper by a (0..1)."""
+        paper = self.paper(cv) * 0.97
+        cv.col = (cv.col + (paper[None, None, :] - cv.col) * a[..., None]).astype(np.float32)
+        cv.ink = (cv.ink * (1 - a)).astype(np.float32)
+
+    def _scrape_mask(self, cv, m, amount):
+        """Scraping takes carbon off the top fibres, unevenly, and raises the fibres (a little lighter, fuzzy)."""
+        a = np.clip(m * float(amount), 0, 0.95) * (0.6 + 0.8 * cv.tex)
+        self._lighten(cv, np.clip(a, 0, 0.97) * 0.85)
+
+    def _blot(self, cv, mask, st, rng):
+        """Blotting paper pressed on wet ink lifts the liquid still on the surface: much on sized paper and board
+        (the ink sits on top), little on raw xuan (it has sunk into the fibres at once). The lifted share of the
+        carbon density follows the dampness; blotting paper leaves a mottle. BLOT_LIFT is eye."""
+        sup = cv.meta.get("support", "xuan_raw")
+        mot = gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 2.5)
+        mot = (mot - mot.min()) / (mot.max() - mot.min() + 1e-6)
+        a = np.clip(mask * st * np.clip(cv.water / 0.5, 0, 1) * BLOT_LIFT.get(sup, 0.6) * (0.65 + 0.35 * mot), 0, 0.9)
+        d = cv.ink * a                                     # carbon density lifted
+        paper = self.paper(cv)
+        cv.col = np.minimum(cv.col * np.exp(d)[..., None], np.maximum(cv.col, paper[None, None, :])).astype(np.float32)
+        cv.ink = (cv.ink - d).astype(np.float32)
+        cv.water = (cv.water * (1 - 0.85 * np.clip(mask, 0, 1))).astype(np.float32)
+
+    def _chinese_white(self, cv, mask, it, rng):
+        """Chinese white (zinc white in gum) brushed over the passage: a near-opaque body-colour film, a little uneven
+        with the brush; the colour is the style doc's #f4f1ea (judgement) unless `color` is given."""
+        col = hx(it.get("color", CHINESE_WHITE_HEX))
+        K, S = pigment_from_hex(col, 0.85)
+        mot = gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 3.0)
+        mot = (mot - mot.min()) / (mot.max() - mot.min() + 1e-6)
+        x = np.clip(mask, 0, 1) * float(it.get("strength", 0.8)) * 2.0 * (0.8 + 0.4 * mot)
+        cv.col = km_layer(cv.col, K, S, x)
+        cv.water = np.maximum(cv.water, np.clip(mask, 0, 1) * 0.3).astype(np.float32)
+
+    # ------------------------------------------------------------------ the finishing check (`report finish`)
+    def finish_check(self, cv):
+        """Did the finishing do its job (docs/FINISHING.md "Ink"; the style docs)? Per tradition:
+        - Chinese ink (xuan, silk): a seal or a signature, the last dark dots.
+        - Pen illustration (bristol, illustration board, laid paper): printable for a line block (Harper 1894;
+          Maginnis 1898 "have the values few and positive"): no grey washes, at most four value groups, hatched greys
+          that stay open when the lines thicken in reduction, the pencil erased.
+        - Intaglio (plate papers): platemark and wiping done, the plate tone even.
+        Every threshold is eye."""
+        self.flush()
+        ops = [f["op"] for f in cv.meta.get("finishes", [])]
+        sup = cv.meta.get("support", "xuan_raw")
+        lines, flags = [], []
+        pen = getattr(cv, "pencil", None)
+        pencil = float((pen > 0.05).mean()) if pen is not None else 0.0
+        if sup in PLATE_SUPPORTS:
+            pm = cv.meta.get("platemark")
+            wiped = "wipe" in ops or cv.meta.get("plate_wiped")
+            x0, y0, x1, y1 = self.plate_rect(cv)
+            ink = cv.ink[y0:y1, x0:x1]
+            lines_m = ink > 0.8
+            from scipy.ndimage import binary_dilation
+            free = (~binary_dilation(lines_m, iterations=3)) & (ink < 0.5)
+            g = 4
+            hh, ww = ink.shape
+            cells = []
+            for i in range(g):
+                for j in range(g):
+                    sub = ink[i * hh // g:(i + 1) * hh // g, j * ww // g:(j + 1) * ww // g]
+                    fm = free[i * hh // g:(i + 1) * hh // g, j * ww // g:(j + 1) * ww // g]
+                    if fm.sum() > 50:
+                        cells.append(float(np.median(sub[fm])))
+            tone = float(np.median(cells)) if cells else 0.0
+            spread = (max(cells) + 0.01) / (min(cells) + 0.01) if cells else 1.0
+            lines.append(f"ink (intaglio): platemark {'yes' if pm else 'no'}, wiped {'yes' if wiped else 'no'}, "
+                         f"plate tone {tone:.3f} (density between the lines), spread across the plate x{spread:.1f}")
+            if not pm:
+                flags.append("print: no platemark (finish platemark)")
+            if not wiped:
+                flags.append("print: the plate was not wiped (finish wipe: tone 0.02 for a clean engraving, 0.04-0.06 for plate tone)")
+            if tone > 0.02 and spread > PLATE_TONE_SPREAD:
+                flags.append(f"plate tone uneven: x{spread:.1f} between parts of the plate (re-wipe the patchy passages with a wipe intention)")
+            return lines, flags
+        if sup in ("xuan_raw", "xuan_sized", "silk"):
+            sealed = "seal" in ops
+            dots = "dots" in ops
+            lines.append(f"ink (brush): seal {'yes' if sealed else 'no'}, signed {'yes' if cv.meta.get('signed') else 'no'}, "
+                         f"last dots {'yes' if dots else 'no'}")
+            if not sealed and not cv.meta.get("signed"):
+                flags.append("ink: no seal or signature (finish seal)")
+            if not dots:
+                flags.append("ink: no last dark dots (finish dots; FINISHING.md)")
+            if pencil > 0.002 and "erase-pencil" not in ops:
+                flags.append("ink: pencil lines still show (finish erase-pencil)")
+            return lines, flags
+        # pen illustration: printable as a line block
+        from scipy.ndimage import binary_opening, distance_transform_edt as edt
+        grey = (cv.ink > 0.1) & (cv.ink < 1.0)
+        wash = float(binary_opening(grey, iterations=2).mean())      # wide grey areas; hairlines vanish in the opening
+        try:
+            import eyes
+            k, shares, means = eyes.value_masses(np.asarray(self.render(cv), np.float32) / 255)
+        except Exception:
+            k = None
+        ppm, red = self.ppm(cv), float(cv.meta.get("reduction", REDUCTION))
+        Y = cv.col @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+        cov = np.clip(1 - Y / max(float(self.paper(cv) @ np.array([0.2126, 0.7152, 0.0722], np.float32)), 1e-3), 0, 1)
+        line = cov > 0.5
+        gain = LINE_GAIN_MM / red * ppm                               # the printing gain at the drawing's scale, px
+        printed = line | (edt(~line) <= gain)
+        win = max(3, int(round(ppm / red)))                           # 1 mm windows at the printed size
+        from scipy.ndimage import uniform_filter
+        before, after = uniform_filter(line.astype(np.float32), win), uniform_filter(printed.astype(np.float32), win)
+        toned = (before > 0.15) & (before < 0.7)
+        closed = float(((after > 0.9) & toned).sum() / max(toned.sum(), 1))
+        lines.append(f"ink (pen, for a line block): grey wash {wash:.1%} of the sheet, value groups {k}, "
+                     f"hatched greys that close in a {red:.2f}x reduction {closed:.0%}, pencil {'erased' if 'erase-pencil' in ops or pencil <= 0.002 else 'showing'}")
+        if wash > PEN_WASH_MAX:
+            flags.append(f"pen: grey wash over {wash:.1%} of the sheet: a line block prints black or nothing (Harper); build tone from lines")
+        if k is not None and k > 4:
+            flags.append(f"pen: {k} value groups: 'have the values few and positive' (Maginnis): a light, one or two half-tones, a black")
+        if closed > PEN_CLOSED_MAX:
+            flags.append(f"pen: {closed:.0%} of the hatched greys close into black when the lines thicken in reduction (Maginnis): open the hatching")
+        if pencil > 0.002 and "erase-pencil" not in ops:
+            flags.append("pen: pencil construction lines still show (finish erase-pencil)")
+        return lines, flags
+
     # ------------------------------------------------------------------ finishing
     def finish(self, cv, op, params):
         self.flush()
@@ -1307,13 +1525,7 @@ class Ink(Medium):
                 print("scrape: give a region, e.g. {\"region\": {\"type\": \"ellipse\", \"cx\": 300, \"cy\": 200, \"rx\": 20, \"ry\": 12}, \"amount\": 0.5}")
                 return
             m = region(params["region"], cv.W, cv.H, params.get("feather", 1.5))
-            a = np.clip(m * float(params.get("amount", 0.5)), 0, 0.95)
-            # scraping takes carbon off the top fibres, unevenly, and raises the fibres (a little lighter, fuzzy)
-            a = a * (0.6 + 0.8 * cv.tex)
-            a = np.clip(a, 0, 0.97)
-            paper = self.paper(cv) * 0.97
-            cv.col = cv.col + (paper[None, None, :] - cv.col) * (a * 0.85)[..., None]
-            cv.ink = cv.ink * (1 - a * 0.85)
+            self._scrape_mask(cv, m, float(params.get("amount", 0.5)))
             return
         if op == "bite":
             return self._bite(cv, params)
@@ -1416,6 +1628,7 @@ class Ink(Medium):
         imp = imp * (rng.random((size, size)) > 0.04)
         K, S_ = pigment_from_hex(params.get("color", "#b8281e"), 0.7)
         cv.col[sl] = km_layer(cv.col[sl], K, S_, A * imp * 1.6)
+        cv.meta["signed"] = cv.meta.get("signed") or "seal"     # the seal is the signature in ink painting (FINISHING.md)
 
 
 class _Analyse:

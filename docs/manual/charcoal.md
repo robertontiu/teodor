@@ -29,7 +29,16 @@
 
 **Hatching** (`"type": "hatch"`). Use the tip tools. The studio's sheet is 1200 px = 48 cm (2.5 px/mm), and the real charcoal and conté hatching measured for the calibration is 1-2 mm apart with 0.5 mm lines: `"spacing": 4`–`5`, `"size": 1.5`–`2`. The core's defaults (spacing 9, size 3) give a coarse 3.6 mm hatch. The colour is the value of each line (`#000000` presses as hard as the stick can), and `layers` are absolute values, so on toned paper set them below the paper's value.
 
-**Glaze.** `glaze` is a veil of powdered charcoal laid lightly with the side of the stick and partly rubbed in: tone on the peaks plus a soft, even film, capped at the value of the colour you give. Use it to tone the paper before drawing (the classic start), or to unify a passage.
+**Glaze.** `glaze` is a veil of powdered charcoal laid lightly with the side of the stick and partly rubbed in: tone on the peaks plus a soft, even film, capped at the value of the colour you give. Use it to tone the paper before drawing (the classic start), or to unify a passage. It is recorded as `underpainting` (the toned start); tag a later unifying veil `"role": "glaze"`. The first marks on bare paper are recorded as `drawing`.
+
+**The hand.** Your sticks keep the widths you ask for: the v8 hand's articulations, pressure wave and drift apply, but not its role sizes (a `drawing`-role line is not narrowed to 0.6), because they pushed the calibrated marks away from the references (docs/calibration/charcoal.md, "The v8 hand"). Add `"role_scale": true` to an intention to get them back.
+
+**Dust.** Every stick sheds part of what it rubs off as loose dust that settles around the line, mostly within 1-3 mm and more in the paper's hollows: vine about half of a stroke, compressed about a quarter, the pencil a fifth. So hatching fills in with a grey haze between the lines, as on real sheets, and a light passage next to a dark one picks up a little tone. The haze is loose: a blender spreads it, the kneaded eraser or `finish clean` lifts it, fixative locks it.
+
+**Revision** (`scrape`, `wipe`, `paintout`; docs/MANUAL.md):
+- `scrape`: the hard eraser swept over the passage. Vine comes back almost to the paper; compressed leaves a ghost.
+- `wipe`: the chamois knocks the passage back, then the kneaded eraser lifts it (a soft, smudgy take-back).
+- `paintout`: erase, then draw again: the kneaded and hard erasers take the passage out and `vine_side` (or the `brush` you give) lays the tone the surroundings have there, as a draughtsman corrects (charcoal can't cover a dark with a light). Ghosts of the old marks stay. A fixed passage can't be erased, so its paintout is refused: draw darker over it instead.
 
 **Time.** Nothing dries, and `dry` does nothing. Unfixed charcoal stays loose dust that any later blender can move and any eraser can lift.
 
@@ -39,9 +48,11 @@
 - `clean` `{"margin": 30}` or `{"region": {...}}`: lifts dust and smudges from the margins or from outside a region.
 - `accents` `{"strokes": [{"pts": [...], "color": "#000000", "size": 5}], "n": 6}`: the last darkest accents in compressed charcoal. It refuses more than `n` strokes.
 
+`report finish` checks: a final fixative over the whole sheet (charcoal not fixed otherwise), no lifts after it (fixed charcoal won't lift), how much all fixative passes darkened the drawing against one full pass of the studio's model (more than 1.5 passes' worth is flagged: a model, no measurement exists), and dust or smudges in margins the schema leaves bare (`finish clean`).
+
 **Order of work.** Tone the paper with `glaze`, or start white. Block in the big shapes with `vine_side`, then rub with the stump or finger. Draw into it with `vine_tip`. Take out the lights with `kneaded` and `eraser`. Put the darkest darks in with `compressed_*`, add `white_chalk` on toned paper, then `finish lift`, `finish accents` and `finish fixative`.
 
-**Limits.** The paper's tooth is a texture (pixel-scale grain with short fibres, the laid lines on Ingres), not real fibres; the real tooth is finer than a pixel, so it shows as a fine speckle, not as visible cells. Hatched passages still look a little cleaner and more contrasted than real ones (no dust settling between the lines). There is no stick wear or breakage, and there is no water (no wash with compressed charcoal). The darkening that fixative causes is a fixed small value. Charcoal can't make colour: blue and red come out as their values. `sign` signs the same way as in oil.
+**Limits.** The paper's tooth is a texture (pixel-scale grain with short fibres, the laid lines on Ingres), not real fibres; the real tooth is finer than a pixel, so it shows as a fine speckle, not as visible cells. Compressed-charcoal hatching is still a little cleaner and more contrasted than real conté hatching (its lines are darker); vine hatching now matches. Dust falls the same way everywhere (no gravity, no hand resting on the sheet). There is no stick wear or breakage, and there is no water (no wash with compressed charcoal). The darkening that fixative causes is a fixed small value. Charcoal can't make colour: blue and red come out as their values. `sign` signs the same way as in oil.
 
 ## Calibration
 
@@ -54,6 +65,8 @@ Calibrated against the Met charcoal, black chalk and conté references (Nov 25, 
 - Line edges: a 10-90% rise of 0.75 mm (Millet, de la Fosse), where the tip was a hard 1 px edge.
 - The catch's softness (a pixel is partly covered because it holds many tooth cells): fitted to the grain inside hatched passages.
 - The stated scale (2.5 px/mm) and the hatch spacing advice (1-2 mm, measured by eye on mm-ruled zooms).
+
+- The dust around strokes (Nov 26, 2026): the haze's two widths (0.5 and 2.6 mm) and the share of a stroke it takes, fitted to the haze measured around Millet's conté strokes; the share per tool (in proportion to its looseness) is a judgement. Grain in hatching went from 1.7-2.2x the references to 0.9x (vine) and 1.5x (compressed): `docs/calibration/charcoal.md`, "Charcoal dust"; sheet `docs/gallery/charcoal_dust.jpg`.
 
 **Still tuned by eye:** coverage `KC = 3.5`; tooth capacities (`cap`) and `grab`; the pressure-to-reach curve and the crushed-dust term; how hard the hand presses for an asked value and the overshoot on the peaks (now scaled down for values near the paper's); per-tool flow, loose and stain; blender, eraser and fixative rates (fixative 4% is FINISHING.md's starting value); the velvet render; fibre length and cloud scale; the side stroke's streaks, its smooth wobble and its soft wedge-shaped landing and lift (they replace the hard square ends that made blocks in `match`); the size caps.
 

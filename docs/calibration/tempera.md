@@ -45,3 +45,7 @@ Gold ground (bare `gold_ground`, 800×800, three 60 mm crops): std L* before 0.6
 - **Line width** 0.33 mm is at the canvas's pixel floor (0.25 mm); finer hatching needs a larger canvas.
 - **Gold chroma** (42 in the photographs, 54-56 rendered): aged, dirty and varnished gold versus new leaf; not changed.
 - **Not found as data:** punch sizes, burnish reflectance, the opacity of each pigment in egg (the opacity rule stays by eye); the FORS values are hue-only by the dataset's normalisation.
+
+## Spectral mixing (Nov 26, 2026)
+
+Every hatched line and `round`/`liner` stroke is now a spectral film (lead-white palette, egg S ×1.24 from FORS; `opaque._tempera_film`), 10 µm per unit of `film` (fitted to the old RGB films: tuned). The opacity rule now comes from the paints. No egg-tempera tint data exists to validate it; the carry-over check (4 lead-white tints: 2.6 median ΔE2000, kmix 14.7), speed (3× the old `match` time) and the binder factor are in `colour.md`, section 6. `opacity_paint`, `glaze`, `oil-glaze` and `hatch-lights` keep the RGB films; `TEODOR_SPECTRAL=0` restores them everywhere.

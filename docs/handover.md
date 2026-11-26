@@ -39,7 +39,7 @@ Written at the end of the long chat session that built most of this (Nov 22–24
    - The surface reads as "a digital filter": square dabs everywhere and uniform edges. The stroke vocabulary needs variety in width, pressure and direction within one stroke.
 3. **Studio gaps painters worked around in v7.** Fixed in v8: `act @file`; `free`/`blend` take a number or a range; `transfer` picks a line colour that shows on the ground; hatch seams. Still open:
    - `color_shift` `value` and `sat` are multipliers (1 = unchanged), not offsets; a negative value turns colour black.
-   - `base.kmix` (gouache, tempera, pastel) is not yet spectral (what it needs: `docs/calibration/colour.md`, section 5). Lead white, titanium white and the earths are in the oil palette since Nov 26; burnt umber and terre verte are approximations, and no measured oil data for earths exists openly.
+   - Gouache and tempera mix spectrally since Nov 26 (`docs/calibration/colour.md`, section 6: titanium and lead white, binder factors from FORS); pastel still uses `base.kmix` (section 6 lists what it needs). Lead white, titanium white and the earths are in the oil palette since Nov 26; burnt umber and terre verte are approximations, and no measured oil data for earths exists openly.
 4. **Elevate plan leftovers** (`docs/proposals-v8.md`): element-clarity view, revision tools, a stronger hand, layers with roles.
 5. **Maybe later:** Robert has mentioned a Ko-fi / Buy Me a Coffee page for Teodor and its sister project Spectre (an AI music producer built the same way: github.com/robertontiu/spectre), run as a private person. Not started.
 

@@ -121,6 +121,13 @@ def v8_intentions(only=None):
                 py = ["python3", os.path.join(w, "studio.py")]
                 subprocess.run(py + ["ref", schema(w)], check=True, env=env, capture_output=True)
                 eps = json.loads(json.dumps(V8_EPISODES))
+                if name == "ink":
+                    # raw xuan: paintout must be refused; wipe blots wet ink and must refuse dry ink with a reason
+                    for it in [it for it in eps[2]["do"] if it["type"] in ("wipe", "paintout")]:
+                        r = subprocess.run(py + ["act", json.dumps({"do": [it]})], env=env, capture_output=True, text=True)
+                        if it["type"] == "paintout" or r.returncode != 0:
+                            assert r.returncode != 0 and "can't" in (r.stderr + r.stdout), f"ink should refuse {it['type']} on raw xuan"
+                        eps[2]["do"].remove(it)
                 if name in ("woodblock", "tempera"):
                     bad = [it for it in eps[2]["do"] if it["type"] in (("scrape", "wipe", "paintout") if name == "woodblock" else ("wipe",))]
                     for it in bad:

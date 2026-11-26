@@ -59,7 +59,7 @@ Where the RGB path loses against the spectral model itself: (1) small amounts of
 - **One white per palette** (Nov 26, section 5): zinc white by default; lead white and titanium white are in the palette but used only when chosen, because RGB cannot tell the whites apart.
 - **Medium (oil) is clear** (K = S = 0) in glazes; real linseed oil yellows and absorbs a little in the blue. Not measured here.
 - **Mixed paint does not persist** between commands: the canvas file stores RGB, so the next command re-unmixes from RGB (a mixture of white and 2% Prussian blue becomes whatever the table says that colour is). Saving the concentrations (13 more channels per pixel) would keep the paint's identity across commands; I did not add it to keep the canvas files small.
-- **Other media** still use `base.kmix`. Switching it to spectral mixing is planned; section 5 lists what that needs.
+- **Other media**: gouache and egg tempera mix spectrally since Nov 26 (section 6); pastel still uses `base.kmix` (section 6 lists what it needs).
 
 ## 5. Lead white, titanium white and the earths (Nov 26, 2026)
 
@@ -95,6 +95,40 @@ Where the RGB path loses against the spectral model itself: (1) small amounts of
 **What switching `base.kmix` to spectral mixing (gouache, pastel, tempera) would need.**
 1. **A windowed path.** Those media call `kmix` per dab on small windows. `spectral.mix` costs about 25× `kmix` per pixel (now 1.4× more), so they need oil's `mix_window` (mixing only where the dab's amount exceeds a threshold, with the canvas's pigment state cached in a `CanvasLatent`), or a cheaper three-paint-at-a-time path.
 2. **A white per medium.** Gouache and tempera whites are not oil whites. Gouache uses zinc or titanium white with chalk or blanc fixe and gum arabic; egg tempera historically uses lead white. The binder changes S (refractive index: gum arabic and egg are lower than oil, so they scatter more and look paler and more opaque), so the oil constants are only a first approximation. Each medium should pick its palette white (`Palette(white=...)`) and, ideally, scale S for its binder. FORS [P2] has the same pigments in gum arabic, egg tempera and oil, which bounds that shift for masstones.
-3. **Pastel** is not a mixture in a binder but juxtaposed or rubbed particles: its "mixing" on paper is partly optical (side by side) and partly physical (rubbed). Spectral Kubelka-Munk fits the rubbed part; a pastel stroke over another should rather be the film path (`film_over`), as oil does over dry paint.
+3. **Pastel** is not a mixture in a binder but juxtaposed or rubbed particles: its "mixing" on paper is partly optical (side by side) and partly physical (rubbed). Spectral Kubelka-Munk fits the rubbed part; a pastel stroke over another should rather be the film path (`film_over`), as oil does over dry paint. (Nov 26, 2026: not done; no measured pastel blends exist to fit the binder correction to S or to validate against. See `docs/calibration/pastel.md`, "The v8 hand, dust and spectral mixing".)
 4. **Validation per medium.** No tint data for gouache or tempera was found. handprint's watercolour ratings (opacity, value range) are the nearest check.
 
+
+## 6. Gouache and egg tempera (Nov 26, 2026)
+
+Built from the list in section 5: a windowed path, one white per medium, and a binder correction to S. `base.kmix` stays the fallback for media that don't opt in (pastel, and `TEODOR_SPECTRAL=0`).
+
+**Palettes per medium** (`spectral.palette_for`, `MEDIUM_PALETTE`). `palette(white, s_scale)` keeps one `Palette` per white and binder factor, each with its own unmixing table (built in about 3 s, cached); `palette()` with no arguments is oil's, unchanged (the oil validation above gives the same numbers: 1.80, 3.45, 5.13). `mix`, `latent`, `mix_window`, `film_over` and `latent_cache` take a `pal` (and `mix_window` a `film` thickness).
+- Gouache: **titanium white** (PW6, the permanent white of modern gouache; LBNL W03 as acrylic) or zinc white (`TEODOR_GOUACHE_WHITE`), and gum arabic's S factor 1.03.
+- Egg tempera: **lead white** (Revigo 08A) and egg's S factor 1.24.
+
+**The binder correction** (computed from the FORS CSVs; the method is all here). The FORS Pigments Checker [P2] has the same pigments as masstones in linseed oil, gum arabic and egg tempera (on cardboard, thickness not stated). Each binder set was normalised per wavelength as `pigments.json` does (lamp black 0.03, titanium white 0.90). With the masstones taken as opaque, K/S = (1 − R)²/2R, and a binder that scales S by f (K unchanged) divides K/S by f, so f = (K/S)oil / (K/S)binder per pigment and band (420-680 nm, R between 0.05 and 0.7). Median over pigments:
+
+| binder | f = S_binder / S_oil | IQR | n |
+|---|---|---|---|
+| gum arabic | 1.03 | 0.76-1.28 | 33 |
+| egg tempera | 1.24 | 0.96-1.44 | 34 |
+
+Physics agrees on the sign for tempera: egg tempera is a high-PVC paint (76-81% with watercolour and casein, above the critical PVC of 30-60%; [Golden, Just Paint](https://justpaint.org/pigment-volume-concentration-and-its-role-in-color/)), so the dried film holds air voids (n = 1.0) beside a binder of about 1.5 (dried egg yolk 1.525, Phenix, quoted there; linseed oil 1.48 fresh to 1.57 old, [Masschelein-Kleiner 1995, *Ancient binding media*, ICCROM, pp. 20-21](https://www.iccrom.org/sites/default/files/2018-02/1995_masschelein_ancient_61234_light.pdf): opacity rises at the critical PVC because the voids differ from the binder). For gum arabic the data show no shift. Gouache's extra body (chalk, blanc fixe) is not modelled beyond its white. Caveats: the per-binder normalisation removes any overall shift, the masstones may not hide the cardboard, and the factor is one number for all pigments (the per-pigment spread is wide: lakes 0.03-0.4, Maya blue 5). A rough cross-dataset check: the model's masstones against FORS egg-tempera masstones (14 shared pigments) are 11.1 ΔE2000 apart with f = 1 and 10.4 with 1.24 (oil against FORS oil: 10.3; the two datasets differ that much anyway).
+
+**Windowed paths.**
+- Gouache (`opaque._gouache_mix`): the brush's colour mixes with the wet or re-dissolved paint under it (where kmix was) only at pixels where the canvas's share exceeds 0.001; the result still covers what is under it by area, as before.
+- Tempera (`opaque._tempera_film`): each hatched line and `round`/`liner` stroke is a spectral film over the canvas (`mix_window` with the dry path), thickness 0.1 film units (10 µm) per unit of the tool's `film`. That number is fitted to the old RGB films' coverage (36 colour-substrate pairs over gesso, verdaccio, a dark and gold: 0.08 and 0.1 tie at a median ΔE2000 of 9.7 from the old film; 0.1 keeps a test panel's mean L* within 1): **tuned**. The opacity rule now comes from the paints (a light colour unmixes with lead white and covers). An explicit `opacity_paint`, `glaze`, `oil-glaze` and `hatch-lights` keep the RGB films.
+
+**Validation.** No tint data for gouache or egg tempera was found (section 5, point 4), so there is no direct check. Carry-over checks through the media's palettes:
+
+| check | kmix | medium's palette |
+|---|---|---|
+| 10 LBNL earth tints in titanium white (acrylic), gouache palette (S ×1.03) | 12.8 / 19.6 | **1.43** / 3.71 (×1.00: 0.95 / 3.55) |
+| 4 Revigo tints of ~10% pigment in lead white (oil, never fitted), tempera palette (S ×1.24) | 14.7 / 16.6 | **2.62** / 3.15 (oil's lead-white palette: 2.86) |
+
+(median / max ΔE2000; these are tints in other binders, so they test the model and the white, not the binder factor).
+
+**Look and speed** (900 × 1200 px, a blurred flat schema; wall time on the shared 2-vCPU machine): gouache, two `match` passes (300 strokes of 30-50 px, 400 of 12-20 px): 7.6 s → 22.9 s, median ΔE2000 to the old render 0.4 (90th percentile 8.3), mean L* 60.3 → 60.5. Tempera, a `hatch` and a `round` `match` (300 strokes each): 3.0 s → 9.4 s, mean L* within 1.3 at the earlier 8 µm unit (hence 10 µm).
+
+**Pastel** (not changed here: another builder owns `drymedia.py`). It would need: (1) its own palette (`palette(white, s_scale)`: pastel whites are chalk or titanium white with chalk; pastel is a pigment-and-filler stick with very little binder, far above the critical PVC, so its S factor should come from data: FORS has no pastel set; the "powder" CSV of FORS, pigments without binder, is the nearest bound); (2) mixing only where pastel is rubbed (the blender, finger, `blend`), with `spectral.mix(..., pal=...)` on the touched pixels as `_gouache_mix` does; (3) a stroke over another as a film (`mix_window` with `wet` = 0, a `film` per layer) or as juxtaposed particles (optical mixing: area coverage, as now); (4) `base.kmix` replaced at its call sites in drymedia.py, behind the same `TEODOR_SPECTRAL` switch.

@@ -33,6 +33,18 @@ from .base import Medium, hx, noise_field, kmix
 
 KC = 3.5   # coverage per unit of deposit: 1 - exp(-KC*dep)
 
+# Loose dust shed by a stick (docs/calibration/charcoal.md, "Charcoal dust"). Friction breaks a dry stick into
+# fragments of every size (a scale-free size distribution for graphite: Bertin, "The physics of pencil drawing",
+# 2026); charcoal's large, binderless particles crumble and lift easily (The Met, "Charcoal"), and the dust that the
+# fibres do not hold stays loose on the surface, "trapped in the surface texture" (Jackson's [S13]), where granular
+# dust settles into the paper's low regions. So part of what a stroke rubs off lands beside the line, as a haze that
+# thins with distance. Measured around isolated conté strokes on Millet's sheet (337802) at 2.5 and 10 px/mm: the
+# paper's optical density above its far floor is about 6% of the line's at 0-0.6 mm, 2.5% at 0.6-1.2 mm, 1.5% at
+# 1.2-2 mm, 0.7% at 2-3.2 mm; about a fifth of the line's mass lies in that haze. The two kernel widths and the
+# shed fraction are fitted to that profile (`DUST_MM`, `DUST_W`, the media's `DUST_K`).
+DUST_MM = (0.5, 2.6)     # sigma (mm) of the near and the far part of the haze (fitted to the profile)
+DUST_W = 0.45             # share of the shed dust in the near part (fitted)
+
 
 def _eq(a):
     """Histogram-equalise to 0..1, so `tex > 1 - r` is a fraction r of the surface."""
@@ -307,7 +319,9 @@ class DryTool:
         sup = M.sup(cv)
         Q = np.asarray(q, np.float32)
         xs, ys, angs, press, rs, steps, sfx = Q.T
-        Rmax = int(math.ceil(float(rs.max()))) + 2
+        dust = 0.0 if sp.get("oily") else float(sp.get("dust", M.DUST_K * sp.get("loose", 0.0)))
+        dpad = int(math.ceil(3 * DUST_MM[1] * M.PPM)) if dust > 0 else 0
+        Rmax = int(math.ceil(float(rs.max()))) + 2 + dpad
         x0, x1 = max(0, int(xs.min()) - Rmax), min(cv.W, int(xs.max()) + Rmax + 1)
         y0, y1 = max(0, int(ys.min()) - Rmax), min(cv.H, int(ys.max()) + Rmax + 1)
         if x0 >= x1 or y0 >= y1:
@@ -424,9 +438,27 @@ class DryTool:
             sc = np.where(np.abs(dl) > 1e-6, np.clip((t - Lm) / np.where(np.abs(dl) > 1e-6, dl, 1), 0, 1), 0.0)
             f = f * sc
             a = a * f / np.maximum(f0, 1e-6)
-        cv.col[sl] = col * (1 - f[..., None]) + Pp * f[..., None]
-        cv.dep[sl] = dep + a
-        cv.loose[sl] = cv.loose[sl] + a * sp["loose"]
+        halo = None
+        if dust > 0:
+            # the shed dust: taken from the line, spread over the paper around it (near and far haze), settling
+            # more into the hollows than on the peaks, and never into an indented groove (see DUST_*)
+            shed = a * dust
+            a = a - shed
+            f = 1 - np.power(np.clip(1 - f, 1e-6, 1), 1 - dust)      # the line keeps 1 - dust of its mass: 1 - exp(-KC a (1 - dust))
+            s1, s2 = DUST_MM[0] * M.PPM, DUST_MM[1] * M.PPM
+            halo = DUST_W * gaussian_filter(shed, s1, mode="constant") + (1 - DUST_W) * gaussian_filter(shed, s2, mode="constant")
+            halo = halo * (0.6 + 0.8 * (1 - cv.tex[sl]))
+            if ind is not None:
+                halo = halo * (1 - np.clip(ind[sl] * 1.5, 0, 1))
+            if cv.clip is not None:
+                halo = halo * np.clip(cv.clip[sl], 0, 1)
+        col = col * (1 - f[..., None]) + Pp * f[..., None]
+        if halo is not None:
+            fh = (1 - np.exp(-KC * halo))[..., None]
+            col = col * (1 - fh) + Pp * fh
+        cv.col[sl] = col
+        cv.dep[sl] = dep + a + (halo if halo is not None else 0)
+        cv.loose[sl] = cv.loose[sl] + a * sp["loose"] + (halo if halo is not None else 0)
         cv.fix[sl] = cv.fix[sl] + a * sp["stain"]
         if hasattr(cv, "sheen") and sp.get("sheen", 0) > 0:
             cv.sheen[sl] = np.clip(cv.sheen[sl] + a * sp["sheen"] * (0.4 + P2), 0, 1.5)
@@ -584,6 +616,7 @@ class DryMedium(Medium):
     # ratio between media follows the number of tooth cells per pixel (about 16 at 0.4 mm, 4 at 0.2 mm)
     W_SUB = 3.0
     veil_mono = True
+    DUST_K = 0.0             # shed dust = DUST_K x the tool's `loose` fraction (0: no haze; see DUST_*)
 
     @property
     def tools(self):
@@ -635,9 +668,28 @@ class DryMedium(Medium):
     def adjust(self, spec, it):
         return spec
 
-    def glaze(self, cv, mask, col, op):
+    # ---------------------------------------------------------------- the hand and roles (core hooks)
+    first_role = "drawing"     # the first marks on bare paper are the drawing (charcoal block-in, pencil lines)
+    glaze_role = "underpainting"   # charcoal's `glaze` is powdered tone: toning the paper before drawing [S12]
+
+    def hand_defaults(self, it, kind):
+        """The core's v8 hand scales stroke size by layer role (lines and drawing x0.6, lay-ins x1.3). The dry media's
+        sticks and leads have calibrated widths (EDGE_MM, the measured line widths and hatch advice), and the role
+        scaling moved the schema-drawing tests away from the references (docs/calibration/charcoal.md, "The v8
+        hand"): on Millet's sheet the hard-edge share rose from 0.31 to 0.43 (reference 0.17), the grain in tone
+        from 8.3 to 10.0 L* (7.2) and the paper share from 0.36 to 0.45 (0.38); on Grandville's graphite sheet the
+        grain from 6.9 to 7.9 (5.2) and the hard-edge share from 0.21 to 0.35 (0.16). Without the role scaling and
+        with the articulations, the drift and the pressure wave kept, they return to 8.4, 0.34, 0.40 (charcoal) and
+        7.1, 0.27 (graphite). So the dry media keep the articulations and the wave and opt out of the role sizes.
+        An intention's own "role_scale": true is honoured."""
+        if kind not in ("match", "free", "strokes", "model", "blend"):
+            return {}
+        return {"role_scale": False}
+
+    def glaze(self, cv, mask, col, op, it=None):
         """The dry 'glaze': a light veil laid with the side of the stick (catches the peaks) and
-        rubbed in (fills the hollows a little), or powdered tone."""
+        rubbed in (fills the hollows a little), or powdered tone. `col` is one colour (3,) or a colour per
+        pixel (H, W, 3), as pastel's paintout lays the colour of the surroundings."""
         s = self.sup(cv)
         op = float(np.clip(op, 0, 1))
         reach = min(1.1, (0.3 + 0.6 * op) * s["grab"]) / s.get("tooth", 1.0)
@@ -650,15 +702,167 @@ class DryMedium(Medium):
         a = base * (0.25 * catch + 0.75 * gaussian_filter(soft, 0.8)) * 0.85
         if hasattr(cv, "indent"):
             a = a * (1 - np.clip(cv.indent * 1.5, 0, 1))      # rubbed powder does not reach into an indented groove
-        P = hx(self.veil) if self.veil else np.asarray(col, np.float32)
+        col = np.asarray(col, np.float32)
+        P = hx(self.veil) if self.veil else col
+        Pb = P if P.ndim == 3 else P[None, None, :]
         f = 1 - np.exp(-KC * a)
         if self.veil_mono:
-            L = _lum(cv.col); t = float(_lum(col)); den = float(_lum(P)) - L
+            L = _lum(cv.col); t = _lum(col); den = _lum(P) - L
             fmax = np.clip((t - L) / np.where(np.abs(den) > 1e-3, den, 1), 0, 1) * (np.abs(den) > 1e-3)
             f0 = f; f = np.minimum(f, fmax); a = a * f / np.maximum(f0, 1e-6)
-        cv.col = (cv.col * (1 - f[..., None]) + P[None, None, :] * f[..., None]).astype(np.float32)
+        cv.col = (cv.col * (1 - f[..., None]) + Pb * f[..., None]).astype(np.float32)
         cv.dep = cv.dep + a
         cv.loose = cv.loose + a * 0.8
+
+    # ---------------------------------------------------------------- revision (core intentions scrape, wipe, paintout)
+    revision_tools = {"scrape": "eraser", "wipe": "kneaded"}
+    wipe_first = "chamois"       # dusty media are knocked back with a chamois before the kneaded eraser lifts
+    redraw_tool = None           # the broad tool that lays tone again after erasing (paintout); None = DEFAULT side
+
+    def _fixed_share(self, cv, mask):
+        m = mask > 0.5
+        d = cv.dep[m]
+        if not m.any() or float(d.sum()) < 1e-3:
+            return 0.0
+        return float(np.clip(cv.fix[m], 0, None).sum() / d.sum())
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Taking dust away (docs/research/process.md 2.6; "erasing is drawing" [S12]):
+        - scrape: the hard eraser swept over the passage (crisp, leaves a ghost of bound and stained dust);
+        - wipe: knocked back with the chamois (charcoal, pastel: a dusty medium is "easily removed by dusting" [S12]),
+          then lifted with the kneaded eraser; graphite with the kneaded eraser alone (little loose dust [S13]);
+        - paintout: charcoal and graphite can't cover a mark with a lighter one, so a passage is painted out by
+          erasing it and drawing the surrounding tone again ("erase then redraw"): charcoal's large, binderless
+          particles lift easily (The Met, "Charcoal"), vine "is easily removed by dusting and by erasing" [S12],
+          graphite erases well [S10]; compressed charcoal and fixed passages leave ghosts (pentimenti). A fixed
+          passage can't be erased, so its paintout is refused. Pastel overrides paintout and scrape.
+        Passes and pressures are judgements (eye)."""
+        passes = int(it.get("passes", 2))
+        st = float(np.clip(it.get("strength", 0.7), 0.05, 1.0))
+        press = 0.45 + 0.55 * st
+        fx = self._fixed_share(cv, mask)
+        if fx > 0.6 and op in ("scrape", "wipe", "paintout"):
+            if op == "paintout":
+                raise SystemExit(f"{self.name} can't paint out this passage: {fx:.0%} of its dust is fixed, and fixed dust "
+                                 "doesn't erase. You can only draw darker over it (or, before fixing, erase and redraw).")
+            print(f"[{self.name}] {op}: {fx:.0%} of the passage is fixed; the eraser takes little of it")
+        if op == "scrape":
+            core.sweep(cv, mask, it, felt, rng, self.revision_tools["scrape"], passes=passes, press=press)
+            return True
+        if op == "wipe":
+            if self.wipe_first and self.wipe_first in self.TOOLS:
+                core.sweep(cv, mask, it, felt, rng, self.wipe_first, passes=1, press=press)
+            core.sweep(cv, mask, it, felt, rng, self.revision_tools["wipe"], passes=passes, press=press)
+            return True
+        if op == "paintout":
+            fill = core.fill_colour(cv, mask)            # the tone around the passage, before it is taken out
+            core.sweep(cv, mask, it, felt, rng, "kneaded", passes=1, press=0.9)
+            core.sweep(cv, mask, it, felt, rng, self.revision_tools["scrape"], passes=passes, press=0.9)
+            tool = it.get("brush") or self.redraw_tool or self.DEFAULT["side"]
+            col = hx(it["color"]) if it.get("color") else None
+            core.sweep(cv, mask, dict(it, pressure=it.get("pressure", 0.8)), felt, rng, tool, passes=passes,
+                       color=col, field=None if col is not None else fill)
+            return True
+        return NotImplemented
+
+    # ---------------------------------------------------------------- the finishing check (`report finish`)
+    SHINE_K = 0.25               # graphite: rendered shine above this reads as glare (eye)
+
+    def _fix_limit(self, cv):
+        """The darkening (mean L* of the colour) that one full-strength fixative over the whole sheet causes in this
+        drawing, by the studio's model (fix_dark, fix_chroma: FINISHING.md's starting values; no measured darkening
+        of fixed charcoal or pastel was found, see the manual pages). Uses the colour, not the render."""
+        import eyes
+        cov = _cov(cv.dep)
+        L0 = _lum(cv.col)[..., None]
+        d = (self.fix_dark * (0.3 + 0.7 * cov))[..., None]
+        c = cv.col
+        if self.fix_chroma:
+            d = d * (0.6 + 0.8 * L0)
+            c = L0 + (c - L0) * (1 - self.fix_chroma * cov[..., None])
+        c = np.clip(c * (1 - d), 0, 1)
+        a = eyes._srgb_to_lab(np.clip(cv.col, 0, 1))[0].mean()
+        b = eyes._srgb_to_lab(c)[0].mean()
+        return float(a - b)
+
+    def finish_check(self, cv):
+        """docs/FINISHING.md, "Charcoal", "Graphite", "Soft pastel". Every threshold is a judgement (eye):
+        - fixative darkening within the modelled range: the summed darkening of all fixative passes against one
+          full-strength pass of the studio's model on this drawing (x1.5, plus 0.5 L*); no measurement exists;
+        - charcoal fixed (a final fixative; loose dust left otherwise), lifts done before it (fixed charcoal won't lift);
+        - pastel: the last bright touches after the last fixative, and no whole-sheet final fixative (Degas fixed
+          selected areas only [S11]);
+        - graphite: the transferred guide lines erased or covered, the sheen not overworked (glare over large dark
+          passages), and the margins clean."""
+        lines, flags = [], []
+        fin = cv.meta.get("finishes", [])
+        ops = [f["op"] for f in fin]
+        name = self.name
+        loose = float((cv.loose > 0.05).mean())
+        drawn = cv.dep > 0.05
+        lines.append(f"{name}: loose dust over {loose:.0%} of the sheet; finishing: " + (", ".join(ops) or "none"))
+        fixes = [i for i, f in enumerate(fin) if f["op"] == "fixative"]
+        if fixes:
+            dl = sum(fin[i]["L_before"] - fin[i]["L_after"] for i in fixes)
+            lim = 1.5 * self._fix_limit(cv) + 0.5
+            lines.append(f"fixative darkened the picture by {dl:.1f} L* over {len(fixes)} pass(es) "
+                         f"(the studio's model allows about {lim:.1f} L*: a model, not a measurement)")
+            if dl > lim:
+                flags.append(f"{name}: the fixative darkened the drawing by {dl:.1f} L*, more than the modelled {lim:.1f} L*: "
+                             "too many or too strong passes (FINISHING.md)")
+        finals = [i for i in fixes if fin[i]["params"].get("kind", self.fix_default) == "final"]
+        if name == "charcoal":
+            whole = any(not fin[i]["params"].get("region") for i in finals)
+            if not whole:
+                flags.append("charcoal not fixed: a final fixative over the whole sheet seals the dust (FINISHING.md)")
+            if finals and any(f["op"] == "lift" for f in fin[finals[0] + 1:]):
+                flags.append("charcoal: lifts after the final fixative take almost nothing (lift before fixing)")
+        if name == "pastel" and fixes:
+            last = fixes[-1]
+            if not any(f["op"] == "accents" for f in fin[last + 1:]):
+                flags.append("pastel: the last bright touches go on after the fixative (finish accents), left unfixed "
+                             "(fixative darkens pastel; FINISHING.md)")
+            if any(not fin[i]["params"].get("region") for i in finals):
+                flags.append("pastel: a final fixative over the whole sheet dulls the lights; Degas fixed selected areas "
+                             "only, as a barrier between layers [S11]")
+        if name == "graphite":
+            g = getattr(cv, "guide", None)
+            if g is not None and float((g > 0.5).sum()) > 20:
+                vis = self._guide_visible(cv)
+                lines.append(f"transferred guide lines still visible along {vis:.0%} of their length")
+                if vis > 0.15:
+                    flags.append(f"graphite: the guide lines still show along {vis:.0%} of their length: erase them in the "
+                                 "light passages (kneaded or precision eraser with seek) or cover them")
+            if drawn.any():
+                sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6) * _cov(cv.dep)
+                k = np.clip(sh * 0.32, 0, 0.42)
+                over = float((k[drawn] > self.SHINE_K).mean())
+                lines.append(f"graphite sheen: {over:.0%} of the drawn area shines strongly")
+                if over > 0.2:
+                    flags.append(f"graphite: {over:.0%} of the drawn area is burnished to a strong shine (glare under light): "
+                                 "lighter pressure, a harder grade over it, or carbon pencil for the darkest darks")
+        mg = max(4, int(0.02 * min(cv.H, cv.W)))
+        edge = np.zeros((cv.H, cv.W), bool)
+        edge[:mg] = edge[-mg:] = True; edge[:, :mg] = edge[:, -mg:] = True
+        if cv.ref is not None:            # only where the drawing (the schema) leaves the margin as bare paper
+            pl = float(_lum(cv.paper[::16, ::16].reshape(-1, 3)).mean())
+            edge &= _lum(cv.ref) > pl - 0.05
+        smud = float((cv.dep[edge] > 0.03).mean()) if edge.sum() > 100 else 0.0
+        if name != "pastel" and smud > 0.25 and "clean" not in ops:
+            flags.append(f"{name}: dust or smudges over {smud:.0%} of the margins (finish clean)")
+        return lines, flags
+
+    def _guide_visible(self, cv):
+        """Share of the guide-line pixels where the line still reads: darker by more than 3 L* (eye) than the
+        tone just around it."""
+        import eyes
+        g = cv.guide > 0.5
+        L = eyes._srgb_to_lab(np.clip(cv.col, 0, 1))[0]
+        ring = (gaussian_filter(g.astype(np.float32), 2.5) > 0.02) & ~(gaussian_filter(g.astype(np.float32), 1.0) > 0.05)
+        w = gaussian_filter(ring.astype(np.float32), 3.0)
+        around = gaussian_filter(L * ring, 3.0) / np.maximum(w, 1e-4)
+        d = (around - L)[g & (w > 0.02)]
+        return float((d > 3.0).mean()) if d.size else 0.0
 
     def episode_end(self, cv):
         pass                     # nothing dries: dust stays dust until it is fixed
@@ -696,8 +900,12 @@ class DryMedium(Medium):
     def _region(self, cv, reg, feather=8):
         if not reg or reg.get("type", "canvas") == "canvas":
             return np.ones((cv.H, cv.W), np.float32)
-        im = Image.new("L", (cv.W, cv.H), 0); d = ImageDraw.Draw(im)
         t = reg["type"]
+        if t not in ("rect", "ellipse", "poly"):          # segments of the schema and any later region type: the core's
+            import studio as S
+            m = S.region_mask(reg, cv.W, cv.H, feather)
+            return np.ones((cv.H, cv.W), np.float32) if m is None else m
+        im = Image.new("L", (cv.W, cv.H), 0); d = ImageDraw.Draw(im)
         if t == "rect":
             d.rectangle([reg["x"], reg["y"], reg["x"] + reg["w"], reg["y"] + reg["h"]], fill=255)
         elif t == "ellipse":
@@ -846,6 +1054,9 @@ class Charcoal(DryMedium):
                 "accents": "last darkest accents, at most n strokes (compressed charcoal) {strokes, n}"}
     bound_erase = 0.55
     veil = "#2a2928"
+    # charcoal sheds dust: about a fifth of a conte or compressed stroke's mass (loose 0.5) ends up as haze around it
+    # (fitted to Millet's sheet, DUST_*); vine (loose 0.88) sheds most, the charcoal pencil least
+    DUST_K = 0.55
     fix_default, fix_strength, fix_dull = "final", 1.0, 0.0
     accent_tool = "compressed_tip"
 
@@ -898,7 +1109,11 @@ def _mech(desc, lead_mm, g, gmax):
 
 class Graphite(DryMedium):
     name = "graphite"
-    arrays = ("col", "paper", "dep", "loose", "fix", "xcap", "sheen", "indent")
+    arrays = ("col", "paper", "dep", "loose", "fix", "xcap", "sheen", "indent", "guide")
+    # a graphite veil (powder rubbed in) unifies a passage: the hyperrealist's blending film, mapped to glaze in
+    # docs/styles/graphite-hyperrealism.md; graphite has little loose dust [S13], so wipe is the kneaded eraser alone
+    glaze_role = "glaze"
+    wipe_first = None
     SUP = {"drawing": dict(desc="white drawing paper, medium tooth", tex="drawing", cap=0.9, grab=1.0, w=0.36),
            "toned": dict(desc="toned (grey-buff) drawing paper", tex="drawing", tone="#b9b2a4", cap=0.9, grab=1.0, w=0.36),
            "ingres": dict(desc="Ingres laid paper: laid lines show through the tone", tex="laid", cap=0.8, grab=0.95, w=0.22, relief=1.2),
@@ -946,6 +1161,7 @@ class Graphite(DryMedium):
     }
     DEFAULT = {"tip": "pencil", "side": "side"}
     MAXSIZE = {"tip": 10, "side": 36}
+    DUST_K = 0.5             # graphite haze (fitted below; docs/calibration/graphite.md)
     PPM = 5.0                # graphite sheets are smaller: 1200 px = 24 cm
     W_SUB = 1.6
     EDGE_MM = 0.3            # graphite lines are crisper (Delacroix's hatching: 0.31 mm)
@@ -995,6 +1211,7 @@ class Graphite(DryMedium):
             for x, y in zip(px[::2], py[::2]):
                 t.dab(cv, float(x), float(y), 0.0, 0.45)
             t.end(cv)
+            cv.guide[py, px] = 1.0         # where the guide lines run, for the finishing check (erased or covered?)
 
     def optics(self, cv, img, light, fill):
         # graphite's metallic shine under a raking light: the flattened flakes catch it, strongest on
@@ -1041,6 +1258,46 @@ class Pastel(DryMedium):
     veil_mono = False
     fix_default, fix_strength, fix_dull, fix_dark, fix_chroma, fix_restore = "workable", 1.0, 0.0, 0.08, 0.10, 0.3
     accent_tool = "soft_tip"
+    first_role = None            # pastel's first marks are a lay-in of colour masses: the core decides (underpainting or dead colour)
+    glaze_role = "scumble"       # a pastel veil is broken over the peaks over what is beneath, not a transparent film
+    revision_tools = {"scrape": "kneaded", "wipe": "kneaded"}     # (scrape is the blade below; the core's "scraper" only cuts oil pastel)
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Pastel revision (amounts are judgements, eye):
+        - scrape: a blade scrapes built-up soft pastel off the tooth (loose dust first, then some of the bound),
+          and cuts through oil pastel to the paper (sgraffito); the colour goes back toward the paper, because each
+          pixel holds one apparent colour (the layer beneath is not kept);
+        - wipe: the chamois knocks the passage back, then the kneaded eraser lifts (the core's sweep);
+        - paintout: pastel is opaque and covers: the colour of the surroundings is laid over the passage as a dust
+          veil (the side of the stick, rubbed in) in `passes` layers. A full tooth takes little: the studio says so
+          (a workable fixative in the region restores tooth first: finish fixative)."""
+        st = float(np.clip(it.get("strength", 0.7), 0.05, 1.0))
+        if op == "scrape":
+            m = np.clip(mask * (0.5 + 0.7 * st), 0, 1)       # a blade takes the top off at once (eye)
+            free = np.clip(cv.dep - cv.fix, 0, None)
+            lo = np.minimum(cv.loose, free)
+            wax = np.clip(cv.sheen * 3, 0, 1)
+            rem = lo * np.clip(m * 1.4, 0, 1) + (free - lo) * np.clip(m * 1.2, 0, 1) + np.minimum(cv.fix, cv.dep) * m * 0.3
+            rem = rem + (cv.dep - rem) * m * wax * 0.9
+            nd = np.clip(cv.dep - rem, 0, None)
+            ratio = np.where(cv.dep > 1e-4, _cov(nd) / np.maximum(_cov(cv.dep), 1e-6), 1.0)
+            cv.col = (cv.paper + (cv.col - cv.paper) * ratio[..., None]).astype(np.float32)
+            cv.loose = np.minimum(cv.loose * (1 - np.clip(m * 1.2, 0, 1)), nd)
+            cv.fix = np.minimum(cv.fix, nd)
+            cv.dep = nd.astype(np.float32)
+            cv.sheen = (cv.sheen * (1 - m * wax)).astype(np.float32)
+            return True
+        if op == "paintout":
+            fill = hx(it["color"]) if it.get("color") else core.fill_colour(cv, mask)
+            sup = self.sup(cv)
+            full = float((cv.dep[mask > 0.5] >= 0.9 * (sup["cap"] + cv.xcap[mask > 0.5])).mean()) if (mask > 0.5).any() else 0.0
+            if full > 0.5:
+                print(f"[pastel] paintout: the tooth is full over {full:.0%} of the passage, so little new colour takes; "
+                      "fix it first (finish fixative kind=workable with a region) to restore tooth")
+            for _ in range(int(it.get("passes", 2))):
+                self.glaze(cv, np.clip(mask, 0, 1), fill, float(it.get("opacity", 0.9)))
+            return True
+        return super().revise(cv, op, mask, it, felt, rng, core)
 
     def optics(self, cv, img, light, fill):
         cov = _cov(cv.dep)[..., None]

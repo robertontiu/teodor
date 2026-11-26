@@ -267,7 +267,7 @@ def _palette_ks(samples):
 
 
 class Palette:
-    def __init__(self, samples=PALETTE_SAMPLES, ks=None, white=None):
+    def __init__(self, samples=PALETTE_SAMPLES, ks=None, white=None, s_scale=1.0):
         self.names = [n for _, n in samples]
         self.samples = [s for s, _ in samples]
         self.whites = [i for i, n in enumerate(self.names) if n in WHITES]
@@ -282,6 +282,10 @@ class Palette:
             ks = _palette_ks(self.samples)
         self.K = np.array([k for k, _ in ks], np.float64)
         self.S = np.maximum(np.array([s for _, s in ks], np.float64), 1e-6)
+        # a binder correction: the paints' scattering in another binder, as a factor on S (K unchanged); see
+        # BINDER_S below. It enters the unmixing table's key through S, so each binder gets its own table.
+        self.s_scale = float(s_scale)
+        self.S = self.S * self.s_scale
         self.K32, self.S32 = self.K[:, BANDS].astype(np.float32), self.S[:, BANDS].astype(np.float32)   # engine bands
         self.P = len(self.names)
         self.lut = None
@@ -418,19 +422,44 @@ class Palette:
 
 
 _PAL = None
+_PALS = {}
 
 
-def palette():
+def palette(white=None, s_scale=1.0):
+    """The palette: with no arguments oil's (DEFAULT_WHITE, oil's measured S); other media ask for their own white
+    and binder correction (palette_for)."""
     global _PAL
-    if _PAL is None:
-        _PAL = Palette()
-    return _PAL
+    if white is None and s_scale == 1.0:
+        if _PAL is None:
+            _PAL = Palette()
+        return _PAL
+    k = (white or DEFAULT_WHITE, round(float(s_scale), 4))
+    if k not in _PALS:
+        _PALS[k] = Palette(white=k[0], s_scale=k[1])
+    return _PALS[k]
+
+
+# One white per medium and a binder correction to S (docs/calibration/colour.md, section 6). The binder factor is the
+# median over 33-34 pigments of (K/S in linseed oil) / (K/S in the binder), from the FORS Pigments Checker masstones
+# (Cosentino 2014: the same pigments in linseed oil, gum arabic and egg tempera), each set normalised per wavelength
+# to lamp black 0.03 and titanium white 0.90: gum arabic 1.03 (IQR 0.76-1.28), egg tempera 1.24 (0.96-1.44). Physics
+# agrees on the sign for tempera: a high-PVC film (egg tempera 76-81% PVC, above the critical PVC; Golden, Just Paint)
+# holds air voids (n = 1.0) beside a binder of about 1.5 (Masschelein-Kleiner 1995), which adds scattering.
+# Gouache's white: titanium white (PW6, the "permanent white" of modern gouache; LBNL measured it, as acrylic) unless
+# TEODOR_GOUACHE_WHITE says "zinc white" (zinc or "Chinese" white, the older gouache white); tempera: lead white.
+MEDIUM_PALETTE = {"gouache": (os.environ.get("TEODOR_GOUACHE_WHITE", "titanium white"), 1.03), "tempera": ("lead white", 1.24)}
+
+
+def palette_for(medium):
+    """The palette a medium mixes with: its white and its binder's S factor (MEDIUM_PALETTE); oil's otherwise."""
+    w, f = MEDIUM_PALETTE.get(medium, (None, 1.0))
+    return palette(w, f)
 
 
 # ---------------------------------------------------------------- the interface
-def latent(rgb):
+def latent(rgb, pal=None):
     """sRGB colour(s) (..., 3) -> (concentrations (..., P), residual (..., 3))."""
-    return palette().latent(rgb)
+    return (pal or palette()).latent(rgb)
 
 
 def from_latent(c, res):
@@ -441,20 +470,21 @@ def forward(c):
     return palette().forward(c)
 
 
-def mix(a, b, t):
+def mix(a, b, t, pal=None):
     """Mix paint colour a with b, a fraction t of b (by weight), in pigment space. Same shape semantics as
-    base.kmix: a (..., 3), b broadcastable to it, t a scalar or (..., 1)."""
+    base.kmix: a (..., 3), b broadcastable to it, t a scalar or (..., 1). pal: the palette (default oil's)."""
+    pal = pal or palette()
     a = np.asarray(a, np.float32)
     b = np.asarray(b, np.float32)
     t = np.asarray(t, np.float32)
     shape = np.broadcast_shapes(a.shape, b.shape, t.shape[:-1] + (3,) if t.ndim else ())
-    ca, ra = latent(a)
-    cb, rb = latent(b)
+    ca, ra = pal.latent(a)
+    cb, rb = pal.latent(b)
     tt = t if t.ndim else t.reshape(1)
     tt = np.clip(tt, 0, 1)
     c = ca * (1 - tt) + cb * tt
     r = ra * (1 - tt) + rb * tt
-    out = np.clip(palette().forward(c) + r, 0, 1).astype(np.float32)
+    out = np.clip(pal.forward(c) + r, 0, 1).astype(np.float32)
     return np.broadcast_to(out, shape).copy() if out.shape != shape else out
 
 
@@ -464,10 +494,11 @@ class CanvasLatent:
     unmixed again from its RGB). The cache is checked against the colour array pixel by pixel: wherever
     anything else changed the colour (a blender, a glaze, a reload), the pixel is unmixed again from RGB."""
 
-    def __init__(self, H, W):
+    def __init__(self, H, W, pal=None):
         self.W = W
+        self.pal = pal or palette()
         self.rgb = np.full((H * W, 3), -1.0, np.float32)
-        self.c = np.zeros((H * W, palette().P), np.float32)
+        self.c = np.zeros((H * W, self.pal.P), np.float32)
         self.r = np.zeros((H * W, 3), np.float32)
 
     def index(self, sl, m):
@@ -480,7 +511,7 @@ class CanvasLatent:
         c, r = self.c[idx], self.r[idx]
         bad = ~np.all(self.rgb[idx] == a, axis=1)
         if bad.any():
-            c[bad], r[bad] = latent(a[bad])
+            c[bad], r[bad] = self.pal.latent(a[bad])
         return a, c, r
 
     def put(self, col, idx, out, c, r):
@@ -490,20 +521,21 @@ class CanvasLatent:
         self.r[idx] = r
 
 
-def latent_cache(cv):
-    """The CanvasLatent of a canvas (made on first use; not saved with the canvas)."""
+def latent_cache(cv, pal=None):
+    """The CanvasLatent of a canvas (made on first use; not saved with the canvas), one per palette."""
+    pal = pal or palette()
     lc = getattr(cv, "_spectral_latent", None)
-    if lc is None or lc.W != cv.col.shape[1] or len(lc.rgb) != cv.col.shape[0] * cv.col.shape[1]:
-        lc = cv._spectral_latent = CanvasLatent(cv.col.shape[0], cv.col.shape[1])
+    if lc is None or lc.W != cv.col.shape[1] or len(lc.rgb) != cv.col.shape[0] * cv.col.shape[1] or lc.pal is not pal:
+        lc = cv._spectral_latent = CanvasLatent(cv.col.shape[0], cv.col.shape[1], pal)
     return lc
 
 
-def film_over(ca, ra, Kf, Sf, x, rb=None):
+def film_over(ca, ra, Kf, Sf, x, rb=None, pal=None):
     """A paint film (constants Kf, Sf per engine band; (n, B) or (1, B)) of thickness x (n, 1) over substrates
     given as latents (ca (n, P), ra (n, 3)). Returns (sRGB (n, 3), luminance transmittance T^2 (n, 1)). The
     substrate's residual passes through the film (T^2); the film paint's own residual rb, if given, shows as
     the film covers (1 - T^2)."""
-    pal = palette()
+    pal = pal or palette()
     Rg = rinf(ca @ pal.K32, ca @ pal.S32)
     Rt, T = km_over(Kf, Sf, x, Rg)
     T2 = ((T * T) @ _EYW)[:, None]
@@ -521,14 +553,16 @@ WET_MIX = 0.15      # paint wetter than this takes new paint in by mixing; drier
                     # threshold, media/oil.py _dry)
 
 
-def mix_window(cv, sl, t, b, index=None, thr=1e-3, wet=None):
+def mix_window(cv, sl, t, b, index=None, thr=1e-3, wet=None, pal=None, film=None):
     """In place: paint b laid into cv.col[sl] with amount t, wherever t > thr, keeping the canvas's pigment
     state. t: window shape (h, w) or (h, w, 1). b: an RGB colour (3,), an RGB window (h, w, 3), or a latent
     pair (c (k, P), r (k, 3)) with `index` (h, w) choosing a row per pixel (e.g. per bristle clump).
     wet (h, w) 0..1, optional (default: all wet): how wet the paint beneath is. Into wet paint (wet >= WET_MIX)
     the new paint mixes (pigment space, a fraction t of b); over dry paint it lies on top as a film of
     thickness t * BODY_FILM (spectral Kubelka-Munk), so opaque paint covers and transparent paint stains. The
-    pixel's pigment state is then the new paint, with what shows through it in the residual."""
+    pixel's pigment state is then the new paint, with what shows through it in the residual.
+    pal: the palette (default oil's; gouache and tempera pass their own, palette_for). film: the film thickness of a
+    full deposit over dry paint (default BODY_FILM)."""
     t = np.asarray(t, np.float32)
     if t.ndim == 3:
         t = t[..., 0]
@@ -537,8 +571,8 @@ def mix_window(cv, sl, t, b, index=None, thr=1e-3, wet=None):
         return
     if not (cv.col.flags.c_contiguous and cv.col.dtype == np.float32):
         cv.col = np.ascontiguousarray(cv.col, np.float32)
-    pal = palette()
-    lc = latent_cache(cv)
+    pal = pal or palette()
+    lc = latent_cache(cv, pal)
     idx = lc.index(sl, m)
     a, ca, ra = lc.get(cv.col, idx)
     if isinstance(b, tuple):
@@ -548,7 +582,7 @@ def mix_window(cv, sl, t, b, index=None, thr=1e-3, wet=None):
         cb, rb = cb[ix], rb[ix]
     else:
         b = np.asarray(b, np.float32)
-        cb, rb = latent(b if b.ndim == 1 else b[m])
+        cb, rb = pal.latent(b if b.ndim == 1 else b[m])
         fb = (b if b.ndim == 1 else b[m]) - rb
         if b.ndim == 1:
             cb, rb, fb = (np.broadcast_to(v, (len(a),) + v.shape) for v in (cb, rb, fb))
@@ -568,7 +602,7 @@ def mix_window(cv, sl, t, b, index=None, thr=1e-3, wet=None):
             f[w_] = pal.forward(c[w_])
             out[w_] = np.clip(f[w_] + ra[w_] + (rb[w_] - ra[w_]) * tt[w_], 0, 1)
         cbd = cb[dry]
-        out[dry] = film_over(ca[dry], ra[dry], cbd @ pal.K32, cbd @ pal.S32, tt[dry] * BODY_FILM, rb[dry])[0]
+        out[dry] = film_over(ca[dry], ra[dry], cbd @ pal.K32, cbd @ pal.S32, tt[dry] * (BODY_FILM if film is None else film), rb[dry], pal=pal)[0]
     lc.put(cv.col, idx, out, c, out - f)
 
 
