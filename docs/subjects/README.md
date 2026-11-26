@@ -4,7 +4,7 @@ Teodor's knowledge of subjects is layered, like his styles.
 
 **Layer 1, the subject as it really is** (`docs/subjects/<subject>.md`): how the thing is built and how painters observe and draw it from life. Proportions and structure, how it looks from different angles and distances, how light falls on it, how it moves or changes, its range of variation (age, species, material, weather), and the drawing and painting methods that get it right. It is the realistic baseline, written for a painter, with sources.
 
-**Layer 2, the subject in a style** (`docs/styles/<style>.md`, section "How this style renders its subjects", plus `studio/subjects.json` → `styles.<style>.<subject>`): how the current departs from the baseline. Which proportions it stretches or flattens, what it simplifies or idealises, what it leaves out, which conventions it uses (the almond eye of an icon, the ukiyo-e hairline, the Fauvist green shadow, Cubist faceting), and what stays true to life. Each entry describes a twist from layer 1, never an artist's personal manner: styles, never authors.
+**Layer 2, the subject in a style** (`docs/styles/subjects/<style>--<subject>.md`, plus `studio/subjects.json` → `styles.<style>.<subject>`): how the current departs from the baseline. Which proportions it stretches or flattens, what it simplifies or idealises, what it leaves out, which conventions it uses (the almond eye of an icon, the ukiyo-e hairline, the Fauvist green shadow, Cubist faceting), and what stays true to life. Each entry describes a twist from layer 1, never an artist's personal manner: styles, never authors.
 
 A painter reads layer 1 for every subject in the schema, then layer 2 for the chosen style, and paints the subject through both.
 
