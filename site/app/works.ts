@@ -1,7 +1,8 @@
 // Paintings in the order they were made. To add one: drop the jpg into public/paintings and add an entry at the end.
 // The gallery shows them newest first.
 // `model` is the Claude model that painted it (default Opus 5.5).
-export type Work = { id: string; title: string; model: string };
+// `style` is the researched style it was painted in (studio v8 onwards; earlier paintings had none).
+export type Work = { id: string; title: string; model: string; style?: string };
 
 const DEFAULT_MODEL = "Opus 5.5";
 
@@ -23,8 +24,8 @@ const inOrderMade: (Omit<Work, "model"> & { model?: string })[] = [
   { id: "r14", title: "The Field Turns Over" },
   { id: "r14b", title: "The Shadow Kept Both Legs", model: "Fable 5.2" },
   { id: "r15", title: "One More Night" },
-  { id: "r16", title: "Cold Water at the Landing Stage" },
-  { id: "r18", title: "The Plum Crate at Noon" },
+  { id: "r16", title: "Cold Water at the Landing Stage", style: "Post-Impressionism" },
+  { id: "r18", title: "The Plum Crate at Noon", style: "Ukiyo-e" },
 ];
 
 export const works: Work[] = inOrderMade.map((w) => ({ ...w, model: w.model ?? DEFAULT_MODEL })).reverse();

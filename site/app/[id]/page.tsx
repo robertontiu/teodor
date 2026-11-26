@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const w = works.find((x) => x.id === id);
   if (!w) return {};
   const title = `${w.title}, by Teodor`;
-  const description = `“${w.title}”, a painting by Teodor (Claude ${w.model}). ${SITE_DESCRIPTION}`;
+  const description = `“${w.title}”, a painting by Teodor (${w.style ? `${w.style}, ` : ""}Claude ${w.model}). ${SITE_DESCRIPTION}`;
   const image = { url: src(w.id), width: 900, height: 1200, alt: `${w.title}, by Teodor` };
   return {
     title,

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { pagePath, src, works as list } from "./works";
 
-const works: [string, string, string][] = list.map((w) => [w.id, w.title, w.model]);
+const works: [string, string, string][] = list.map((w) => [w.id, w.title, w.style ? `${w.style} · ${w.model}` : w.model]);
 
 const toggleFullscreen = () => {
   try {
@@ -168,10 +168,10 @@ export default function Gallery({ initial }: { initial?: string }) {
       </div>
       <div className={toast ? "toast on" : "toast"} role="status" aria-live="polite">{toast}</div>
       <footer className="bar">
-        <h1 style={{ opacity: title.visible ? 1 : 0 }}>
-          {title.text}
-          {title.model && <span className="model">{title.model}</span>}
-        </h1>
+        <div className="caption" style={{ opacity: title.visible ? 1 : 0 }}>
+          <h1>{title.text}</h1>
+          {title.model && <p className="meta">{title.model}</p>}
+        </div>
         <small className="copy">© 2026 Robert Ontiu</small>
       </footer>
     </>
