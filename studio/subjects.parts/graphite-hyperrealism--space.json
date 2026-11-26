@@ -1,0 +1,44 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "space": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--space.md",
+    "rules": [
+     "Perspective is the lens's, transferred, not constructed; 24 mm used close extends depth: on a 48 cm sheet the hand at 0.6 m is ~0.83 life size, a blade at 10 cm 6.3x, the Moon 22 px (Wikipedia Hyperrealism, Perspective distortion; derived)",
+     "Depth of field added: blur b = f^2|s-d|/(N d (s-f)); at 24 mm focused 0.6 m, f/16 gives a sharp zone 0.4-1.2 m, Moon blur 6 px, grass at 10 cm 31 px, at 5 cm 69 px (thin-lens optics; derived table in doc)",
+     "FLAG: shallow focus at f/2.8-f/5.6 smears the Moon (blur >= its size); use f/11-f/22, f/16 recommended (derived)",
+     "Blur grows continuously with each object's distance; no uniform blur field, no cut-out subject (Eclectic Light on Renoir; Wikipedia DOF)",
+     "Blur is an edge width, not a value change: blurred things keep their value; thin things narrower than their blur fade to translucent grey (judgement; derived)",
+     "Points of light become aperture-shaped discs, polygonal when stopped down; matte surfaces make soft bands (Wikipedia Bokeh; judgement)",
+     "Decide the blur before detail; smudge, then detail only in focus (Dessindigo; Wildlife Art Store)",
+     "No aerial perspective at these depths; corners of a wide frame stretch round things 1.2-1.35x and darken slightly (derived; vignetting judgement)"
+    ],
+    "keep": [
+     "overlap order near grass > hand > sky and Moon",
+     "relative size by distance from one lens",
+     "one eye level and one lens for the sheet",
+     "shadows from one sun"
+    ],
+    "avoid": [
+     "mixing lenses (telephoto Moon in a wide frame)",
+     "near blur drawn lighter or hazier",
+     "cut-out sharp subject on uniform blur",
+     "sharp edges outside the focal zone"
+    ],
+    "sources": [
+     "Wikipedia, Hyperrealism (visual arts): https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Hyperfocal distance: https://en.wikipedia.org/wiki/Hyperfocal_distance",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion",
+     "Eclectic Light, depth of field in painting: https://eclecticlight.co/2023/10/13/painting-on-the-edge-depth-of-field/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wildlife Art Store, realistic grass: https://www.wildlifeartstore.com/drawing-realistic-grass/",
+     "docs/subjects/space.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   }
+  }
+ }
+}

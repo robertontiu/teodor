@@ -25,6 +25,7 @@ A painter reads layer 1 for every subject in the schema, then layer 2 for the ch
 | `landscape` | terrain, rock, mountains, fields, paths: structure, planes, recession |
 | `water` | still and moving water, waves, spray, reflections, transparency, rain |
 | `sky` | sky, clouds, weather, atmosphere, sun and moon, times of day |
+| `moon` | the moon from Earth: phases and the lit limb, true size through a lens, brightness by day and night, maria, the terminator |
 | `fire-smoke` | fire, smoke, steam, candlelight as subjects |
 | `light-shadow` | light on form: form and cast shadow, reflected light, halftones, light sources, atmospheric perspective |
 | `space` | perspective and space: linear, aerial, overlap, scale, horizon and viewpoint, foreshortening of the scene |

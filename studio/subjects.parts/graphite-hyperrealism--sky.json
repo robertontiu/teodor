@@ -1,0 +1,41 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "sky": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--sky.md",
+    "rules": [
+     "Hue becomes value through the filter: yellow darkens blue sky slightly, orange very dark, red almost black; the filter steepens the vertical gradient (zenith falls more than the hazy horizon) (Ilford; Photography Mad; judgement for steepening)",
+     "Gradient: horizon L* 70-80, at the Moon's height L* 45-55, top of frame L* 35-45; side away from the Sun darker (layer 1 gradients; values judgement)",
+     "FLAG: a red-filter near-black sky is beyond graphite over a large area (graphite area ~L* 42 and shiny, carbon ~L* 32): draw an orange-filter sky with carbon over graphite at the top (calibration; Vitruvian Studio)",
+     "No texture, no banding: a photographic sky has grain ~0; keep 0.5-5 mm mottle at the reference's and the vertical profile monotonic (calibration flat tone and ramp residual 0.44 L*)",
+     "Technique: pressure falling toward the horizon, crossed second layer, loose graphite rubbed in, tortillon, paper towel, soft brush; 'draw the sky darker than it looks' (Empty Easel); light layers, blend in stages, no overblending (Vitruvian; Wildlife Art Store)",
+     "Cirrus lifted, not drawn: kneaded strokes along one wind, a few fibres with the battery eraser at its smallest, softened; 5-15 L* above the sky; no stylus grooves (WMO via layer 1; Wildlife Art Store white lines; judgement)",
+     "The sky has no edges except cirrus fibres, the Moon's limb and silhouettes against it (judgement)"
+    ],
+    "keep": [
+     "both gradients and their direction to the Sun",
+     "cirrus at WMO height, one wind, perspective toward the horizon",
+     "sky darker than the sunlit hand, lighter than its contact shadows"
+    ],
+    "avoid": [
+     "flat or banded sky",
+     "blotchy mottle or visible hatching",
+     "near-black shiny carbon field",
+     "cirrus as hard white scratches",
+     "edges or outlines in the clear sky"
+    ],
+    "sources": [
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Empty Easel, luminous clouds in graphite: https://emptyeasel.com/?p=23357",
+     "Vitruvian Studio, graphite shine: https://vitruvianstudio.com/blog/3-ways-to-reduce-graphite-shine-in-your-drawings/",
+     "Wildlife Art Store, white lines: https://www.wildlifeartstore.com/white-lines-in-a-pencil-drawing/",
+     "Sibley, indenting explained: https://sibleyfineart.com/_blog/?p=780",
+     "docs/subjects/sky.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   }
+  }
+ }
+}

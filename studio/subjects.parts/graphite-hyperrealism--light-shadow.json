@@ -1,0 +1,41 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "light-shadow": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--light-shadow.md",
+    "rules": [
+     "Keep layer 1's structure (families, core, reflected light, occlusion); colour becomes value (Skillshare: edges are changes in value)",
+     "Sun vs open shade is four stops at noon (sunny 16: f/16 vs f/4); a low sun about 2-3 stops (Wikipedia Sunny 16; judgement)",
+     "The filter darkens the blue-skylit shadows and keeps warm sunlit skin light: about one stop more separation than the eye sees (Ilford; Photography Mad; derived, amount judgement)",
+     "Values on a sunlit hand: lit L* 75-88, halftones 55-70, shadow family 30-45, core 25-32, contact accents 18-28 in carbon; paper white only for true speculars (photographic ruler; Skillshare 'highlights aren't pure white'; judgement)",
+     "FLAG 'soft penumbras': penumbra = distance/110; on the hand (1-3 cm) 0.08-0.25 mm on the sheet, i.e. crisp; softness comes from rounded terminators and depth-of-field blur, not from cast shadows on the hand (layer 1, derived)",
+     "Terminators on round forms are gradients, never a soft line (calibration test egg)",
+     "Skylit shadow planes facing up lighter than those facing down; reflected light below the darkest halftone (layer 1; judgement)",
+     "Crisp family edges by clipped blending; dark-on-dark edges sharpened with a hard pencil or precision_eraser seek (calibration limit 3)"
+    ],
+    "keep": [
+     "one sun for every shadow and the Moon's lit limb",
+     "families separate in value",
+     "core, reflected light, occlusion order",
+     "cast shadows sharp at contact, softer with distance"
+    ],
+    "avoid": [
+     "outlines",
+     "paper-white lit skin everywhere",
+     "soft cast shadows on the hand under direct sun",
+     "terminator as a soft line",
+     "shiny burnished darks"
+    ],
+    "sources": [
+     "Wikipedia, Sunny 16 rule: https://en.wikipedia.org/wiki/Sunny_16_rule",
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Skillshare, the real art of photorealistic drawing: https://www.skillshare.com/en/blog/the-real-art-of-photorealistic-drawing/",
+     "docs/subjects/light-shadow.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   }
+  }
+ }
+}

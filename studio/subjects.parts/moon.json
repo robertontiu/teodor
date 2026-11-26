@@ -1,0 +1,42 @@
+{
+ "subjects": {
+  "moon": {
+   "doc": "docs/subjects/moon.md",
+   "summary": "A 0.5 deg disc whose lit limb faces the Sun; tiny on any ordinary lens (f/110 mm on the sensor); about as bright as sunlit asphalt, so pale and low-contrast against a day sky and blown out against a night sky.",
+   "key": {
+    "angular_diameter": {"value": "29.3-34.1 arcmin (~0.5 deg); fingernail at arm's length", "source": "Wikipedia, Moon; NASA moon illusion"},
+    "image_size_mm": {"value": "focal length / 110 (f/101-f/117 over the orbit): 24 mm -> 0.22, 50 mm -> 0.45, 200 mm -> 1.8, 400 mm -> 3.6; on a 48 cm-wide sheet from a 24 mm-high frame: 24 mm lens 4.3 mm (22 px), 50 mm 9 mm (45 px)", "source": "UniquePhoto Q&A f/110 rule; table derived"},
+    "lit_limb": {"value": "faces the Sun along the great circle; Northern Hemisphere waxes on the right, Southern on the left", "source": "Wikipedia, Lunar phase; Trefethen moon tilt"},
+    "terminator_geometry": {"value": "lit fraction k=(1+cos phase angle)/2; limb a semicircle, terminator a half-ellipse with semi-minor R*|2k-1|; lit width k x diameter", "source": "derived (geometry)"},
+    "phase_times": {"value": "waxing gibbous rises ~15:00, high ~21:00, in the east in the late afternoon with the Sun in the west; first quarter rises ~12:00; full never in a day sky", "source": "Wikipedia, Lunar phase; EarthSky"},
+    "surface": {"value": "albedo ~0.12 (worn asphalt); maria darker basalt, 31% of the near side; true colour muted brownish grey; rays from Tycho and Copernicus bright", "source": "Wikipedia, Moon"},
+    "maria_vs_highlands_Lstar": {"value": "~50 vs ~80 in the lit half (NASA rendering, approximate)", "source": "measured, NASA GSFC_20171208_Archive_e001862"},
+    "relief": {"value": "craters in relief only along the terminator; full Moon flat, no shadows; quarter 1/11 as bright as full", "source": "Space.com"},
+    "day_contrast": {"value": "Moon 1.1-1.7x the sky beside it (under one stop): pale, bluish, faint maria; dark part of the disc equals the sky", "source": "derived from Wikipedia luminance table (Moon 2.5 kcd/m2, clear sky 7 kcd/m2) and Space.com phase brightness"},
+    "vs_sunlit_ground": {"value": "about the value of sunlit worn asphalt; darker than sunlit skin, paper or cloud (Looney 11 = one stop under sunny 16)", "source": "Wikipedia, Looney 11 rule; Moon (albedo); derived"},
+    "night_contrast": {"value": "~10^6 x the night sky; clipped white featureless disc with a glow when the land is exposed (measured: disc L* 99.4, glow L* 30 -> 18 from limb to 2 radii, sky L* 6)", "source": "Wikipedia luminance table; measured NASA NHQ201611140005"},
+    "bw_filters": {"value": "yellow darkens blue sky slightly, orange very dark, red almost black; the brownish-grey Moon barely changes, so it stands out", "source": "Ilford; Photography Mad; judgement for the Moon"},
+    "low_moon": {"value": "not larger (1.5% farther; perceived ~50% larger); flattened ~5 arcmin (a sixth) by refraction; yellow-orange", "source": "NASA; Wikipedia, Moon illusion; Atmospheric refraction"},
+    "earthshine": {"value": "lights the dark part of a thin crescent a few days from new, at twilight or night; invisible by day and on a gibbous", "source": "Wikipedia, Earthshine; judgement for daytime"}
+   },
+   "checks": [
+    "Diameter ~0.5 deg of the picture's field of view (f/110 on the sensor); larger only as a stated long lens from far away",
+    "Lit limb faces the Sun, agreeing with the scene's cast shadows; phase fits the hour",
+    "Terminator a half-ellipse of the phase's width, softer and broken; the opposite limb crisp",
+    "By day: dark part of the disc = sky; lit part a few steps above the sky, about a sunlit grey stone, below sunlit cloud and skin",
+    "By night: either a clipped white disc with a glow over a visible land, or a detailed Moon on black, never both",
+    "Maria as a few soft patches at naked-eye size, in the near side's real pattern",
+    "A horizon Moon flattened by a sixth and warm, not enlarged"
+   ],
+   "avoid": [
+    "giant Moon with a normal lens",
+    "lit side away from the Sun",
+    "full circle outlined behind a crescent or gibbous by day",
+    "earthshine by day",
+    "paper-white day Moon with dark crisp maria",
+    "detailed Moon over an exposed night landscape",
+    "enlarged horizon Moon"
+   ]
+  }
+ }
+}

@@ -1,0 +1,43 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "trees-plants": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--trees-plants.md",
+    "rules": [
+     "Scale and focus by the lens: a 4 mm blade is ~74 mm wide on the sheet at 5 cm (blur 14 mm at f/16), ~25 mm at 10 cm (blur 6 mm), ~3.3 mm at the hand's 0.6 m (sharp) (derived from space table)",
+     "FLAG 'a few sharp ones': sharp blades can only stand in the focal zone (0.4-1.2 m at f/16), small, beside or behind the hand; every near blade blurred by its distance (optics)",
+     "Negative drawing: draw the darks between blades, keep or lift the blades; every blade has a beginning and an end (Sibley grass)",
+     "Sharp blades: lit edges indented with the stylus before any tone or lifted with an eraser pen; gaps 'almost black' (Sibley indenting; Wildlife Art Store)",
+     "Blurred blades: no stylus, no visible stroke; lay value then blend unclipped across the edge with a brush about the blur width; blur keeps value, no 'lighter because blurred' (Dessindigo; judgement)",
+     "Filtered grass (orange/red) prints darker than seen: sunlit blades L* 45-65, shadows and gaps L* 20-35 (Bolo filters; Photography Mad; values judgement)",
+     "Front-lit by a sun behind the camera: few glints, little translucency; bokeh discs only from glints, polygonal at f/16, light grey, few (Wikipedia Bokeh; judgement)"
+    ],
+    "keep": [
+     "tapering curved blades from a base",
+     "overlap in depth",
+     "one light and one wind",
+     "size by distance from the lens"
+    ],
+    "avoid": [
+     "sharp blades among the near blurred ones",
+     "stylus grooves in blurred blades",
+     "near blur drawn lighter",
+     "outlined blades",
+     "discs everywhere on matte grass"
+    ],
+    "sources": [
+     "Sibley Fine Art, drawing grass: https://sibleyfineart.com/tutorial--draw-grass.htm",
+     "Sibley Fine Art, indenting: https://sibleyfineart.com/tutorial--indenting.htm",
+     "Wildlife Art Store, realistic grass: https://www.wildlifeartstore.com/drawing-realistic-grass/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Bolo, notes on filters: https://pages.cs.wisc.edu/~bolo/photo/filters.html",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "docs/subjects/trees-plants.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   }
+  }
+ }
+}

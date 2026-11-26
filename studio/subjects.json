@@ -1336,6 +1336,86 @@
     "children as small adults",
     "using face width-to-height ratio as a sex cue"
    ]
+  },
+  "moon": {
+   "doc": "docs/subjects/moon.md",
+   "summary": "A 0.5 deg disc whose lit limb faces the Sun; tiny on any ordinary lens (f/110 mm on the sensor); about as bright as sunlit asphalt, so pale and low-contrast against a day sky and blown out against a night sky.",
+   "key": {
+    "angular_diameter": {
+     "value": "29.3-34.1 arcmin (~0.5 deg); fingernail at arm's length",
+     "source": "Wikipedia, Moon; NASA moon illusion"
+    },
+    "image_size_mm": {
+     "value": "focal length / 110 (f/101-f/117 over the orbit): 24 mm -> 0.22, 50 mm -> 0.45, 200 mm -> 1.8, 400 mm -> 3.6; on a 48 cm-wide sheet from a 24 mm-high frame: 24 mm lens 4.3 mm (22 px), 50 mm 9 mm (45 px)",
+     "source": "UniquePhoto Q&A f/110 rule; table derived"
+    },
+    "lit_limb": {
+     "value": "faces the Sun along the great circle; Northern Hemisphere waxes on the right, Southern on the left",
+     "source": "Wikipedia, Lunar phase; Trefethen moon tilt"
+    },
+    "terminator_geometry": {
+     "value": "lit fraction k=(1+cos phase angle)/2; limb a semicircle, terminator a half-ellipse with semi-minor R*|2k-1|; lit width k x diameter",
+     "source": "derived (geometry)"
+    },
+    "phase_times": {
+     "value": "waxing gibbous rises ~15:00, high ~21:00, in the east in the late afternoon with the Sun in the west; first quarter rises ~12:00; full never in a day sky",
+     "source": "Wikipedia, Lunar phase; EarthSky"
+    },
+    "surface": {
+     "value": "albedo ~0.12 (worn asphalt); maria darker basalt, 31% of the near side; true colour muted brownish grey; rays from Tycho and Copernicus bright",
+     "source": "Wikipedia, Moon"
+    },
+    "maria_vs_highlands_Lstar": {
+     "value": "~50 vs ~80 in the lit half (NASA rendering, approximate)",
+     "source": "measured, NASA GSFC_20171208_Archive_e001862"
+    },
+    "relief": {
+     "value": "craters in relief only along the terminator; full Moon flat, no shadows; quarter 1/11 as bright as full",
+     "source": "Space.com"
+    },
+    "day_contrast": {
+     "value": "Moon 1.1-1.7x the sky beside it (under one stop): pale, bluish, faint maria; dark part of the disc equals the sky",
+     "source": "derived from Wikipedia luminance table (Moon 2.5 kcd/m2, clear sky 7 kcd/m2) and Space.com phase brightness"
+    },
+    "vs_sunlit_ground": {
+     "value": "about the value of sunlit worn asphalt; darker than sunlit skin, paper or cloud (Looney 11 = one stop under sunny 16)",
+     "source": "Wikipedia, Looney 11 rule; Moon (albedo); derived"
+    },
+    "night_contrast": {
+     "value": "~10^6 x the night sky; clipped white featureless disc with a glow when the land is exposed (measured: disc L* 99.4, glow L* 30 -> 18 from limb to 2 radii, sky L* 6)",
+     "source": "Wikipedia luminance table; measured NASA NHQ201611140005"
+    },
+    "bw_filters": {
+     "value": "yellow darkens blue sky slightly, orange very dark, red almost black; the brownish-grey Moon barely changes, so it stands out",
+     "source": "Ilford; Photography Mad; judgement for the Moon"
+    },
+    "low_moon": {
+     "value": "not larger (1.5% farther; perceived ~50% larger); flattened ~5 arcmin (a sixth) by refraction; yellow-orange",
+     "source": "NASA; Wikipedia, Moon illusion; Atmospheric refraction"
+    },
+    "earthshine": {
+     "value": "lights the dark part of a thin crescent a few days from new, at twilight or night; invisible by day and on a gibbous",
+     "source": "Wikipedia, Earthshine; judgement for daytime"
+    }
+   },
+   "checks": [
+    "Diameter ~0.5 deg of the picture's field of view (f/110 on the sensor); larger only as a stated long lens from far away",
+    "Lit limb faces the Sun, agreeing with the scene's cast shadows; phase fits the hour",
+    "Terminator a half-ellipse of the phase's width, softer and broken; the opposite limb crisp",
+    "By day: dark part of the disc = sky; lit part a few steps above the sky, about a sunlit grey stone, below sunlit cloud and skin",
+    "By night: either a clipped white disc with a glow over a visible land, or a detailed Moon on black, never both",
+    "Maria as a few soft patches at naked-eye size, in the near side's real pattern",
+    "A horizon Moon flattened by a sixth and warm, not enlarged"
+   ],
+   "avoid": [
+    "giant Moon with a normal lens",
+    "lit side away from the Sun",
+    "full circle outlined behind a crescent or gibbous by day",
+    "earthshine by day",
+    "paper-white day Moon with dark crisp maria",
+    "detailed Moon over an exposed night landscape",
+    "enlarged horizon Moon"
+   ]
   }
  },
  "styles": {
@@ -2775,6 +2855,188 @@
      "https://www.metmuseum.org/art/collection/search/55222",
      "https://www.metmuseum.org/art/collection/search/55624",
      "https://www.metmuseum.org/art/collection/search/55185"
+    ]
+   }
+  },
+  "graphite-hyperrealism": {
+   "light-shadow": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--light-shadow.md",
+    "rules": [
+     "Keep layer 1's structure (families, core, reflected light, occlusion); colour becomes value (Skillshare: edges are changes in value)",
+     "Sun vs open shade is four stops at noon (sunny 16: f/16 vs f/4); a low sun about 2-3 stops (Wikipedia Sunny 16; judgement)",
+     "The filter darkens the blue-skylit shadows and keeps warm sunlit skin light: about one stop more separation than the eye sees (Ilford; Photography Mad; derived, amount judgement)",
+     "Values on a sunlit hand: lit L* 75-88, halftones 55-70, shadow family 30-45, core 25-32, contact accents 18-28 in carbon; paper white only for true speculars (photographic ruler; Skillshare 'highlights aren't pure white'; judgement)",
+     "FLAG 'soft penumbras': penumbra = distance/110; on the hand (1-3 cm) 0.08-0.25 mm on the sheet, i.e. crisp; softness comes from rounded terminators and depth-of-field blur, not from cast shadows on the hand (layer 1, derived)",
+     "Terminators on round forms are gradients, never a soft line (calibration test egg)",
+     "Skylit shadow planes facing up lighter than those facing down; reflected light below the darkest halftone (layer 1; judgement)",
+     "Crisp family edges by clipped blending; dark-on-dark edges sharpened with a hard pencil or precision_eraser seek (calibration limit 3)"
+    ],
+    "keep": [
+     "one sun for every shadow and the Moon's lit limb",
+     "families separate in value",
+     "core, reflected light, occlusion order",
+     "cast shadows sharp at contact, softer with distance"
+    ],
+    "avoid": [
+     "outlines",
+     "paper-white lit skin everywhere",
+     "soft cast shadows on the hand under direct sun",
+     "terminator as a soft line",
+     "shiny burnished darks"
+    ],
+    "sources": [
+     "Wikipedia, Sunny 16 rule: https://en.wikipedia.org/wiki/Sunny_16_rule",
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Skillshare, the real art of photorealistic drawing: https://www.skillshare.com/en/blog/the-real-art-of-photorealistic-drawing/",
+     "docs/subjects/light-shadow.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   },
+   "moon": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--moon.md",
+    "rules": [
+     "Size is the lens's, never enlarged: f/110 mm on the sensor; on a 48 cm-wide sheet 22 px (24 mm lens), 32 px (35 mm), 45 px (50 mm) (layer 1, derived)",
+     "Filtered B&W: orange/red filter darkens the blue sky, the brownish-grey Moon keeps its value: Moon 15-30 L* above the sky beside it; suggested sky L* 45-55, highlands L* 70-80 (Ilford; judgement)",
+     "FLAG 'brightest': by day the Moon equals sunlit worn asphalt (albedo 0.12; Looney 11 = sunny 16 minus one stop); keep lit skin >= Moon > sky; Moon is the brightest SMALL shape and brightest in the sky, no glint or nail highlight lighter (layer 1, derived)",
+     "FLAG 'hardest-edged' with shallow focus: infinity blur f^2/(N(s-f)) is 0.36 mm at f/2.8 (> the 0.22 mm Moon: a dim blot), 0.06 mm at f/16 (crisp, ~1.2 mm rim softening on the sheet); draw it as at f/16 (thin-lens optics, derived)",
+     "Lit limb the hardest edge on the disc; terminator a soft half-ellipse (2-4 px at 22 px); unlit part exactly the sky value, no circle outline, no earthshine, no halo by day (layer 1; judgement)",
+     "Two or three soft maria 4-8 L* darker than the highlands; no craters at this size (judgement)",
+     "Reserve the disc as a hole in the sky's clip region, then tone it up lightly (mech_03 2H/HB, tortillon); soften the rim with one unclipped tortillon pass; no stylus (calibration eraser caps; judgement)"
+    ],
+    "keep": [
+     "lit limb toward the Sun along the great circle, agreeing with the hand's light",
+     "phase shape: semicircular limb, half-ellipse terminator",
+     "real near-side maria pattern",
+     "~0.5 deg of the field of view; oval near a wide frame's corner"
+    ],
+    "avoid": [
+     "enlarged Moon in a wide-angle picture",
+     "paper-white Moon brighter than the sunlit hand",
+     "blurred blot (wide aperture) or cut-out hole",
+     "outlined full circle, earthshine, glow by day",
+     "craters or crisp dark maria at 22 px",
+     "lifting the disc out of a dark sky with a too-large eraser"
+    ],
+    "sources": [
+     "Wikipedia, Hyperrealism (visual arts): https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)",
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field ; Hyperfocal distance: https://en.wikipedia.org/wiki/Hyperfocal_distance",
+     "docs/subjects/moon.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   },
+   "sky": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--sky.md",
+    "rules": [
+     "Hue becomes value through the filter: yellow darkens blue sky slightly, orange very dark, red almost black; the filter steepens the vertical gradient (zenith falls more than the hazy horizon) (Ilford; Photography Mad; judgement for steepening)",
+     "Gradient: horizon L* 70-80, at the Moon's height L* 45-55, top of frame L* 35-45; side away from the Sun darker (layer 1 gradients; values judgement)",
+     "FLAG: a red-filter near-black sky is beyond graphite over a large area (graphite area ~L* 42 and shiny, carbon ~L* 32): draw an orange-filter sky with carbon over graphite at the top (calibration; Vitruvian Studio)",
+     "No texture, no banding: a photographic sky has grain ~0; keep 0.5-5 mm mottle at the reference's and the vertical profile monotonic (calibration flat tone and ramp residual 0.44 L*)",
+     "Technique: pressure falling toward the horizon, crossed second layer, loose graphite rubbed in, tortillon, paper towel, soft brush; 'draw the sky darker than it looks' (Empty Easel); light layers, blend in stages, no overblending (Vitruvian; Wildlife Art Store)",
+     "Cirrus lifted, not drawn: kneaded strokes along one wind, a few fibres with the battery eraser at its smallest, softened; 5-15 L* above the sky; no stylus grooves (WMO via layer 1; Wildlife Art Store white lines; judgement)",
+     "The sky has no edges except cirrus fibres, the Moon's limb and silhouettes against it (judgement)"
+    ],
+    "keep": [
+     "both gradients and their direction to the Sun",
+     "cirrus at WMO height, one wind, perspective toward the horizon",
+     "sky darker than the sunlit hand, lighter than its contact shadows"
+    ],
+    "avoid": [
+     "flat or banded sky",
+     "blotchy mottle or visible hatching",
+     "near-black shiny carbon field",
+     "cirrus as hard white scratches",
+     "edges or outlines in the clear sky"
+    ],
+    "sources": [
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Empty Easel, luminous clouds in graphite: https://emptyeasel.com/?p=23357",
+     "Vitruvian Studio, graphite shine: https://vitruvianstudio.com/blog/3-ways-to-reduce-graphite-shine-in-your-drawings/",
+     "Wildlife Art Store, white lines: https://www.wildlifeartstore.com/white-lines-in-a-pencil-drawing/",
+     "Sibley, indenting explained: https://sibleyfineart.com/_blog/?p=780",
+     "docs/subjects/sky.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   },
+   "space": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--space.md",
+    "rules": [
+     "Perspective is the lens's, transferred, not constructed; 24 mm used close extends depth: on a 48 cm sheet the hand at 0.6 m is ~0.83 life size, a blade at 10 cm 6.3x, the Moon 22 px (Wikipedia Hyperrealism, Perspective distortion; derived)",
+     "Depth of field added: blur b = f^2|s-d|/(N d (s-f)); at 24 mm focused 0.6 m, f/16 gives a sharp zone 0.4-1.2 m, Moon blur 6 px, grass at 10 cm 31 px, at 5 cm 69 px (thin-lens optics; derived table in doc)",
+     "FLAG: shallow focus at f/2.8-f/5.6 smears the Moon (blur >= its size); use f/11-f/22, f/16 recommended (derived)",
+     "Blur grows continuously with each object's distance; no uniform blur field, no cut-out subject (Eclectic Light on Renoir; Wikipedia DOF)",
+     "Blur is an edge width, not a value change: blurred things keep their value; thin things narrower than their blur fade to translucent grey (judgement; derived)",
+     "Points of light become aperture-shaped discs, polygonal when stopped down; matte surfaces make soft bands (Wikipedia Bokeh; judgement)",
+     "Decide the blur before detail; smudge, then detail only in focus (Dessindigo; Wildlife Art Store)",
+     "No aerial perspective at these depths; corners of a wide frame stretch round things 1.2-1.35x and darken slightly (derived; vignetting judgement)"
+    ],
+    "keep": [
+     "overlap order near grass > hand > sky and Moon",
+     "relative size by distance from one lens",
+     "one eye level and one lens for the sheet",
+     "shadows from one sun"
+    ],
+    "avoid": [
+     "mixing lenses (telephoto Moon in a wide frame)",
+     "near blur drawn lighter or hazier",
+     "cut-out sharp subject on uniform blur",
+     "sharp edges outside the focal zone"
+    ],
+    "sources": [
+     "Wikipedia, Hyperrealism (visual arts): https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Hyperfocal distance: https://en.wikipedia.org/wiki/Hyperfocal_distance",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion",
+     "Eclectic Light, depth of field in painting: https://eclecticlight.co/2023/10/13/painting-on-the-edge-depth-of-field/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wildlife Art Store, realistic grass: https://www.wildlifeartstore.com/drawing-realistic-grass/",
+     "docs/subjects/space.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   },
+   "trees-plants": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--trees-plants.md",
+    "rules": [
+     "Scale and focus by the lens: a 4 mm blade is ~74 mm wide on the sheet at 5 cm (blur 14 mm at f/16), ~25 mm at 10 cm (blur 6 mm), ~3.3 mm at the hand's 0.6 m (sharp) (derived from space table)",
+     "FLAG 'a few sharp ones': sharp blades can only stand in the focal zone (0.4-1.2 m at f/16), small, beside or behind the hand; every near blade blurred by its distance (optics)",
+     "Negative drawing: draw the darks between blades, keep or lift the blades; every blade has a beginning and an end (Sibley grass)",
+     "Sharp blades: lit edges indented with the stylus before any tone or lifted with an eraser pen; gaps 'almost black' (Sibley indenting; Wildlife Art Store)",
+     "Blurred blades: no stylus, no visible stroke; lay value then blend unclipped across the edge with a brush about the blur width; blur keeps value, no 'lighter because blurred' (Dessindigo; judgement)",
+     "Filtered grass (orange/red) prints darker than seen: sunlit blades L* 45-65, shadows and gaps L* 20-35 (Bolo filters; Photography Mad; values judgement)",
+     "Front-lit by a sun behind the camera: few glints, little translucency; bokeh discs only from glints, polygonal at f/16, light grey, few (Wikipedia Bokeh; judgement)"
+    ],
+    "keep": [
+     "tapering curved blades from a base",
+     "overlap in depth",
+     "one light and one wind",
+     "size by distance from the lens"
+    ],
+    "avoid": [
+     "sharp blades among the near blurred ones",
+     "stylus grooves in blurred blades",
+     "near blur drawn lighter",
+     "outlined blades",
+     "discs everywhere on matte grass"
+    ],
+    "sources": [
+     "Sibley Fine Art, drawing grass: https://sibleyfineart.com/tutorial--draw-grass.htm",
+     "Sibley Fine Art, indenting: https://sibleyfineart.com/tutorial--indenting.htm",
+     "Wildlife Art Store, realistic grass: https://www.wildlifeartstore.com/drawing-realistic-grass/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Bolo, notes on filters: https://pages.cs.wisc.edu/~bolo/photo/filters.html",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "docs/subjects/trees-plants.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
     ]
    }
   }

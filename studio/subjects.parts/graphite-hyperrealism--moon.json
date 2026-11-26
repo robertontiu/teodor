@@ -1,0 +1,41 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "moon": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--moon.md",
+    "rules": [
+     "Size is the lens's, never enlarged: f/110 mm on the sensor; on a 48 cm-wide sheet 22 px (24 mm lens), 32 px (35 mm), 45 px (50 mm) (layer 1, derived)",
+     "Filtered B&W: orange/red filter darkens the blue sky, the brownish-grey Moon keeps its value: Moon 15-30 L* above the sky beside it; suggested sky L* 45-55, highlands L* 70-80 (Ilford; judgement)",
+     "FLAG 'brightest': by day the Moon equals sunlit worn asphalt (albedo 0.12; Looney 11 = sunny 16 minus one stop); keep lit skin >= Moon > sky; Moon is the brightest SMALL shape and brightest in the sky, no glint or nail highlight lighter (layer 1, derived)",
+     "FLAG 'hardest-edged' with shallow focus: infinity blur f^2/(N(s-f)) is 0.36 mm at f/2.8 (> the 0.22 mm Moon: a dim blot), 0.06 mm at f/16 (crisp, ~1.2 mm rim softening on the sheet); draw it as at f/16 (thin-lens optics, derived)",
+     "Lit limb the hardest edge on the disc; terminator a soft half-ellipse (2-4 px at 22 px); unlit part exactly the sky value, no circle outline, no earthshine, no halo by day (layer 1; judgement)",
+     "Two or three soft maria 4-8 L* darker than the highlands; no craters at this size (judgement)",
+     "Reserve the disc as a hole in the sky's clip region, then tone it up lightly (mech_03 2H/HB, tortillon); soften the rim with one unclipped tortillon pass; no stylus (calibration eraser caps; judgement)"
+    ],
+    "keep": [
+     "lit limb toward the Sun along the great circle, agreeing with the hand's light",
+     "phase shape: semicircular limb, half-ellipse terminator",
+     "real near-side maria pattern",
+     "~0.5 deg of the field of view; oval near a wide frame's corner"
+    ],
+    "avoid": [
+     "enlarged Moon in a wide-angle picture",
+     "paper-white Moon brighter than the sunlit hand",
+     "blurred blot (wide aperture) or cut-out hole",
+     "outlined full circle, earthshine, glow by day",
+     "craters or crisp dark maria at 22 px",
+     "lifting the disc out of a dark sky with a too-large eraser"
+    ],
+    "sources": [
+     "Wikipedia, Hyperrealism (visual arts): https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)",
+     "Ilford, colour filters: https://ilfordphoto.com/colour-filters",
+     "Photography Mad, coloured filters: https://photographymad.com/pages/view/using-coloured-filters-in-black-and-white-photography",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field ; Hyperfocal distance: https://en.wikipedia.org/wiki/Hyperfocal_distance",
+     "docs/subjects/moon.md (layer 1)",
+     "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
+     "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
+    ]
+   }
+  }
+ }
+}
