@@ -16,7 +16,7 @@ for f in glob.glob(os.path.join(STUDIO, "*.py")):
         shutil.copy(f, w)
 shutil.copytree(os.path.join(STUDIO, "media"), os.path.join(w, "media"), dirs_exist_ok=True,
                 ignore=shutil.ignore_patterns("__pycache__", ".*"))
-for f in ("styles.json", "targets.json", "pigments.json", "subjects.json"):
+for f in ("styles.json", "targets.json", "pigments.json"):  # never subjects.json: that name is the painter's own list
     p = os.path.join(ROOT, "studio", f)
     if os.path.exists(p):
         shutil.copy(p, os.path.join(w, f))
