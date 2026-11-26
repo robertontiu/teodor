@@ -1,4 +1,4 @@
-# Visitor (a fresh critic; knew only the commission "a public exhibition on a theme. The theme is: She (a female character the artist has a deep interest in)"; read final.png and the contact sheet past_work.jpg)
+# Visitor, first state (a fresh critic; knew only the commission "a public exhibition on a theme. The theme is: She (a female character the artist has a deep interest in)"; read final.png and the contact sheet past_work.jpg)
 
 1) First three seconds: wind, release, a shout of joy. Then unease, because the laugh reads as a grimace.
 

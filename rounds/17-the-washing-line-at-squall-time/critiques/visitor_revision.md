@@ -1,0 +1,14 @@
+# Visitor, after the revision (a fresh critic; knew only the commission; read final.png, no contact sheet)
+
+1) First three seconds: exhilaration and release, wind, open air. Underneath that a slightly stiff, staged quality, like a happy figurehead more than a person.
+
+2) What makes me feel it: the wide open-armed pose, one hand gripping a sail and the other open to the sea. Hair streaming to the right. Her head is tipped back into the light. A cold storm-blue sky and sea sit against her warm ochre body, and the strong diagonal of the bow drives her forward. The person is a woman, roughly 25 to 35, in a sleeveless ochre bodice and skirt, with long dark-brown hair. She stands at the prow of a sailing boat. She seems to be a seafarer or a free spirit, someone who has chosen the open water. Her expression is an eyes-half-closed, open-mouthed smile of joy, face lifted to the wind.
+
+3) Weaknesses, face first:
+- Face: it reads as a pale, flat, mask-like oval. The features are small and pushed together near the top of the head, and the eyes are vague slits. The smile is a dark crescent that sits too low and too wide, so the joy looks grimacing or doll-like up close. The face is lighter and cooler than the arms and neck, so it looks pasted on rather than lit by the same sun. There is no clear plane change between brow, cheek and jaw, and no shadow under the chin to seat the head on the neck.
+- Anatomy and drawing: the raised arm is long, tube-like and uniform in width, with no elbow or deltoid structure. The left (viewer's right) arm turns into a dark brown wing-like smear, and you can't tell if it is an arm, a shawl or hair. The torso is stiff and boxy, like a breastplate, with a hard dark waistband. Her lower body has no legs or weight; she just ends at the gunwale, so she doesn't seem to stand on anything.
+- Space: the bow, rail and foreground deck are a large, muddy, undifferentiated brown wedge (about a third of the canvas) with no form or nautical detail. The figure isn't anchored in the boat.
+- Surface: patches of visible screen-like crosshatch texture (sky, sail, around the head) read as digital, not paint. The sail is a flat grey sheet with little sense of billowing cloth or wind direction matching the hair.
+- Light: the light is said to come from the upper left, but the sail and her front are both bright, and cast shadows are missing. The scene lacks one clear sun.
+
+4) The one change: repaint the head. Give it the same warm light as the arms, a clear light/shadow split across the planes of the face with a cast shadow under the jaw, and properly placed eyes, nose and a smaller, higher smile. The whole picture's emotion rests on that face, and right now it undercuts the joy the pose promises. (A close second: give the foreground bow real form, or crop it.)

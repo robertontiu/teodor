@@ -1,0 +1,142 @@
+{
+ "camera": {
+  "pos": [
+   -0.03,
+   0.55,
+   2.4
+  ],
+  "look_at": [
+   0.16,
+   1.0,
+   0
+  ],
+  "fov": 44
+ },
+ "sun": {
+  "azimuth": -80,
+  "elevation": 10,
+  "color": "#eef0dc",
+  "intensity": 2.9,
+  "softness": 8
+ },
+ "sky": {
+  "zenith": "#4a4e56",
+  "horizon": "#bdb9a8",
+  "sun_glow": 0.4,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#7d8590",
+  "ground": "#4a3c30",
+  "intensity": 0.3
+ },
+ "fog": {
+  "color": "#9a9e9c",
+  "density": 0.004
+ },
+ "ground": {
+  "color": "#2f3436",
+  "color2": "#283034"
+ },
+ "wind": [
+  12,
+  0,
+  0
+ ],
+ "render_scale": 1.3,
+ "objects": [
+  {
+   "type": "person",
+   "id": "she",
+   "pos": [
+    0.06,
+    1.44,
+    0.0
+   ],
+   "anchor": "head",
+   "facing": -20,
+   "sex": "female",
+   "age": 40,
+   "build": "sturdy",
+   "height": 1.66,
+   "pose": "lean_wind",
+   "lean": [
+    0,
+    -13
+   ],
+   "joints": {
+    "neck": [
+     -3,
+     12,
+     -20
+    ],
+    "head": [
+     -3,
+     4,
+     0
+    ],
+    "spine": [
+     -4,
+     -6,
+     8
+    ],
+    "arm_r": [
+     30,
+     50,
+     0,
+     20
+    ]
+   },
+   "expression": {
+    "preset": "smile",
+    "au": {
+     "6": 1.0,
+     "12": 0.85,
+     "7": 0.65,
+     "41": 0.35,
+     "25": 0.08,
+     "26": 0.0
+    }
+   },
+   "gaze": [
+    15,
+    8
+   ],
+   "skin": "#c4977a",
+   "color": "#b5a78c",
+   "bare": [
+    "arms"
+   ],
+   "hair": {
+    "style": "ponytail",
+    "color": "#2a1f18",
+    "length": 0.5
+   },
+   "clothes": [
+    {
+     "kind": "dress",
+     "color": "#4b3a2a",
+     "length": 0.95,
+     "flare": 0.15,
+     "drag": 1.3,
+     "folds": 0.05
+    },
+    {
+     "kind": "shawl",
+     "color": "#2f2a28",
+     "length": 0.7,
+     "width": 0.36
+    }
+   ],
+   "reach_l": {
+    "target": [
+     1.0,
+     2.5,
+     0.3
+    ],
+    "hand": "grip"
+   },
+   "hand_r": "spread"
+  }
+ ]
+}

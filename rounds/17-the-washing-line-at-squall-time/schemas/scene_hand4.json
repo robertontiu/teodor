@@ -1,0 +1,75 @@
+{
+ "camera": {
+  "pos": [
+   -0.03,
+   0.55,
+   2.4
+  ],
+  "look_at": [
+   0.16,
+   1.0,
+   0
+  ],
+  "fov": 44
+ },
+ "sun": {
+  "azimuth": -80,
+  "elevation": 10,
+  "color": "#eef0dc",
+  "intensity": 2.9,
+  "softness": 8
+ },
+ "sky": {
+  "zenith": "#4a4e56",
+  "horizon": "#bdb9a8",
+  "sun_glow": 0.4,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#7d8590",
+  "ground": "#4a3c30",
+  "intensity": 0.3
+ },
+ "fog": {
+  "color": "#9a9e9c",
+  "density": 0.004
+ },
+ "ground": {
+  "color": "#2f3436",
+  "color2": "#283034"
+ },
+ "wind": [
+  12,
+  0,
+  0
+ ],
+ "render_scale": 2.0,
+ "objects": [
+  {
+   "type": "hand",
+   "id": "open",
+   "pos": [
+    -0.275,
+    0.886,
+    0.35
+   ],
+   "preset": "spread",
+   "fingers": [
+    -1,
+    -0.32,
+    0.2
+   ],
+   "palm": [
+    0,
+    0.35,
+    1
+   ],
+   "side": "r",
+   "length": 0.15,
+   "forearm": 0.6,
+   "sex": "female",
+   "age": 40,
+   "skin": "#c4977a"
+  }
+ ]
+}
