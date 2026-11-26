@@ -1,0 +1,65 @@
+{
+ "styles": {
+  "romanticism": {
+   "hair": {
+    "doc": "docs/styles/subjects/romanticism--hair.md",
+    "summary": "Hair let loose: unbound, dishevelled or wet as a sign of passion and nature's force; one dark mass with few groups, edge lost into dark ground or weather, a few locks in the light in visible strokes; moves with the same weather as cloth and sky.",
+    "rules": [
+     {
+      "rule": "Loose, unbound hair belongs to the Romantic figure; in the period's code dishevelled hair signals distraction or distress, so face and pose decide the reading.",
+      "source": "Showalter 1985, Representing Ophelia (quoted): https://eportfolios.macaulay.cuny.edu/milsteinsandbox/?p=51; CMA 1941.215.13 Delacroix, The Death of Ophelia; Met 334042 Goya, A woman pulling at her hair; Met 438814 Delacroix, The Abduction of Rebecca"
+     },
+     {
+      "rule": "Fewer groups than life: one dark mass, two or three big falls, a few locks only where the light catches; no texture in the shadow mass.",
+      "source": "judgement, observed on CMA 1964.284 Delacroix, Marguerite-Juliette Pierret, Met 438107 Chasseriau, Desdemona, CMA 1941.215.13 Delacroix, The Death of Ophelia"
+     },
+     {
+      "rule": "Lose the edge into dark ground on the shadow side and into the weather leeward; find it only against the lit face or light sky.",
+      "source": "judgement, observed on Met 438107 Chasseriau, Desdemona, CMA 1964.284 Delacroix, Marguerite-Juliette Pierret, Met 436423 Fuseli, Night-Hag"
+     },
+     {
+      "rule": "Hair is among the darkest values beside the face so the lit face reads against it.",
+      "source": "judgement, observed on CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 438107 Chasseriau, Desdemona"
+     },
+     {
+      "rule": "Wet hair as dark tapering ropes following water or wind, light gaps between them.",
+      "source": "CMA 1941.215.13 Delacroix, The Death of Ophelia; layer 1 hair (wet)"
+     },
+     {
+      "rule": "Strokes long, tapering, visible, following growth and fall; light a warm band of a few strokes across the locks, not a polished sheen; shadows coloured, not black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9; CMA 1964.284 Delacroix, Marguerite-Juliette Pierret; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 physics: roots fixed, ends move most, windward side flat to the skull",
+     "wet hair darker and clumped",
+     "one wind for hair, cloth and sky",
+     "highlight across the strands"
+    ],
+    "avoid": [
+     "dressed, powdered or tightly curled sculptural hair with even light and firm edge (neoclassical contrast)",
+     "individual strands or a corona of strays",
+     "texture in shadow"
+    ],
+    "flags": [
+     "Loose hair on a woman read as distraction in period code; the brief's joy is carried by face and pose (judgement)."
+    ],
+    "sources": [
+     "Showalter 1985, Representing Ophelia (quoted): https://eportfolios.macaulay.cuny.edu/milsteinsandbox/?p=51",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "Met 438107 Chasseriau, Desdemona",
+     "Met 436423 Fuseli, Night-Hag",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "CMA 1964.284 Delacroix, Marguerite-Juliette Pierret",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)"
+    ]
+   }
+  }
+ }
+}

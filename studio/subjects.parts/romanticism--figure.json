@@ -1,0 +1,91 @@
+{
+ "styles": {
+  "romanticism": {
+   "figure": {
+    "doc": "docs/styles/subjects/romanticism--figure.md",
+    "summary": "The body carries a passion and the weather: twisted, off balance, arms flung along the storm's diagonal, heavy observed masses, broken contours, dramatic side light, visible brushwork; against the calm, even-lit, firm-contoured neoclassical ideal.",
+    "rules": [
+     {
+      "rule": "Push the line of action past life: arms to full stretch, torso twisted against the pelvis, the body on one diagonal that continues the storm, sea or sail.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Met 436176 Delacroix, Christ Asleep during the Tempest; Met 358057 Gericault, Shipwreck of the Meduse"
+     },
+     {
+      "rule": "Balance may be unstable, held by wind, rope or another body; commit the gesture fully.",
+      "source": "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix (disequilibrium vs the academie); Met 436176 Delacroix, Christ Asleep during the Tempest"
+     },
+     {
+      "rule": "Keep the natural 7-7.5 head canon; make the masses heavy and fleshy (Michelangelo and Rubens, not Greek statuary); working bodies as observed.",
+      "source": "Smarthistory Delacroix overview https://smarthistory.org/?p=49523; Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; head count judgement"
+     },
+     {
+      "rule": "Simplify anatomy to a few big lit masses; leave out small surface anatomy beyond half-length.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Single figure in nature: set against sky and sea with a low horizon, body or face turned to the light; figure and weather share one feeling.",
+      "source": "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism; Met 436454 Gericault, Alfred Dedreux; Met 358004 Gericault, I Dream of Her; CMA 1995.68 Friedrich, Woman with the Spider Web"
+     },
+     {
+      "rule": "Shadows on flesh built from strands of colour taking the surround's hue, never local colour mixed with black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9"
+     },
+     {
+      "rule": "Contours broken and discontinuous; volumes inside dominate; lost edges on turning shadow sides and into dark ground.",
+      "source": "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix; judgement for the edge placement"
+     },
+     {
+      "rule": "Dramatic one-sided light with strong contrasts, not David's clear even light.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Brushwork visible; keep the freshness of the sketch over finish.",
+      "source": "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal"
+     }
+    ],
+    "keep": [
+     "anatomy, weight and head unit from layer 1",
+     "opposite tilts of shoulders and hips",
+     "contact and overlap",
+     "drawing from models (Gericault drew 'the bodies of the living and the dead')"
+    ],
+    "avoid": [
+     "frieze-like frontal arrangement",
+     "calm sculptural ideal body ('noble simplicity and sedate grandeur')",
+     "firm continuous outline with blended academic modelling",
+     "the Ruckenfigur lone figure from behind (Teodor's habit)",
+     "slimming a working body toward an ideal or an eight-head heroic canon (judgement)"
+    ],
+    "measured": "crisp-edge share (gradient >8 L*/px among >2) on 800-px museum images: Romantic oils 0.02-0.19 (5 works), David 0.23-0.28, Girodet 1823 0.15; overlapping, no threshold set. Value key did not separate the currents.",
+    "flags": [
+     "Joy in a gale has no shared Romantic model (storm figures show awe, terror, despair, hope); paint the joy through the open upward gesture with the current's means (judgement)."
+    ],
+    "sources": [
+     "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix",
+     "Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "CMA 2023.123 Delacroix, A Young Black Woman Fetching Water",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 358057 Gericault, Shipwreck of the Meduse",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "CMA 1961.149 Gericault, The French Blacksmith",
+     "CMA 2008.378.a Gericault, Man Clutching a Horse",
+     "Met 358004 Gericault, I Dream of Her",
+     "Met 334047 Goya, A country dance",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 436423 Fuseli, Night-Hag",
+     "CMA 1995.68 Friedrich, Woman with the Spider Web",
+     "Met 436105 David, Death of Socrates (contrast)",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)"
+    ]
+   }
+  }
+ }
+}

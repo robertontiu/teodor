@@ -1168,5 +1168,931 @@
    ]
   }
  },
- "styles": {}
+ "styles": {
+  "romanticism": {
+   "drapery": {
+    "doc": "docs/styles/subjects/romanticism--drapery.md",
+    "summary": "Cloth carries the weather and the feeling: fewer, bigger folds as broad colour planes in loaded strokes, bellying and streaming with one wind; deep saturated colour; gravity and support points kept.",
+    "rules": [
+     "Cloth carries the weather and the feeling: show wind direction and force before fabric construction (Delacroix, Christ Asleep, Met 29.100.131; Faust lithograph, Met 62.617.1; Martin, CMA 1997.138)",
+     "Fewer, bigger folds: one or two fold systems per cloth mass, secondary folds as single strokes, no small wrinkles (observed across Delacroix, Gericault, Martin)",
+     "Wind-filled cloth is a convex pocket or sail: lit belly, dark hollow, carried by silhouette; the belly may be exaggerated (judgement, from Christ Asleep and the Faust cape)",
+     "Flag folds stream as one long taut tapering shape from the anchor, not many small flutters (Faust cape; Martin shawl)",
+     "Colour over line: each cloth plane in one loaded stroke, drawing sacrificed to drama (L'Artiste 1832 via OpenLearn; Smarthistory/McCoy)",
+     "Cloth holds the strongest local colour, deep not gay: deep reds and blues against earths and storm greys (Burke II.17: no 'gay or gaudy drapery', 'except perhaps a strong red'; observed Christ Asleep, Rebecca)",
+     "Heavy wool hangs plumb in long pipe folds and barely lifts; light cloth (capes, shawls, sails, sheets) shows the wind (Gericault, Return from Russia, CMA 1931.48)",
+     "White cloth (sails, laundry, dresses) is the brightest note on the land, still below the sky's brightest (measured: Whalers Met 96.29; Flers CMA 1980.259; Oxbow umbrella Met 08.228)",
+     "Edges crisp on the lit belly, lost into the storm on the shadow side; in prints hatching follows the wind (Rebecca Met 03.30; Faust)",
+     "At landscape scale a figure's clothing is two or three strokes, one light and one dark shape streaming the same way (Martin, CMA 1997.138)"
+    ],
+    "keep": [
+     "support points and gravity from layer 1: cloaks hang from shoulders, sheets from pegs, sag between pegs",
+     "wind plus gravity gives a diagonal; heavy cloth lifts less than light",
+     "windward side presses and reveals the body, leeward side billows",
+     "one wind for cloth, hair, grass, smoke and trees",
+     "wet cloth darker, heavier, clinging; translucency per layer 1 (no Romantic convention found: judgement)"
+    ],
+    "avoid": [
+     "many small even wrinkles, stitching or texture inventories",
+     "fold lines drawn over flat colour",
+     "pastel or gaudy cloth colour",
+     "cloth flapping in several directions",
+     "Neoclassical sculptural wet drapery on a still idealised body",
+     "cloth brighter than the sky's brightest light"
+    ],
+    "flags": [
+     "translucent wet linen: no Romantic convention found; layer 1 governs it"
+    ],
+    "case_notes": [
+     "gale: heavy wool skirt pressed against the legs as one connected mass, no fluttering hem; shawl as one long dark streaming flag (judgement from Gericault, Martin, Faust)",
+     "wet linen sheets: big lit bellies with 2-3 fold lines from each peg, heavy sagging bottom edge; the torn-free sheet a twisting flag, leading edge crisp, trailing edge lost in haze (judgement)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/drapery.md",
+     "OpenLearn, Delacroix 2.10 Colour versus line: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.10",
+     "Burke, Enquiry II.17: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "McCoy, Eugene Delacroix an introduction (Smarthistory): https://uen.pressbooks.pub/arth2720/chapter/eugene-delacroix-an-introduction/",
+     "https://www.metmuseum.org/art/collection/search/436176",
+     "https://www.metmuseum.org/art/collection/search/438814",
+     "https://www.metmuseum.org/art/collection/search/337093",
+     "https://www.metmuseum.org/art/collection/search/437854",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.clevelandart.org/art/1931.48",
+     "https://www.clevelandart.org/art/1997.138",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/2022.249"
+    ]
+   },
+   "face": {
+    "doc": "docs/styles/subjects/romanticism--face.md",
+    "summary": "Individual, psychological faces; passion reaches the face (open mouths allowed); head often lifted to the light; at figure scale three to five value shapes; dramatic side light, warm thick lights, cool thin shadows lost into hair and ground.",
+    "rules": [
+     {
+      "rule": "Make each face particular (nose, jaw, brow, weathering); keep the classical profile only for allegory.",
+      "source": "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism (portraits as vehicles of psychological states); Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met 337181 Gericault, studies for the Raft"
+     },
+     {
+      "rule": "The lifted head: tipped back, face turned up to the light or sky; reads as hope, ecstasy or terror by the rest of the face.",
+      "source": "Met 337181 Gericault, studies for the Raft; Met 436423 Fuseli, Night-Hag; Met 334042 Goya, A woman pulling at her hair; CMA 1995.68 Friedrich, Woman with the Spider Web; Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Below half-length the face is 3-5 value shapes: lit brow and cheek, dark socket, dark mouth, shadow under the jaw; no outlined features.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest and Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Expression stronger than neoclassical; the open mouth is allowed; the whole head (tilt, neck strain) carries it.",
+      "source": "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism (Winckelmann's sedate soul, the contrast); Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Paint joy, not the satanic laugh: Romantic theory separates joy ('La joie est une') from laughter of superiority; avoid sneer, one-sided mouth, caricature grin.",
+      "source": "Baudelaire 1855, On the Essence of Laughter: https://shakespeare-navigators.ewu.edu/courses/Dramatic_Comedy/Baudelaire_Essence_of_Laughter.html; Baudelaire, De l'essence du rire (Wikisource): https://fr.wikisource.org/wiki/Curiosit%C3%A9s_esth%C3%A9tiques/De_l%E2%80%99essence_du_rire"
+     },
+     {
+      "rule": "Dramatic side light out of a dark ground; lit planes warm, thick, stroked; shadow planes thin, cool, lost into hair and ground.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9; CMA 1964.284 Delacroix, Marguerite-Juliette Pierret"
+     }
+    ],
+    "keep": [
+     "FACS action units and the laugh-versus-scream table from layer 1",
+     "measured proportions from layer 1",
+     "for a laugh: AU6 lifted cheeks and narrowed eyes as well as AU12 mouth"
+    ],
+    "avoid": [
+     "smooth, evenly lit, finished neoclassical face",
+     "one ideal face for everyone",
+     "outlined eyes and mouth",
+     "satirical or mocking laughing faces of period prints",
+     "a head thrown so far back from below that the laugh is lost (layer 1)"
+    ],
+    "measured": "two Delacroix figure crops (Met 436176, 438814), flesh-hued pixels only: lit quartile L* 34-37, chroma ~22, hue 60-69 deg; darkest quartile L* 8-10, chroma ~10 (greenish shadows under-counted by the filter).",
+    "flags": [
+     "A joyful laugh is outside the current's usual faces; keep the true Duchenne laugh from layer 1 and render it with Romantic means (judgement)."
+    ],
+    "sources": [
+     "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Baudelaire 1855, On the Essence of Laughter: https://shakespeare-navigators.ewu.edu/courses/Dramatic_Comedy/Baudelaire_Essence_of_Laughter.html",
+     "Baudelaire, De l'essence du rire (Wikisource): https://fr.wikisource.org/wiki/Curiosit%C3%A9s_esth%C3%A9tiques/De_l%E2%80%99essence_du_rire",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 1964.284 Delacroix, Marguerite-Juliette Pierret",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "Met 436423 Fuseli, Night-Hag",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 334047 Goya, A country dance",
+     "Met 438107 Chasseriau, Desdemona",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)",
+     "CMA 1968.260.k Blake, The Just Upright Man is Laughed to Scorn (title only)"
+    ]
+   },
+   "figure": {
+    "doc": "docs/styles/subjects/romanticism--figure.md",
+    "summary": "The body carries a passion and the weather: twisted, off balance, arms flung along the storm's diagonal, heavy observed masses, broken contours, dramatic side light, visible brushwork; against the calm, even-lit, firm-contoured neoclassical ideal.",
+    "rules": [
+     {
+      "rule": "Push the line of action past life: arms to full stretch, torso twisted against the pelvis, the body on one diagonal that continues the storm, sea or sail.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Met 436176 Delacroix, Christ Asleep during the Tempest; Met 358057 Gericault, Shipwreck of the Meduse"
+     },
+     {
+      "rule": "Balance may be unstable, held by wind, rope or another body; commit the gesture fully.",
+      "source": "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix (disequilibrium vs the academie); Met 436176 Delacroix, Christ Asleep during the Tempest"
+     },
+     {
+      "rule": "Keep the natural 7-7.5 head canon; make the masses heavy and fleshy (Michelangelo and Rubens, not Greek statuary); working bodies as observed.",
+      "source": "Smarthistory Delacroix overview https://smarthistory.org/?p=49523; Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; head count judgement"
+     },
+     {
+      "rule": "Simplify anatomy to a few big lit masses; leave out small surface anatomy beyond half-length.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Single figure in nature: set against sky and sea with a low horizon, body or face turned to the light; figure and weather share one feeling.",
+      "source": "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism; Met 436454 Gericault, Alfred Dedreux; Met 358004 Gericault, I Dream of Her; CMA 1995.68 Friedrich, Woman with the Spider Web"
+     },
+     {
+      "rule": "Shadows on flesh built from strands of colour taking the surround's hue, never local colour mixed with black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9"
+     },
+     {
+      "rule": "Contours broken and discontinuous; volumes inside dominate; lost edges on turning shadow sides and into dark ground.",
+      "source": "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix; judgement for the edge placement"
+     },
+     {
+      "rule": "Dramatic one-sided light with strong contrasts, not David's clear even light.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Brushwork visible; keep the freshness of the sketch over finish.",
+      "source": "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal"
+     }
+    ],
+    "keep": [
+     "anatomy, weight and head unit from layer 1",
+     "opposite tilts of shoulders and hips",
+     "contact and overlap",
+     "drawing from models (Gericault drew 'the bodies of the living and the dead')"
+    ],
+    "avoid": [
+     "frieze-like frontal arrangement",
+     "calm sculptural ideal body ('noble simplicity and sedate grandeur')",
+     "firm continuous outline with blended academic modelling",
+     "the Ruckenfigur lone figure from behind (Teodor's habit)",
+     "slimming a working body toward an ideal or an eight-head heroic canon (judgement)"
+    ],
+    "measured": "crisp-edge share (gradient >8 L*/px among >2) on 800-px museum images: Romantic oils 0.02-0.19 (5 works), David 0.23-0.28, Girodet 1823 0.15; overlapping, no threshold set. Value key did not separate the currents.",
+    "flags": [
+     "Joy in a gale has no shared Romantic model (storm figures show awe, terror, despair, hope); paint the joy through the open upward gesture with the current's means (judgement)."
+    ],
+    "sources": [
+     "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix",
+     "Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "CMA 2023.123 Delacroix, A Young Black Woman Fetching Water",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 358057 Gericault, Shipwreck of the Meduse",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "CMA 1961.149 Gericault, The French Blacksmith",
+     "CMA 2008.378.a Gericault, Man Clutching a Horse",
+     "Met 358004 Gericault, I Dream of Her",
+     "Met 334047 Goya, A country dance",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 436423 Fuseli, Night-Hag",
+     "CMA 1995.68 Friedrich, Woman with the Spider Web",
+     "Met 436105 David, Death of Socrates (contrast)",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)"
+    ]
+   },
+   "hair": {
+    "doc": "docs/styles/subjects/romanticism--hair.md",
+    "summary": "Hair let loose: unbound, dishevelled or wet as a sign of passion and nature's force; one dark mass with few groups, edge lost into dark ground or weather, a few locks in the light in visible strokes; moves with the same weather as cloth and sky.",
+    "rules": [
+     {
+      "rule": "Loose, unbound hair belongs to the Romantic figure; in the period's code dishevelled hair signals distraction or distress, so face and pose decide the reading.",
+      "source": "Showalter 1985, Representing Ophelia (quoted): https://eportfolios.macaulay.cuny.edu/milsteinsandbox/?p=51; CMA 1941.215.13 Delacroix, The Death of Ophelia; Met 334042 Goya, A woman pulling at her hair; Met 438814 Delacroix, The Abduction of Rebecca"
+     },
+     {
+      "rule": "Fewer groups than life: one dark mass, two or three big falls, a few locks only where the light catches; no texture in the shadow mass.",
+      "source": "judgement, observed on CMA 1964.284 Delacroix, Marguerite-Juliette Pierret, Met 438107 Chasseriau, Desdemona, CMA 1941.215.13 Delacroix, The Death of Ophelia"
+     },
+     {
+      "rule": "Lose the edge into dark ground on the shadow side and into the weather leeward; find it only against the lit face or light sky.",
+      "source": "judgement, observed on Met 438107 Chasseriau, Desdemona, CMA 1964.284 Delacroix, Marguerite-Juliette Pierret, Met 436423 Fuseli, Night-Hag"
+     },
+     {
+      "rule": "Hair is among the darkest values beside the face so the lit face reads against it.",
+      "source": "judgement, observed on CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 438107 Chasseriau, Desdemona"
+     },
+     {
+      "rule": "Wet hair as dark tapering ropes following water or wind, light gaps between them.",
+      "source": "CMA 1941.215.13 Delacroix, The Death of Ophelia; layer 1 hair (wet)"
+     },
+     {
+      "rule": "Strokes long, tapering, visible, following growth and fall; light a warm band of a few strokes across the locks, not a polished sheen; shadows coloured, not black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9; CMA 1964.284 Delacroix, Marguerite-Juliette Pierret; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 physics: roots fixed, ends move most, windward side flat to the skull",
+     "wet hair darker and clumped",
+     "one wind for hair, cloth and sky",
+     "highlight across the strands"
+    ],
+    "avoid": [
+     "dressed, powdered or tightly curled sculptural hair with even light and firm edge (neoclassical contrast)",
+     "individual strands or a corona of strays",
+     "texture in shadow"
+    ],
+    "flags": [
+     "Loose hair on a woman read as distraction in period code; the brief's joy is carried by face and pose (judgement)."
+    ],
+    "sources": [
+     "Showalter 1985, Representing Ophelia (quoted): https://eportfolios.macaulay.cuny.edu/milsteinsandbox/?p=51",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "Met 438107 Chasseriau, Desdemona",
+     "Met 436423 Fuseli, Night-Hag",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "CMA 1964.284 Delacroix, Marguerite-Juliette Pierret",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)"
+    ]
+   },
+   "hands-feet": {
+    "doc": "docs/styles/subjects/romanticism--hands-feet.md",
+    "summary": "The hand is the end of the gesture: raised against sky or sea at the top of the diagonal, painted as a silhouette and two or three planes (open fan, gripping knot, block); the force shown by what it grips. Feet mostly hidden; bare working feet broad and planted.",
+    "rules": [
+     {
+      "rule": "Put the raised hand at the end of the main diagonal, against light sky or sea.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met 436176 Delacroix, Christ Asleep during the Tempest; CMA 1941.215.13 Delacroix, The Death of Ophelia"
+     },
+     {
+      "rule": "Show the grip by what it grips: cloth bunched and taut, branch bent, rope straight.",
+      "source": "judgement, observed on CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 358057 Gericault, Shipwreck of the Meduse, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "At figure scale a hand is a silhouette plus 2-3 planes and the dark finger gaps; open hand a fan of a few strokes, gripping hand a knot with one opposing thumb stroke; no nails or knuckle detail.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest, CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Only the hand in the light is articulated; hands in shadow merge with sleeve or body.",
+      "source": "judgement, observed on Met 438814 Delacroix, The Abduction of Rebecca, Met 436176 Delacroix, Christ Asleep during the Tempest"
+     },
+     {
+      "rule": "A hand against light sky reads as a dark silhouette with a thin warm rim; against dark ground, a found warm edge on the lit side.",
+      "source": "judgement"
+     },
+     {
+      "rule": "Working hands and feet broad and heavy; bare feet flat and planted; lifted foot a two-plane wedge.",
+      "source": "judgement, observed on CMA 1961.149 Gericault, The French Blacksmith, CMA 2023.123 Delacroix, A Young Black Woman Fetching Water, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Shadows on hands carry the surround's colour, not black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9"
+     }
+    ],
+    "keep": [
+     "palm block, knuckle arc, thumb from the wrist (layer 1)",
+     "hand about a face long",
+     "contact: a grip wraps and presses"
+    ],
+    "avoid": [
+     "the elegant finished academic hand",
+     "simplification that hides a wrong construction (tubes, mitts, paddles habit)",
+     "outlined fingers"
+    ],
+    "flags": [
+     "Little scholarship addresses Romantic hands directly; most rules are observations of the works (judgement)."
+    ],
+    "sources": [
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "Met 358057 Gericault, Shipwreck of the Meduse",
+     "CMA 2008.378.a Gericault, Man Clutching a Horse",
+     "CMA 1961.149 Gericault, The French Blacksmith",
+     "Met 334047 Goya, A country dance",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 2023.123 Delacroix, A Young Black Woman Fetching Water"
+    ]
+   },
+   "landscape": {
+    "doc": "docs/styles/subjects/romanticism--landscape.md",
+    "rules": [
+     "Land is the lower third to half; weather overrides Carlson's plane values: dark foreground, one lit patch in the middle ground, a low grey far band",
+     "Foreground (bottom 15%) is the darkest band: median L* 11-25 in the storm oils (measured)",
+     "Lit patch where the break falls: land 90th percentile L* 37-54 against medians 12-30 (measured; Cox 1813 'fleeting lights of the sunbeams')",
+     "Rounded crests as one or two long, smooth convex arcs, often tilted across the frame; fewer, larger masses than layer 1 (Martin, Dahl, Michel; judgement call as a rule)",
+     "Far hills and coast by their outline only, no ridges (Cox 1813: 'the extreme Outline'); a far coast is a thin, nearly level band",
+     "Warm earths (ochre, russet, olive, brown) under a cool sky; warm lights; no saturated green (Cox 1813; measured #9b7a5d, #a98466, #7b6752, #35291c)",
+     "Thick, directional strokes following the slope in the foreground only; flat, thin, horizontal washes or scumbles in the distance (Cox 1813; Tate on Constable)",
+     "The crest's silhouette against the distance is the strongest edge in the lower half, broken by grass"
+    ],
+    "keep": [
+     "aerial recession: cooler and lower in contrast with each band back",
+     "cloud shadows follow the terrain and match the sky",
+     "paths follow contours and narrow",
+     "texture shrinks with distance",
+     "convex crest: top edge catches the most light"
+    ],
+    "avoid": [
+     "even, mapped detail everywhere",
+     "lumpy repeated bumps on a crest",
+     "bright green turf (Burke: a gloomy mountain is grander than bright green turf)",
+     "lit land not explained by the sky's break",
+     "a lone figure from behind unless the brief asks (style doc)"
+    ],
+    "measured": {
+     "foreground_median_Lstar": {
+      "Dahl": 11,
+      "Branch Hill": 12,
+      "Michel": 19,
+      "Harrow": 23,
+      "Oxbow": 25,
+      "Hadleigh": 25
+     },
+     "land_p90_Lstar_oils": [
+      37,
+      54
+     ],
+     "far_land_band_hex": "#5a6061"
+    },
+    "works": [
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Martin, View on the South Downs (Met 895898); Valley of the Tyne (CMA 1997.138)",
+     "Cox, Journey Home (Met 894574)",
+     "Constable, Harrow (CMA 1916.1027); Branch Hill Pond (CMA 1972.48)",
+     "Dahl, Mother and Child by the Sea (Met 438954); View over Hallingdal (Met 441967)",
+     "Cole, The Oxbow (Met 10497)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Girtin, Tynemouth (CMA 1940.557)"
+    ],
+    "judgement_calls": [
+     "fewer, larger masses as a rule",
+     "tilted crests",
+     "crest as repoussoir lit at its top",
+     "figures for scale",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "Met, Martin, View on the South Downs: https://www.metmuseum.org/art/collection/search/895898",
+     "Met, Cole, The Oxbow: https://www.metmuseum.org/art/collection/search/10497",
+     "Burke 1757, Enquiry, part II, Colour considered as productive of the sublime: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   },
+   "light-shadow": {
+    "doc": "docs/styles/subjects/romanticism--light-shadow.md",
+    "summary": "One cloud-break light on a minority of the land; the sky holds the light, storm cloud ~L*30 never black, shadowed land darker than the cloud, lit land below the sky; warm dark earth shadows under storm.",
+    "rules": [
+     "Light a place, not the scene: one cloud-break patch on about 4-26% of the land (median 13%), the rest one connected shadow family (measured, 14 works)",
+     "The sky holds the light: most of the brightest pixels above the horizon, sky mean about 20 L* above the land (measured; Constable: sky the 'chief organ of sentiment', Met essay)",
+     "The lit land stays below the sky's brightest: about 25 L* lower in storm oils, 2-8 in luminous watercolours (measured)",
+     "Storm cloud darks about L* 28-32, never black; the shadowed land is darker than the darkest cloud (L* 5-18) (measured, 5 storm oils)",
+     "Light often lands in the middle distance with a dark foreground; keep aerial perspective in the darks, which lift toward the horizon (measured: Branch Hill, Hampstead, Flers, Oxbow)",
+     "Storm edge: dark mass on one side, light falling beyond (Met, The Oxbow 08.228; Michel CMA 1975.78; Hampstead CMA 1916.1027)",
+     "Quick transition from light to dark is the strongest value step (Burke II.15); on the ground the patch edge stays soft like a cloud shadow, cloud rims crisper (judgement)",
+     "Light colour: cool silver-white or warm gold both belong; a cold-white storm light is within the current (measured)",
+     "Shadows under storm are warm dark earth, not blue: lit by grey cloud and brown bounce (measured ground darks; judgement for reading, consistent with layer 1)",
+     "Visible shafts of light or rain from the cloud break are allowed (Hampstead; Moel Cynwich CMA 2010.147; Oxbow)",
+     "Plan three value families: sky, lit patch (below sky), shadowed land (below darkest cloud) (judgement from measurements)"
+    ],
+    "keep": [
+     "one dominant light; cast shadows and terminators agree with it",
+     "light-family / shadow-family rule inside the lit patch, with terminator, core and reflected light",
+     "low light gives long raking shadows",
+     "translucent things glow when backlit (layer 1; no Romantic convention found for wet linen)",
+     "aerial perspective in darks and saturation"
+    ],
+    "avoid": [
+     "even daylight with land as bright as sky",
+     "black storm clouds",
+     "hard-edged spotlight on the ground",
+     "several competing light patches",
+     "blue shadows under a storm sky",
+     "modelling every form in the shadow family",
+     "generic orange sunset vortex"
+    ],
+    "measured": {
+     "method": "Met/CMA open-access web images, frames cropped, sRGB to CIE L*, horizon read on a 10% grid; varnished originals, so hue is only relative",
+     "works": 14,
+     "lit_ground_fraction": {
+      "range": [
+       0.04,
+       0.26
+      ],
+      "median": 0.13,
+      "definition": "ground pixels > ground median + 15 L*"
+     },
+     "brightest_15pct_in_sky": "71-100% in 13 of 14 works (89%+ in nine); exception Isabey night storm 32%",
+     "sky_minus_ground_mean_L": {
+      "range": [
+       11,
+       46
+      ],
+      "median": 20
+     },
+     "sky_light_minus_ground_light_L": {
+      "storm_oils": [
+       11,
+       43
+      ],
+      "storm_oils_median": 25,
+      "luminous_turner_and_watercolour": [
+       2,
+       8
+      ]
+     },
+     "storm_cloud_dark_L": [
+      28,
+      32
+     ],
+     "land_dark_L": [
+      5,
+      18
+     ],
+     "dark_ladder_near_mid_far_L": {
+      "Oxbow": [
+       8,
+       11,
+       20
+      ],
+      "Branch Hill": [
+       2,
+       7,
+       14
+      ],
+      "Hampstead": [
+       15,
+       16,
+       20
+      ]
+     },
+     "lit_sky_rgb_cool_white": {
+      "Michel": [
+       207,
+       208,
+       198
+      ],
+      "Moel Cynwich": [
+       217,
+       213,
+       200
+      ]
+     },
+     "ground_dark_rgb": {
+      "Oxbow": [
+       41,
+       36,
+       12
+      ],
+      "Branch Hill": [
+       27,
+       22,
+       14
+      ],
+      "Michel": [
+       37,
+       33,
+       28
+      ]
+     }
+    },
+    "flags": [
+     "no Romantic public-domain work in the sample shows translucent wet linen; layer 1 governs it",
+     "photographed varnish warms measured hues; trust value relations more than hue"
+    ],
+    "case_notes": [
+     "targets (judgement, scaled from measurements): storm sky ~L*30, cloud break ~80, lit patch 45-65, shadowed land 8-20; lit patch 10-25% of the ground with figure and sheets in it",
+     "backlit wet linen is the brightest land shape but below the sky break; cold light makes lit planes cooler than the warm brown shadows (judgement)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/light-shadow.md",
+     "Met, John Constable essay: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Constable to Fisher 23 Oct 1821 (transcription): https://lacrank.blogspot.com/2025/08/john-constable-letter-about-clouds.html",
+     "Burke, Enquiry II.15: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.15.htm",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/375834",
+     "https://www.metmuseum.org/art/collection/search/441967",
+     "https://www.metmuseum.org/art/collection/search/438950",
+     "https://www.metmuseum.org/art/collection/search/437854",
+     "https://www.clevelandart.org/art/1972.48",
+     "https://www.clevelandart.org/art/1916.1027",
+     "https://www.clevelandart.org/art/1975.78",
+     "https://www.clevelandart.org/art/2019.76",
+     "https://www.clevelandart.org/art/1954.129",
+     "https://www.clevelandart.org/art/1942.647",
+     "https://www.clevelandart.org/art/2010.147",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/1917.1335"
+    ]
+   },
+   "objects": {
+    "doc": "docs/styles/subjects/romanticism--objects.md",
+    "summary": "Everyday objects small, used, weathered and summary: picturesque roughness, uprights against the sky, white things as the land's brightest accents, all bearing the same weather and light.",
+    "rules": [
+     "Everyday objects are small traces of ordinary life inside the vastness, 'a reminder of the reality of the scene' (CMA, Turner Fluelen 1954.129); 'the minute with the infinite' (CMA 2010.147)",
+     "Picturesque character: weathered, irregular, rough, mended; 'roughness ... sudden variation ... irregularity'; mossy rough-hewn pales of unequal heights, not neat post-and-rail (Price 1794)",
+     "Summarise detail: a few loaded strokes, material shown by one or two lights on the lit side; kept 'at a picturesque distance' (CMA, Constable Branch Hill 1972.48; Flers CMA 1980.259)",
+     "Objects bear the weather: they agree with the wind and the single light (Constable, Mill Near Colchester, Met 2007.41; Oxbow umbrella Met 08.228)",
+     "Uprights against the sky: posts, masts, mill sails, blasted trees; 'a perpendicular has more force ... than an inclined plane', rugged beats smooth (Burke II.8)",
+     "White things (cloth, a white horse, a wall) are the brightest small accents on the land, placed in the light and kept below the sky (measured: Branch Hill, Flers, Oxbow, Mill)",
+     "Objects are in use or just left, not arranged as still life (observed: cart loading, linen bleaching, abandoned easel, fallen arms in Rebecca Met 03.30)",
+     "Small warm or red accents in the earth-grey land (Branch Hill harness, Flers, Mill sail)",
+     "Silhouette crisp against the sky on the lit side, lost into dark ground (Mill; Oxbow)"
+    ],
+    "keep": [
+     "correct construction: wheel and basket ellipses, post taper and lean, line sag between supports",
+     "real scale against the figure (peg about a hand's width, basket 50-70 cm, post about 2 m: judgement)",
+     "contact shadows; objects sit on the ground"
+    ],
+    "avoid": [
+     "new, neat or symmetrical objects (straight painted post, uniform pegs)",
+     "still-life gloss and reflections",
+     "detail legible beyond what the light picks out",
+     "outlines",
+     "objects that ignore the wind",
+     "objects brighter than the sky",
+     "an object as large or finished as the figure unless it is the subject"
+    ],
+    "flags": [
+     "object sizes are real-world judgement, not from a Romantic source"
+    ],
+    "case_notes": [
+     "post: weathered, slightly leaning, silver on the lit face, the one strong vertical against the sky, lost at the base",
+     "line: one fine sagging stroke, lost across darks, crisp against light sky; pegs: a few dark notches, one light touch each",
+     "basket: low rough wicker lump, one lit side, contact shadow, correct ellipse, holding a pale linen accent"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md; docs/subjects/objects.md",
+     "Price, Essay on the Picturesque (extracts): https://www.lancaster.ac.uk/users/philosophy/awaymave/onlineresources/price3.htm",
+     "Tate, Picturesque: https://www.tate.org.uk/art/art-terms/p/picturesque",
+     "Constable to Fisher 1821, 'old rotten planks, slimy posts' (secondary): https://www.shafe.co.uk/wp-content/uploads/21-08-Romanticism-John-Constable.pdf",
+     "Burke, Enquiry II.8: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.8.htm",
+     "https://www.clevelandart.org/art/1954.129",
+     "https://www.clevelandart.org/art/2010.147",
+     "https://www.clevelandart.org/art/1972.48",
+     "https://www.clevelandart.org/art/1980.259",
+     "https://www.clevelandart.org/art/1975.78",
+     "https://www.clevelandart.org/art/2022.249",
+     "https://www.metmuseum.org/art/collection/search/375834",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/438814"
+    ]
+   },
+   "sky": {
+    "doc": "docs/styles/subjects/romanticism--sky.md",
+    "rules": [
+     "Sky is the subject: horizon 0.51-0.83 of the height down (median ~0.57), sky at least half the picture (measured on 12 Met/CMA works, 7 artists)",
+     "One storm mass, not a field of clouds: a single dark body over the top or one side, lower edge level or one long diagonal; small clouds only as torn fragments streaming off it (works sample; Cox 1813 'broad masses')",
+     "Darkest at the top, one bright break low under the cloud edge: break ~25-30 L* lighter than the mass (measured, Constable Harrow, Dahl)",
+     "Land darker than any sky: brightest sky band 22-38 L* above the land median in the oils (measured)",
+     "Cloud darks are coloured mid-darks (~L* 25-40), never black (measured #544c46, #564e41, #595b5c; style doc)",
+     "Colour low-chroma: a 'slate-indigo' storm is indigo greyed with earth; no saturated blue (measured; flags any brief asking for a strong indigo)",
+     "Break is silver (cool) or cream (warm), never pure white; cool sky over warm land (Cox 1813)",
+     "Rain veils: parallel streaks hanging from the cloud base, leaning with the wind, lighter where they cross the break (works sample; value logic is a judgement call)",
+     "Edges: mass lost and wet-in-wet; the torn edge against the break and the lit rims are the hardest edges in the sky",
+     "Strokes run with the weather: long horizontal drags for streaming cloud, dragged verticals for rain; impasto only on the lights (Met Constable essay; Tate)",
+     "Oil on a warm-dark ground for storms (V&A: Constable's brown ground for a stormy day)"
+    ],
+    "keep": [
+     "one wind for all cloud, rain and torn edges",
+     "cloud bases on one receding level, crowding toward the horizon",
+     "rain falls from the dark base, never from the break",
+     "land lit from the break's side, lit patches under the break",
+     "aerial perspective at the horizon"
+    ],
+    "avoid": [
+     "many separate cotton-ball clouds",
+     "pure black or saturated indigo cloud",
+     "even dabbing with no direction",
+     "a white break or a visible sun disc in the storm",
+     "the sky lighter at the top than at the break",
+     "generic orange sunset vortex (style doc pastiche)"
+    ],
+    "measured": {
+     "horizon_from_top": {
+      "min": 0.51,
+      "median": 0.57,
+      "max": 0.83
+     },
+     "break_minus_mass_Lstar": [
+      25,
+      30
+     ],
+     "break_minus_land_median_Lstar": [
+      22,
+      38
+     ],
+     "cloud_dark_hex": [
+      "#544c46",
+      "#544840",
+      "#564e41",
+      "#595b5c"
+     ],
+     "break_hex": "#b2ac9e",
+     "rain_veil_hex": "#76695f",
+     "watercolour_slate_hex": [
+      "#8e8d87",
+      "#677278"
+     ]
+    },
+    "works": [
+     "Constable, Hampstead Heath looking toward Harrow (CMA 1916.1027)",
+     "Constable, Branch Hill Pond (CMA 1972.48)",
+     "Constable, Cloud study (Met 727706)",
+     "Cotman, Boats off the coast, storm approaching (Met 746834)",
+     "Cox, Journey Home (Met 894574); Study of clouds (Met 697200)",
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Dahl, Mother and Child by the Sea (Met 438954); View over Hallingdal (Met 441967)",
+     "Cole, The Oxbow (Met 10497); Clouds (Met 21693)",
+     "Martin, Valley of the Tyne (CMA 1997.138)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Barber, Storm Over a Lake (Met 340873)",
+     "Lucas after Constable, Departing Storm (Met 679718); Hadleigh Castle (Met 649970)"
+    ],
+    "judgement_calls": [
+     "cloud-genus reading",
+     "break as the leading feature",
+     "rain-veil value logic",
+     "silver vs warm break by pole",
+     "engine tool mapping"
+    ],
+    "sources": [
+     "Met Heilbrunn Timeline, John Constable: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Burke 1757, Enquiry, part II, Colour considered as productive of the sublime: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.17.htm",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "V&A, Constable's oil sketches: https://www.vam.ac.uk/articles/constables-oil-sketches",
+     "Met, Cotman, Boats off the coast, storm approaching: https://www.metmuseum.org/art/collection/search/746834",
+     "Met, Cole, The Oxbow: https://www.metmuseum.org/art/collection/search/10497",
+     "Met, Cox, Journey Home: https://www.metmuseum.org/art/collection/search/894574",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   },
+   "space": {
+    "doc": "docs/styles/subjects/romanticism--space.md",
+    "summary": "Space from a big sky (median horizon 0.55 from top) and horizontal value bands; asymmetric with one cropped dark side; figures either tiny or large at the picture plane; aerial perspective kept in the darks.",
+    "rules": [
+     "Build space from the sky and 3-5 horizontal value bands of land, not from vanishing points (measured: Michel, Hampstead, Hallingdal; Martin)",
+     "Sky about half the height or more; median horizon 0.55 from top, range 0.48-0.72 (measured, 12 works); the sky is 'the standard of scale' (Constable 1821)",
+     "Asymmetry: one dark mass cut by a side edge, the other side open to the distance (measured 11 of 14; Oxbow storm-left/sun-right, Met 08.228)",
+     "Two figure scales: tiny in the landscape branch (2-8% of height) or large near the picture plane, heads against the sky (Gericault CMA 1931.48)",
+     "Depth by diagonal sweeps of road, river and slope ('curving arcs ... swirl', Martin CMA 1997.138)",
+     "Contrast the minute with the infinite (CMA 2010.147; Burke II.8 on littleness)",
+     "Aerial perspective kept in the darks and in cooling toward the horizon, even when the light falls in the middle distance (measured: Oxbow, Branch Hill, Moel Cynwich, Hallingdal)",
+     "Little ruled perspective: overlap, size, height in the field and air carry depth (judgement; layer 1 vista-space cues)"
+    ],
+    "keep": [
+     "one horizon at eye level; figures keyed to it",
+     "size diminution and 1/D^2 compression of ground bands",
+     "clear overlap, no tangents",
+     "Koschmieder contrast loss for darks and saturation"
+    ],
+    "avoid": [
+     "centred horizon with symmetrical classical wings",
+     "ruled grid as the main depth cue",
+     "blue haze on near ground",
+     "sky under half the height in a storm picture",
+     "lone figure from behind as default (Teodor habit)"
+    ],
+    "measured": {
+     "horizon_from_top": {
+      "median": 0.55,
+      "range": [
+       0.48,
+       0.72
+      ],
+      "n": 12,
+      "values": {
+       "Moel Cynwich": 0.48,
+       "Branch Hill": 0.5,
+       "Oxbow": 0.52,
+       "Michel": 0.53,
+       "Burning": 0.53,
+       "Isabey": 0.55,
+       "Flers": 0.55,
+       "Hampstead": 0.58,
+       "Whalers": 0.62,
+       "Fluelen": 0.63,
+       "Mill Near Colchester": 0.71,
+       "Return from Russia": 0.72
+      }
+     },
+     "skyline_mountain_works": {
+      "Hallingdal": 0.45,
+      "Schroon": 0.45,
+      "Feige": 0.4
+     },
+     "one_side_cropped_mass": "11 of 14 landscapes",
+     "elevated_viewpoint": "5 of 12 (all wide panoramas)",
+     "figure_height_fraction": {
+      "landscape_branch": [
+       0.02,
+       0.08
+      ],
+      "german_contemplative": [
+       0.15,
+       0.25
+      ],
+      "figure_branch": "about 0.75 (Gericault)"
+     }
+    },
+    "flags": [
+     "horizon at 0.75 (sky three-quarters) exceeds every measured work (max 0.72; median 0.55) but is within the current (Constable watercolour 0.71, Gericault ~0.72, Monk by the Sea per style doc): allowed as a stated choice",
+     "low viewpoint is the figure branch's device; the landscape panoramas mostly look down from a height (Burke II.8 prefers depth, 'not very positive')"
+    ],
+    "case_notes": [
+     "low viewpoint belongs to the figure branch: horizon at the figure's knees to hips, figure 50-75% of the height, centre about a third in from one side (judgement from Gericault)",
+     "cropped edge on the heavy dark side, opposite the open low distance (measured convention)"
+    ],
+    "sources": [
+     "docs/styles/romanticism.md (incl. Smarthistory, Monk by the Sea); docs/subjects/space.md",
+     "Constable to Fisher 23 Oct 1821 (transcription): https://lacrank.blogspot.com/2025/08/john-constable-letter-about-clouds.html",
+     "Met, Romanticism essay: https://www.metmuseum.org/essays/romanticism",
+     "Burke, Enquiry II.8 and II.9: https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.8.htm, https://viscomi.sites.oasis.unc.edu/viscomi/Burke/sublime/II.9.htm",
+     "Met, Friedrich: The Soul of Nature: https://www.metmuseum.org/exhibitions/caspar-david-friedrich-the-soul-of-nature/inside-the-exhibition",
+     "https://www.metmuseum.org/art/collection/search/10497",
+     "https://www.metmuseum.org/art/collection/search/436176",
+     "https://www.metmuseum.org/art/collection/search/337093",
+     "https://www.metmuseum.org/art/collection/search/435922",
+     "https://www.metmuseum.org/art/collection/search/438417",
+     "https://www.metmuseum.org/art/collection/search/439344",
+     "https://www.clevelandart.org/art/1931.48",
+     "https://www.clevelandart.org/art/1997.138",
+     "https://www.clevelandart.org/art/2010.147",
+     "plus the measured landscapes listed under light-shadow"
+    ]
+   },
+   "trees-plants": {
+    "doc": "docs/styles/subjects/romanticism--trees-plants.md",
+    "scope": "grass and low vegetation in wind (first entry); trees in storm noted briefly",
+    "rules": [
+     "Make the wind visible: every blade, reed and tuft leans the same way as the rain and cloud (Leypold, Cox, Martin, Cole, Church)",
+     "Grass bank as one dark mass with a ragged top; single blades only at the crest edge against light and in the nearest tufts (Leypold, Cox; Cox 1813 on foreground drawing)",
+     "Flattened grass as long, curved, combed drags along the slope; standing tufts as tapered flicks downwind (judgement call from Martin and Cox)",
+     "Lights sparse and late: short strokes along the lean on tips facing the break, clustered where the light rakes, never an even scatter (Constable's flecks, Tate; Leypold; Cox)",
+     "Watercolour grass lights are scraped, lifted, reserved or added in body colour (Met medium lines: Cox Journey Home, Driving sheep; Martin)",
+     "Colour ochre, straw, russet, olive: warm in the light, cool olive-brown between tufts; no saturated green (Cox 1813; measured #a98466, #7b6752, #9b7a5d)",
+     "Order: dark mass, then mid-tone strokes in the wind direction, then lights (Cox 1813 method)",
+     "Trees in storm lean or are broken, with foliage swept one way, silhouetted against the break (Cole, Church, Leypold, Cox)"
+    ],
+    "keep": [
+     "blades taper and grow from dark bases",
+     "texture shrinks with distance",
+     "lights face the light source",
+     "branch thickness and sky holes (layer 1) for any tree"
+    ],
+    "avoid": [
+     "upright, evenly spaced blades",
+     "every blade drawn across the bank",
+     "even dot texture ('spotting the foreground all over', a contemporary complaint)",
+     "saturated green",
+     "grass leaning against the wind shown in the sky"
+    ],
+    "measured": {
+     "hex": {
+      "cox_lit_grass": "#a98466",
+      "cox_grass_shadow": "#7b6752",
+      "martin_heath": "#9b7a5d",
+      "leypold_lit_grass": "#5e401d",
+      "michel_lit_grass": "#37352b"
+     }
+    },
+    "works": [
+     "Cox, Journey Home (Met 894574); On the Thames (CMA 2005.201); Driving sheep (Met 709059)",
+     "Leypold, Wanderer in the Storm (Met 439333)",
+     "Martin, View on the South Downs (Met 895898)",
+     "Michel, Landscape Near Paris (CMA 1975.78)",
+     "Constable, Branch Hill Pond (CMA 1972.48); Harrow (CMA 1916.1027)",
+     "Church, Storm in the Mountains (CMA 1969.52)",
+     "Cole, The Oxbow (Met 10497)"
+    ],
+    "judgement_calls": [
+     "lean angles 30-60 deg judged by eye",
+     "combed drags for flattened grass",
+     "lights as strokes along the lean",
+     "late-season colour",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Tate, Salisbury Cathedral from the Meadows, techniques and materials: https://www.tate.org.uk/art/artworks/constable-salisbury-cathedral-from-the-meadows-t13896/in-depth-salisbury-cathedral-from-the-meadows/techniques-materials-six-footer-paintings",
+     "Met, Cox, Journey Home: https://www.metmuseum.org/art/collection/search/894574",
+     "Met, Martin, View on the South Downs: https://www.metmuseum.org/art/collection/search/895898",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   },
+   "water": {
+    "doc": "docs/styles/subjects/romanticism--water.md",
+    "rules": [
+     "Distant sea is a thin strip subordinate to the sky (Cox 1813: 'every other subject … subservient'); near water is a separate subject",
+     "Horizon is a dead-level, crisp, ruled line: the one long hard edge; only rain or mist may cut it (Dahl, Delacroix, Atkins, Cotman)",
+     "Far sea darker than the sky just above it: 9-15 L* in daylight works, more under the storm (measured; departs from layer 1's mirror equality; ruffled facets reflect the higher, darker sky, a judgement call)",
+     "Exactly one lit band where the break's light touches the sea: horizontal, brightest at the horizon, fading toward the viewer, broken ends; placed by the glitter-path geometry (Dahl, Lucas, Isabey, Cotman)",
+     "Lit band made of short horizontal touches: impasto flecks in oil, reserved or scratched paper in watercolour (Dahl; Met Cotman medium line)",
+     "No wave shapes on the far strip: only horizontal value bands",
+     "Colour low-chroma, near the cloud's, slightly bluer or greener and darker; no saturated blue or turquoise far off (measured #7e8886, #918b7a)",
+     "Rain veils cross the strip at the sky's rain angle and soften the horizon locally"
+    ],
+    "keep": [
+     "level horizon at eye level",
+     "lit band under the light source on the line to the viewer, long and narrow for a low light",
+     "sea darks agree with the sky above",
+     "one wind across sea and sky"
+    ],
+    "avoid": [
+     "wave scallops on distant water",
+     "the sea as light as or lighter than the sky above it (outside the lit band)",
+     "more than one lit band",
+     "a soft or tilted horizon",
+     "saturated blue sea under a storm",
+     "white dashes for water"
+    ],
+    "measured": {
+     "sky_above_vs_sea_below_Lstar": {
+      "Constable cloud study": [
+       72,
+       57
+      ],
+      "Delacroix Dieppe": [
+       83,
+       73
+      ],
+      "Girtin Tynemouth": [
+       67,
+       58
+      ]
+     },
+     "lit_band_range_Lstar": {
+      "Dahl": [
+       16,
+       55
+      ],
+      "Lucas Hadleigh": [
+       25,
+       69
+      ]
+     },
+     "hex": {
+      "dark_sea_watercolour": "#7e8886",
+      "cotman_far_sea": "#918b7a",
+      "dahl_lit_band": "#856956",
+      "dahl_dark_sea": "#2e2724"
+     }
+    },
+    "works": [
+     "Dahl, Mother and Child by the Sea (Met 438954)",
+     "Cotman, Boats off the coast, storm approaching (Met 746834)",
+     "Constable, Cloud study (Met 727706)",
+     "Lucas after Constable, Hadleigh Castle (Met 649970)",
+     "Girtin, Tynemouth (CMA 1940.557)",
+     "Delacroix, The Sea at Dieppe (Met 336528)",
+     "Atkins, The Fleet off the Coast, Beachy Head (CMA 2011.411)",
+     "Isabey, A Storm off the Normandy Coast (Met 438950)",
+     "Turner, Whalers (Met 437854)"
+    ],
+    "judgement_calls": [
+     "near vs far water split",
+     "physical reading of the darker far sea",
+     "impasto vs reserve equivalence",
+     "sails as scale",
+     "engine mapping"
+    ],
+    "sources": [
+     "Cox, A Treatise on Landscape Painting and Effect in Water Colours (1813; 1922 reprint): https://archive.org/download/treatiseonlandsc00coxduoft/treatiseonlandsc00coxduoft_djvu.txt",
+     "Met, Cotman, Boats off the coast, storm approaching: https://www.metmuseum.org/art/collection/search/746834",
+     "Met Heilbrunn Timeline, John Constable: https://www.metmuseum.org/essays/john-constable-1776-1837",
+     "Met open-access API (collectionapi.metmuseum.org) and images.metmuseum.org, public-domain works listed in 'works'",
+     "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
+    ]
+   }
+  }
+ }
 }

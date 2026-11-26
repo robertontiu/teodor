@@ -15,3 +15,8 @@ Mannequin or puppet figures, faces drawn on instead of painted, hands like tubes
 - A learned motor vocabulary instead of parametric strokes; fatigue and session-level physiology.
 - More viewers than one critic, to see how widely a painting's feeling is shared.
 - A painter that keeps memory across paintings (style development).
+
+## Museum APIs (as of Nov 2026)
+- The Met's old search endpoint is retired (410 since 2026-10-01); use `/public/collection/v1.1/search` with `offset` and `limit`, or the department listings and the Open Access CSV. The Met API rate-limits fast requests with a 403.
+- The Cleveland Museum of Art open-access API is reachable and CC0. Both APIs refuse requests without a User-Agent header.
+- The Art Institute of Chicago's images are behind bot protection: don't work around it.

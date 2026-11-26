@@ -1,0 +1,74 @@
+{
+ "styles": {
+  "romanticism": {
+   "face": {
+    "doc": "docs/styles/subjects/romanticism--face.md",
+    "summary": "Individual, psychological faces; passion reaches the face (open mouths allowed); head often lifted to the light; at figure scale three to five value shapes; dramatic side light, warm thick lights, cool thin shadows lost into hair and ground.",
+    "rules": [
+     {
+      "rule": "Make each face particular (nose, jaw, brow, weathering); keep the classical profile only for allegory.",
+      "source": "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism (portraits as vehicles of psychological states); Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met 337181 Gericault, studies for the Raft"
+     },
+     {
+      "rule": "The lifted head: tipped back, face turned up to the light or sky; reads as hope, ecstasy or terror by the rest of the face.",
+      "source": "Met 337181 Gericault, studies for the Raft; Met 436423 Fuseli, Night-Hag; Met 334042 Goya, A woman pulling at her hair; CMA 1995.68 Friedrich, Woman with the Spider Web; Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Below half-length the face is 3-5 value shapes: lit brow and cheek, dark socket, dark mouth, shadow under the jaw; no outlined features.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest and Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Expression stronger than neoclassical; the open mouth is allowed; the whole head (tilt, neck strain) carries it.",
+      "source": "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism (Winckelmann's sedate soul, the contrast); Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/"
+     },
+     {
+      "rule": "Paint joy, not the satanic laugh: Romantic theory separates joy ('La joie est une') from laughter of superiority; avoid sneer, one-sided mouth, caricature grin.",
+      "source": "Baudelaire 1855, On the Essence of Laughter: https://shakespeare-navigators.ewu.edu/courses/Dramatic_Comedy/Baudelaire_Essence_of_Laughter.html; Baudelaire, De l'essence du rire (Wikisource): https://fr.wikisource.org/wiki/Curiosit%C3%A9s_esth%C3%A9tiques/De_l%E2%80%99essence_du_rire"
+     },
+     {
+      "rule": "Dramatic side light out of a dark ground; lit planes warm, thick, stroked; shadow planes thin, cool, lost into hair and ground.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9; CMA 1964.284 Delacroix, Marguerite-Juliette Pierret"
+     }
+    ],
+    "keep": [
+     "FACS action units and the laugh-versus-scream table from layer 1",
+     "measured proportions from layer 1",
+     "for a laugh: AU6 lifted cheeks and narrowed eyes as well as AU12 mouth"
+    ],
+    "avoid": [
+     "smooth, evenly lit, finished neoclassical face",
+     "one ideal face for everyone",
+     "outlined eyes and mouth",
+     "satirical or mocking laughing faces of period prints",
+     "a head thrown so far back from below that the laugh is lost (layer 1)"
+    ],
+    "measured": "two Delacroix figure crops (Met 436176, 438814), flesh-hued pixels only: lit quartile L* 34-37, chroma ~22, hue 60-69 deg; darkest quartile L* 8-10, chroma ~10 (greenish shadows under-counted by the filter).",
+    "flags": [
+     "A joyful laugh is outside the current's usual faces; keep the true Duchenne laugh from layer 1 and render it with Romantic means (judgement)."
+    ],
+    "sources": [
+     "Met Heilbrunn, Romanticism: https://www.metmuseum.org/essays/romanticism",
+     "Met Heilbrunn, Neoclassicism (Winckelmann): https://www.metmuseum.org/essays/neoclassicism",
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Met Perspectives, Delacroix: https://www.metmuseum.org/perspectives/delacroix-close-reappraisal",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Baudelaire 1855, On the Essence of Laughter: https://shakespeare-navigators.ewu.edu/courses/Dramatic_Comedy/Baudelaire_Essence_of_Laughter.html",
+     "Baudelaire, De l'essence du rire (Wikisource): https://fr.wikisource.org/wiki/Curiosit%C3%A9s_esth%C3%A9tiques/De_l%E2%80%99essence_du_rire",
+     "Met 337181 Gericault, studies for the Raft",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 1964.284 Delacroix, Marguerite-Juliette Pierret",
+     "Met 436454 Gericault, Alfred Dedreux",
+     "Met 436423 Fuseli, Night-Hag",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 334047 Goya, A country dance",
+     "Met 438107 Chasseriau, Desdemona",
+     "Met 436106 David, Lavoisier (contrast)",
+     "Met 438389 Girodet, Madame Reizet (contrast)",
+     "CMA 1968.260.k Blake, The Just Upright Man is Laughed to Scorn (title only)"
+    ]
+   }
+  }
+ }
+}

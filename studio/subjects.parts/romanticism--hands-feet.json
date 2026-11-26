@@ -1,0 +1,68 @@
+{
+ "styles": {
+  "romanticism": {
+   "hands-feet": {
+    "doc": "docs/styles/subjects/romanticism--hands-feet.md",
+    "summary": "The hand is the end of the gesture: raised against sky or sea at the top of the diagonal, painted as a silhouette and two or three planes (open fan, gripping knot, block); the force shown by what it grips. Feet mostly hidden; bare working feet broad and planted.",
+    "rules": [
+     {
+      "rule": "Put the raised hand at the end of the main diagonal, against light sky or sea.",
+      "source": "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/; Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people; Met 436176 Delacroix, Christ Asleep during the Tempest; CMA 1941.215.13 Delacroix, The Death of Ophelia"
+     },
+     {
+      "rule": "Show the grip by what it grips: cloth bunched and taut, branch bent, rope straight.",
+      "source": "judgement, observed on CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 358057 Gericault, Shipwreck of the Meduse, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "At figure scale a hand is a silhouette plus 2-3 planes and the dark finger gaps; open hand a fan of a few strokes, gripping hand a knot with one opposing thumb stroke; no nails or knuckle detail.",
+      "source": "judgement, observed on Met 436176 Delacroix, Christ Asleep during the Tempest, CMA 1941.215.13 Delacroix, The Death of Ophelia, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Only the hand in the light is articulated; hands in shadow merge with sleeve or body.",
+      "source": "judgement, observed on Met 438814 Delacroix, The Abduction of Rebecca, Met 436176 Delacroix, Christ Asleep during the Tempest"
+     },
+     {
+      "rule": "A hand against light sky reads as a dark silhouette with a thin warm rim; against dark ground, a found warm edge on the lit side.",
+      "source": "judgement"
+     },
+     {
+      "rule": "Working hands and feet broad and heavy; bare feet flat and planted; lifted foot a two-plane wedge.",
+      "source": "judgement, observed on CMA 1961.149 Gericault, The French Blacksmith, CMA 2023.123 Delacroix, A Young Black Woman Fetching Water, Met 334047 Goya, A country dance"
+     },
+     {
+      "rule": "Shadows on hands carry the surround's colour, not black.",
+      "source": "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9"
+     }
+    ],
+    "keep": [
+     "palm block, knuckle arc, thumb from the wrist (layer 1)",
+     "hand about a face long",
+     "contact: a grip wraps and presses"
+    ],
+    "avoid": [
+     "the elegant finished academic hand",
+     "simplification that hides a wrong construction (tubes, mitts, paddles habit)",
+     "outlined fingers"
+    ],
+    "flags": [
+     "Little scholarship addresses Romantic hands directly; most rules are observations of the works (judgement)."
+    ],
+    "sources": [
+     "Smarthistory, Raft of the Medusa: https://smarthistory.org/theodore-gericault-raft-of-the-medusa/",
+     "Smarthistory, Liberty Leading the People: https://smarthistory.org/delacroix-liberty-leading-the-people",
+     "Howell 2019, Nineteenth-Century Art Worldwide: https://www.19thc-artworldwide.org/autumn19/howell-on-strength-and-fragility-in-late-figure-drawings-by-eugene-delacroix",
+     "Open University, Delacroix 2.9 Painterly techniques: https://www.open.edu/openlearn/history-the-arts/history-art/delacroix/content-section-2.9",
+     "Met 436176 Delacroix, Christ Asleep during the Tempest",
+     "CMA 1941.215.13 Delacroix, The Death of Ophelia",
+     "Met 358057 Gericault, Shipwreck of the Meduse",
+     "CMA 2008.378.a Gericault, Man Clutching a Horse",
+     "CMA 1961.149 Gericault, The French Blacksmith",
+     "Met 334047 Goya, A country dance",
+     "Met 334042 Goya, A woman pulling at her hair",
+     "Met 438814 Delacroix, The Abduction of Rebecca",
+     "CMA 2023.123 Delacroix, A Young Black Woman Fetching Water"
+    ]
+   }
+  }
+ }
+}
