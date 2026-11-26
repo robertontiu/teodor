@@ -1,0 +1,46 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "hands-feet": {
+    "doc": "docs/styles/subjects/ukiyo-e--hands-feet.md",
+    "rules": [
+     "Hands small, about 0.5 of the face's length; feet about 0.7 of a head (read by eye on CMA 1956.753, 1985.309; Met 55810, 36922).",
+     "Outline only: knuckles and toes as small hooks and lobes; no shading, nails, tendons or dark finger gaps (all works seen).",
+     "Refined hands: slender separated fingers, tips curling back (Met 55810, 54869; CMA 1956.753).",
+     "Working hands: blunt, mitten-like, two or three finger lines, a knuckle hook on a grip (Met 36922, 55222).",
+     "Hands often half hidden in a sleeve or holding an object through it, only fingertips showing (Met 37163).",
+     "A held fruit is a flat colour shape with a key-line contour and at most one internal line; curled fingers overlap it, a sliver of fruit between them (Met 37163 crystal ball; judgement for fruit).",
+     "A sleeper's grip is loose: fruit resting in a cupped palm on the lap, fingers part-open (judgement, after Met 55800, 55810).",
+     "Bare feet: small outline, toes as a fan of lobes, big toe set apart by one line, ankle tick, heel curve (CMA 1985.309; Met 55800, 36922, 36521).",
+     "Sandals: sole as a flat band, straps as two or three lines (Met 36922, 36521, 55222); modern shoes as a flat dark shape with sole line and laces or buttons as short lines and dots, no sheen (Met 55185 boots; judgement that it transfers).",
+     "Feet at the frame: cut by a straight edge with full detail up to it, one or two sliced mid-foot or at the ankle (crop rule from Met 55222, 55624; judgement for feet alone)."
+    ],
+    "keep": [
+     "five fingers and toes, thumb opposition, grip direction",
+     "joint bending order",
+     "big toe on the inside; inner ankle bone higher"
+    ],
+    "avoid": [
+     "life-size hands (as long as the face)",
+     "core shadows on fingers, nails, tendons",
+     "a shaded, volumetric fruit",
+     "shoe sheen or leather highlights",
+     "feet fading or softening toward the frame edge"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/37163",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55624",
+     "https://www.metmuseum.org/art/collection/search/55185"
+    ]
+   }
+  }
+ }
+}

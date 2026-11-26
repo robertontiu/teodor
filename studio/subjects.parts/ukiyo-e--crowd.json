@@ -1,0 +1,44 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "crowd": {
+    "doc": "docs/styles/subjects/ukiyo-e--crowd.md",
+    "rules": [
+     "Scale jump instead of steady recession: large near figures against a far band of tiny repeated heads, little in between (CMA 1956.753 label: 'People crowding the Ryōgoku Bridge'; Met 55624; judgement that it is a rule).",
+     "Near figures cut hard by the frame, down to head and shoulders or a back; straight cut, full detail up to it (Met 55222, 55624; Art UK: 'cropping figures').",
+     "Dense overlap of distinct shapes: own key line, different flat colour or pattern, pose and facing per figure; no shadows between them (Met 55222, 36922).",
+     "Anonymous passers-by as flat silhouettes in a few greys, no features, overlapping (Met 55624).",
+     "Crowds hidden behind something: only heads, hats, spears above a bridge crest, wall or palanquin (Met 36922, 55369).",
+     "A frieze of travellers along a road, repeated hats and loads making a rhythm (Met 55369, 36521; CMA 1948.306).",
+     "Groups of two and three inside the mass (Met 55222, 36922; CMA 1956.753).",
+     "Detail falls off in flat steps: near faces and pattern, then flat colour and outline, then one flat value; distance by paler flat greys, not haze (CMA 1948.306 label: three greys; Met 55222, 55624).",
+     "Brief: passers-by enter only from the frame edges (a foot and trouser leg, a coat hem, a bag edge), cut straight with full detail to the edge; subordinate by flatness and lower chroma or one grey each; motion by stride and flipped hem along the edge; vary the pieces so they read as many people (judgement; extension of Met 55222, 55624)."
+    ],
+    "keep": [
+     "group structure (pairs, threes)",
+     "overlap order",
+     "one ground plane for the feet",
+     "size of like things at one depth",
+     "walking direction"
+    ],
+    "avoid": [
+     "blur, haze or fading toward the frame edge",
+     "a steady perspective recession of figures",
+     "one passer-by repeated identically",
+     "cast shadows between figures",
+     "passers-by competing with the main figure in chroma or pattern"
+    ],
+    "sources": [
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/55369",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://clevelandart.org/art/1948.306",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55624",
+     "https://www.artuk.org/discover/stories/when-east-inspired-west-the-extraordinary-influence-of-japanese-art"
+    ]
+   }
+  }
+ }
+}

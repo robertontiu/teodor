@@ -1,0 +1,48 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "hair": {
+    "doc": "docs/styles/subjects/ukiyo-e--hair.md",
+    "rules": [
+     "The mass is flat solid sumi black (flat grey for grey hair) with no highlight band or ring (Met 54869, 55800, 55810; CMA 1956.753).",
+     "Against background or clothing the mass has a clean hard contour (all works seen).",
+     "Where hair meets skin: a kewari fringe of very fine parallel lines, each strand cut separately and tapering into the face's paper (Waraku: lines 'less than a millimeter in width'; JAANUS kashirabori: hair the hardest part, cut by the master).",
+     "Fringe measured on Met 55800: lines about 0.15-0.2 mm wide, 0.5-0.8 mm apart, 1-3 mm long, roughly 1/15-1/20 of the face's length apart (rough reading).",
+     "Fringe lines follow growth direction: back and up from forehead and temples, down at sideburns and nape, parallel within a patch, fanning round the head (Met 55800, 55810, 55222; CMA 1985.309).",
+     "Short haircut: a black cap with a clean outer contour, kewari fringe at forehead and temples, a few lighter or reserved lines inside for lock direction (Met 55182, 55185).",
+     "Grey or thinning hair and beards: fine lines only, paper or skin showing between (Met 54339).",
+     "Shaved or stubbled skin: a flat pale grey or blue-grey tint, not lines (Met 55222, 36922).",
+     "Short hair from straight above: flat black shape filling the head's top, outer contour a little outside the skull, fine direction lines radiating from the crown whorl, parting as a thin line of skin tint, forehead hairline as a kewari fringe facing the viewer (judgement; log as an extension)."
+    ],
+    "keep": [
+     "hair shell outside the skull's outline",
+     "growth directions radiating from the crown whorl",
+     "hairline framing the face's upper third",
+     "ears below and in front of the side hair"
+    ],
+    "avoid": [
+     "highlights or sheen of any kind",
+     "soft blurred edges made by blending",
+     "strand-by-strand rendering of the whole mass",
+     "a hard line drawn between hair and forehead instead of a fringe"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://www.metmuseum.org/art/collection/search/55185",
+     "https://intojapanwaraku.com/rock/art-rock/1665/",
+     "https://projects.mcah.columbia.edu/jaanus/node/3270",
+     "https://woodblock.com/encyclopedia/entries/015_02/015_02.html",
+     "https://www.asahi-net.or.jp/~xs3d-bull/where/going06.html"
+    ]
+   }
+  }
+ }
+}

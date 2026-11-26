@@ -2346,6 +2346,266 @@
      "https://www.metmuseum.org/essays/japonisme",
      "https://en.wikipedia.org/wiki/Uki-e"
     ]
+   },
+   "crowd": {
+    "doc": "docs/styles/subjects/ukiyo-e--crowd.md",
+    "rules": [
+     "Scale jump instead of steady recession: large near figures against a far band of tiny repeated heads, little in between (CMA 1956.753 label: 'People crowding the Ryōgoku Bridge'; Met 55624; judgement that it is a rule).",
+     "Near figures cut hard by the frame, down to head and shoulders or a back; straight cut, full detail up to it (Met 55222, 55624; Art UK: 'cropping figures').",
+     "Dense overlap of distinct shapes: own key line, different flat colour or pattern, pose and facing per figure; no shadows between them (Met 55222, 36922).",
+     "Anonymous passers-by as flat silhouettes in a few greys, no features, overlapping (Met 55624).",
+     "Crowds hidden behind something: only heads, hats, spears above a bridge crest, wall or palanquin (Met 36922, 55369).",
+     "A frieze of travellers along a road, repeated hats and loads making a rhythm (Met 55369, 36521; CMA 1948.306).",
+     "Groups of two and three inside the mass (Met 55222, 36922; CMA 1956.753).",
+     "Detail falls off in flat steps: near faces and pattern, then flat colour and outline, then one flat value; distance by paler flat greys, not haze (CMA 1948.306 label: three greys; Met 55222, 55624).",
+     "Brief: passers-by enter only from the frame edges (a foot and trouser leg, a coat hem, a bag edge), cut straight with full detail to the edge; subordinate by flatness and lower chroma or one grey each; motion by stride and flipped hem along the edge; vary the pieces so they read as many people (judgement; extension of Met 55222, 55624)."
+    ],
+    "keep": [
+     "group structure (pairs, threes)",
+     "overlap order",
+     "one ground plane for the feet",
+     "size of like things at one depth",
+     "walking direction"
+    ],
+    "avoid": [
+     "blur, haze or fading toward the frame edge",
+     "a steady perspective recession of figures",
+     "one passer-by repeated identically",
+     "cast shadows between figures",
+     "passers-by competing with the main figure in chroma or pattern"
+    ],
+    "sources": [
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/55369",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://clevelandart.org/art/1948.306",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55624",
+     "https://www.artuk.org/discover/stories/when-east-inspired-west-the-extraordinary-influence-of-japanese-art"
+    ]
+   },
+   "drapery": {
+    "doc": "docs/styles/subjects/ukiyo-e--drapery.md",
+    "rules": [
+     "Each garment is one flat colour area inside a long, smooth key-line contour, heavier than the face's lines (Met 55810, 54869, 37176; CMA 1956.753).",
+     "Folds are a few lines from support points running with the fall, ending in a taper or small hook, drawn over the pattern; no shading (Met 55810; CMA 1956.753).",
+     "White or plain cloth: folds by blind embossing plus a few lines (CMA 1985.309 label); with no embossing in the engine, lines alone (judgement).",
+     "Pattern lies flat: motifs keep one size and shape across folds and turns, crests stay circles, flowers run straight through folds (Met 55810, 55800; CMA 1956.753; Met 55185 Western dress).",
+     "Motifs are cut by the outline, overlapping cloth and fold lines, never wrapped round the form (Met 55185, 37176, 55810).",
+     "Stripes and checks keep constant spacing: straight within a panel and changing angle at a turn (Met 36922, 55222), or bending gently along a large panel's main fall (Met 55810); never compressed or shaded.",
+     "Pattern as its own flat colour or paper reserve on the garment's ground (Met 55800; CMA 1956.753; judgement on block logic).",
+     "Layered edges (hem, sleeve, collar) as parallel bands of flat colour, each with its own key line (Met 55800; CMA 1985.309).",
+     "Patterned shirt: flat ground, pattern at one motif size over the whole shirt, cut by outline, collar, seams and the apron's edge; fold lines at elbow, armpit and waist over it (judgement applying the pattern rule; Met 55185, 55182).",
+     "Apron: a separate flat panel in its own colour with its own contour, overlapping shirt and trousers; ties as key-line loops like obi bows; one or two sag lines over the lap (Met 55800, CMA 1985.309 bows; judgement for the apron).",
+     "Seated trousers: flat colour per leg area; knee told by the outline's angle; two or three short compression lines behind the knee and at the groin, one or two long lines down the shin (Met 36922, 36521, 55182; judgement for the seated case)."
+    ],
+    "keep": [
+     "support points and direction of fall",
+     "overlap order of garments",
+     "where cloth bunches (inside a bent knee or elbow)",
+     "few big folds over small ones",
+     "material told by the contour: soft cloth sags in long curves, stiff cloth breaks at angles"
+    ],
+    "avoid": [
+     "tonal modelling of folds",
+     "pattern foreshortened, compressed or shaded round the form",
+     "many small wrinkles",
+     "fold lines that interrupt or hide the pattern instead of lying over it",
+     "a soft, painterly hem or contour"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/37163",
+     "https://www.metmuseum.org/art/collection/search/37176",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://www.metmuseum.org/art/collection/search/55185"
+    ]
+   },
+   "face": {
+    "doc": "docs/styles/subjects/ukiyo-e--face.md",
+    "rules": [
+     "The face is one flat area, paper white or one pale flat tint; no planes, socket shadows, cheek or jaw modelling (Met 54869, 55222; CMA 1956.753; NGV essay).",
+     "Features are a few very fine key lines, the finest in the print, thinner than garment outlines (JAANUS kashirabori: nose line carved 'much narrower' than drawn; Met 54869).",
+     "Ideal type (young men and women): slit eyes, long fine nose ending in a hook, tiny mouth about 0.6-0.8 of one eye's length (hikime kagibana, Wikipedia/JAANUS; read by eye on CMA 1956.753, Met 54869, 55810).",
+     "Commoners and working men: same flat face and line, but blunter marks: short thick brow strokes, dash or arc eyes, hook or bulb nose, a wider mouth line that can grin or frown; individuality from skull, jaw and two or three marks (Met 55222, 36922, 36521; CMA 1930.190; judgement that it is a convention).",
+     "Old age: add a few key lines (crow's-feet, brow furrow, nose-to-mouth line); grey hair and beard as fine parallel lines (Met 54339).",
+     "Closed eyes: one relaxed, downward-sagging arc each, at most a short crease line above; no lashes, no lid shadow (Japanese Wiki Corpus: closed eyes 'as narrow lines'; Met 55800, 55810, 54339; CMA 1985.309).",
+     "A sleeper's faint smile lives only in the mouth line: corners tick up by a hair, lips may part slightly; cheeks do not rise (Met 55810; judgement on the limit).",
+     "Viewpoints: three-quarter or profile; full front is rare (Wikipedia: 'only two main viewpoints'; judgement from works seen).",
+     "Head seen from above or tipped: the skull shape grows and features crowd toward the chin, but each feature keeps its frontal glyph; nostrils and lid planes are not foreshortened (Met 55222).",
+     "Brief case, face tipped back and seen from above: turn the head slightly so the face reads three-quarter, keep the glyphs whole, show the tip through the outline (chin and jaw line uppermost, throat as one or two lines) (judgement; log as an extension).",
+     "Flesh: paper or one pale warm tint, flat and the same on face and limbs; labourers may take a stronger ruddy tint (Met 36922, 36521); no rosy cheeks (Meiji face bokashi, Met 55182, is a late exception).",
+     "Shaved or stubbled skin: a flat pale grey or blue-grey tint (Met 55222, 36922).",
+     "Red only as an accent: lower lip, sometimes the eye corner; for a man, the mouth a sumi or dull red line (Met 54869; CMA 1985.309; judgement for men)."
+    ],
+    "keep": [
+     "oval of the face and the order of features on it (eyes near the half line, mouth nearer the nose than the chin)",
+     "turn and tilt of the head",
+     "hair overlapping forehead and ears",
+     "legible expression"
+    ],
+    "avoid": [
+     "plane or tonal modelling of the face",
+     "outlined, lashed or shaded eyes; iris highlights",
+     "foreshortened nostrils and lid planes",
+     "a broad grin with raised cheeks on a sleeper",
+     "anime-cute faces (big eyes, tiny chin)",
+     "likeness of a real person, including actor likeness (nigao-e)"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://clevelandart.org/art/1930.190",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://en.wikipedia.org/wiki/Hikime_kagibana",
+     "https://projects.mcah.columbia.edu/jaanus/node/4084",
+     "https://projects.mcah.columbia.edu/jaanus/node/3270",
+     "https://www.japanesewiki.com/culture/Hikime-Kagibana.html",
+     "https://www.ngv.vic.gov.au/essay/japanese-woodblock-prints-a-mass-medium/",
+     "https://viewingjapaneseprints.net/texts/ukiyoe/kiyonaga.html"
+    ]
+   },
+   "figure": {
+    "doc": "docs/styles/subjects/ukiyo-e--figure.md",
+    "rules": [
+     "Proportion follows a type: refined figures long and slight (Utamaro about 8 heads crown to chin, read by eye on CMA 1956.753; Kiyonaga 'exceptionally tall', Harunobu 'child-like': viewingjapaneseprints, Wikipedia), working men compact at about 6-6.5 heads with large heads and sturdy legs (Met 36922 by eye; Met 36521, 55222).",
+     "A contemporary ordinary man: use the compact commoner type, about 6.5 heads, the same for every figure of that type (judgement).",
+     "The garment's outline is the figure's outline; torso and thighs are located by sleeve, lap and hem, not drawn as anatomy (Met 55810, 54869; CMA 1956.753).",
+     "One long contour (nape, back, lap) carries the line of action (Met 55810; CMA 1930.190).",
+     "No modelling of masses; folds may be told by blind embossing instead of shade (CMA 1985.309 label).",
+     "Bare limbs: a hook for the knee, a bulge in the calf's outline, a tick for the ankle, on flat skin tint (Met 36922, 36521).",
+     "Grounded by overlap of body over floor line, mat or bench; no contact or cast shadow (Met 55800; CMA 1985.322).",
+     "Sleepers are slack and folded: head dropped, shoulders rounded, arms loose or pillowing the head; long sagging curves (Met 55800, 55810, 54339; CMA 1985.309).",
+     "Seated figures read as a mound of cloth with a broad base and one curve for the back (Met 55810; CMA 1985.322).",
+     "High view: the floor tilts up on parallel diagonals; the figure is a raised three-quarter view, compressed by overlap, with near limbs not enlarged (Met 55800, 55222; CMA 1985.322; JAANUS fukinuki yatai; judgement on scaling).",
+     "Straight-down view: an extension, not a convention; the figure as a flat silhouette seen from its top, parts told apart by overlap and garment colour (judgement, as in ukiyo-e--space)."
+    ],
+    "keep": [
+     "line of action and the tilts of head, shoulders and hips",
+     "overlap order",
+     "where the weight rests",
+     "relative limb lengths within one figure"
+    ],
+    "avoid": [
+     "muscle or volume modelling",
+     "perspective scaling of near limbs (giant near knee or foot)",
+     "contact or cast shadows under the body",
+     "different canons for figures of the same type",
+     "anatomy warped beyond the type into caricature"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://clevelandart.org/art/1985.322",
+     "https://clevelandart.org/art/1930.190",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://viewingjapaneseprints.net/texts/ukiyoe/kiyonaga.html",
+     "https://en.wikipedia.org/wiki/Torii_Kiyonaga",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai"
+    ]
+   },
+   "hair": {
+    "doc": "docs/styles/subjects/ukiyo-e--hair.md",
+    "rules": [
+     "The mass is flat solid sumi black (flat grey for grey hair) with no highlight band or ring (Met 54869, 55800, 55810; CMA 1956.753).",
+     "Against background or clothing the mass has a clean hard contour (all works seen).",
+     "Where hair meets skin: a kewari fringe of very fine parallel lines, each strand cut separately and tapering into the face's paper (Waraku: lines 'less than a millimeter in width'; JAANUS kashirabori: hair the hardest part, cut by the master).",
+     "Fringe measured on Met 55800: lines about 0.15-0.2 mm wide, 0.5-0.8 mm apart, 1-3 mm long, roughly 1/15-1/20 of the face's length apart (rough reading).",
+     "Fringe lines follow growth direction: back and up from forehead and temples, down at sideburns and nape, parallel within a patch, fanning round the head (Met 55800, 55810, 55222; CMA 1985.309).",
+     "Short haircut: a black cap with a clean outer contour, kewari fringe at forehead and temples, a few lighter or reserved lines inside for lock direction (Met 55182, 55185).",
+     "Grey or thinning hair and beards: fine lines only, paper or skin showing between (Met 54339).",
+     "Shaved or stubbled skin: a flat pale grey or blue-grey tint, not lines (Met 55222, 36922).",
+     "Short hair from straight above: flat black shape filling the head's top, outer contour a little outside the skull, fine direction lines radiating from the crown whorl, parting as a thin line of skin tint, forehead hairline as a kewari fringe facing the viewer (judgement; log as an extension)."
+    ],
+    "keep": [
+     "hair shell outside the skull's outline",
+     "growth directions radiating from the crown whorl",
+     "hairline framing the face's upper third",
+     "ears below and in front of the side hair"
+    ],
+    "avoid": [
+     "highlights or sheen of any kind",
+     "soft blurred edges made by blending",
+     "strand-by-strand rendering of the whole mass",
+     "a hard line drawn between hair and forehead instead of a fringe"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://www.metmuseum.org/art/collection/search/55185",
+     "https://intojapanwaraku.com/rock/art-rock/1665/",
+     "https://projects.mcah.columbia.edu/jaanus/node/3270",
+     "https://woodblock.com/encyclopedia/entries/015_02/015_02.html",
+     "https://www.asahi-net.or.jp/~xs3d-bull/where/going06.html"
+    ]
+   },
+   "hands-feet": {
+    "doc": "docs/styles/subjects/ukiyo-e--hands-feet.md",
+    "rules": [
+     "Hands small, about 0.5 of the face's length; feet about 0.7 of a head (read by eye on CMA 1956.753, 1985.309; Met 55810, 36922).",
+     "Outline only: knuckles and toes as small hooks and lobes; no shading, nails, tendons or dark finger gaps (all works seen).",
+     "Refined hands: slender separated fingers, tips curling back (Met 55810, 54869; CMA 1956.753).",
+     "Working hands: blunt, mitten-like, two or three finger lines, a knuckle hook on a grip (Met 36922, 55222).",
+     "Hands often half hidden in a sleeve or holding an object through it, only fingertips showing (Met 37163).",
+     "A held fruit is a flat colour shape with a key-line contour and at most one internal line; curled fingers overlap it, a sliver of fruit between them (Met 37163 crystal ball; judgement for fruit).",
+     "A sleeper's grip is loose: fruit resting in a cupped palm on the lap, fingers part-open (judgement, after Met 55800, 55810).",
+     "Bare feet: small outline, toes as a fan of lobes, big toe set apart by one line, ankle tick, heel curve (CMA 1985.309; Met 55800, 36922, 36521).",
+     "Sandals: sole as a flat band, straps as two or three lines (Met 36922, 36521, 55222); modern shoes as a flat dark shape with sole line and laces or buttons as short lines and dots, no sheen (Met 55185 boots; judgement that it transfers).",
+     "Feet at the frame: cut by a straight edge with full detail up to it, one or two sliced mid-foot or at the ankle (crop rule from Met 55222, 55624; judgement for feet alone)."
+    ],
+    "keep": [
+     "five fingers and toes, thumb opposition, grip direction",
+     "joint bending order",
+     "big toe on the inside; inner ankle bone higher"
+    ],
+    "avoid": [
+     "life-size hands (as long as the face)",
+     "core shadows on fingers, nails, tendons",
+     "a shaded, volumetric fruit",
+     "shoe sheen or leather highlights",
+     "feet fading or softening toward the frame edge"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/37163",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55624",
+     "https://www.metmuseum.org/art/collection/search/55185"
+    ]
    }
   }
  }

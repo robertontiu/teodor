@@ -1,0 +1,51 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "figure": {
+    "doc": "docs/styles/subjects/ukiyo-e--figure.md",
+    "rules": [
+     "Proportion follows a type: refined figures long and slight (Utamaro about 8 heads crown to chin, read by eye on CMA 1956.753; Kiyonaga 'exceptionally tall', Harunobu 'child-like': viewingjapaneseprints, Wikipedia), working men compact at about 6-6.5 heads with large heads and sturdy legs (Met 36922 by eye; Met 36521, 55222).",
+     "A contemporary ordinary man: use the compact commoner type, about 6.5 heads, the same for every figure of that type (judgement).",
+     "The garment's outline is the figure's outline; torso and thighs are located by sleeve, lap and hem, not drawn as anatomy (Met 55810, 54869; CMA 1956.753).",
+     "One long contour (nape, back, lap) carries the line of action (Met 55810; CMA 1930.190).",
+     "No modelling of masses; folds may be told by blind embossing instead of shade (CMA 1985.309 label).",
+     "Bare limbs: a hook for the knee, a bulge in the calf's outline, a tick for the ankle, on flat skin tint (Met 36922, 36521).",
+     "Grounded by overlap of body over floor line, mat or bench; no contact or cast shadow (Met 55800; CMA 1985.322).",
+     "Sleepers are slack and folded: head dropped, shoulders rounded, arms loose or pillowing the head; long sagging curves (Met 55800, 55810, 54339; CMA 1985.309).",
+     "Seated figures read as a mound of cloth with a broad base and one curve for the back (Met 55810; CMA 1985.322).",
+     "High view: the floor tilts up on parallel diagonals; the figure is a raised three-quarter view, compressed by overlap, with near limbs not enlarged (Met 55800, 55222; CMA 1985.322; JAANUS fukinuki yatai; judgement on scaling).",
+     "Straight-down view: an extension, not a convention; the figure as a flat silhouette seen from its top, parts told apart by overlap and garment colour (judgement, as in ukiyo-e--space)."
+    ],
+    "keep": [
+     "line of action and the tilts of head, shoulders and hips",
+     "overlap order",
+     "where the weight rests",
+     "relative limb lengths within one figure"
+    ],
+    "avoid": [
+     "muscle or volume modelling",
+     "perspective scaling of near limbs (giant near knee or foot)",
+     "contact or cast shadows under the body",
+     "different canons for figures of the same type",
+     "anatomy warped beyond the type into caricature"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://clevelandart.org/art/1985.322",
+     "https://clevelandart.org/art/1930.190",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://viewingjapaneseprints.net/texts/ukiyoe/kiyonaga.html",
+     "https://en.wikipedia.org/wiki/Torii_Kiyonaga",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai"
+    ]
+   }
+  }
+ }
+}

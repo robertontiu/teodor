@@ -1,0 +1,50 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "drapery": {
+    "doc": "docs/styles/subjects/ukiyo-e--drapery.md",
+    "rules": [
+     "Each garment is one flat colour area inside a long, smooth key-line contour, heavier than the face's lines (Met 55810, 54869, 37176; CMA 1956.753).",
+     "Folds are a few lines from support points running with the fall, ending in a taper or small hook, drawn over the pattern; no shading (Met 55810; CMA 1956.753).",
+     "White or plain cloth: folds by blind embossing plus a few lines (CMA 1985.309 label); with no embossing in the engine, lines alone (judgement).",
+     "Pattern lies flat: motifs keep one size and shape across folds and turns, crests stay circles, flowers run straight through folds (Met 55810, 55800; CMA 1956.753; Met 55185 Western dress).",
+     "Motifs are cut by the outline, overlapping cloth and fold lines, never wrapped round the form (Met 55185, 37176, 55810).",
+     "Stripes and checks keep constant spacing: straight within a panel and changing angle at a turn (Met 36922, 55222), or bending gently along a large panel's main fall (Met 55810); never compressed or shaded.",
+     "Pattern as its own flat colour or paper reserve on the garment's ground (Met 55800; CMA 1956.753; judgement on block logic).",
+     "Layered edges (hem, sleeve, collar) as parallel bands of flat colour, each with its own key line (Met 55800; CMA 1985.309).",
+     "Patterned shirt: flat ground, pattern at one motif size over the whole shirt, cut by outline, collar, seams and the apron's edge; fold lines at elbow, armpit and waist over it (judgement applying the pattern rule; Met 55185, 55182).",
+     "Apron: a separate flat panel in its own colour with its own contour, overlapping shirt and trousers; ties as key-line loops like obi bows; one or two sag lines over the lap (Met 55800, CMA 1985.309 bows; judgement for the apron).",
+     "Seated trousers: flat colour per leg area; knee told by the outline's angle; two or three short compression lines behind the knee and at the groin, one or two long lines down the shin (Met 36922, 36521, 55182; judgement for the seated case)."
+    ],
+    "keep": [
+     "support points and direction of fall",
+     "overlap order of garments",
+     "where cloth bunches (inside a bent knee or elbow)",
+     "few big folds over small ones",
+     "material told by the contour: soft cloth sags in long curves, stiff cloth breaks at angles"
+    ],
+    "avoid": [
+     "tonal modelling of folds",
+     "pattern foreshortened, compressed or shaded round the form",
+     "many small wrinkles",
+     "fold lines that interrupt or hide the pattern instead of lying over it",
+     "a soft, painterly hem or contour"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://www.metmuseum.org/art/collection/search/37163",
+     "https://www.metmuseum.org/art/collection/search/37176",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://www.metmuseum.org/art/collection/search/55185"
+    ]
+   }
+  }
+ }
+}

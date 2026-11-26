@@ -1,0 +1,57 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "face": {
+    "doc": "docs/styles/subjects/ukiyo-e--face.md",
+    "rules": [
+     "The face is one flat area, paper white or one pale flat tint; no planes, socket shadows, cheek or jaw modelling (Met 54869, 55222; CMA 1956.753; NGV essay).",
+     "Features are a few very fine key lines, the finest in the print, thinner than garment outlines (JAANUS kashirabori: nose line carved 'much narrower' than drawn; Met 54869).",
+     "Ideal type (young men and women): slit eyes, long fine nose ending in a hook, tiny mouth about 0.6-0.8 of one eye's length (hikime kagibana, Wikipedia/JAANUS; read by eye on CMA 1956.753, Met 54869, 55810).",
+     "Commoners and working men: same flat face and line, but blunter marks: short thick brow strokes, dash or arc eyes, hook or bulb nose, a wider mouth line that can grin or frown; individuality from skull, jaw and two or three marks (Met 55222, 36922, 36521; CMA 1930.190; judgement that it is a convention).",
+     "Old age: add a few key lines (crow's-feet, brow furrow, nose-to-mouth line); grey hair and beard as fine parallel lines (Met 54339).",
+     "Closed eyes: one relaxed, downward-sagging arc each, at most a short crease line above; no lashes, no lid shadow (Japanese Wiki Corpus: closed eyes 'as narrow lines'; Met 55800, 55810, 54339; CMA 1985.309).",
+     "A sleeper's faint smile lives only in the mouth line: corners tick up by a hair, lips may part slightly; cheeks do not rise (Met 55810; judgement on the limit).",
+     "Viewpoints: three-quarter or profile; full front is rare (Wikipedia: 'only two main viewpoints'; judgement from works seen).",
+     "Head seen from above or tipped: the skull shape grows and features crowd toward the chin, but each feature keeps its frontal glyph; nostrils and lid planes are not foreshortened (Met 55222).",
+     "Brief case, face tipped back and seen from above: turn the head slightly so the face reads three-quarter, keep the glyphs whole, show the tip through the outline (chin and jaw line uppermost, throat as one or two lines) (judgement; log as an extension).",
+     "Flesh: paper or one pale warm tint, flat and the same on face and limbs; labourers may take a stronger ruddy tint (Met 36922, 36521); no rosy cheeks (Meiji face bokashi, Met 55182, is a late exception).",
+     "Shaved or stubbled skin: a flat pale grey or blue-grey tint (Met 55222, 36922).",
+     "Red only as an accent: lower lip, sometimes the eye corner; for a man, the mouth a sumi or dull red line (Met 54869; CMA 1985.309; judgement for men)."
+    ],
+    "keep": [
+     "oval of the face and the order of features on it (eyes near the half line, mouth nearer the nose than the chin)",
+     "turn and tilt of the head",
+     "hair overlapping forehead and ears",
+     "legible expression"
+    ],
+    "avoid": [
+     "plane or tonal modelling of the face",
+     "outlined, lashed or shaded eyes; iris highlights",
+     "foreshortened nostrils and lid planes",
+     "a broad grin with raised cheeks on a sleeper",
+     "anime-cute faces (big eyes, tiny chin)",
+     "likeness of a real person, including actor likeness (nigao-e)"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55800",
+     "https://www.metmuseum.org/art/collection/search/55810",
+     "https://clevelandart.org/art/1985.309",
+     "https://www.metmuseum.org/art/collection/search/54869",
+     "https://clevelandart.org/art/1956.753",
+     "https://www.metmuseum.org/art/collection/search/54339",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36521",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://clevelandart.org/art/1930.190",
+     "https://www.metmuseum.org/art/collection/search/55182",
+     "https://en.wikipedia.org/wiki/Hikime_kagibana",
+     "https://projects.mcah.columbia.edu/jaanus/node/4084",
+     "https://projects.mcah.columbia.edu/jaanus/node/3270",
+     "https://www.japanesewiki.com/culture/Hikime-Kagibana.html",
+     "https://www.ngv.vic.gov.au/essay/japanese-woodblock-prints-a-mass-medium/",
+     "https://viewingjapaneseprints.net/texts/ukiyoe/kiyonaga.html"
+    ]
+   }
+  }
+ }
+}
