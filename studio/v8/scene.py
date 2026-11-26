@@ -90,6 +90,7 @@ class Node:
     def __init__(self, f, color, emit=0.0, bound=None, kind="solid"):
         self.f, self.color, self.emit, self.bound, self.kind = f, hx(color) if isinstance(color, str) else color, emit, bound, kind
         self.owner, self.element, self.colorf, self.gloss, self.planes, self.frame, self.scale = None, "object", None, 0.0, 0.0, None, 1.0
+        self.wrap = 0.0
         self.subf, self.sub, self.glossf, self.plane, self.nsmooth = None, None, None, False, 0.0
 
 
@@ -99,6 +100,7 @@ def from_part(d):
     n = Node(d["f"], d["color"], d.get("emit", 0.0), (list(np.asarray(c, np.float32)), float(r)))
     n.element, n.colorf, n.gloss = d.get("element", "object"), d.get("colorf"), d.get("gloss", 0.0)
     n.planes, n.frame, n.scale = d.get("planes", 0.0), d.get("frame"), d.get("scale", 1.0)
+    n.wrap = d.get("wrap", 0.0)
     n.plane = d.get("plane", False)
     n.subf, n.sub, n.glossf = d.get("subf"), d.get("sub"), d.get("glossf")
     n.nsmooth = d.get("nsmooth", 0.0)
@@ -580,6 +582,7 @@ class Scene:
         emit = np.zeros(len(idx), np.float32)
         gloss = np.zeros(len(idx), np.float32)
         pl = np.zeros(len(idx), np.float32)
+        wr = np.zeros(len(idx), np.float32)
         sublab = np.zeros(len(idx), np.int32)
         off = 1 if self.has_ground else 0
         if self.has_ground:
@@ -593,6 +596,7 @@ class Scene:
                 continue
             base[m] = nd.colorf(p[m]) if nd.colorf is not None else nd.color
             emit[m] = nd.emit
+            wr[m] = getattr(nd, "wrap", 0.0)
             gloss[m] = nd.glossf(p[m]) if nd.glossf is not None else nd.gloss
             if nd.subf is not None:
                 sublab[m] = nd.subf(p[m])
@@ -606,7 +610,9 @@ class Scene:
                 n[m] = norm(n[m] * (1 - nd.planes) + nc * nd.planes)
                 pl[m] = nd.planes
         pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * t[idx])[:, None]
-        dif = np.clip(n @ ld, 0, 1)
+        # skin scatters light under its surface, so the light wraps a little past the terminator
+        # ("wrap" diffuse; 0 for everything but skin parts that ask for it)
+        dif = np.clip((n @ ld + wr) / (1 + wr), 0, 1)
         sh = np.zeros(len(idx), np.float32)
         lit = dif > 0
         if lit.any():

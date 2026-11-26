@@ -305,9 +305,26 @@ STATURE_M = [(0, 0.5), (1, 0.76), (2, 0.87), (3, 0.96), (5, 1.1), (8, 1.28), (10
 STATURE_F = [(0, 0.5), (1, 0.75), (2, 0.86), (3, 0.95), (5, 1.09), (8, 1.27), (10, 1.38), (12, 1.51), (15, 1.61), (18, 1.64), (60, 1.62), (85, 1.56)]
 LEGFRAC = [(0, 0.37), (2, 0.41), (5, 0.45), (10, 0.49), (15, 0.51), (18, 0.513)]
 BUILDS = {  # torso width, limb girth, shoulder width, belly
-    "slim": (0.9, 0.86, 0.96, 0.0), "average": (1.0, 1.0, 1.0, 0.0), "heavy": (1.18, 1.2, 1.04, 1.0),
-    "muscular": (1.06, 1.16, 1.1, 0.0), "frail": (0.88, 0.78, 0.92, 0.0),
+    "slim": (0.9, 0.86, 0.96, 0.0), "average": (1.0, 1.0, 1.0, 0.0), "sturdy": (1.1, 1.14, 1.05, 0.25),
+    "heavy": (1.18, 1.2, 1.04, 1.0), "muscular": (1.06, 1.16, 1.1, 0.0), "frail": (0.88, 0.78, 0.92, 0.0),
 }
+# Adult torso targets in meters at the reference stature (1.77 m men, 1.64 m women), scaled by height.
+# Shoulders (biacromial) 41.1 / 36.7 cm (US survey 1988-94, via Healthline; docs/subjects/sex-age.md);
+# waist-to-hip circumference ratio about 0.89 / 0.72 (Johnson et al. 2012 via Live Science); hip-to-shoulder
+# circumference 1:1.18 / 1:1.03 (figure.md). The absolute waist and hip girths (85/96 cm men, 72/100 cm
+# women, average build) are judgement, chosen to give those ratios. Per build: (waist, hip, chest) multipliers;
+# women gain fat on hips and thighs, men on the belly (gynoid / android, sex-age.md section 2).
+TORSO_M = dict(sh=0.411, waist=0.85, hip=0.96, chest=0.98, S=1.77)
+TORSO_F = dict(sh=0.367, waist=0.72, hip=1.00, chest=0.88, S=1.64)
+BUILD_GIRTH = {  # sex: build -> (waist, hip, chest)
+    "male": {"slim": (0.9, 0.93, 0.92), "average": (1, 1, 1), "sturdy": (1.1, 1.06, 1.08), "heavy": (1.3, 1.14, 1.14),
+             "muscular": (1.0, 1.02, 1.12), "frail": (0.88, 0.9, 0.88)},
+    "female": {"slim": (0.9, 0.92, 0.94), "average": (1, 1, 1), "sturdy": (1.14, 1.08, 1.08), "heavy": (1.28, 1.2, 1.16),
+               "muscular": (1.02, 1.0, 1.04), "frail": (0.9, 0.88, 0.9)},
+}
+# Hair greying with age: among 45-65 year olds the average share of grey is 27% (Panhard et al. 2012,
+# sex-age.md section 4); the rest of the curve is judgement.
+GREY = [(0, 0.0), (35, 0.0), (45, 0.08), (55, 0.27), (65, 0.5), (75, 0.75), (85, 0.9)]
 
 
 class Body:
@@ -333,10 +350,18 @@ class Body:
         self.child = float(np.clip((14 - a) / 12, 0, 1))
         if a >= 55:
             self.bl *= 1 - 0.12 * self.old
+        self.build = o.get("build", "average")
+        # How strongly sex shows in shape and colour: nil before puberty (a child's face and body carry
+        # little sex information; sex-age.md section 4), full from about 16. `dimorphism` (default 1)
+        # scales it for one person: below 1 more androgynous, above 1 more marked. `fs` is the shape
+        # factor the g() interpolation uses: 0 male, 1 female, 0.5 a neutral child.
+        self.dm = float(np.clip((a - 10) / 6, 0, 1)) * float(o.get("dimorphism", 1.0))
+        sgn = 1.0 if self.fem else -1.0
+        self.fs = float(np.clip(0.5 + 0.5 * sgn * self.dm, -0.25, 1.25))
 
     def g(self, male, female):
-        """A value interpolated by sex."""
-        return male + (female - male) * self.fem
+        """A value interpolated by sex (through the shape factor: a child sits halfway)."""
+        return male + (female - male) * self.fs
 
 
 # ---------------------------------------------------------------- pose presets
@@ -620,45 +645,50 @@ def face_shape(body):
     (Farkas 2005 via Al-Sebaei 2015, docs/subjects/face.md): thirds upper/middle/lower 67.1/54.8/72.6
     mm (men) and 63.0/50.6/64.3 (women), eye fissure 31.3/30.7, intercanthal 33.3/31.8, nose width
     34.9/31.4, over a head height of about 232/218 mm (judgement, the common vertex-menton means).
-    Sex, child and old modifiers follow face.md section 4."""
-    fem, old, child = body.fem, body.old, body.child
+    In head units the lower third (subnasale to chin) is then 0.313 of the head in men and 0.295 in
+    women, and nasion to subnasale 0.236 and 0.232: a woman's face sits a little lower and smaller
+    under her cranium, with a shorter lower face (sex-age.md section 1). Sex, child and old modifiers
+    follow face.md section 4; sex goes through body.fs (children halfway)."""
+    fem, old, child = body.fs, body.old, body.child
     g = lambda m, f: m + (f - m) * fem
     S = {}
     fv = 1 - 0.16 * child                       # children: the face (eye line to chin) is a smaller share
-    ye = -0.5 + 0.5 * fv
+    ye = -0.5 + 0.5 * fv + g(0.01, -0.014) * (1 - child)
     S["ye"] = ye
     S["Y"] = lambda t: ye - t * (ye + 0.5)      # t: fraction of the way from the eye line to the chin
     Y = S["Y"]
-    S["t_sn"] = g(0.36, 0.365) + 0.08 * child   # nose base, as a share of eye line to chin (Met references: 0.32-0.38 adults, 0.45 a boy)
-    S["t_sto"] = g(0.565, 0.57) + 0.07 * child    # mouth line (references 0.54-0.61 adults, 0.65 a boy)
+    # nose base: lower third 0.313 / 0.295 of the head (Farkas); children as before
+    S["t_sn"] = g(0.385, 0.39) * (1 - child) + 0.44 * child
+    S["t_sto"] = S["t_sn"] + g(0.33, 0.32) * (1 - S["t_sn"]) + 0.01 * child   # upper lip: a third of the lower face (sn-sto / sn-gn)
     S["y_sn"], S["y_sto"] = Y(S["t_sn"]), Y(S["t_sto"])
-    S["y_brow"] = ye + g(0.066, 0.074) - 0.006 * child
-    S["x_eye"] = g(0.134, 0.136) * (1 + 0.07 * child)          # pupil: (en-en + ex-ex) / 4; a child's eyes are wider apart (Tuts+)          # pupil: (en-en + ex-ex) / 4
+    S["y_n"] = ye + g(0.039, 0.041)             # nasion: n-sn 0.236 / 0.232 of the head
+    S["y_brow"] = ye + g(0.064, 0.082) - 0.006 * child   # women's brows sit higher over a taller lid band (sex-age.md)
+    S["x_eye"] = g(0.134, 0.136) * (1 + 0.07 * child)          # pupil: (en-en + ex-ex) / 4; a child's eyes are wider apart (Tuts+)
     S["w_eye"] = g(0.135, 0.141) * (1 + 0.16 * child) * (1 - 0.06 * old)   # fissure; the eye gap narrows with age (Skomina 2020)
     S["re"] = g(0.052, 0.055) * (1 + 0.28 * child)             # a 24 mm eyeball
     S["z_e"] = 0.212 + 0.004 * fem
-    S["zg"] = g(0.352, 0.338) - 0.012 * child                  # glabella: flatter brow region in women (Skomina 2020)
-    S["tilt"] = R(g(14, 7) - 7 * child)                        # forehead slope back from vertical
-    S["ridge"] = g(0.024, 0.008) * (1 - child)                 # brow ridge
+    S["zg"] = g(0.356, 0.336) - 0.012 * child                  # glabella: flatter brow region in women (Skomina 2020)
+    S["tilt"] = R(g(15, 5) - 7 * child)                        # forehead slope back from vertical; more upright in women
+    S["ridge"] = max(g(0.026, 0.004), 0.0) * (1 - child)       # brow ridge
     S["z_n"] = g(0.318, 0.322) - 0.018 * child                 # nasion: children's bridge is low
-    S["z_tip"] = g(0.448, 0.428) - 0.06 * child + 0.006 * old
-    S["x_al"] = g(0.07, 0.066) * (1 - 0.12 * child) * (1 + 0.15 * old)   # nose width about the inner-eye distance (Farkas: 34.9/33.3, 31.4/31.8 mm); wider when old
-    S["bw"] = g(0.022, 0.018) * (1 - 0.2 * child)              # nose bridge half width
-    S["y_tip"] = S["y_sn"] + 0.034 - 0.014 * old + 0.006 * fem + 0.008 * child   # the tip droops with age
-    S["x_zy"] = g(0.283, 0.286) * (1 - 0.02 * child)              # zygomatic half width (zy-zy about 0.57-0.6 of the head height)
+    S["z_tip"] = g(0.452, 0.424) - 0.06 * child + 0.006 * old
+    S["x_al"] = g(0.071, 0.065) * (1 - 0.12 * child) * (1 + 0.15 * old)   # nose width about the inner-eye distance (Farkas: 34.9/33.3, 31.4/31.8 mm); wider when old
+    S["bw"] = g(0.023, 0.017) * (1 - 0.2 * child)              # nose bridge half width
+    S["y_tip"] = S["y_sn"] + 0.034 - 0.014 * old + 0.008 * fem + 0.008 * child   # the tip droops with age, lifts a little in women
+    S["x_zy"] = g(0.283, 0.288) * (1 - 0.02 * child)           # zygomatic half width: women's cheekbones relatively prominent
     S["x_t"] = g(0.268, 0.272)
-    S["x_go"] = g(0.232, 0.212) * (1 - 0.14 * child)            # men: wider jaw at gonion (Skomina 2020)
-    S["y_go"] = Y(g(0.72, 0.66))
-    S["z_go"] = g(-0.045, -0.025)
-    S["x_ch"] = g(0.085, 0.06) * (1 - 0.2 * child)
-    S["z_pog"] = g(0.352, 0.338) - 0.035 * child
-    S["cx"] = g(0.114, 0.116) * (1 - 0.12 * child)             # mouth half width (ch-ch 53 / 50 mm)
-    S["hu"] = g(0.026, 0.032) * (1 - 0.45 * old)               # vermilion heights; they narrow with age
-    S["hl"] = g(0.034, 0.042) * (1 - 0.4 * old)
-    S["tu"] = g(0.011, 0.014) * (1 - 0.3 * old)
-    S["tl"] = g(0.013, 0.017) * (1 - 0.3 * old)
-    S["z_bar"] = g(0.372, 0.366) - 0.02 * child                # front of the muzzle barrel (upper lip)
-    S["full"] = g(0.75, 1.0) + 0.9 * child - 0.3 * old         # cheek fullness
+    S["x_go"] = g(0.236, 0.2) * (1 - 0.14 * child)             # men: wider jaw at gonion (Skomina 2020); go/zy 0.83 / 0.69
+    S["y_go"] = Y(g(0.74, 0.62))                               # women's jaw angle sits higher and tucks back: a tapering outline
+    S["z_go"] = g(-0.045, -0.015)
+    S["x_ch"] = g(0.09, 0.052) * (1 - 0.2 * child)             # chin: broad and square / small and rounded
+    S["z_pog"] = g(0.356, 0.334) - 0.035 * child
+    S["cx"] = g(0.114, 0.114) * (1 - 0.12 * child)             # mouth half width (ch-ch 53 / 50 mm over 232 / 218)
+    S["hu"] = g(0.024, 0.033) * (1 - 0.45 * old)               # vermilion heights: fuller in women; they narrow with age
+    S["hl"] = g(0.031, 0.044) * (1 - 0.4 * old)
+    S["tu"] = g(0.010, 0.0135) * (1 - 0.3 * old)
+    S["tl"] = g(0.012, 0.016) * (1 - 0.3 * old)
+    S["z_bar"] = g(0.374, 0.364) - 0.02 * child                # front of the muzzle barrel (upper lip)
+    S["full"] = g(0.7, 1.15) + 0.9 * child - 0.3 * old         # cheek fullness
     return S
 
 
@@ -673,10 +703,10 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
     H = body.u
     au = au_of(o.get("expression", "neutral"))
     A = lambda k: float(au.get(k, 0.0))
-    fem, old, child = body.fem, body.old, body.child
+    fem, old, child = body.fs, body.old, body.child
     S = face_shape(body)
     Y, ye = S["Y"], S["ye"]
-    planes = float(o.get("planes", 0.45))
+    planes = float(o.get("planes", body.g(0.45, 0.32)))     # default: softer plane breaks on a woman's face (sex-age.md section 6, heavy jaw shadow)
     kp = (0.008 + 0.045 * (1 - planes)) * (1 + 0.5 * fem + 0.6 * child) * (1 - 0.3 * old)   # plane-break softness (judgement)
 
     # ---------- action units -> parameters (judgement, calibrated by eye against face.md section 5)
@@ -711,12 +741,19 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
     pivot = V(0, ye - 0.07, -0.03)               # the jaw hinge, in front of the ear
     Rj = rx(jaw)
     glide = V(0, -0.01, 0.16) * math.sin(jaw - R(2))   # the condyle slides forward as the mouth opens (judgement)
-    sk = hx(skin)
-    lips = hx(lip_col) if lip_col else sk * V(1.0, 0.8, 0.8)
+    sk = hx(skin) if isinstance(skin, str) else np.asarray(skin, np.float32)
+    # facial contrast (Russell 2009): the lips stand darker and redder off a woman's lighter skin; in men
+    # the mouth is browner and sits in less contrast; contrast falls with age (Porcheron et al. 2013)
+    lips = hx(lip_col) if lip_col else sk * (V(0.74, 0.58, 0.56) + (V(0.62, 0.37, 0.39) - V(0.74, 0.58, 0.56)) * float(np.clip(fem, 0, 1)))
     teeth, mouthc = hx("#a89e8c"), hx("#1e0c0a")
     hd = o.get("hair")
     hcol = (hd if isinstance(hd, str) else hd.get("color")) if hd else None
     brow_col = hx(o.get("brows", hcol or "#3a2a20"))
+    if "brows" not in o and hcol:      # brows grey later and less than the scalp hair (judgement)
+        brow_col = brow_col + (hx("#b8b4ac") - brow_col) * 0.5 * lerp_table(GREY, body.age)
+    fade = 1 - 0.3 * old                # facial contrast falls with age (Porcheron 2013)
+    beard = float(o.get("beard", 0.35 * float(np.clip((body.age - 17) / 6, 0, 1)) if body.fs < 0.5 else 0.0))
+    beard_col = hx(o.get("beard_color", "#000000")) if "beard_color" in o else brow_col
 
     # ---------- the cranium: a ball with its side cut flat (Loomis)
     cr_c = V(0, 0.1 + 0.02 * child, -0.06)
@@ -784,7 +821,7 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
     jw.done()
 
     # ---------- the nose: a wedge with front, sides and base, alae and a tip
-    yn, zn = ye + 0.035, S["z_n"]
+    yn, zn = S["y_n"], S["z_n"]
     T = V(0, S["y_tip"], S["z_tip"])
     ysn = S["y_sn"]
     zsn = S["z_tip"] - 0.068
@@ -962,23 +999,36 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
         # the three colour zones: forehead lighter and cooler, cheeks, nose and ears warmer, jaw cooler
         warm = np.exp(-((qm[:, 0] - 0.15) / 0.08) ** 2 - ((q[:, 1] - ye + 0.12) / 0.1) ** 2) + np.exp(-(q[:, 0] / 0.05) ** 2 - ((q[:, 1] - S["y_tip"]) / 0.07) ** 2)
         c *= (1 + 0.07 * np.clip(warm, 0, 1)[:, None] * V(1, -0.6, -0.8))
-        cool = np.clip((S["y_sto"] - 0.02 - q[:, 1]) / 0.1, 0, 1) * (1 - fem) * (1 - child) * 0.6
-        c *= (1 - 0.07 * cool[:, None] * V(1, 0.6, -0.4))
+        if beard > 0:
+            # the beard zone: upper lip, chin and the jaw below a line from the ear lobe to the side of the
+            # nose; shaved, it is a cool grey-blue shadow; from 0.6 up the hair colour itself (face.md 3)
+            lo = S["y_sn"] - 0.01 - (qm[:, 0] / 0.27) * (S["y_sn"] - 0.01 - (ye - 0.1))
+            zone = np.clip((lo - q[:, 1]) / 0.03, 0, 1) * np.clip((q[:, 2] + 0.02) / 0.06, 0, 1) * (q[:, 1] > -0.52)
+            zone *= 1 - np.exp(-((qm[:, 0] / (cx + 0.02)) ** 2 + ((q[:, 1] - sto) / 0.05) ** 2) * 2.0) * 0.15   # thinner beside the lips
+            shave = c * V(0.8, 0.84, 0.93)
+            w1 = (min(beard, 0.6) / 0.6 * 0.55 * zone)[:, None]
+            c = c * (1 - w1) + shave * w1
+            if beard > 0.6:
+                w2 = ((beard - 0.6) / 0.4 * 0.9 * zone)[:, None]
+                c = c * (1 - w2) + beard_col[None] * w2
         # eyebrows (hair over the brow ridge)
         sb = np.clip((qm[:, 0] - (0.032 - knit)) / (xe + 0.085 - 0.032), 0, 1)
         arch = body.g(0.01, 0.018)
         ybc = yb + 0.016 + arch * np.sin(math.pi * sb ** 0.8) + b_in * (1 - sb) + b_out * sb - 0.006 * sb * old
         bh = 0.014 * (1.2 - 0.6 * sb) * body.g(1, 0.8)
         wgt = np.clip(1.4 - np.abs(q[:, 1] - ybc) / bh, 0, 1) * np.clip((qm[:, 0] - 0.028 + knit) / 0.015, 0, 1) \
-            * np.clip((xe + 0.09 - qm[:, 0]) / 0.03, 0, 1) * (q[:, 2] > 0.2) * body.g(0.6, 0.5)
+            * np.clip((xe + 0.09 - qm[:, 0]) / 0.03, 0, 1) * (q[:, 2] > 0.2) * body.g(0.62, 0.66) * fade
         c = c * (1 - wgt[:, None]) + brow_col[None] * wgt[:, None]
         # lips
         x, t, yu, yl = edges(q)
         su = (q[:, 1] - yu) / S["hu"]
         sl = (yl - q[:, 1]) / (S["hl"] * (1 - 0.3 * A("20")))
         on_lip = ((su > -0.05) & (su < 1.0) | (sl > -0.05) & (sl < 1.0)) & (x < cx * (1.0 - 0.04 * t)) & (q[:, 2] > S["z_bar"] - 0.06)
-        lw = body.g(0.5, 0.68) * (1 - 0.3 * old)
-        c[on_lip] = c[on_lip] * (1 - lw) + lips * lw
+        lw = body.g(0.55, 0.8) * fade
+        # the lip colour fades toward the corners and the vermilion border, so the mouth is a form, not a slab
+        soft = np.clip(1 - t ** 3, 0, 1) * np.clip(np.minimum(1 - su, 1 - sl) * 2.5, 0, 1) ** 0.7
+        wl_ = (on_lip * lw * (0.35 + 0.65 * soft))[:, None]
+        c = c * (1 - wl_) + lips[None] * wl_
         if opened:
             mo = mouth2d(q)
             inside = (mo < 0.003) & (q[:, 2] < S["z_bar"] - 0.012)
@@ -1008,13 +1058,22 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
             c[ir] = hx(iris_col)
             c[on & (cosg > 0.975)] = hx("#0c0806")
             fs, du, s = fissure(q, e)
-            lash = (du > -0.002) & (du < 0.007 + 0.002 * fem) & (np.abs(s) < 0.97) & (r_ > re_ + 0.002) & (q[:, 2] > e[2]) & (closed < 0.5)
-            c[lash] = c[lash] * body.g(0.35, 0.2) + brow_col * body.g(0.35, 0.5)
+            # the lash line: darker and a little thicker in women, the strongest contrast cue at small size
+            lash = (du > -0.003) & (du < 0.007 + 0.004 * fem) & (np.abs(s) < 0.97 + 0.02 * fem) & (r_ > re_ + 0.002) & (q[:, 2] > e[2]) & (closed < 0.5)
+            dk = body.g(0.45, 0.85) * fade
+            c[lash] = c[lash] * (1 - dk) + hx("#140c0a") * dk
+            # the upper lid's own shade over the lash line, and a fine lower lash line (judgement; Russell 2009:
+            # women's eye region stays dark against a lighter skin)
+            lid = (du >= 0.007 + 0.004 * fem) & (du < 0.02) & (np.abs(s) < 1.0) & (q[:, 2] > e[2]) & (closed < 0.5)
+            c[lid] = c[lid] * (1 - 0.18 * fem * fade)
+            vv = q[:, 1] - e[1] - 0.004 * s
+            low = (np.abs(vv + lid_l * np.maximum(1 - s * s, 0) ** 0.75 * (1 + 0.2 * s)) < 0.003) & (np.abs(s) < 0.9) & (q[:, 2] > e[2]) & (closed < 0.5) & (r_ > re_ + 0.001)
+            c[low] = c[low] * (1 - 0.35 * fem * fade)
             if closed >= 0.5:
                 lash = (np.abs(du) < 0.004) & (np.abs(s) < 0.95) & (q[:, 2] > e[2])
                 c[lash] = c[lash] * 0.5 + brow_col * 0.3
         return c
-    return dict(f=f, colorf=colorf, color=sk, element="head", bound=(O, H * 0.64), gloss=gloss, planes=planes,
+    return dict(f=f, colorf=colorf, color=sk, element="head", bound=(O, H * 0.64), gloss=gloss, planes=planes, wrap=float(o.get("skin_wrap", 0.25)),
                 frame=M, scale=H, lift=(lid_l, lid_u), polys=dict(up=up, ck=ck, jw=jw, nose=nz, k=kp, sdf=sdf_local), skull=skull,
                 marks=dict(crown=(0, 0.5, -0.06), chin=(0, -0.5, zp - 0.075), brow=(0, yb, zg), eye_l=(xe, ye, ze + re_), eye_r=(-xe, ye, ze + re_),
                            en_l=(xe - hw, ye, ze + 0.03), ex_l=(xe + hw, ye + 0.004, ze), en_r=(-xe + hw, ye, ze + 0.03), ex_r=(-xe - hw, ye + 0.004, ze),
@@ -1023,76 +1082,152 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
                            lid_u=(xe, ye + lid_u, ze + re_), lid_l=(xe, ye - lid_l, ze + re_)))
 
 
+HAIR_STYLES = ("short", "crop", "bob", "long", "bun", "ponytail", "slick", "receding", "bald")
+
+
 def hair_part(o, body, O, M, wind, collide, skull=None):
-    """Hair as masses: a cap following the cranium, plus a bun, a ponytail or long locks that hang
-    and stream (rope simulation), or a receding/bald crown."""
+    """Hair as masses with volume, not a skull cap (sex-age.md sections 1 and 3: the hair silhouette is
+    the cue that survives the smallest sizes):
+    - over the skull a solid mass whose thickness depends on the style, thicker on the crown and, for
+      hair that falls, widening downward;
+    - the hairline: a rounded front for women and children; for men the temples recede with age (and
+      more with `receding`);
+    - `bob` and `long` fall as a curtain below the skull, covering the ears and framing the face, pushed
+      along the wind; `long` continues in thick locks simulated as ropes under gravity and wind;
+    - `bun` is a real volume high at the back of the crown (`"bun_pos": "low"` for a nape bun);
+      `ponytail` a gathered, tapering mass from a tie at the back;
+    - colour greys with age unless `grey` (0-1) is given (GREY table; Panhard et al. 2012)."""
     hd = o.get("hair")
     if not hd:
         return []
     if isinstance(hd, str):
         hd = {"color": hd}
     style = hd.get("style", "short")
-    col = hd.get("color", "#2a1e18")
+    fs = body.fs
+    col = hx(hd.get("color", "#2a1e18"))
+    grey = float(hd.get("grey", lerp_table(GREY, body.age)))
+    col = col + (hx("#c4c2bc") - col) * grey
     H = body.u
     M = np.asarray(M, np.float32)
-    th = hd.get("thickness", {"short": 0.035, "bun": 0.03, "long": 0.04, "slick": 0.012, "receding": 0.02, "bald": 0.02}.get(style, 0.03))
-    front = hd.get("hairline", {"receding": 0.36, "slick": 0.34}.get(style, 0.3))
+    S = face_shape(body)
+    ye = S["ye"]
+    th = hd.get("thickness", {"short": 0.035 + 0.015 * fs, "crop": 0.045, "bob": 0.05, "long": 0.055, "bun": 0.03, "ponytail": 0.032,
+                              "slick": 0.012, "receding": 0.035, "bald": 0.02}.get(style, 0.03))
+    vol = hd.get("volume", 1.0)
+    th *= vol
+    # the front hairline: upper third (trichion to glabella) 0.29 of the head (Farkas, both sexes)
+    front = hd.get("hairline", ye + body.g(0.33, 0.305) + {"receding": 0.16, "slick": 0.01}.get(style, 0.0))   # receding: the front has gone
+    male = fs < 0.5
+    rec = float(hd.get("recession", (float(np.clip((body.age - 20) / 40, 0, 1)) * 0.6 + (0.6 if style == "receding" else 0.0)) * (1 - min(max(fs, 0), 1))))
+    falls = style in ("bob", "long")
+    y_cut = {"bob": -0.36, "long": -0.24}.get(style, 0.0) - hd.get("drop", 0.0)
+    w = np.asarray(wind, np.float32)
+    wl = (M.T @ w) / max(float(np.linalg.norm(w)), 1e-6)
+    wl[1] = 0
+    wstr = min(float(np.linalg.norm(w)) / 16.0, 1.2)
+    cr_c, cr_r = V(0, 0.1, -0.06), V(0.33, 0.385, 0.405)
 
     def local(p):
         return ((p - O) @ M) / H
 
     def cap(q):
-        z = q[:, 2]
-        # hairline: higher in front, down to the nape at the back, above the ears at the sides
-        hl = front + (np.clip(-z, 0, 0.4) / 0.4) * (-0.62 - front)
-        side = np.clip((np.abs(q[:, 0]) - 0.2) / 0.1, 0, 1) * np.clip((z + 0.1) / 0.25, 0, 1)
-        hl = hl + side * (0.17 - front)
-        hl = hl + (0.03 if style in ("short", "receding", "slick") else 0.008) * np.cos(q[:, 0] * 14) * (z > 0)   # an irregular front edge for short hair
-        t = th * np.clip((q[:, 1] - hl) / 0.1, 0.12, 1.0)        # thin at the hairline, full above
-        d = np.linalg.norm((q - V(0, 0.1, -0.06)) / V(0.32, 0.385, 0.405), axis=1) - 1
-        d = d * 0.37
-        if skull is not None:          # sit on the head's own forehead and temple planes
-            d = np.minimum(d, skull(q))
+        if falls and wstr > 0:      # the falling mass leans downwind, more toward its ends
+            s_ = np.clip((0.1 - q[:, 1]) / 0.45, 0, 1) ** 1.5 * 0.14 * wstr
+            q = q - s_[:, None] * wl[None]
+        x, y, z = np.abs(q[:, 0]), q[:, 1], q[:, 2]
+        # hairline: front edge, down the temples to above the ears (or over them), to the nape at the back
+        if male:
+            hl0 = front + rec * 0.11 * np.exp(-((x - 0.14) / 0.065) ** 2) - 0.02 * (x / 0.22) ** 2   # temple recession (M shape)
+            hl0 = hl0 + 0.008 * np.cos(q[:, 0] * 22) * (style in ("short", "receding"))
+        else:
+            hl0 = front - 0.07 * np.clip(x / 0.24, 0, 1) ** 2                                           # rounded, no recession
+        side_y = (ye + 0.1) if (male or style in ("short", "crop", "slick")) else (ye + 0.06 if style in ("bun", "ponytail") else -0.5)
+        sw = np.clip((x - 0.16) / 0.14, 0, 1)
+        hl = hl0 + sw * sw * (3 - 2 * sw) * (side_y - hl0)
+        # the nape: short cuts stop at the base of the skull, sitting close; longer hair reaches the neck
+        nape = hd.get("nape", {"short": -0.2 - 0.12 * fs, "crop": -0.32, "receding": -0.25, "slick": -0.45, "bald": -0.36}.get(style, -0.62))
+        hl = hl + (np.clip(-z, 0, 0.4) / 0.4) * (nape - hl)
+        if style in ("short", "crop", "receding"):    # a short cut sits close at the sides and the nape
+            th_ = th * (1 - 0.55 * np.clip((0.2 - y) / 0.35, 0, 1))
+        else:
+            th_ = th
+        r_ = np.clip((y - hl) / 0.2, 0, 1)
+        t = th_ * r_ * r_ * (3 - 2 * r_) - 0.01 * (1 - r_)     # the mass thins to nothing at the hairline: no ledge
+        t = t * (1 + 0.25 * np.clip((y - 0.2) / 0.25, 0, 1) * np.clip((0.15 - z) / 0.2, 0, 1)
+                 * (style not in ("slick", "bun", "ponytail")))   # a fuller crown, behind the hairline
+        ellc = lambda qq: (np.linalg.norm((qq - cr_c) / (cr_r * 0.98), axis=1) - 1) * 0.37
+        # the hair rests on the skull's planes but rounds over their corners (a mass, not a plane cast)
+        base = (lambda qq: smin(skull(qq), ellc(qq), 0.06)) if skull is not None else ellc
+        if falls:          # hair that falls widens downward (an A-shaped mass) and hangs below the skull: the skull's
+            # cross-section a little above the ears, carried straight down
+            t = t * (1 + 0.35 * np.clip((0.05 - y) / 0.4, 0, 1))
+            qq = np.stack([q[:, 0], np.maximum(y, cr_c[1]), q[:, 2]], 1)
+            cyl = smax((np.linalg.norm((qq - cr_c) / cr_r, axis=1) - 1) * 0.37, np.abs(q[:, 0]) - 0.318 - 0.02, 0.04)
+            d = np.minimum(base(q), cyl)
+            xo_ = 0.3 - 0.06 * np.clip((ye - 0.05 - y) / 0.3, 0, 1)
+            wy = np.clip((hl0 - 0.06 - y) / 0.12, 0, 1) * np.clip((z + 0.12) / 0.08, 0, 1)
+            edge = 1 - wy * (1 - np.clip((x - xo_) / 0.09, 0.2, 1.0))
+            t = t * edge                            # the curtain thins toward the face, so its edge rolls in
+        else:
+            d = base(q)
         d = d - t - 0.004
-        d = np.maximum(d, (hl - q[:, 1]) * 0.5)
-        if style in ("receding", "bald"):
-            crown = np.linalg.norm((q[:, [0, 2]] - V(0, 0.02)) / V(0.24, 0.3), axis=1) - 1
-            topcut = np.maximum(-crown * 0.2, 0.05 - q[:, 1]) if style == "receding" else -(q[:, 1] - 0.0)
-            d = np.maximum(d, -topcut) if style == "receding" else np.maximum(d, q[:, 1] - 0.05)
+        d = smax(d, (hl - 0.012 - y) * 0.5, 0.01)
+        if falls:
+            d = smax(d, y_cut - y + 0.02 * np.cos(q[:, 0] * 9), 0.03)       # the cut, a little uneven
+            # the face stays open: in front of the ears, below the hairline, nothing
+            # the opening follows the face: wide at the temples, closer under the cheekbones, so the ends frame the jaw
+            xo = 0.3 - 0.06 * np.clip((ye - 0.05 - y) / 0.3, 0, 1)
+            opening = np.minimum.reduce([xo - x, z + 0.01 + 0.08 * np.clip((ye - 0.1 - y) / 0.3, 0, 1), hl0 - 0.01 - y])
+            d = smax(d, opening, 0.06)
+        if style == "receding":     # the horseshoe: sides and back below the parietal line, rising toward the back
+            d = smax(d, y - (0.23 + 0.12 * np.clip(-(z + 0.1) / 0.3, 0, 1)), 0.02)
+        elif style == "bald":
+            d = np.maximum(d, y - 0.05)
         if style == "slick":   # wet hair combed straight back: thin, in a few loose lengthwise locks
-            d = d + 0.004 * np.sin(q[:, 0] * 38 + 3 * np.sin(q[:, 2] * 9)) * np.clip(q[:, 1] + 0.2, 0, 1)
-        return d
-    parts = []
+            d = d + 0.004 * np.sin(q[:, 0] * 38 + 3 * np.sin(q[:, 2] * 9)) * np.clip(y + 0.2, 0, 1)
+        return d * (0.85 if falls else 1.0)
     extra = Prims()
     if style == "bun":
-        extra.ell(V(0, 0.12, -0.47), rx(R(-20)), V(0.13, 0.12, 0.11))
-    fn_extra = extra.fn(0.03) if not extra.empty() else None
-    locks = None
-    if style in ("long", "ponytail"):
-        n_l = 7 if style == "long" else 1
-        locks = []
-        Ln = hd.get("length", 0.35 if style == "long" else 0.25)
+        if hd.get("bun_pos", "high") == "low":
+            extra.ell(V(0, -0.02, -0.5), rx(R(-10)), V(0.15, 0.12, 0.12) * vol)
+        else:
+            extra.ell(V(0, 0.42, -0.38), rx(R(-45)), V(0.165, 0.135, 0.15) * vol)   # on the back of the crown: it shows above the head
+    if style == "ponytail":
+        extra.ell(V(0, 0.13, -0.45), rx(R(-30)), V(0.08, 0.07, 0.07))          # the gathered hair at the tie
+    fn_extra = extra.fn(0.06) if not extra.empty() else None
+    locks = []
+    if style == "long":
+        n_l = hd.get("locks", 13)
+        Ln = hd.get("length", 0.35)
+        rxa, rza = 0.33 + th * 1.3, 0.405 + th * 1.3
         for i in range(n_l):
-            a = (i / max(n_l - 1, 1) - 0.5) * 2.4 if n_l > 1 else 0
-            anc = V(math.sin(a) * 0.3, 0.0 - 0.15 * abs(math.sin(a)), -0.3 - 0.1 * math.cos(a)) if n_l > 1 else V(0, 0.05, -0.44)
-            aw = O + M @ (anc * H)
-            pts = rope(aw, 8, Ln / 8, wind, collide, drag=hd.get("drag", 1.6), seed=i, r=0.02)
-            locks.append(pts)
+            a = (i / (n_l - 1) - 0.5) * math.radians(250)
+            anc = V(math.sin(a) * rxa, y_cut + 0.05, -0.06 - math.cos(a) * rza)
+            out = M @ nrm(V(math.sin(a), -2.5, -math.cos(a)))
+            pts = rope(O + M @ (anc * H), 8, Ln / 8, wind, collide, drag=hd.get("drag", 1.6), seed=i, r=0.028, init=out)
+            locks.append((pts, 0.085 * H, 0.055 * H))
+    elif style == "ponytail":
+        Ln = hd.get("length", 0.25)
+        for i, dx in enumerate((-0.03, 0.0, 0.03)):
+            anc = O + M @ (V(dx, 0.1, -0.5) * H)
+            pts = rope(anc, 8, Ln / 8, wind, collide, drag=hd.get("drag", 1.6), seed=20 + i, r=0.03, init=M @ V(0, -1, -0.6))
+            locks.append((pts, 0.075 * H, 0.03 * H))
     gl = hd.get("gloss", 0.6 if style == "slick" else 0.15)
 
     def f(p):
-        d = cap(local(p)) * H
+        q = local(p)
+        d = cap(q) * H
         if fn_extra:
-            d = smin(d, fn_extra(local(p)) * H, 0.02)
-        if locks:
-            for pts in locks:
-                n = len(pts) - 1
-                r1 = np.linspace(0.05, 0.025, n) * H
-                d = smin(d, rc_batch(p, pts[:-1], pts[1:], r1, r1 * 0.85).min(1), 0.03)
+            d = smin(d, fn_extra(q) * H, 0.03 * H)
+        for pts, r1, r2 in locks:
+            n = len(pts) - 1
+            ra = np.linspace(r1, r2 * 1.15, n)
+            d = smin(d, rc_batch(p, pts[:-1], pts[1:], ra, np.append(ra[1:], r2)).min(1), 0.035)
         return d * 0.9
-    sph = [(O, H * 0.7)]
-    if locks:
-        sph += [(q, 0.05) for pts in locks for q in pts]
+    sph = [(O, H * 0.75)]
+    if falls:
+        sph.append((O + M @ (V(0, -0.3, -0.1) * H), H * 0.55))
+    sph += [(q, 0.05) for pts, _, _ in locks for q in pts]
     return [part(f, col, "hair", sph, gloss=gl)]
 
 
@@ -1226,7 +1361,7 @@ def dress_part(o, cl, body, J, wind, collide, color):
     length = cl.get("length_m", length)
     waist = J["waist"]
     Mw = J["Rpelvis"]
-    rw = 0.62 * u * body.wf * body.bt * body.g(1.0, 1.05)
+    rw = J["_dims"]["a_w"] * 1.04 if "_dims" in J else 0.62 * u * body.wf * body.bt   # the waistband sits on the waist
     flare = cl.get("flare", 0.45)
     nseg = 10
     G0 = np.zeros((nseg + 1, n_r, 3), np.float32)
@@ -1326,7 +1461,7 @@ def trousers_part(o, cl, body, J, prims, color):
             c, n = cuts[i]
             dl = np.maximum(dl, (p - c) @ n)
             d = smin(d, dl, 0.06 * u)
-        rip = 0.004 * np.sin(p[:, 1] * 60 + p[:, 0] * 20)
+        rip = 0.0015 * np.sin(p[:, 1] * 60 + p[:, 0] * 20)      # fine ripples (a coarser one aliased into stripes at thumbnail size)
         return (d - ease - rip) * 0.85
     sph = tor.spheres() + legs[0].spheres() + legs[1].spheres()
     return part(f, cl.get("color", color), "drapery", sph, name="trousers", pad=0.06)
@@ -1375,6 +1510,49 @@ def shirt_part(o, cl, body, J, wind, prims, color):
 
 
 # ---------------------------------------------------------------- the person
+def sex_skin(skin, body, k=1.0):
+    """Women's skin is lighter, men's darker and redder (Russell 2009; Dupuis-Roy et al. 2009: a redder
+    skin pushes a face to male). The direction is measured, the size (about 4% lighter, a little less
+    red; men about 4% darker and redder) is judgement. `skin_sex` 0 turns it off. Returns a hex colour."""
+    c = hx(skin)
+    t = (body.fs - 0.5) * 2 * k              # +1 woman, -1 man, 0 child
+    if t >= 0:
+        c = c * (1 + 0.045 * t) * (V(0.985, 1.0, 1.01) ** t)
+    else:
+        c = c * (1 + 0.045 * t) * (V(1.025, 0.99, 0.965) ** (-t))
+    c = np.clip(c, 0, 1)
+    return "#%02x%02x%02x" % tuple(int(round(float(v) * 255)) for v in c)
+
+
+def ell_perim(a, b):
+    """Ramanujan's approximation to an ellipse's perimeter."""
+    h = ((a - b) / (a + b)) ** 2
+    return math.pi * (a + b) * (1 + 3 * h / (10 + math.sqrt(4 - 3 * h)))
+
+
+def semi_axis(C, aspect):
+    """Half width a of an ellipse with perimeter C and depth/width ratio `aspect`."""
+    return C / ell_perim(1.0, aspect)
+
+
+def torso_dims(body):
+    """Torso widths in meters from the targets (TORSO_M / TORSO_F, BUILD_GIRTH), mixed by the sex
+    shape factor (a child sits halfway), scaled by stature; older women's waists thicken (judgement)."""
+    mix = lambda k: TORSO_M[k] + (TORSO_F[k] - TORSO_M[k]) * body.fs
+    bm = BUILD_GIRTH["male"].get(body.build, (1, 1, 1))
+    bf = BUILD_GIRTH["female"].get(body.build, (1, 1, 1))
+    gb = [m_ + (f_ - m_) * min(max(body.fs, 0), 1) for m_, f_ in zip(bm, bf)]
+    sc = body.S / mix("S")
+    waist = mix("waist") * gb[0] * (1 + body.old * (0.05 + 0.05 * body.fem)) * sc
+    hip = mix("hip") * gb[1] * sc
+    chest = mix("chest") * gb[2] * sc
+    asp_w, asp_h, asp_c = body.g(0.78, 0.72), body.g(0.72, 0.76), body.g(0.68, 0.7)
+    a_w, a_h, a_c = semi_axis(waist, asp_w), semi_axis(hip, asp_h), semi_axis(chest, asp_c)
+    sh = mix("sh") * sc * body.bs
+    return dict(waist=waist, hip=hip, chest=chest, a_w=a_w, b_w=a_w * asp_w, a_h=a_h, b_h=a_h * asp_h, a_c=a_c, b_c=a_c * asp_c,
+                sh=sh, shx=sh / 2 - 0.02 * sc)
+
+
 def person(o):
     """Build a person from a scene object. See docs/MANUAL.md, "People"."""
     body = Body(o)
@@ -1419,11 +1597,13 @@ def person(o):
     Rh = Rn @ jrot(G("head"))
     J["Rhead"] = Rh
     J["head"] = J["atlas"] + Rh @ V(0, 0.4 * u, 0.04 * u)
-    shx = body.g(0.78, 0.68) * wf * bs
+    dims = torso_dims(body)
+    J["_dims"] = dims
+    shx = dims["shx"] / u                      # the shoulder joints, 2 cm inside the acromion (biacromial breadth)
     for side, s in ((1, "l"), (-1, "r")):
         rs, fs = (G(f"shoulder_{s}", 2))
         J[f"sh_{s}"] = J["chest"] + Rc @ V(side * shx * u, (0.92 * tf + 0.06 * rs) * u, (-0.08 + 0.08 * fs) * u)
-        hipx = body.g(0.4, 0.45) * wf * bt
+        hipx = body.g(0.4, 0.45) * wf             # hip joints: bone, wider set in women; flesh comes from torso_dims
         J[f"hip_{s}"] = Rp @ V(side * hipx * u, 0, 0)
     # ---------- legs
     for side, s in ((1, "l"), (-1, "r")):
@@ -1548,7 +1728,7 @@ def person(o):
 
     # ---------- surfaces
     wind = np.asarray(o.get("wind", o.get("_wind", [0, 0, 0])), np.float32)
-    skin = o.get("skin", "#c49a7e")
+    skin = sex_skin(o.get("skin", "#c49a7e"), body, o.get("skin_sex", 1.0))
     cloth = o.get("color", "#3a3a44")
     bare = set(o.get("bare", ["head", "hands"]))
     bare |= {"head", "hands"}
@@ -1557,25 +1737,33 @@ def person(o):
             bare.add("arms")
     gloss_skin = o.get("skin_gloss", 0.0)
     parts = []
-    hip_r = body.g(0.62, 0.68) * wf * bt
-
+    dm = dims
+    kw, kh = 1.02, 1.03         # calibration of the measured girths to the targets (body_stats)
     torso = Prims()
-    torso.ell(J["pelvis"] + Rp @ V(0, 0.12 * u, -0.02 * u), Rp, V(hip_r, 0.42 * tf, 0.42 * bt) * u)
+    torso.ell(J["pelvis"] + Rp @ V(0, 0.1 * u, -0.01 * u), Rp, V(dm["a_h"] * kh * 0.95, 0.5 * tf * u, dm["b_h"] * kh * 0.9))
+    for side in (1, -1):           # gluteal masses behind, and the trochanter's fullness at the side (more in women)
+        torso.ell(J["pelvis"] + Rp @ V(side * dm["a_h"] * 0.42, -0.06 * u, -dm["b_h"] * 0.42), Rp,
+                  V(dm["a_h"] * 0.52, body.g(0.3, 0.34) * u, dm["b_h"] * 0.55) * kh)
+    # the waist: a tall mass centred on the natural waist, so the outline runs smoothly from ribs to hips
+    torso.ell(J["waist"] + Rl @ V(0, 0.0, (0.01 + 0.1 * body.belly) * u), Rl,
+              V(dm["a_w"] * kw, 1.4 * tf * u, dm["b_w"] * kw * (1 + 0.25 * body.belly)))
+    torso.ell(J["chest"] + Rc @ V(0, 0.48 * tf * u, 0.02 * u), Rc, V(dm["a_c"], 0.7 * tf * u, dm["b_c"]))
+    torso.ell(J["chest"] + Rc @ V(0, 0.05 * tf * u, 0.01 * u), Rc, V(dm["a_c"] * 0.88, 0.55 * tf * u, dm["b_c"] * 0.9))   # the lower ribcage
+    bust = float(np.clip(body.dm, 0, 1.3)) * body.fem
+    pec = 1 - min(max(body.fs, 0), 1)
     for side in (1, -1):
-        torso.ell(J["pelvis"] + Rp @ V(side * 0.24 * u, -0.08 * u, -0.2 * u), Rp, V(0.28 * bt, body.g(0.32, 0.35), body.g(0.25, 0.28) * bt) * u)
-    torso.ell(J["lumbar"] + Rl @ V(0, 0.25 * tf * u, (0.02 + 0.12 * body.belly) * u), Rl,
-              V(body.g(0.52, 0.46) * bt * wf, 0.75 * tf, (0.36 + 0.18 * body.belly) * bt) * u)
-    torso.ell(J["chest"] + Rc @ V(0, 0.48 * tf * u, 0.02 * u), Rc, V(body.g(0.6, 0.54) * bt * wf * bs ** 0.5, 0.7 * tf, body.g(0.44, 0.41) * bt) * u)
-    for side in (1, -1):
-        if body.fem and body.child < 0.5:
+        if bust > 0.05:
             sag = 0.1 * body.old
-            torso.ell(J["chest"] + Rc @ V(side * 0.25 * u, (0.6 - sag) * tf * u, 0.27 * u), Rc @ rx(R(15)), V(0.18, 0.17, 0.14) * u * bt)
-        else:
-            torso.ell(J["chest"] + Rc @ V(side * 0.28 * u, 0.78 * tf * u, 0.24 * u), Rc, V(0.28 * bs, 0.18, 0.12) * u * bt)
-        torso.cone(J["neckb"], J[f"sh_{'l' if side == 1 else 'r'}"] + Rc @ V(0, 0.05 * u, 0), 0.3 * u * wf, 0.22 * u * wf * bs)
+            bb = 0.5 + 0.5 * bust
+            torso.ell(J["chest"] + Rc @ V(side * dm["a_c"] * 0.52, (0.58 - sag) * tf * u, dm["b_c"] * 0.62 + 0.02 * u), Rc @ rx(R(15)),
+                      V(0.2 * bb, 0.18 * bb, 0.15 * bb) * u * bt ** 0.7)
+        if pec > 0.05:
+            torso.ell(J["chest"] + Rc @ V(side * dm["a_c"] * 0.56, 0.78 * tf * u, dm["b_c"] * 0.62), Rc, V(0.28 * bs * pec, 0.18, 0.12 * pec + 0.02) * u * bt)
+        # trapezius: higher, thicker in men (the neck looks shorter); a lower slope in women
+        torso.cone(J["neckb"], J[f"sh_{'l' if side == 1 else 'r'}"] + Rc @ V(0, body.g(0.08, 0.02) * u, 0), body.g(0.33, 0.26) * u * wf, 0.22 * u * wf * bs)
     tprims = torso
     neck = Prims()
-    nr = body.g(0.27, 0.22) * (1 - 0.15 * body.old) * wf ** 0.5
+    nr = body.g(0.29, 0.215) * (1 - 0.15 * body.old) * wf ** 0.5 * bt ** 0.3     # women: a slimmer neck (sex-age.md section 2)
     neck.cone(J["neckb"] - Rc @ V(0, 0.08 * u, 0), J["atlas"], nr * u * 1.1, nr * u * 0.88)
     # ---------- what the hands can touch: other objects in the scene, the person's own head and body
     ext = o.get("_collide")
@@ -1595,21 +1783,23 @@ def person(o):
         if ext is not None:
             d = np.minimum(d, ext(p))
         return d
-    m = body.fem * 0.4 + body.child * 0.6               # how much the muscle masses show (less in women and children; judgement)
+    m = min(max(body.fs, 0), 1) * 0.6 + body.child * 0.6   # how much the muscle masses show: about 78% more arm muscle in men (Lassek and Gaulin 2009); less in women and children (judgement)
     mus = (1 - m) * (1.0 + 0.5 * (o.get("build") == "muscular")) * (1 - 0.4 * body.old)
     leg_prims, foot_prims = [], []
     for side, s in ((1, "l"), (-1, "r")):
         Lg = Prims()
         g_ = bl * body.g(1.0, 1.04)
+        gt = g_ * body.g(1.0, 1.1)                    # gynoid: fuller thighs in women (sex-age.md section 2)
         hp, kn, an = J[f"hip_{s}"], J[f"kn_{s}"], J[f"an_{s}"]
         Rt_, Rs_ = J[f"Rthigh_{s}"], J[f"Rshin_{s}"]
         fwd_t, med_t = Rt_ @ V(0, 0, 1), Rt_ @ V(-side, 0, 0)
         fwd_s, med_s = Rs_ @ V(0, 0, 1), Rs_ @ V(-side, 0, 0)
         Lt = float(np.linalg.norm(kn - hp))
-        Lg.cone(hp + Rp @ V(-side * 0.02 * u, 0.02 * u, 0), kn, 0.35 * u * g_ * bt ** 0.5, 0.2 * u * g_)
+        r_top = max(dims["a_h"] * 0.93 - hipx * u, 0.25 * u * g_)      # the thigh's top makes the hip line with the pelvis
+        Lg.cone(hp + Rp @ V(-side * 0.02 * u, 0.02 * u, 0), kn, r_top, 0.2 * u * g_)
         # thigh: the quadriceps in front, the hamstrings behind, the teardrop of vastus medialis above the knee
-        Lg.ell(hp + (kn - hp) * 0.42 + fwd_t * 0.05 * u, Rt_, V(0.31, 0.38 * Lt / u, 0.29) * u * g_)
-        Lg.ell(hp + (kn - hp) * 0.5 - fwd_t * 0.07 * u, Rt_, V(0.27, 0.32 * Lt / u, 0.22) * u * g_)
+        Lg.ell(hp + (kn - hp) * 0.4 + fwd_t * 0.05 * u - med_t * 0.02 * u * (gt - g_) / max(g_, 1e-3), Rt_, V(0.31, 0.4 * Lt / u, 0.29) * u * gt)
+        Lg.ell(hp + (kn - hp) * 0.48 - fwd_t * 0.07 * u, Rt_, V(0.27, 0.34 * Lt / u, 0.22) * u * gt)
         Lg.ell(hp + (kn - hp) * 0.82 + med_t * 0.075 * u + fwd_t * 0.04 * u, Rt_, V(0.11, 0.17, 0.11) * u * g_ * (0.8 + 0.3 * mus))
         # the knee: a block wider than deep, the flat patella in front, the tendon down to the shin (not a ball)
         Lg.ell(kn + Rs_ @ V(0, 0.01 * u, -0.01 * u), Rs_, V(0.175, 0.13, 0.15) * u * g_)
@@ -1658,7 +1848,7 @@ def person(o):
     for side, s in ((1, "l"), (-1, "r")):
         A_ = Prims()
         sh, el, wr = J[f"sh_{s}"], J[f"el_{s}"], J[f"wr_{s}"]
-        g_ = bl * (1 - 0.15 * body.fem)
+        g_ = bl * body.g(1.0, 0.84)                          # slimmer arms and wrists in women
         du, df = nrm(el - sh), nrm(wr - el)
         L1_, L2_ = float(np.linalg.norm(el - sh)), float(np.linalg.norm(wr - el))
         bfront = Rc @ V(0, 0, 1)
@@ -1686,7 +1876,7 @@ def person(o):
     for side, s in ((1, "l"), (-1, "r")):
         hp = pose.get(f"hand_{s}", "relaxed")
         wants = (f"reach_{s}" in pose) or ext is not None
-        hand_prims_.append(hand_prims(J[f"Rhand_{s}"], J[f"wr_{s}"], hand_len, side, hp, girth=bl ** 0.5,
+        hand_prims_.append(hand_prims(J[f"Rhand_{s}"], J[f"wr_{s}"], hand_len, side, hp, girth=bl ** 0.5 * body.g(1.0, 0.88),
                                       collide=(lambda p: touch(p, lfn0)) if wants else None))
 
     def col(part_name):
@@ -1704,7 +1894,7 @@ def person(o):
     groups = [("torso", skin if "torso" in bare else torso_col, gloss_skin if "torso" in bare else 0, tprims.fn(0.13 * u), tprims.spheres(), None),
               ("neck", skin, gloss_skin, neck.fn(0.0), neck.spheres(), 0.1 * u)]
     for P in arm_prims:
-        groups.append(("arms", skin if "arms" in bare else torso_col, gloss_skin if "arms" in bare else 0, P.fn(0.05 * u), P.spheres(), 0.1 * u))
+        groups.append(("arms", skin if "arms" in bare else torso_col, gloss_skin if "arms" in bare else 0, P.fn((0.05 + 0.04 * min(max(body.fs, 0), 1)) * u), P.spheres(), 0.1 * u))
     for P in leg_prims:
         groups.append(("legs", col("legs"), 0, P.fn(0.08 * u), P.spheres(), 0.14 * u))
     for P in foot_prims:
@@ -1724,14 +1914,24 @@ def person(o):
     lfn = [P.fn(0.05 * u) for P in leg_prims]
     afn = [P.fn(0.04 * u) for P in arm_prims]
 
+    J["_tfn"], J["_lfn"] = tfn, lfn
+
     def collide(p):
         d = tfn(p)
         for g in lfn + afn:
             d = np.minimum(d, g(p))
         return d
-    hp_ = J["head"]
-    parts += hair_part(o, body, J["head"], J["Rhead"], wind, lambda p: np.minimum(collide(p), np.linalg.norm(p - hp_, axis=1) - 0.5 * u),
-                       skull=head.get("skull"))
+    # hair falls over a coarse body (head, neck, shoulder line, chest, upper arms, back): the rope simulation
+    # calls it thousands of times, and the full body would cost about 20 s per head of long hair
+    hb = Prims()
+    hb.ell(J["head"] + J["Rhead"] @ V(0, 0.02 * u, -0.03 * u), J["Rhead"], V(0.36, 0.5, 0.46) * u)
+    hb.cone(J["neckb"], J["atlas"], nr * u * 1.15, nr * u)
+    hb.cone(J["sh_l"], J["sh_r"], 0.2 * u * bl, 0.2 * u * bl)
+    hb.ell(J["chest"] + Rc @ V(0, 0.45 * tf * u, 0), Rc, V(dims["a_c"] * 1.05, 0.85 * tf * u, dims["b_c"] * 1.05))
+    for s_ in "lr":
+        hb.cone(J[f"sh_{s_}"], J[f"el_{s_}"], 0.17 * u * bl, 0.12 * u * bl)
+    hfn_c = hb.fn(0.0)
+    parts += hair_part(o, body, J["head"], J["Rhead"], wind, hfn_c, skull=head.get("skull"))
     for cl in clothes:
         k = cl.get("kind")
         if k == "dress":
@@ -1743,6 +1943,39 @@ def person(o):
         elif k == "shirt":
             parts.append(shirt_part(o, cl, body, J, wind, {"torso": tprims, "arms": arm_prims}, cloth))
     return parts, J
+
+
+def body_stats(o, step=0.004):
+    """Measure a person standing: waist and hip girths as a tape measure takes them (the convex hull of a
+    horizontal slice: the narrowest girth between the hips and the chest, the widest around the hips and
+    thighs), their ratio, and the shoulder (biacromial target) and hip breadths, in meters."""
+    from scipy.spatial import ConvexHull
+    o = dict(o, pose="stand", joints={}, anchor="ground", pos=[0, 0, 0], _ground_y=0.0, clothes=[], hair=None, lie=None)
+    for k in ("reach_l", "reach_r", "lean", "pitch", "roll", "facing"):
+        o.pop(k, None)
+    parts, J = person(o)
+    tf, lf = J["_tfn"], J["_lfn"]
+    f = lambda p: np.minimum(np.minimum(tf(p), lf[0](p)), lf[1](p))
+    c = J["pelvis"]
+    xs = np.arange(-0.3, 0.3, step, dtype=np.float32)
+    X, Z = np.meshgrid(xs, xs)
+
+    def girth(y):
+        P = np.stack([X.ravel() + c[0], np.full(X.size, y, np.float32), Z.ravel() + c[2]], 1)
+        ins = f(P) < 0
+        if ins.sum() < 3:
+            return 0.0, 0.0
+        Q = P[ins][:, [0, 2]]
+        hull = ConvexHull(Q)
+        return float(hull.area), float(np.ptp(Q[:, 0]))
+    hy = float(c[1])
+    ys_w = np.linspace(hy + 0.08, float(J["chest"][1]) + 0.02, 16)
+    ys_h = np.linspace(hy - 0.12, hy + 0.06, 12)
+    gw = min((girth(y) + (y,) for y in ys_w), key=lambda t: t[0])
+    gh = max((girth(y) + (y,) for y in ys_h), key=lambda t: t[0])
+    return dict(waist=round(gw[0], 3), hip=round(gh[0], 3), whr=round(gw[0] / gh[0], 3), waist_breadth=round(gw[1], 3),
+                hip_breadth=round(gh[1], 3), shoulder_target=round(J["_dims"]["sh"], 3),
+                waist_target=round(J["_dims"]["waist"], 3), hip_target=round(J["_dims"]["hip"], 3))
 
 
 def frame_along(d):

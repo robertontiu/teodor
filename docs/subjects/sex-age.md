@@ -140,6 +140,21 @@ Look at the picture at thumbnail size, then squint. For each figure, check the c
 4. Lower facial contrast and uneven skin colour.
 5. For an old woman: keep a female cue or two strong (neck, jaw outline, hair, body line), since low contrast and folds both push towards male.
 
+## Studio note: the figure rig (2026-11-26)
+
+The `scene` people (`studio/v8/figure.py`) were rebuilt on this page after the rig's women were read as men. What they do now, and what was measured (renders and scripts were kept out of the repository; the numbers are here and in `face` and `figure`, studio notes):
+
+- **Sex is built as positive cues** (section 0), entering at puberty (from about 10, full at 16; a child is built halfway, so the 8-year-old girl and boy measure alike and are told apart by hair and clothes, section 4). `dimorphism` scales it for one person.
+- **Face** (section 1): Farkas's lower third, 0.296 of the head in women against 0.314; a narrower jaw (gonion over zygion 0.69 against 0.83) tapering to a small chin; a flatter, more upright brow with a higher, arched eyebrow and a lid band under it; fuller lips and cheeks; softer plane breaks (`planes` 0.32 against 0.45). Facial contrast: a darker lash line and lower lash line, redder and darker lips, and a lighter, less red skin in women; a darker, redder skin and a beard-zone tint (`beard`) in men.
+- **Hair** (sections 1, 3): a mass with thickness, not a cap; a rounded hairline for women and children, temple recession with age for men; bobs and long hair fall as a curtain that frames the face and leans with the wind, long hair continuing in locks simulated in the wind; buns and ponytails with volume; greying by age (section 4). A short cut sits close at the sides and the nape.
+- **Body** (section 2): biacromial 41.1 / 36.7 cm and girths giving a waist-to-hip ratio of 0.89 / 0.72 (measured on the rig as a tape takes them: 0.885 / 0.724; sturdy 0.93 / 0.77; heavy 0.96 / 0.81; at 75, 0.92 / 0.77), a bust, a slimmer neck, a lower trapezius, slimmer arms, wrists and hands and smoother muscle masses for women; a thick neck, a high trapezius and crisper masses for men.
+
+**Measured, before / after** (frontal heads 200 x 260 px under a soft front light; Russell's contrast on CIELAB L*; details in `face` section 9): eye contrast of women 0.03-0.06 / 0.18-0.21 against men 0.13 / 0.13-0.14 (so the women went from the least contrast to the most); lips' redness over the skin +3 to +5 / +7 to +12 against men's +2 to +4; skin lightness 63.5 / 66-67 against men's 62; frontal silhouette waist over hip width 0.42-0.45 / 0.58-0.65 (women), 0.67-0.70 / 0.84-0.92 (men). Public-domain references measured the same way (two same-sitting couples, Cleveland Museum of Art, CC0) gave eye contrast 0.19-0.21 for the women and 0.15-0.28 for the men: four faces show the range, not the sex difference, which rests on Russell's sample.
+
+**Read at thumbnail size** (`docs/gallery/figures_sheet.jpg`, the variant rows: woman 20, 40 sturdy and 75; man 20, 40 and 75; girl and boy 8; each as a head and as a full figure about 190 px tall, children about 140): every woman reads as a woman, including the sturdy woman in a work shirt and trousers (tucked, so the waistband shows the hip line) and, in a control render, a woman of 40 with short hair. At a face 12 px wide the reading rests on the hair's silhouette and the face's lightness (as Moghaddam and Yang found); a bun seen from the front is then the weakest case.
+
+**Still short:** the bob and the old man's horseshoe have hard-cut edges; long hair at the face is a thick curtain rather than strands; the lips read as two bands at close range; at a face 40 px wide the eye-contrast difference narrows (women 0.04-0.14 against men 0.03-0.04); the women's eye line (0.486 of the head above the chin) sits a little below the Met photographs' 0.51-0.54; seen from below with a high-contrast light, the jaw's under-planes still group into dark shapes, which the skin's light wrap only softens; a head with long hair costs about 33 s at 200 x 260 against about 10 s.
+
 ## Sources
 
 - [Johnson, Iida and Tassinary 2012, Person (mis)perception: functionally biased sex categorization of bodies, *Proc. R. Soc. B* (PubMed)](https://www.pubmed.gov/23075835/); [Live Science summary with WHR values](https://www.livescience.com/24038-brain-bias-male-bodies.html)
