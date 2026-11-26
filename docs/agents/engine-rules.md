@@ -28,6 +28,7 @@ Follow `docs/styles/README.md`. The research batches write to `studio/styles.par
 ## Core internals (from v6, still the base)
 - **The motor model:** `Felt` + `gesture_path` + `play`. A minimum-jerk speed profile drives dab spacing, pressure and width; there's a landing ramp and a lift taper. Tension adds jagged control points and tremor; negative valence switches from Catmull-Rom curves to angular polylines; care reduces scatter and adds landing hesitation.
 - **`do_match`:** Hertzmann-style painterly rendering against the schema. Strokes start near the points of greatest error, follow the schema's form, and stop when the colour diverges.
+- **The v8 hand (2026-11-26):** `match`, `free`, `strokes`, `model` and `blend` run `play_v8` (articulation profiles along the stroke), `Drift` (correlated variation across a passage), `FormField` (stroke direction) and size by focus and role; oil-v7 is routed to the frozen `*_v7` functions so it stays bit-identical. Every intention gets a layer role (`infer_role`), recorded per pixel in `{CANVAS}_roles.npy` and per 8 px cell in `{CANVAS}_rolefirst.npy`. Media hooks: `revise`, `revision_tools`, `glaze_role`, `first_role`, `finish_check` (`media/base.py`); oil reads `_load_mul` and `deplete_mul`.
 - **Performance (2 vCPU):** a full-canvas match with a 60–90 brush takes ~17 s, a 24–40 brush ~8 s, small brushes in regions 1–6 s. Spectral oil mixing is about 1.7× slower.
 
 ## History of fixes worth knowing (v6 tuning)

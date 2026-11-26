@@ -111,7 +111,22 @@
    "Zentralinstitut für Kunstgeschichte, The Human Image in Panel Painting in the Mediterranean: https://artsandculture.google.com/story/YwXBmJkkx_srLw",
    "Amanatiadis et al. 2021, Minerals 11(7) 782 (pigments of Byzantine iconography): https://www.mdpi.com/2075-163X/11/7/782",
    "Met Heilbrunn Timeline, Painting in Oil in the Low Countries and Its Spread to Southern Europe (tempera handling): https://www.metmuseum.org/essays/painting-in-oil-in-the-low-countries-and-its-spread-to-southern-europe"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    "dead_colour",
+    [
+     "body",
+     "hatch",
+     "glaze"
+    ],
+    "accent",
+    "contour"
+   ],
+   "source": "docs/styles/byzantine-icon.md section 9: design drawn and incised; roskrysh (flat dark local colour); highlights in progressively lighter layers, each floated with a transparent glaze; last sparing highlights; final lines restored.",
+   "judgement": "roskrysh mapped to dead_colour; the hatched highlight layers and the floats share one stage because they alternate."
+  }
  },
  "renaissance": {
   "name": "Renaissance painting (Early and High, Italy and the North)",
@@ -223,7 +238,22 @@
    "Keith, Roy, Morrison, Schade 2011, National Gallery Technical Bulletin 32 (Virgin of the Rocks): https://www.nationalgallery.org.uk/upload/pdf/keith_roy_morrison_schade2011.pdf",
    "Shafe, Cennini's Il Libro dell'Arte, the panel painter's workshop: https://www.shafe.co.uk/essay_panel_painters_workshop/",
    "C. Cennini, Il Libro dell'Arte, trans. D. V. Thompson 1933 (located, not read): https://ia801802.us.archive.org/20/items/illibrodellarte1933cenn/illibrodellarte1933cenn.pdf"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    "underpainting",
+    "dead_colour",
+    "body",
+    [
+     "glaze",
+     "scumble"
+    ],
+    "accent"
+   ],
+   "source": "docs/styles/renaissance.md section 9: underdrawing; monochrome underpainting; lay-in of colour per zone; flesh in opaque layers; glazes and scumbles for drapery; final details.",
+   "judgement": "the colour lay-in per zone mapped to dead_colour."
+  }
  },
  "baroque": {
   "name": "Baroque chiaroscuro and tenebrism",
@@ -327,7 +357,20 @@
    "L. Keith 1998, Three Paintings by Caravaggio, National Gallery Technical Bulletin 19: https://www.nationalgallery.org.uk/research/research-resources/technical-bulletin/three-paintings-by-caravaggio",
    "P. Noble 2025, The Role of the Colored Ground in Rembrandt's Painting Practice, JHNA 17:2: https://jhna.org/articles/the-role-of-the-colored-ground-in-rembrandts-painting-practice/",
    "E. Kolfin 2025, Why Colored Grounds Matter, JHNA 17:2: https://jhna.org/articles/why-colored-grounds-matter-evolving-research-colored-grounds-in-dutch-paintings-1580-1720/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    "underpainting",
+    "body",
+    [
+     "glaze",
+     "accent"
+    ]
+   ],
+   "source": "docs/styles/baroque.md section 9: incised contours; abbozzo (broad brushstrokes indicating forms); lights built thickly, final paint in one or two layers; late ground-coloured darks; shadow glazes feathered onto the lights.",
+   "judgement": "the abbozzo mapped to underpainting; the late darks (accents) and the shadow glazes share the last stage."
+  }
  },
  "dutch-golden-age": {
   "name": "Dutch Golden Age painting (genre scenes, still life, landscape)",
@@ -435,7 +478,21 @@
    "E. Kolfin 2025, Why Colored Grounds Matter, JHNA 17:2: https://jhna.org/articles/why-colored-grounds-matter-evolving-research-colored-grounds-in-dutch-paintings-1580-1720/",
    "Essential Vermeer, Working up (after van de Wetering): https://www.essentialvermeer.com/technique/technique_working_up.html",
    "P. Noble 2025, The Role of the Colored Ground in Rembrandt's Painting Practice, JHNA 17:2: https://jhna.org/articles/the-role-of-the-colored-ground-in-rembrandts-painting-practice/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "dead_colour"
+    ],
+    "body",
+    "glaze",
+    "accent"
+   ],
+   "source": "docs/styles/dutch-golden-age.md section 9: sketch on the ground; dead colouring (a monochrome brown underpainting); working up area by area; glazes to deepen and unify; impasto highlights and last accents.",
+   "judgement": "the Dutch dead colouring is monochrome, so underpainting and dead_colour are one stage."
+  }
  },
  "romanticism": {
   "name": "Romanticism (the sublime landscape and the British watercolour tradition)",
@@ -560,7 +617,24 @@
    "Smarthistory, Caspar David Friedrich, Monk by the Sea: https://smarthistory.org/friedrich-monk-by-the-sea",
    "National Gallery, Winter Landscape close examination: https://www.nationalgallery.org.uk/research/research-resources/research-papers/close-examination/winter-landscape",
    "Wallace Collection, Turner's watercolour materials and techniques: https://www.wallacecollection.org/explore/explore-in-depth/turner/turners-watercolors/turners-watercolour-materials-and-techniques/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "wash"
+    ],
+    [
+     "scumble",
+     "dead_colour"
+    ],
+    "body",
+    "accent"
+   ],
+   "source": "docs/styles/romanticism.md section 9: underdrawing; thin transparent tonal washes (oil) or warm then cool washes (watercolour); sky and distance scumbled or wet-in-wet; middle and near forms in harder strokes; last telling details.",
+   "judgement": "lifted, scratched or rubbed lights are corrections and not ordered."
+  }
  },
  "cubism": {
   "name": "Cubism (Analytic and Synthetic)",
@@ -664,7 +738,24 @@
    "Tate, Analytical cubism: https://www.tate.org.uk/art/art-terms/a/analytical-cubism",
    "Tate, Synthetic cubism: https://www.tate.org.uk/art/art-terms/s/synthetic-cubism",
    "Tate, Papier collé: https://www.tate.org.uk/art/art-terms/p/papier-colle"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "dead_colour",
+     "wash"
+    ],
+    [
+     "body",
+     "hatch"
+    ],
+    "contour",
+    "accent"
+   ],
+   "source": "docs/styles/cubism.md section 9: charcoal drawing; selective thin oil and washes; facets of small parallel strokes; more charcoal on and beside the paint; darkest accents and letters last.",
+   "judgement": "the second charcoal campaign over the paint mapped to contour."
+  }
  },
  "post-impressionism": {
   "name": "Post-Impressionism",
@@ -862,7 +953,27 @@
    "https://artsandculture.google.com/story/3AXB4iaqB_MqNg",
    "https://www.theartstory.org/movement/cloisonnism-and-synthetism/",
    "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "dead_colour"
+    ],
+    [
+     "body",
+     "hatch",
+     "scumble"
+    ],
+    [
+     "accent",
+     "contour"
+    ]
+   ],
+   "source": "docs/styles/post-impressionism.md section 9 and styles.json process: pencil sketch and thin blue outline; hatched strokes from thin washes to rich layers (constructive) or a first campaign (divisionist) or colour fields (expressive); impasto rework of the focal area, dots, dark outlines restated last.",
+   "judgement": "one order for the three modes; the last stage holds the impasto accents and the restated contours."
+  }
  },
  "surrealism": {
   "name": "Surrealism (illusionistic and automatist)",
@@ -985,7 +1096,23 @@
    "Philadelphia Museum of Art, Dalí teacher resource: https://legacyweb.philamuseum.org/doc_downloads/education/ex_resources/dali.pdf",
    "Fundació Gala-Salvador Dalí, Painting and Documenting the painting technique",
    "MoMA, Magritte materials and techniques: https://www.moma.org/explore/inside_out/2013/10/15/revealing-the-mystery-of-magrittes-materials-and-techniques/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "dead_colour"
+    ],
+    [
+     "body",
+     "glaze"
+    ],
+    "accent"
+   ],
+   "source": "docs/styles/surrealism.md section 9 (illusionistic): precise drawing on a smooth light ground; thin lay-in; soft modelling and sharp cast shadows; highest finish on the strange object.",
+   "judgement": "the automatist mode lays its field before the drawing; this order is the illusionistic one."
+  }
  },
  "abstract-expressionism": {
   "name": "Abstract Expressionism (gestural and colour field)",
@@ -1117,7 +1244,21 @@
    "Tate, Women Singing II, Process and Memory: https://www.tate.org.uk/research/in-focus/women-singing-ii/process-and-memory",
    "MoMA, Pollock One conservation: https://www.moma.org/explore/inside_out/2013/01/08/momas-jackson-pollock-conservation-project-looking-closely-at-one-number-31-1950/",
    "Getty, Pollock's Mural: https://getty.edu/conservation/our_projects/science/modpaints/modpaints_jp_mural.html"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "dead_colour",
+    [
+     "body",
+     "scumble",
+     "wash",
+     "glaze"
+    ],
+    "accent"
+   ],
+   "source": "docs/styles/abstract-expressionism.md section 9: unplanned thin first marks (gestural) or a stained field (colour field); wet-into-wet layers or thin field layers; the figure colour and final glazes last.",
+   "judgement": "both modes collapsed into first marks, building layers, last marks; building up and scraping down are corrections and not ordered."
+  }
  },
  "ukiyo-e": {
   "name": "Ukiyo-e (woodblock prints and painted ukiyo-e)",
@@ -1218,7 +1359,16 @@
    "Asian Art Museum, The ukiyo-e woodblock printing process: https://education.asianart.org/resources/the-ukiyo-e-woodblock-printing-process/",
    "Fitzwilliam Museum, Yoshitoshi glossary: https://yoshitoshi.fitzmuseum.cam.ac.uk/glossary/",
    "Vermeulen et al. 2020, npj Heritage Science 8:62, doi:10.1186/s40494-020-00406-y"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    "body",
+    "contour"
+   ],
+   "source": "docs/styles/ukiyo-e.md section 9 and styles.json process: the line design; flat colour areas lightest first and bokashi; the key line in sumi over the colour (the brushed analogue).",
+   "judgement": "historically the key block was cut first; the studio's brushed analogue lays it last, as styles.json says."
+  }
  },
  "east-asian-ink": {
   "name": "East Asian ink painting (literati landscape and sumi-e)",
@@ -1351,7 +1501,17 @@
    "J. Cahill, Lecture 7B (Guo Xi): https://ieas.berkeley.edu/sites/default/files/aparv_lecture7b.pdf",
    "Cleveland Museum of Art, Haboku Landscape: https://www.clevelandart.org/art/148810",
    "Xie He Six Principles: ibiblio Cultural Heritage of China; HKU University Museum, Huihua Liufa"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    "body",
+    "wash",
+    "accent"
+   ],
+   "source": "docs/styles/east-asian-ink.md section 9: main forms in pale-to-middle outline; cun texture strokes; graded washes; dots and darkest accents last.",
+   "judgement": "the outline mapped to drawing (it is the structure, painted once) and the cun strokes to body; the order of dots is the doc's own judgement."
+  }
  },
  "realism": {
   "name": "Realism",
@@ -1454,7 +1614,20 @@
    "https://www.metmuseum.org/en/perspectives/materials-and-techniques-drawing-charcoal",
    "https://www.thehistoryofart.org/gustave-courbet/style-and-technique/",
    "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "dead_colour"
+    ],
+    "body",
+    "accent"
+   ],
+   "source": "docs/styles/realism.md section 9: studies; thin lay-in of the big masses in dark-middle values over a dark ground; lights built with loaded brush and knife; last lightest knife accents and darkest accents.",
+   "judgement": "the lay-in is in colour but tonal, so underpainting and dead_colour are one stage."
+  }
  },
  "impressionism": {
   "name": "Impressionism",
@@ -1558,7 +1731,23 @@
    "https://www.nationalgallery.org.uk/stories/how-did-new-pigment-technologies-drive-the-impressionist-movement",
    "https://en.wikipedia.org/wiki/Ground_(art)",
    "https://eclecticlight.co/2015/10/06/pigments-technique-%e2%86%92-style-4-after-1850/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "underpainting",
+     "dead_colour"
+    ],
+    [
+     "body",
+     "scumble"
+    ],
+    "accent"
+   ],
+   "source": "docs/styles/impressionism.md section 9: thin lay-in of the main elements in subdued colour; the whole built together wet-in-wet; reinforce and accent: intense local colour on top, reflections last, thin dragged strokes late.",
+   "judgement": "the late thin dragged strokes (scumbles) can also come with the accents; scumble is placed with the body stage."
+  }
  },
  "fauvism": {
   "name": "Fauvism",
@@ -1654,7 +1843,19 @@
    "https://www.tate.org.uk/art/art-terms/f/fauvism",
    "https://www.museothyssen.org/en/node/25199",
    "https://courtauld.ac.uk/wp-content/uploads/2021/04/Report-Derain-by-F-Whitlum-Cooper-and-Cleo-Nisse.compressed.pdf"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "dead_colour",
+     "body"
+    ],
+    "contour"
+   ],
+   "source": "docs/styles/fauvism.md section 9: layout in a thin blue line or light ultramarine glazes; key line first, then zones of nearly pure colour painted directly; thin dark contour lines where shapes would merge.",
+   "judgement": "direct painting has no separate dead colour, so the first colour and the body are one stage; the doc marks the contours' order as judgement."
+  }
  },
  "expressionism": {
   "name": "German Expressionism (Brücke)",
@@ -1766,6 +1967,22 @@
    "https://artdaily.com/news/70440/images/close.gif",
    "https://collections.lacma.org/object/71942",
    "https://www.theartstory.org/movement/die-brucke/"
-  ]
+  ],
+  "layer_order": {
+   "order": [
+    "drawing",
+    [
+     "dead_colour",
+     "wash"
+    ],
+    "body",
+    [
+     "hatch",
+     "contour"
+    ]
+   ],
+   "source": "docs/styles/expressionism.md section 9: underdrawing; thin lean colour fields; rework and restate; hatching and dark contours last.",
+   "judgement": "the doc marks the order of hatching and contours as judgement."
+  }
  }
 }

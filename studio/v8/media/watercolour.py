@@ -844,6 +844,56 @@ class Watercolour(Medium):
             cv.under = cv.under + (b - cv.under) * np.clip(w * 1.5, 0, 1)
         cv.col = self.appear(cv, (slice(None), slice(None)))
 
+    # ---------------------------------------------------------------- revision
+    glaze_role = "wash"
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """wipe: blot or lift the wash (wet pigment in suspension comes up most, dried pigment by 1 - staining);
+        scrape: a blade takes the paint off the peaks of the paper (romanticism.md: lights "lifted, rubbed,
+        scratched"); paintout: lift the passage and lay a wash of the surrounding colour (watercolour cannot
+        cover, so a passage is painted out by taking it back first). Amounts are eye."""
+        self._bind(cv)
+        full = (slice(None), slice(None))
+        st = float(it.get("strength", 0.7))
+        if op in ("wipe", "paintout"):
+            wetf = np.clip(cv.water * 2, 0, 1)
+            fw = np.clip(mask * st * wetf, 0, 0.95)
+            cv.gK *= (1 - fw)[..., None]
+            cv.gS *= (1 - fw)
+            f = np.clip(mask * st * (1 - wetf) * (1 - 0.75 * cv.stain) * self._sup(cv)["lift"], 0, 0.95)
+            self.relift(cv, full, f, into_wash=False)
+            cv.col = self.appear(cv, full)
+            if op == "paintout":
+                col = hx(it["color"]) if it.get("color") else np.median(core.fill_colour(cv, mask)[mask > 0.5], 0)
+                self.glaze(cv, mask, col, float(it.get("opacity", 0.6)), it)
+            return True
+        if op == "scrape":
+            peaks = np.clip((cv.tex - 0.35) / 0.5, 0, 1)
+            f = np.clip(mask * st * (0.3 + 0.7 * peaks) * (1 - 0.4 * cv.stain), 0, 0.97)
+            self.relift(cv, full, f, into_wash=False)
+            cv.col = self.appear(cv, full)
+            return True
+        return NotImplemented
+
+    def finish_check(self, cv):
+        """docs/FINISHING.md "Watercolour": final darks present, lights lifted or reserved, masking fluid removed,
+        the painting dry. The darks threshold (p2 L* under 30) is a judgement."""
+        import eyes
+        lines, flags = [], []
+        ops = [f["op"] for f in cv.meta.get("finishes", [])]
+        L, _, _ = eyes._srgb_to_lab(eyes.load(self.render(cv)))
+        p2 = float(np.percentile(L, 2))
+        lines.append(f"watercolour: darkest 2% at L* {p2:.0f}, " + ", ".join(ops or ["no finishing steps"]))
+        if p2 > 30 and "darks" not in ops:
+            flags.append(f"no final darks (darkest 2% only reach L* {p2:.0f}): finish darks")
+        if float(np.abs(cv.mask).max()) > 0.01:
+            flags.append("masking fluid is still on the paper: finish unmask")
+        if float(cv.water.max()) > 0.05:
+            flags.append("the paper is still wet: finish dry or mount")
+        if "lift" not in ops and "unmask" not in ops and float(np.percentile(L, 99)) < 85:
+            flags.append("no lifted or reserved lights: the lightest passages don't reach the paper")
+        return lines, flags
+
     def _finish_lift(self, cv, params):
         import studio as S
         strength = float(params.get("strength", 0.6))

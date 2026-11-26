@@ -518,6 +518,21 @@ class Woodblock(Medium):
             img = np.clip(img * shade[..., None], 0, 1)
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
 
+    # --- revision: a print can't be taken back
+    glaze_role = "body"
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        raise SystemExit(f"woodblock can't {op}: a printed impression is in the paper's fibres and the inks are "
+                         "transparent, so nothing can be scraped, wiped or painted out. Plan the change in the next "
+                         "block: recarve it (a new schema version) and print the corrected block, or start a new impression.")
+
+    def finish_check(self, cv):
+        ops = [f["op"] for f in cv.meta.get("finishes", [])]
+        lines, flags = ["woodblock: " + (", ".join(ops) or "no finishing steps")], []
+        if "seal" not in ops and not cv.meta.get("signed"):
+            flags.append("no seal or signature: a print is signed with a seal block (finish seal or sign)")
+        return lines, flags
+
     # --- finishing: nothing beyond the impression
     def finish(self, cv, op, params):
         self.flush()

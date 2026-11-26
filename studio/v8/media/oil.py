@@ -332,7 +332,7 @@ class Brush:
         self.pprev = press
 
     def _deplete(self, stp, press, frac):
-        use = stp * (0.35 + 0.65 * min(press, 1.2)) * frac / (max(self.size, 2) * self.sp["cap"])
+        use = stp * (0.35 + 0.65 * min(press, 1.2)) * frac / (max(self.size, 2) * self.sp["cap"]) * getattr(self, "deplete_mul", 1.0)
         self.bload = np.maximum(0, self.bload - use * self.brate).astype(np.float32)
 
     def _scraping(self):
@@ -463,7 +463,9 @@ class Oil(Medium):
                       fat=it.get("fat"), streak=it.get("streak", 0.2))
             b.liner = True
             return b
-        return Brush(kind, size, color, rng, load=it.get("load", 1.0) * rng.uniform(0.82, 1.12),
+        # the core's v8 hand passes a load that drifts across the passage (_load_mul) instead of a random one per stroke
+        lm = it["_load_mul"] if "_load_mul" in it else rng.uniform(0.82, 1.12)
+        return Brush(kind, size, color, rng, load=it.get("load", 1.0) * lm,
                      cover=it.get("cover", 0.95), pickup=it.get("pickup", 0.35), thick=it.get("impasto", 0.5),
                      wetmix=it.get("wetmix", 0.5), edge=it.get("edge", "soft"), fat=it.get("fat"),
                      streak=it.get("streak", 0.5), scrape=it.get("scrape"))
@@ -545,6 +547,53 @@ class Oil(Medium):
         spec = (np.clip(lightdot - 0.07, 0, 0.6) ** 1.3) * (0.04 + 0.28 * g ** 2)
         img = np.clip(img + spec[..., None], 0, 1)
         return Image.fromarray((img * 255).astype(np.uint8))
+
+    # ---------------------------------------------------------------- revision
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """scrape: the palette knife scrapes wet paint back toward the layer beneath (its scrape mode), and on
+        dry paint the blade shaves the impasto and bares the ground on the tops of the weave (how a scraped-back
+        canvas looks); wipe: the rag lifts wet paint toward the dried layer or ground; paintout: the core's
+        default (the surrounding colour brushed over the passage)."""
+        _ensure(cv)
+        if op == "scrape":
+            core.sweep(cv, mask, it, felt, rng, "knife", extra={"scrape": True}, passes=int(it.get("passes", 2)))
+            dry = mask * np.clip(1 - cv.wet * 2, 0, 1)
+            if dry.max() > 0.05:
+                g = hx(cv.meta.get("ground", "#c8b89a"))
+                # the blade takes the tops of the weave first (tooth^2), more with strength (0..1); eye
+                amt = np.clip(dry * float(it.get("strength", 0.7)) * (0.15 + 0.85 * cv._oil_tooth ** 2) * 0.8, 0, 0.95)
+                cv.col = (cv.col * (1 - amt[..., None]) + g * amt[..., None]).astype(np.float32)
+                cv.ht = np.maximum(cv.ht - amt * np.maximum(cv.ht - 0.05, 0), 0).astype(np.float32)
+                cv.hdry = np.minimum(cv.hdry, cv.ht)
+                cv.under = np.where((amt > 0.01)[..., None], cv.col, cv.under).astype(np.float32)
+            return True
+        if op == "wipe":
+            wet = float((cv.wet[mask > 0.5] > 0.15).mean()) if (mask > 0.5).any() else 0.0
+            if wet < 0.2:
+                print(f"[oil] wipe: only {wet:.0%} of the passage is still wet; a rag lifts wet paint only. Scrape dry paint back instead.")
+            core.sweep(cv, mask, it, felt, rng, "rag", passes=int(it.get("passes", 2)))
+            return True
+        return NotImplemented
+
+    def finish_check(self, cv):
+        """Did the finishing do its job (docs/FINISHING.md "Oil")? Dry before varnish, no sunken (matte)
+        passages left after retouch or varnish, an even gloss. Thresholds are judgements (eye)."""
+        _ensure(cv)
+        lines, flags = [], []
+        ops = [f["op"] for f in cv.meta.get("finishes", [])]
+        wet = float((cv.wet > 0.05).mean())
+        dry = cv.wet < 0.2
+        sunk = float((dry & (cv.sheen < 0.6)).mean())
+        even = float(cv.sheen[dry].std()) if dry.any() else 0.0
+        lines.append(f"oil: wet {wet:.0%} of the surface, sunken (matte) {sunk:.0%}, gloss spread {even:.2f}, "
+                     + ("varnished" if "varnish" in ops else "not varnished"))
+        if wet > 0.05 and "varnish" not in ops:
+            flags.append(f"{wet:.0%} of the paint is still wet: dry it before varnishing")
+        if sunk > 0.03:
+            flags.append(f"sunken (matte) passages over {sunk:.0%} of the surface: retouch or oil out" + (" (the varnish should have evened them)" if "varnish" in ops else ""))
+        if even > 0.12:
+            flags.append(f"uneven gloss (sheen spread {even:.2f}): retouch the dull passages or varnish")
+        return lines, flags
 
     # ---------------------------------------------------------------- finishing
     def _region(self, cv, params):

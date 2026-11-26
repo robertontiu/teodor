@@ -84,6 +84,19 @@ class Medium:
         """Return a PIL image of the canvas as it looks (lighting, sheen, support)."""
         raise NotImplementedError
 
+    # --- revision: taking paint away (core intentions scrape, wipe, paintout; studio.py do_revise)
+    glaze_role = "glaze"         # the layer role a `glaze` intention lays in this medium (wash, glaze, body...)
+    revision_tools = {}          # op -> a tool id of this medium the core sweeps over the region for that op
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Take paint away in the masked region (op: scrape | wipe | paintout). Return True when done, or
+        NotImplemented to let the core fall back (revision_tools, an eraser/knife/rag tool, a finishing step of
+        the same name, then its default). Raise SystemExit with a clear reason when the medium can't do it."""
+        return NotImplemented
+
+    # finish_check(cv) -> (lines, flags) may be defined by a medium for `report finish` (docs/FINISHING.md);
+    # without it the core runs its own default checks.
+
     # --- the last stage
     def finish(self, cv, op, params):
         """Finishing operations particular to the medium (varnish, fixative...)."""

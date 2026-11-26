@@ -276,6 +276,36 @@ class Gouache(Medium):
         img = img + 0.025 * (1 - _lum(img))[..., None] ** 3
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
 
+    # ---------------------------------------------------------------- revision
+    def _paper(self, cv):
+        g = hx(cv.meta.get("ground", "#f2efe6"))
+        return hx("#7d7468") if cv.meta.get("support") == "toned_paper" and _lum(g) > 0.7 else g
+
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Gouache re-dissolves: wipe lifts paint with a damp brush or sponge (some colour stays in the paper),
+        scrape takes dry paint back to the paper with a blade, catching the tooth unevenly; paintout is the
+        core's default (gouache covers, so the surrounding colour simply goes over). Amounts are eye."""
+        if op not in ("wipe", "scrape"):
+            return NotImplemented
+        st = float(it.get("strength", 0.7))
+        mot = gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 2.5)
+        mot = (mot - mot.min()) / (mot.max() - mot.min() + 1e-6)
+        if op == "wipe":
+            amt = np.clip(mask * st * (0.45 + 0.35 * mot), 0, 0.9)
+            cv.wet = np.maximum(cv.wet, mask * 0.5).astype(np.float32)
+        else:
+            amt = np.clip(mask * st * (0.5 + 0.5 * cv.tex) * (0.7 + 0.3 * mot), 0, 0.95)
+        cv.col = (cv.col * (1 - amt[..., None]) + self._paper(cv) * amt[..., None]).astype(np.float32)
+        cv.thick = (cv.thick * (1 - amt)).astype(np.float32)
+        return True
+
+    def finish_check(self, cv):
+        ops = [f["op"] for f in cv.meta.get("finishes", [])]
+        lines, flags = [f"gouache: wet {float((cv.wet > 0.05).mean()):.0%}; " + (", ".join(ops) or "no finishing steps")], []
+        if float(cv.wet.max()) > 0.05:
+            flags.append("gouache still wet: finish dry applies the drying shift (FINISHING.md)")
+        return lines, flags
+
     def finish(self, cv, op, params):
         if op == "dry":
             self._dry_by(cv, 0.0)
@@ -590,6 +620,23 @@ class Tempera(Medium):
         return Image.fromarray((np.clip(img, 0, 1) * 255).astype(np.uint8))
 
     # ------------------------------------------------------------ the last stage
+    # ---------------------------------------------------------------- revision
+    def revise(self, cv, op, mask, it, felt, rng, core):
+        """Egg tempera dries the moment it touches the panel: it can be scraped back with a blade to the gesso (or
+        the gold), never wiped; painting out is the core's default (hatched film over it). Amounts are eye."""
+        if op == "wipe":
+            raise SystemExit("tempera can't be wiped: egg tempera dries the moment it touches the panel. "
+                             "Scrape it back to the gesso (scrape) or paint it out (paintout).")
+        if op != "scrape":
+            return NotImplemented
+        st = float(it.get("strength", 0.7))
+        amt = np.clip(mask * st * (0.6 + 0.4 * cv.tex), 0, 0.97)
+        base = np.where((cv.leaf > 0.5)[..., None], GOLD, hx(cv.meta.get("ground", "#f4f0e6"))).astype(np.float32)
+        cv.col = (cv.col * (1 - amt[..., None]) + base * amt[..., None]).astype(np.float32)
+        cv.film = (cv.film * (1 - amt)).astype(np.float32)
+        cv.gold = np.maximum(cv.gold, amt * cv.leaf).astype(np.float32)
+        return True
+
     def finish(self, cv, op, params):
         rng = np.random.default_rng(int(params.get("seed", 3)))
         if op == "hatch-lights":

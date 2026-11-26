@@ -61,17 +61,94 @@ def _otsu(x, bins=100):
     return float(edges[int(np.argmax(var))])
 
 
-def _value_groups(L):
+def _value_groups_hist(L):
+    """The first measure (until round 16): peaks of the L* histogram. Kept for comparison only: it merged
+    neighbouring masses and counted 2 groups all through round 16, where the squint view showed three."""
     hist, _ = np.histogram(L, bins=20, range=(0, 100))
     h = gaussian_filter(hist.astype(float), 1.0)
     h = h / (h.max() + 1e-9)
     peaks = [i for i in range(len(h)) if h[i] > 0.12 and h[i] >= h[max(0, i - 1)] and h[i] >= h[min(len(h) - 1, i + 1)]]
-    # merge peaks closer than 3 bins (15 L*)
     merged = []
     for p in peaks:
         if not merged or p - merged[-1] > 2:
             merged.append(p)
     return len(merged)
+
+
+# Value groups as the eye counts them (docs/MANUAL.md "report"): the picture is squinted (48 px on the long
+# side plus a little blur, like `look squint`), its L* is split optimally into k groups (Fisher-Jenks, exact 1-D
+# clustering), and k grows while every new split is still a MASS: each group holds at least VG_MIN_SHARE of
+# the picture with a connected piece of at least VG_MIN_PIECE, neighbouring groups differ by at least one step
+# of a 7-step value scale (14 L*; less in a narrow-range picture: 30% of its p2-p98 range, never under 6), the
+# split explains at least VG_GAIN more of the variance, and the boundaries between groups are sharper than the
+# picture's average gradient (VG_SHARP: a smooth gradient or noise has no masses). Checked against round 16
+# (crit_2 and final: 3 groups, as the gray and squint views showed; the old histogram measure said 2), 14
+# public-domain Met oils (2-3 groups), a linear gradient and noise (1 each). All five thresholds are tuned by eye
+# on those images (docs/proposals-v8.md).
+VG_LONG, VG_MIN_SHARE, VG_MIN_PIECE, VG_GAP, VG_GAP_FRAC, VG_GAIN, VG_SHARP = 48, 0.04, 0.02, 14.0, 0.3, 0.04, 1.2
+
+
+def _squint_L(rgb):
+    h, w = rgb.shape[:2]
+    s = VG_LONG / max(h, w)
+    im = Image.fromarray((np.clip(rgb, 0, 1) * 255).astype(np.uint8)).resize((max(4, round(w * s)), max(4, round(h * s))), Image.LANCZOS)
+    L, _, _ = _srgb_to_lab(np.asarray(im, np.float32) / 255)
+    return gaussian_filter(L, 0.8)
+
+
+def _jenks(x, kmax=6, bins=100):
+    """Exact optimal 1-D clustering of x (0..100) on a histogram: {k: (within-group SSE, breaks)}, total SSE."""
+    h, e = np.histogram(x, bins=bins, range=(0, 100))
+    c = (e[:-1] + e[1:]) / 2
+    w = h.astype(float)
+    n = len(w)
+    cw = np.concatenate([[0], np.cumsum(w)]); cs = np.concatenate([[0], np.cumsum(w * c)]); cq = np.concatenate([[0], np.cumsum(w * c * c)])
+    i_, j_ = np.meshgrid(np.arange(n + 1), np.arange(n + 1), indexing="ij")
+    Wt = cw[j_] - cw[i_]
+    St = cs[j_] - cs[i_]
+    sse = np.where(Wt > 0, cq[j_] - cq[i_] - St * St / np.maximum(Wt, 1e-12), 0.0)
+    sse = np.where(j_ > i_, sse, np.inf)
+    D = np.full((kmax + 1, n + 1), np.inf); B = np.zeros((kmax + 1, n + 1), int); D[0, 0] = 0
+    for k in range(1, kmax + 1):
+        tot = D[k - 1][:, None] + sse            # [i, j]
+        B[k] = np.argmin(tot, 0); D[k] = tot[B[k], np.arange(n + 1)]
+    out = {}
+    for k in range(1, kmax + 1):
+        br, j = [], n
+        for kk in range(k, 0, -1):
+            i = B[kk, j]; br.append(i); j = i
+        out[k] = (float(D[k, n]), [float(e[b]) for b in sorted(br)[1:]])
+    return out, float(sse[0, n])
+
+
+def value_masses(rgb):
+    """(number of value groups, their shares dark to light, their mean L*), counted as described above."""
+    from scipy.ndimage import label
+    L = _squint_L(rgb)
+    res, tot = _jenks(L.ravel())
+    if tot <= 1e-6:
+        return 1, [1.0], [float(L.mean())]
+    p2, p98 = np.percentile(L, [2, 98])
+    gap_min = min(VG_GAP, max(6.0, VG_GAP_FRAC * (p98 - p2)))
+    gm = np.hypot(sobel(L, 0), sobel(L, 1)) / 8
+    base = float(gm.mean()) + 1e-6
+    best = (1, [1.0], [float(L.mean())])
+    for k in range(2, 7):
+        sse_k, br = res[k]
+        lab = np.digitize(L, br)
+        shares = [float((lab == g).mean()) for g in range(k)]
+        if min(shares) < VG_MIN_SHARE:
+            break
+        means = [float(L[lab == g].mean()) for g in range(k)]
+        gain = (res[k - 1][0] - sse_k) / tot
+        bnd = np.zeros(lab.shape, bool)
+        bnd[:-1] |= lab[:-1] != lab[1:]; bnd[:, :-1] |= lab[:, :-1] != lab[:, 1:]
+        sharp = float(gm[bnd].mean()) / base if bnd.any() else 0.0
+        piece = min((np.bincount(label(lab == g)[0].ravel())[1:].max() / L.size) if (lab == g).any() else 0 for g in range(k))
+        if min(np.diff(means)) < gap_min or gain < VG_GAIN or piece < VG_MIN_PIECE or sharp < VG_SHARP:
+            break
+        best = (k, shares, means)
+    return best
 
 
 def _spectral_slope(L):
@@ -107,7 +184,7 @@ def measure(img):
     out["value_murky"] = float(((L > 40) & (L < 60)).mean())
     t = _otsu(L)
     out["notan_dark_share"] = float((L < t).mean())
-    out["value_groups"] = _value_groups(gaussian_filter(L, 2))
+    out["value_groups"] = value_masses(rgb)[0]   # scalars only: tools/measure_targets.py averages every key
     # colour
     C = np.hypot(a, b)
     out["chroma_mean"] = float(C.mean())
@@ -149,6 +226,132 @@ def measure(img):
     out["hard_edges_near_focus"] = float((hard & near).sum() / max(hard.sum(), 1))
     out["contrast_concentration"] = float(lc[near].mean() / (lc.mean() + 1e-9))
     return {k: (round(v, 4) if isinstance(v, float) else v) for k, v in out.items()}
+
+
+# ---------------------------------------------------------------- marks: how the strokes are built
+# Brushwork studies describe strokes by orientation, length and width, and find them distinctive of a painter's
+# hand (Lamberti, Sanna & Paravati 2014, EURASIP J. Image Video Proc. 2014:53; Li, Yao, Hendriks & Wang 2012,
+# IEEE TPAMI 34(6): van Gogh's strokes are "rhythmic", regular strokes tightly arranged). Extracting single
+# strokes is fragile, so these are field measures of the same properties, made on the same 512 px image for the
+# canvas and the reference paintings:
+#   orient_coherence   how strongly marks are oriented locally (structure-tensor coherence weighted by energy;
+#                      0 = no direction, 1 = parallel lines)
+#   orient_spread      how much the dominant direction changes across the picture (circular spread of the
+#                      dominant orientation of 8x6 tiles, 0 = all one angle, 1 = every angle): "never all one angle"
+#   mark_scale         median characteristic scale of the marks (px at 512 px long side; the sigma where the
+#                      scale-normalised Laplacian energy peaks, per tile) and mark_scale_spread (sd of log2 of it
+#                      across tiles: 0 = one mark size everywhere, the "uniform dab")
+#   edge_variety       entropy of the edge classes lost/soft/firm/hard (L* gradient 1-2, 2-4, 4-8, >8 per px)
+#                      among edge pixels, 0..1: one kind of edge everywhere scores low
+# The integration scales (sigma 3 for the tensor, sigmas 1-8 for the scale) are chosen for the 512 px image, a
+# judgement.
+SCALES = (1.0, 1.4, 2.0, 2.8, 4.0, 5.6, 8.0, 11.3, 16.0)
+
+
+def mark_stats(img):
+    from scipy.ndimage import gaussian_laplace
+    rgb = load(img)
+    L, _, _ = _srgb_to_lab(rgb)
+    H, W = L.shape
+    Ls = gaussian_filter(L, 1.0)
+    gx, gy = sobel(Ls, 1) / 8, sobel(Ls, 0) / 8
+    Jxx, Jxy, Jyy = (gaussian_filter(a, 3.0) for a in (gx * gx, gx * gy, gy * gy))
+    tr = Jxx + Jyy + 1e-9
+    coh = np.sqrt((Jxx - Jyy) ** 2 + 4 * Jxy ** 2) / tr
+    out = {"orient_coherence": float((coh * tr).sum() / tr.sum())}
+    c2, s2 = (Jxx - Jyy) / tr, 2 * Jxy / tr               # doubled-angle vector, length = coherence
+    gy_, gx_ = 6, 8
+    angs, wts = [], []
+    for r in range(gy_):
+        for c in range(gx_):
+            sl = (slice(r * H // gy_, (r + 1) * H // gy_), slice(c * W // gx_, (c + 1) * W // gx_))
+            w = tr[sl]
+            vc, vs = (c2[sl] * w).sum() / w.sum(), (s2[sl] * w).sum() / w.sum()
+            angs.append(math.atan2(vs, vc)); wts.append(math.hypot(vc, vs) * w.mean())
+    angs, wts = np.array(angs), np.array(wts) + 1e-12
+    R = math.hypot((wts * np.cos(angs)).sum(), (wts * np.sin(angs)).sum()) / wts.sum()
+    out["orient_spread"] = float(1 - R)
+    # characteristic mark scale per tile
+    E = np.stack([(s * s * gaussian_laplace(L, s)) ** 2 for s in SCALES])
+    ls = np.log2(np.array(SCALES))
+    sc = []
+    for r in range(gy_):
+        for c in range(gx_):
+            e = E[:, r * H // gy_:(r + 1) * H // gy_, c * W // gx_:(c + 1) * W // gx_].mean((1, 2))
+            sc.append(ls[int(np.argmax(e))] if e.max() > 0 else 0.0)
+    sc = np.array(sc)
+    out["mark_scale"] = float(2 ** np.median(sc))
+    out["mark_scale_spread"] = float(sc.std())
+    g = np.hypot(*np.gradient(gaussian_filter(L, 1.0)))
+    cls = np.digitize(g[g > 1.0], [2.0, 4.0, 8.0])
+    p = np.bincount(cls, minlength=4) / max(cls.size, 1)
+    out["edge_variety"] = float(-(p[p > 0] * np.log(p[p > 0])).sum() / math.log(4))
+    return {k: round(v, 4) for k, v in out.items()}
+
+
+# ---------------------------------------------------------------- element clarity (Spectre's masking measure)
+# Each element of the picture (a figure, a head, a hand, the sky...) against its immediate surround, at thumbnail
+# size (the canvas at 1/12, like `look thumb`, blurred 0.7 px): the difference in mean L* (value), in mean colour
+# (Delta E ab), and the mean L* gradient along the element's outline (the edge). Spectre flags a stem as "not
+# in the mix" when it is masked; an element whose contrast (the larger of the value difference and half the
+# colour difference) is under CLARITY_MIN and whose outline edge is under CLARITY_EDGE is "masked": at a
+# glance it does not separate from its neighbours. Both thresholds are judgements (eye), to be tuned against
+# critics' readings; the same measure on the schema says whether the drawing had the element clear, and an element
+# with under half the schema's contrast is "weakened". Declare tight regions (a polygon around the figure, not a
+# loose ellipse): the surround ring is taken just outside the declared outline.
+CLARITY_MIN, CLARITY_EDGE, THUMB = 8.0, 3.0, 12
+
+
+def _clarity_one(Lab, m):
+    from scipy.ndimage import binary_dilation, binary_erosion
+    L, a, b = Lab
+    inside = m > 0.5
+    if inside.sum() < 3:
+        return None
+    r = int(np.clip(round(0.35 * math.sqrt(inside.sum())), 2, 8))
+    ring = binary_dilation(inside, iterations=r) & ~inside
+    if ring.sum() < 3:
+        return None
+    dL = abs(float(L[inside].mean() - L[ring].mean()))
+    dE = math.sqrt(dL ** 2 + float(a[inside].mean() - a[ring].mean()) ** 2 + float(b[inside].mean() - b[ring].mean()) ** 2)
+    edge_px = inside & ~binary_erosion(inside)
+    g = np.hypot(*np.gradient(L))
+    edge = float(g[binary_dilation(edge_px)].mean())
+    return dL, dE, edge
+
+
+def element_clarity(img, masks, ref_img=None):
+    """{name: {dL, dE, edge, contrast, masked, schema_contrast}} for full-size masks (H, W) of the canvas."""
+    if isinstance(img, str):
+        img = Image.open(img)
+    img = img.convert("RGB")
+    W, H = img.size
+    tw, th = max(8, W // THUMB), max(8, H // THUMB)
+
+    def lab(im):
+        a = np.asarray(im.convert("RGB").resize((tw, th), Image.LANCZOS), np.float32) / 255
+        a = np.stack([gaussian_filter(a[..., i], 0.7) for i in range(3)], -1)
+        return _srgb_to_lab(a)
+    Lab = lab(img)
+    Lr = lab(ref_img) if ref_img is not None else None
+    out = {}
+    for name, m in masks.items():
+        ms = np.asarray(Image.fromarray((np.clip(m, 0, 1) * 255).astype(np.uint8)).resize((tw, th), Image.BOX), np.float32) / 255
+        r = _clarity_one(Lab, ms)
+        if r is None:
+            out[name] = dict(dL=0, dE=0, edge=0, contrast=0, masked=False, schema_contrast=None, note="too small at thumbnail size")
+            continue
+        dL, dE, edge = r
+        con = max(dL, 0.5 * dE)
+        sc = None
+        if Lr is not None:
+            rr = _clarity_one(Lr, ms)
+            sc = max(rr[0], 0.5 * rr[1]) if rr else None
+        out[name] = dict(dL=dL, dE=dE, edge=edge, contrast=con,
+                         masked=bool(con < CLARITY_MIN and (edge < CLARITY_EDGE or con < CLARITY_MIN / 2)),
+                         weakened=bool(sc is not None and sc >= CLARITY_MIN and con < 0.5 * sc),
+                         schema_contrast=sc)
+    return out
 
 
 # ---------------------------------------------------------------- comparing with a target
