@@ -29,7 +29,13 @@ Set by Robert; they apply until he changes them.
 
 ## Subjects before drawing
 Teodor's subject library is layered (`docs/subjects/README.md`): layer 1 is how a subject really is (a face, water, a cat), and layer 2 is how a style changes it. The library starts thin and grows with every painting:
-1. Phase 1 ends its planning (feeling, research, thumbnails, colour studies, the chosen composition) by writing `subjects.json` in the work dir: every subject in the picture, with a note on how it appears. The painter replies `PLAN DONE`.
+1. Phase 1 ends its planning (feeling, research, thumbnails, colour studies, the chosen composition) by writing `subjects.json` in the work dir: every subject in the picture, with a note on how it appears, and by gathering references for the hard subjects into `refs/` (`tools/find_refs.py`; `docs/research/references.md`). The painter replies `PLAN DONE`.
+   **Check the references** before phase 1 continues: open `refs/sheet.jpg` and `refs/refs.json` and remove (from `refs.json` and the folder, then `python3 tools/find_refs.py <WORKDIR> --sheet`) any reference that breaks a rule:
+   - *licence:* every entry has a CC0 / public-domain `licence`, its `licence_evidence` from the museum's API and an `object_url`; open the object page of any you doubt. Nothing from another site.
+   - *likeness (rule 5):* no photograph of an identifiable public figure (a performer, a sitter known by name, a famous model), even when the title doesn't name them (Nadar's *Pierrot Laughing* is the mime Deburau); no reference with `named_sitter: true` used for a face; no feature resting on one person's face (at least three references from different sources per face feature).
+   - *no gore:* no post-mortem, medical-wound or execution images.
+   - *styles, never authors:* no feature built mostly on one artist's works.
+   - *a real study:* each `reason` says what the painter studies in it, not the tool's default text. Note any feature with fewer than three good references, and tell the painter in the continuation prompt.
 2. The orchestrator runs `python3 tools/subject_gaps.py <WORKDIR>`. For each gap it runs the prompts in `docs/prompts/subject-research.md`: layer 1 first, then layer 2 for the commission's style. Gaps that write different files run in parallel. Then it merges `studio/subjects.parts/` into `studio/subjects.json` (`python3 tools/merge_subjects.py`) and commits the new pages.
 3. If the engine changed since the work dir was made, run `python3 tools/refresh_studio.py <WORKDIR>`. Phase 1 continues in a fresh session ("PHASE 1, continued after planning"). Teodor reads layer 1 and layer 2 for every subject in his list, then draws: schema, tone, transfer, block-in.
 A subject added later (in phase 2 or 3, say a dog walks into the picture) goes through the same check before it is painted.
@@ -42,6 +48,7 @@ A subject added later (in phase 2 or 3, say a dog walks into the picture) goes t
 | `journal.md` | painter | one line per episode, including felt state |
 | `handoff.md` | painter (end of every phase) | where the painting stands, what each element is meant to do, open problems, the plan for the next phase |
 | `critique_N.md` | orchestrator | a fresh critic's reading of `crit_N.png`, verbatim |
+| `refs/` (`refs.json`, `sheet.jpg`, images) | painter (`tools/find_refs.py`), checked by the orchestrator | openly licensed references studied for named features, with provenance; never committed except `refs.json` as the round's `references.json` |
 | `crit_N.png`, `final.png` | painter | the checkpoint image and the final image |
 | canvas state (`main_*.npy`, scene files, frames) | studio | survives across phases |
 
@@ -73,7 +80,7 @@ The brief tells Teodor to read both, research painters he hasn't drawn on, and b
 Run the phases one after another, waiting for each to finish: the next step depends on its files. A phase takes roughly 5–30 minutes.
 
 - **Phase 1, planning:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1, PLANNING. Follow the brief exactly, and end with PLAN DONE as it says."
-- **Phase 1, continued:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1, continued after planning. Read feeling.md, journal.md and subjects.json, then the subject pages the brief names, then draw. Continue from the journal's last episode and end phase 1 as the brief says."
+- **Phase 1, continued:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1, continued after planning. Read feeling.md, journal.md, subjects.json and refs/refs.json, then the subject pages the brief names, then draw (build each face, hand and expression study with `look refs <feature>`). Continue from the journal's last episode and end phase 1 as the brief says."
 - **Phase 2:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 2 (development). Begin by reading `feeling.md`, `journal.md`, `handoff.md` and `critique_1.md`, then look at the canvas (look full, thumb, gray). Continue from episode N+1 (the journal's last number) and end phase 2 as the brief says."
 - **Phase 3:** the same, "PHASE 3 (finalization)", reading `critique_2.md` too. Add: "Weigh the critique as a painter: take what is true about the craft, and judge its reading against your own feeling. Finish exactly as the brief's last paragraph says (sign, time-lapse, `final.png`, reply FINISHED with the title)."
 
@@ -93,6 +100,7 @@ Save each reading verbatim to `critique_N.md` with a header such as `# Critique 
    - `painting.jpg`: `final.png` resized to 900×1200, JPEG quality ~90 (already signed)
    - `feeling.md`: Teodor's feeling in his words, plus the commission
    - `journal.md`, `handoff.md`, `episodes.jsonl` (copy of `main_log.jsonl`), `timelapse.mp4`
+   - `references.json`: a copy of `refs/refs.json` (what was studied, for which feature, with each licence and object URL); not the images
    - `critiques/`: `crit_N.jpg` (600×800), `critique_N.md`, `visitor.md`
    - `scenes/` (scene JSON and overlay SVGs) or `schemas/` (schema SVGs for abstract work)
 3. **`docs/experiments.md`:** a section "## Round NN: *Title* (Teodor, v7, <model>; theme: …)" with setup, run (episodes, scene/schema versions), feeling, the person's reaction, critics' readings and lessons.

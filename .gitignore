@@ -6,5 +6,8 @@
 *_frames/
 __pycache__/
 
+# downloaded reference images (tools/find_refs.py) are raw downloaded data: never committed (AGENTS.md rule 8)
+refs/
+
 # artist-specific configurations are temporary and never versioned (docs/styles/README.md)
 studio/styles.local/

@@ -28,15 +28,15 @@ docs/
   MANUAL.md, manual/        the painter's studio manual; one page per medium
   styles/                   the style system (README) and one doc per current
   subjects/                 the subject library, layer 1 (README explains both layers)
-  research/, research.md    emotion, process, figures; the research behind v6
+  research/, research.md    emotion, process, references, figures; the research behind v6
   MEDIA.md, FINISHING.md, media-data.md   media and finishing research, physical data
   calibration/, gallery/    calibration reports and mark sheets per medium
   habits.md, experiments.md Teodor's habits; the round-by-round history
   proposals-v8.md           the v8 plan with checkboxes
   prompts/                  painter-brief.md (template), subject-research.md; older briefs kept as records
 tools/                      make_brief.py, measure_targets.py, subject_gaps.py, merge_subjects.py,
-                            calibrate_media.py, pigments/
-rounds/NN-title/            painting.jpg, feeling.md, journal.md, handoff.md, critiques/, schemas or scenes, timelapse.mp4
+                            calibrate_media.py, find_refs.py (open-access references), pigments/
+rounds/NN-title/            painting.jpg, feeling.md, journal.md, handoff.md, critiques/, schemas or scenes, timelapse.mp4, references.json
 site/                       the website (Next.js); app/works.ts lists the paintings
 .github/workflows/          deploy-site.yml (Vercel Deploy Hook)
 ```
