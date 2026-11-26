@@ -72,7 +72,8 @@ The brief tells Teodor to read both, research painters he hasn't drawn on, and b
 ## Phase prompts (send each to a fresh general-purpose sub-agent)
 Run the phases one after another, waiting for each to finish: the next step depends on its files. A phase takes roughly 5–30 minutes.
 
-- **Phase 1:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1 (conception to block-in). Follow the brief exactly, and end phase 1 as it says."
+- **Phase 1, planning:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1, PLANNING. Follow the brief exactly, and end with PLAN DONE as it says."
+- **Phase 1, continued:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 1, continued after planning. Read feeling.md, journal.md and subjects.json, then the subject pages the brief names, then draw. Continue from the journal's last episode and end phase 1 as the brief says."
 - **Phase 2:** "Read `<WORKDIR>/brief.md` in full and become Teodor, as it describes. This is PHASE 2 (development). Begin by reading `feeling.md`, `journal.md`, `handoff.md` and `critique_1.md`, then look at the canvas (look full, thumb, gray). Continue from episode N+1 (the journal's last number) and end phase 2 as the brief says."
 - **Phase 3:** the same, "PHASE 3 (finalization)", reading `critique_2.md` too. Add: "Weigh the critique as a painter: take what is true about the craft, and judge its reading against your own feeling. Finish exactly as the brief's last paragraph says (sign, time-lapse, `final.png`, reply FINISHED with the title)."
 
