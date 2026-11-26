@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <filter id="s2"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="s4"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="s8"><feGaussianBlur stdDeviation="8"/></filter>
+ </defs>
+ <!-- Bodice study, phase 3: the owner read the figure as a man (a boxy column, a coat).
+      A fitted wool bodice: the bust's curve under the cold light, a shadow under it, the waist pulled in high
+      by the apron string (narrower than the shoulders by a third), the hips and skirt flaring from it.
+      A V of the kerchief opening at the neck. Light from the low left. -->
+ <!-- around the waist: the shawl's hanging end at her side (left) and the dark billow behind (right), so the waist reads -->
+ <path d="M 432 700 C 444 720, 462 750, 474 790 L 470 830 C 452 800, 436 760, 426 724 Z" fill="#2f2a27" filter="url(#s4)"/>
+ <path d="M 620 700 C 636 700, 650 720, 660 760 L 664 830 C 646 816, 626 800, 608 790 C 614 760, 618 730, 620 700 Z" fill="#3b312b" filter="url(#s4)"/>
+ <!-- the bodice's mass, fitted -->
+ <path d="M 452 576 C 500 570, 590 568, 642 576 C 640 620, 632 680, 618 736 C 612 758, 608 772, 606 786 L 480 786 C 474 760, 462 732, 448 712 C 436 698, 434 672, 440 652 C 444 630, 450 604, 452 576 Z" fill="#634936"/>
+ <!-- the shadow side (her back, away from the light) -->
+ <path d="M 566 576 C 600 572, 626 572, 642 576 C 640 624, 630 684, 616 738 C 610 760, 607 774, 606 786 L 576 786 C 584 740, 586 690, 580 640 C 576 612, 570 590, 566 576 Z" fill="#45342a" filter="url(#s4)"/>
+ <!-- the bust: one round form turned to the light, lit on its upper side, the shadow under it -->
+ <path d="M 446 640 C 470 628, 520 630, 548 646 C 560 664, 556 690, 540 704 C 516 716, 480 716, 456 710 C 440 700, 436 670, 446 640 Z" fill="#87674c" filter="url(#s4)"/>
+ <path d="M 452 650 C 472 640, 504 640, 524 650 C 518 664, 494 670, 470 668 C 460 664, 454 658, 452 650 Z" fill="#9c7a5a" filter="url(#s4)"/>
+ <path d="M 448 708 C 476 722, 520 724, 556 710 C 552 722, 540 730, 520 732 C 490 734, 466 728, 452 720 Z" fill="#35281f" filter="url(#s2)"/>
+ <!-- the kerchief's V at the neck: half-shaded skin, the cloth's lit edges -->
+ <path d="M 474 578 C 494 580, 538 580, 560 576 C 548 600, 530 620, 512 636 C 498 616, 486 598, 474 578 Z" fill="#a67d66" filter="url(#s2)"/>
+ <path d="M 470 576 C 484 598, 498 618, 512 638" stroke="#b8ada2" stroke-width="5" fill="none" filter="url(#s2)"/>
+ <path d="M 562 574 C 548 598, 530 620, 512 638" stroke="#5e5650" stroke-width="5" fill="none" filter="url(#s2)"/>
+ <!-- the waist pulled in: the apron string, a dark knot of shadow either side -->
+ <path d="M 476 778 C 520 774, 570 774, 610 778 L 608 792 C 568 790, 520 790, 478 794 Z" fill="#2f241d"/>
+ <!-- the hips flaring from the waist into the skirt, the lit hip on the windward side -->
+ <path d="M 478 794 C 560 790, 600 792, 610 794 C 616 810, 622 824, 628 836 C 580 832, 520 832, 470 836 C 472 820, 476 806, 478 794 Z" fill="#6c523e" filter="url(#s4)"/>
+ <path d="M 482 794 C 470 820, 458 850, 454 890 C 470 930, 500 940, 524 936 C 516 880, 508 830, 502 796 Z" fill="#8a6a4e" filter="url(#s8)"/>
+ <path d="M 606 794 C 620 818, 640 850, 664 890 C 650 920, 630 928, 618 924 C 612 870, 604 830, 596 796 Z" fill="#46342a" filter="url(#s8)"/>
+</svg>

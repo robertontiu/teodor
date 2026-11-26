@@ -69,3 +69,5 @@ If a research file is missing, rerun that research with the prompt shape in this
 - [ ] `strokes` with a region given as `clip` silently tints the whole canvas (`clip` is an on/off switch; the region goes under `region`). Refuse or translate a region-shaped `clip`.
 - [ ] A dry-run / preview mode for an act (render the effect on a copy and show it) so a stopped edit can't print at the wrong strength.
 - [ ] The figure rig's female heads and bodies still read masculine (gaunt face, hard jaw, flat hair cap, no waist); round 17's woman read as a man to the owner. Strengthen the sex cues in figure.py from face.md and figure.md, and measure them on public-domain portraits at thumbnail size.
+- [ ] A face pass at higher resolution: paint a head on a larger sub-canvas (with the same medium and strokes) and bring it back down, so a 90 px face can get planes, eye sockets and a readable expression instead of a mask (rounds 13-17).
+- [ ] Critic prompt asks who the person is (sex, age): round 17's critics missed that she read as a man.

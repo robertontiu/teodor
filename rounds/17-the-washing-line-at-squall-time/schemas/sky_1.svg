@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0.25" y2="1">
+   <stop offset="0" stop-color="#43474f"/>
+   <stop offset="0.45" stop-color="#4f545d"/>
+   <stop offset="0.62" stop-color="#6c6f71"/>
+   <stop offset="0.73" stop-color="#8d8d86"/>
+  </linearGradient>
+  <radialGradient id="brk" cx="0.16" cy="0.69" r="0.42" gradientTransform="scale(1,0.45) translate(0,0.86)">
+   <stop offset="0" stop-color="#d0ccb9"/>
+   <stop offset="0.45" stop-color="#b3b1a3"/>
+   <stop offset="1" stop-color="#8a8b86" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="b20"><feGaussianBlur stdDeviation="20"/></filter>
+  <filter id="b40"><feGaussianBlur stdDeviation="40"/></filter>
+  <linearGradient id="sea" x1="0" y1="0" x2="1" y2="0">
+   <stop offset="0" stop-color="#5f6664"/>
+   <stop offset="0.35" stop-color="#3f484d"/>
+   <stop offset="1" stop-color="#323b42"/>
+  </linearGradient>
+  <linearGradient id="crest" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#4a4232"/>
+   <stop offset="0.25" stop-color="#2f2a21"/>
+   <stop offset="1" stop-color="#221f1a"/>
+  </linearGradient>
+ </defs>
+ <rect width="1200" height="1600" fill="url(#sky)"/>
+ <!-- the break: low left, a cold silver-cream band under the cloud's edge -->
+ <ellipse cx="230" cy="1070" rx="520" ry="150" fill="url(#brk)" filter="url(#b40)"/>
+ <path d="M -20 1150 C 120 1000, 300 985, 520 1030 C 640 1055, 720 1100, 800 1150 Z" fill="#c8c5b3" filter="url(#b20)"/>
+ <path d="M -20 1150 C 100 1060, 250 1040, 420 1080 C 520 1100, 600 1130, 660 1160 Z" fill="#d4d0bd" filter="url(#b8)"/>
+ <!-- the storm mass: one body from the upper left, lower edge a long ragged diagonal down to the right -->
+ <path d="M -20 -20 L 1220 -20 L 1220 700 C 1100 760, 980 800, 860 860 C 760 900, 700 870, 600 905 C 500 940, 420 925, 330 960 C 240 990, 150 980, 60 1010 L -20 1030 Z" fill="#3d424b" filter="url(#b20)"/>
+ <!-- torn lit rim of the mass, just above the break (one crisp ragged edge in the sky) -->
+ <path d="M 40 1002 C 140 975, 230 985, 330 955 C 420 925, 520 935, 600 900 C 560 935, 470 948, 380 975 C 280 1005, 160 1008, 40 1020 Z" fill="#9a998e" filter="url(#b8)"/>
+ <!-- fractus streaming right under the mass -->
+ <path d="M 380 1010 C 520 990, 640 1000, 760 975 C 700 1010, 560 1025, 420 1030 Z" fill="#5a5d60" filter="url(#b8)"/>
+ <path d="M 600 950 C 720 930, 850 930, 980 895 C 900 945, 760 960, 640 968 Z" fill="#4c5056" filter="url(#b8)"/>
+ <!-- darker core top-left, the zenith, low-chroma greyed indigo (never black) -->
+ <path d="M -20 -20 L 700 -20 C 600 120, 420 260, 220 330 C 120 360, 40 380, -20 390 Z" fill="#363b45" filter="url(#b40)"/>
+ <!-- rain veils at the right over the sea, leaning with the wind -->
+ <g filter="url(#b20)" opacity="0.55">
+  <path d="M 820 860 L 900 840 L 1010 1170 L 930 1170 Z" fill="#5d6268"/>
+  <path d="M 940 800 L 1010 790 L 1120 1170 L 1060 1170 Z" fill="#5a5f66"/>
+  <path d="M 1060 760 L 1140 750 L 1230 1170 L 1170 1170 Z" fill="#555a61"/>
+ </g>
+ <!-- the sea strip: dead-level horizon; one lit band under the break -->
+ <rect x="0" y="1168" width="1200" height="120" fill="url(#sea)"/>
+ <path d="M 0 1170 L 560 1170 L 520 1178 L 0 1180 Z" fill="#a9aaa0"/>
+ <path d="M 30 1188 L 380 1186 L 300 1192 L 40 1194 Z" fill="#8d918c" opacity="0.8"/>
+ <!-- the crest: dark warm land, one long arc rising to the right -->
+ <path d="M -20 1600 L -20 1540 C 200 1420, 420 1310, 640 1250 C 820 1200, 1000 1180, 1220 1170 L 1220 1600 Z" fill="url(#crest)"/>
+ <path d="M -20 1545 C 200 1425, 420 1315, 640 1255 C 820 1206, 1000 1186, 1220 1176 L 1220 1196 C 1000 1205, 820 1228, 640 1278 C 440 1335, 220 1440, -20 1570 Z" fill="#5a5139" opacity="0.8" filter="url(#b8)"/>
+</svg>

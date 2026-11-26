@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs><filter id="s1"><feGaussianBlur stdDeviation="1.2"/></filter><filter id="s3"><feGaussianBlur stdDeviation="3"/></filter><filter id="s20"><feGaussianBlur stdDeviation="20"/></filter></defs>
+ <!-- Tonal study of the raised fist gripping the bunched corner of the sheet. The back of the hand faces us, the
+      knuckles point up and right into the cloth; lit from the low left: the thumb side and the back of the hand lit,
+      the knuckle tops catching the warmest light, the underside of the fingers in shadow. A dark cloud close behind. -->
+ <ellipse cx="740" cy="140" rx="70" ry="80" fill="#2f343d" filter="url(#s20)" opacity="0.85"/>
+ <!-- the bunched cloth coming out of the fist, twisted, flaring into the sheet -->
+ <path d="M 770 128 C 782 118, 796 116, 806 124 C 812 140, 812 160, 806 176 C 796 184, 782 182, 772 172 Z" fill="#8f897c" filter="url(#s1)"/>
+ <path d="M 776 120 C 786 112, 798 110, 808 118 C 800 120, 790 124, 782 128 Z" fill="#c4c0b2" filter="url(#s1)"/>
+ <path d="M 790 176 C 798 182, 808 182, 816 176 C 812 190, 800 196, 790 190 Z" fill="#5e594f" filter="url(#s1)"/>
+ <!-- forearm into the wrist: lit plane on the left, shadow plane on the right -->
+ <path d="M 706 300 C 708 250, 712 210, 718 176 L 750 172 C 748 210, 744 250, 742 300 Z" fill="#7d5546"/>
+ <path d="M 706 300 C 708 250, 712 210, 718 176 L 732 176 C 728 210, 724 250, 722 300 Z" fill="#cf9f83" filter="url(#s3)"/>
+ <!-- the fist: a block, the back of the hand toward us -->
+ <path d="M 714 178 C 712 160, 716 140, 726 128 C 742 118, 762 116, 778 122 C 786 132, 788 150, 786 168 C 780 180, 764 186, 746 186 C 732 186, 720 184, 714 178 Z" fill="#a8735d"/>
+ <!-- back of the hand: the lit plane -->
+ <path d="M 718 172 C 716 156, 720 142, 728 132 C 740 124, 754 122, 764 126 C 760 140, 756 156, 750 172 C 738 176, 726 176, 718 172 Z" fill="#d8a98c" filter="url(#s1)"/>
+ <!-- knuckle row: four bumps along the top right, lit tops, dark creases between -->
+ <ellipse cx="760" cy="124" rx="7" ry="6" fill="#e0a88c" filter="url(#s1)"/>
+ <ellipse cx="772" cy="130" rx="6" ry="6" fill="#d39c80" filter="url(#s1)"/>
+ <ellipse cx="779" cy="142" rx="5" ry="6" fill="#c38e74" filter="url(#s1)"/>
+ <ellipse cx="782" cy="156" rx="5" ry="6" fill="#b07c64" filter="url(#s1)"/>
+ <path d="M 766 128 L 770 134 M 776 136 L 778 142 M 780 149 L 782 152" stroke="#5c3a30" stroke-width="2" filter="url(#s1)"/>
+ <!-- the curled fingers' middle segments on the right: shadow plane -->
+ <path d="M 774 160 C 784 160, 790 168, 786 178 C 776 186, 762 186, 752 184 C 760 176, 768 168, 774 160 Z" fill="#6e4a3e" filter="url(#s1)"/>
+ <!-- the thumb wrapped across the front, lit on its top -->
+ <path d="M 722 170 C 734 160, 752 156, 768 160 C 772 164, 770 170, 764 172 C 750 172, 736 176, 726 180 Z" fill="#c99579" filter="url(#s1)"/>
+ <path d="M 726 168 C 738 162, 752 158, 766 160" stroke="#e7b89b" stroke-width="2.5" fill="none" filter="url(#s1)"/>
+ <!-- tendons on the back of the hand, catching the raking light -->
+ <path d="M 734 168 L 752 132 M 742 170 L 762 136" stroke="#e5b598" stroke-width="1.6" filter="url(#s1)"/>
+</svg>

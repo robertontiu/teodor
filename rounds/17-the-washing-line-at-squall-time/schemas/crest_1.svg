@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <linearGradient id="sky" x1="0" y1="0" x2="0.25" y2="1">
+   <stop offset="0" stop-color="#43474f"/>
+   <stop offset="0.45" stop-color="#4f545d"/>
+   <stop offset="0.62" stop-color="#6c6f71"/>
+   <stop offset="0.73" stop-color="#8d8d86"/>
+  </linearGradient>
+  <radialGradient id="brk" cx="0.16" cy="0.69" r="0.42" gradientTransform="scale(1,0.45) translate(0,0.86)">
+   <stop offset="0" stop-color="#d0ccb9"/>
+   <stop offset="0.45" stop-color="#b3b1a3"/>
+   <stop offset="1" stop-color="#8a8b86" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="b20"><feGaussianBlur stdDeviation="20"/></filter>
+  <filter id="b40"><feGaussianBlur stdDeviation="40"/></filter>
+  <linearGradient id="sea" x1="0" y1="0" x2="1" y2="0">
+   <stop offset="0" stop-color="#5f6664"/>
+   <stop offset="0.35" stop-color="#3f484d"/>
+   <stop offset="1" stop-color="#323b42"/>
+  </linearGradient>
+  <linearGradient id="crest" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="#4a4232"/>
+   <stop offset="0.25" stop-color="#2f2a21"/>
+   <stop offset="1" stop-color="#221f1a"/>
+  </linearGradient>
+ </defs>
+
+ <path d="M -20 1600 L -20 1500 C 250 1330, 480 1200, 700 1135 C 900 1085, 1050 1072, 1220 1062 L 1220 1600 Z" fill="url(#crest)"/>
+ <path d="M -20 1505 C 250 1335, 480 1205, 700 1140 C 900 1090, 1050 1077, 1220 1067 L 1220 1090 C 1050 1098, 900 1112, 700 1162 C 480 1225, 250 1355, -20 1530 Z" fill="#5d5440" opacity="0.85" filter="url(#b8)"/>
+ <!-- a few lit grass tufts on the crest edge, bent downwind -->
+ <g stroke="#6e6548" stroke-width="3" fill="none" filter="url(#b8)" opacity="0.7">
+  <path d="M 120 1440 C 140 1420, 160 1412, 185 1408"/><path d="M 330 1318 C 350 1300, 372 1294, 400 1292"/>
+  <path d="M 560 1205 C 580 1188, 604 1182, 630 1180"/><path d="M 980 1088 C 1000 1074, 1024 1070, 1050 1068"/>
+ </g>
+</svg>

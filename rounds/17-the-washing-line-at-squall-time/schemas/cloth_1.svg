@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs><filter id="b3"><feGaussianBlur stdDeviation="3"/></filter><filter id="b10"><feGaussianBlur stdDeviation="10"/></filter></defs>
+ <!-- the skirt's leeward side billowing downwind (heavy wool lifts little: one connected mass) -->
+ <path d="M 700 700 C 760 760, 820 860, 860 960 C 890 1040, 930 1100, 980 1150 L 780 1200 C 740 1100, 700 960, 670 820 Z" fill="#3a2c20" filter="url(#b3)"/>
+ <path d="M 720 760 C 770 840, 810 930, 850 1020 C 830 1000, 790 940, 760 880 Z" fill="#5a4532" filter="url(#b10)"/>
+ <!-- the shawl: knotted at the shoulders, one long taut dark end streaming downwind -->
+ <path d="M 640 520 C 700 520, 760 560, 830 600 C 900 640, 960 660, 1020 700 C 960 700, 900 690, 840 670 C 780 650, 720 620, 660 600 Z" fill="#262423" filter="url(#b3)"/>
+ <path d="M 680 560 C 760 590, 840 620, 930 670 C 860 650, 780 625, 700 590 Z" fill="#3d3936" filter="url(#b10)"/>
+ <path d="M 1000 690 L 1030 706 M 985 698 L 1012 716 M 1010 684 L 1040 694" stroke="#262423" stroke-width="4" filter="url(#b3)"/>
+</svg>

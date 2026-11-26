@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs><filter id="b3"><feGaussianBlur stdDeviation="3"/></filter><filter id="b8"><feGaussianBlur stdDeviation="8"/></filter><filter id="b16"><feGaussianBlur stdDeviation="16"/></filter>
+  <clipPath id="dr"><path d="M 455 590 C 520 570, 600 560, 650 580 C 660 680, 660 760, 650 830 C 700 900, 760 980, 820 1060 C 860 1110, 900 1140, 940 1160 L 540 1240 C 520 1150, 500 1020, 485 900 C 470 800, 460 690, 455 590 Z"/></clipPath></defs>
+ <!-- Study of the wool, phase 2: the critic saw "a featureless brown column with no waist, hip or weight".
+      Bodice: a lit plane on the windward side toward the light; the waist pulled in by the apron string.
+      Skirt: pressed onto the windward leg, so the thigh shows as a long lit form leaning into the wind;
+      a deep valley between the legs; the leeward leg and the billow in shade, a dark hollow inside the billow.
+      A little rust in the lit wool (chroma is half the target). -->
+ <g clip-path="url(#dr)">
+  <!-- bodice: lit plane on the left, the turn, the shadow plane -->
+  <path d="M 455 590 C 480 584, 505 580, 528 580 C 534 650, 532 720, 522 800 L 478 806 C 468 730, 460 660, 455 590 Z" fill="#7e5c42" filter="url(#b8)"/>
+  <path d="M 528 580 C 560 590, 590 600, 620 640 L 640 800 L 530 806 C 534 720, 536 650, 528 580 Z" fill="#4a3829" filter="url(#b16)"/>
+  <!-- under the bust: a soft shadow -->
+  <path d="M 470 690 C 500 700, 540 704, 600 700 C 560 716, 510 718, 472 708 Z" fill="#33271d" filter="url(#b8)"/>
+  <!-- waist: the apron string, tilted with the lean, lit top edge -->
+  <path d="M 470 800 C 520 808, 590 812, 655 818 L 655 834 C 590 830, 520 826, 474 822 Z" fill="#2a2018" filter="url(#b3)"/>
+  <path d="M 472 800 C 520 806, 580 810, 630 814" stroke="#8f6c4e" stroke-width="3" fill="none" filter="url(#b3)"/>
+  <!-- the windward thigh, the wool pressed onto it: one long lit form from hip to knee, leaning -->
+  <path d="M 488 840 C 520 850, 560 860, 590 880 C 598 960, 600 1060, 596 1180 L 548 1200 C 530 1100, 508 980, 490 880 Z" fill="#86603f" filter="url(#b8)"/>
+  <path d="M 498 860 C 520 870, 545 880, 565 900 C 570 980, 572 1060, 570 1150 C 560 1060, 540 960, 498 860 Z" fill="#9a7050" filter="url(#b16)"/>
+  <!-- the valley between the legs: the deepest dark of the skirt -->
+  <path d="M 590 880 C 610 900, 625 960, 630 1060 C 634 1120, 640 1170, 650 1200 L 612 1200 C 604 1120, 600 1000, 590 880 Z" fill="#241b14" filter="url(#b8)"/>
+  <!-- the leeward leg: half-tone wool -->
+  <path d="M 630 860 C 680 900, 720 980, 740 1080 L 700 1180 C 680 1080, 660 980, 630 900 Z" fill="#5a4430" filter="url(#b16)"/>
+  <!-- the billow: the dark hollow inside, a lit rim on the fold where it turns -->
+  <path d="M 700 880 C 760 940, 800 1020, 850 1090 L 780 1130 C 760 1040, 730 960, 700 880 Z" fill="#2b2119" filter="url(#b16)"/>
+  <path d="M 680 840 C 740 900, 790 980, 840 1060" stroke="#6e5238" stroke-width="6" fill="none" filter="url(#b8)"/>
+ </g>
+</svg>

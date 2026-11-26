@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs><filter id="s1"><feGaussianBlur stdDeviation="1.2"/></filter><filter id="s3"><feGaussianBlur stdDeviation="3"/></filter><filter id="s30"><feGaussianBlur stdDeviation="30"/></filter></defs>
+ <!-- Tonal study of the open hand flung wide: palm toward us and a little toward the light; fingers grouped
+      (index and middle together, ring and little together, the thumb apart), dark gaps between the groups;
+      the palm lit warm, the heel and the fingers' far edges in halftone. A darker tongue of storm behind it. -->
+ <!-- wrist and forearm coming in from the upper right -->
+ <path d="M 262 752 C 236 770, 210 792, 188 810 L 198 846 C 222 830, 246 810, 270 790 Z" fill="#9a6a56"/>
+ <path d="M 262 752 C 236 770, 210 792, 188 810 L 192 822 C 216 804, 240 784, 266 766 Z" fill="#d2a184" filter="url(#s3)"/>
+ <!-- palm: the lit plane -->
+ <path d="M 190 808 C 172 806, 150 810, 130 820 C 118 834, 116 856, 126 872 C 142 880, 166 878, 186 866 C 200 852, 204 830, 190 808 Z" fill="#c38f74"/>
+ <path d="M 186 812 C 168 810, 150 814, 136 822 C 128 834, 128 850, 136 860 C 152 862, 170 856, 182 846 C 190 836, 192 822, 186 812 Z" fill="#dcab8e" filter="url(#s3)"/>
+ <!-- thumb, apart, up and out -->
+ <path d="M 176 808 C 168 796, 156 784, 142 776 C 136 776, 134 782, 138 788 C 148 798, 158 808, 164 816 Z" fill="#cc9a7e" filter="url(#s1)"/>
+ <path d="M 142 778 C 138 778, 136 783, 139 787" stroke="#e8bb9e" stroke-width="2" fill="none" filter="url(#s1)"/>
+ <!-- index and middle together, pointing out left: one lit shape with a soft crease -->
+ <path d="M 134 822 C 112 818, 86 820, 60 822 C 52 826, 52 836, 60 840 C 76 846, 92 848, 108 850 C 118 850, 126 846, 132 840 Z" fill="#d0a084" filter="url(#s1)"/>
+ <path d="M 62 832 C 82 834, 104 836, 126 836" stroke="#9b6a55" stroke-width="1.6" fill="none" filter="url(#s1)"/>
+ <path d="M 60 824 C 84 822, 108 820, 132 822" stroke="#ecc0a3" stroke-width="2" fill="none" filter="url(#s1)"/>
+ <!-- the dark gap between the groups -->
+ <path d="M 130 846 C 112 852, 92 856, 72 856 C 92 860, 112 860, 128 856 Z" fill="#2e333b" filter="url(#s1)"/>
+ <!-- ring and little together, a little lower and more curled: halftone -->
+ <path d="M 130 858 C 112 862, 92 870, 74 880 C 70 888, 76 894, 84 892 C 100 888, 116 882, 132 874 Z" fill="#a8765f" filter="url(#s1)"/>
+ <path d="M 80 884 C 96 880, 112 874, 128 866" stroke="#c99479" stroke-width="1.6" fill="none" filter="url(#s1)"/>
+ <!-- heel of the hand, turning away: shadow -->
+ <path d="M 186 862 C 172 876, 152 882, 134 876 C 150 890, 176 888, 194 868 Z" fill="#7a5244" filter="url(#s1)"/>
+</svg>

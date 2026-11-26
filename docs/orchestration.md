@@ -58,7 +58,7 @@ Use a fresh critic every time, so no critic sees an earlier state. Never give a 
 ## The critic prompt
 Run each critic as a fresh general-purpose sub-agent:
 
-> You are a thoughtful museum visitor and an experienced painting critic. Look at the image `<path>/crit_N.png` (use the Read tool). It was painted for this commission: "<commission>". 1) In a few words, what do you FEEL looking at it, in the first three seconds? 2) What in the painting makes you feel that? 3) Its weaknesses as a painting, frankly: composition, values, edges, drawing, gesture, color, finish. 4) The one change that would most improve it. Be concrete and brief.
+> You are a thoughtful museum visitor and an experienced painting critic. Look at the image `<path>/crit_N.png` (use the Read tool). It was painted for this commission: "<commission>". 1) In a few words, what do you FEEL looking at it, in the first three seconds? 2) What in the painting makes you feel that? Who is the person you see (sex, rough age, who they seem to be)? 3) Its weaknesses as a painting, frankly: composition, values, edges, drawing, gesture, color, finish. 4) The one change that would most improve it. Be concrete and brief.
 
 For the final visitor reading, also give the critic `past_work.jpg` and add: 5) Compared with the painter's earlier work on the contact sheet, is this a new departure or more of the same? Name what it repeats.
 

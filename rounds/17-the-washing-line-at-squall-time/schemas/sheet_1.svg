@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <filter id="b4"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="b12"><feGaussianBlur stdDeviation="12"/></filter>
+  <clipPath id="sh"><path id="shp" d="M 782 150 C 800 110, 850 60, 905 20 C 930 0, 960 -10, 990 -25 L 1225 -25 L 1225 400 C 1190 420, 1150 400, 1110 432 C 1070 462, 1030 430, 990 455 C 960 470, 930 440, 905 420 C 880 380, 850 330, 830 270 C 815 225, 800 190, 782 150 Z"/></clipPath>
+ </defs>
+ <!-- the sheet: half-shade body -->
+ <use href="#shp" fill="#a7a296"/>
+ <g clip-path="url(#sh)">
+  <!-- lit belly facing the light, near the fist -->
+  <path d="M 770 150 C 820 80, 900 20, 1000 -30 L 1080 -30 C 1000 60, 940 150, 900 260 C 880 320, 860 340, 840 300 Z" fill="#cfccbf" filter="url(#b4)"/>
+  <!-- the fold running from the fist down-right, the turn into shade -->
+  <path d="M 800 180 C 880 210, 960 260, 1050 300 C 1120 330, 1180 330, 1230 320 L 1230 360 C 1170 380, 1100 370, 1030 340 C 950 305, 880 260, 815 215 Z" fill="#857f72" filter="url(#b12)"/>
+  <!-- upper right of the belly, cooler half-light -->
+  <path d="M 1000 -30 L 1230 -30 L 1230 200 C 1160 160, 1080 120, 1000 60 Z" fill="#b6b3a8" filter="url(#b12)"/>
+  <!-- the hollow along the lower free edge, warm grey-brown -->
+  <path d="M 880 380 C 950 420, 1040 400, 1120 400 C 1170 395, 1200 380, 1230 380 L 1230 470 L 880 470 Z" fill="#6c665b" filter="url(#b12)"/>
+ </g>
+</svg>

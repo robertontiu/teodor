@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs><filter id="b3"><feGaussianBlur stdDeviation="3"/></filter><filter id="b10"><feGaussianBlur stdDeviation="10"/></filter></defs>
+ <!-- the crest's lip catching the raking light, so she stands ON the hill: lit to the left of her,
+      broken where her shadow falls to the right, picked up again far right. Muted ochre grass, not green. -->
+ <path d="M 0 1480 C 120 1400, 280 1310, 460 1240 C 500 1226, 530 1216, 560 1208" stroke="#6e6146" stroke-width="7" fill="none" filter="url(#b3)"/>
+ <!-- her cast shadow on the crest top, to the right of her -->
+ <path d="M 640 1180 C 760 1140, 900 1110, 1060 1090 L 1060 1130 C 900 1150, 760 1180, 650 1215 Z" fill="#1c1914" filter="url(#b10)" opacity="0.85"/>
+ <path d="M 1060 1078 C 1110 1072, 1160 1068, 1200 1066" stroke="#5f553f" stroke-width="5" fill="none" filter="url(#b3)"/>
+</svg>

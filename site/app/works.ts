@@ -25,6 +25,7 @@ const inOrderMade: (Omit<Work, "model"> & { model?: string })[] = [
   { id: "r14b", title: "The Shadow Kept Both Legs", model: "Fable 5.2" },
   { id: "r15", title: "One More Night" },
   { id: "r16", title: "Cold Water at the Landing Stage", style: "Post-Impressionism" },
+  { id: "r17", title: "The Washing Line at Squall Time", style: "Romanticism" },
   { id: "r18", title: "The Plum Crate at Noon", style: "Ukiyo-e" },
 ];
 

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <filter id="b2"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="b6"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="b12"><feGaussianBlur stdDeviation="12"/></filter>
+  <filter id="b30"><feGaussianBlur stdDeviation="30"/></filter>
+  <clipPath id="sh"><path id="shp" d="M 790 150 C 812 100, 842 40, 878 -25 L 1225 -25 L 1225 470 C 1196 500, 1168 478, 1140 508 C 1112 538, 1084 506, 1052 530 C 1024 552, 1000 528, 976 548 C 958 560, 944 540, 930 520 C 900 470, 870 400, 850 330 C 830 260, 812 200, 790 150 Z"/></clipPath>
+ </defs>
+ <!-- Study of the sheet, phase 2: the critic read study 2 as a cloud. Cloth logic now:
+      held by ONE corner in the fist, so tension folds radiate from the fist to the far corners (out of frame);
+      a bellied pocket between them, lit on the bulge (left, toward the break) and dark in the troughs;
+      the lower free edge a hem that snaps, with a dark hollow above it and the turned-back underside showing;
+      darker overall than study 2 (white cloth in a storm stays well below the sky's light). Smaller: the hem lifted ~100 px. -->
+ <!-- the storm where the old sheet hung: the rain side of the sky, veils dragging down to the right -->
+ <path d="M 840 380 L 1225 380 L 1225 760 C 1100 760, 980 740, 900 700 Z" fill="#40444d" filter="url(#b30)"/>
+ <g filter="url(#b12)" opacity="0.55">
+  <path d="M 960 560 L 990 560 L 1060 900 L 1020 900 Z" fill="#5d6166"/>
+  <path d="M 1050 540 L 1090 540 L 1170 900 L 1120 900 Z" fill="#62666a"/>
+  <path d="M 1140 520 L 1180 520 L 1225 760 L 1225 900 Z" fill="#5a5e63"/>
+ </g>
+ <use href="#shp" fill="#857f74"/>
+ <g clip-path="url(#sh)">
+  <!-- the pocket: the bulge facing the light, near the fist, kept below the break and the face -->
+  <path d="M 790 150 C 830 70, 880 10, 940 -30 L 1010 -30 C 970 40, 940 110, 920 190 C 905 250, 880 270, 860 240 C 835 205, 812 175, 790 150 Z" fill="#b9b5a8" filter="url(#b6)"/>
+  <!-- tension fold 1: from the fist to the upper right corner: a lit ridge with a dark trough under it -->
+  <path d="M 800 140 C 870 120, 960 110, 1060 80 C 1120 60, 1180 30, 1225 10 L 1225 44 C 1170 70, 1110 96, 1040 116 C 950 136, 880 146, 806 158 Z" fill="#a39f93" filter="url(#b6)"/>
+  <path d="M 806 160 C 890 150, 980 146, 1060 128 C 1130 110, 1190 84, 1225 66 L 1225 130 C 1160 150, 1080 168, 990 176 C 920 180, 860 182, 812 180 Z" fill="#6c665c" filter="url(#b12)"/>
+  <!-- tension fold 2: from the fist to the right edge, the main one -->
+  <path d="M 812 182 C 880 214, 960 250, 1050 262 C 1120 270, 1180 262, 1225 250 L 1225 280 C 1170 296, 1110 300, 1040 292 C 950 280, 870 240, 818 200 Z" fill="#a9a599" filter="url(#b6)"/>
+  <path d="M 820 210 C 880 260, 960 300, 1050 314 C 1120 322, 1180 316, 1225 306 L 1225 360 C 1160 372, 1090 372, 1020 360 C 930 340, 870 290, 826 236 Z" fill="#625c53" filter="url(#b12)"/>
+  <!-- tension fold 3: down toward the hem's far corner -->
+  <path d="M 826 236 C 900 300, 980 360, 1080 410 C 1140 438, 1190 448, 1225 450 L 1225 470 C 1180 470, 1130 458, 1074 432 C 970 382, 890 320, 834 260 Z" fill="#a19d91" filter="url(#b6)"/>
+  <!-- the half-light belly between folds 2 and 3 -->
+  <path d="M 900 290 C 980 300, 1080 320, 1225 350 L 1225 420 C 1140 410, 1040 380, 960 350 Z" fill="#8f897d" filter="url(#b12)"/>
+  <!-- the hollow above the hem: dark, warm grey-brown -->
+  <path d="M 860 330 C 900 420, 950 490, 1010 500 C 1080 510, 1160 470, 1225 460 L 1225 560 L 860 560 Z" fill="#555048" filter="url(#b12)"/>
+  <!-- the left edge, taut from the fist down: the side turned from the light -->
+  <path d="M 790 150 C 812 200, 830 260, 850 330 C 870 400, 900 470, 930 520 L 910 530 C 880 470, 852 400, 834 330 C 818 270, 802 210, 786 160 Z" fill="#5c574f" filter="url(#b2)"/>
+ </g>
+ <!-- the hem: snapping, scalloped; the turned-back underside showing as a thin darker band, one lit lip along it -->
+ <path d="M 930 520 C 944 540, 958 560, 976 548 C 1000 528, 1024 552, 1052 530 C 1084 506, 1112 538, 1140 508 C 1168 478, 1196 500, 1225 470 L 1225 486 C 1196 516, 1168 494, 1142 524 C 1112 556, 1084 522, 1054 546 C 1024 568, 1000 544, 978 564 C 958 578, 940 556, 930 520 Z" fill="#3e3a35" filter="url(#b2)"/>
+ <path d="M 934 518 C 948 534, 960 548, 976 540 C 1000 520, 1024 544, 1052 522 C 1084 498, 1112 530, 1140 500 C 1168 470, 1196 492, 1225 462" stroke="#a29e91" stroke-width="2.5" fill="none" filter="url(#b2)"/>
+ <!-- the leading edge out of the fist, against the darkest cloud: one crisp line, the ledger's hard edge -->
+ <path d="M 792 148 C 812 100, 842 40, 878 -25" stroke="#c3bfb1" stroke-width="3" fill="none" filter="url(#b2)"/>
+</svg>

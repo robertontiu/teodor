@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <filter id="b4"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="b14"><feGaussianBlur stdDeviation="14"/></filter>
+  <clipPath id="sh"><path id="shp" d="M 784 150 C 800 100, 830 40, 870 -25 L 1225 -25 L 1225 600 C 1190 630, 1150 600, 1110 640 C 1075 672, 1040 625, 1000 650 C 975 665, 950 630, 935 600 C 905 540, 880 470, 860 400 C 840 320, 815 230, 784 150 Z"/></clipPath>
+ </defs>
+ <use href="#shp" fill="#a39e92"/>
+ <g clip-path="url(#sh)">
+  <!-- lit belly facing the break, near the fist: the big light of the upper picture (kept below the break's value) -->
+  <path d="M 770 150 C 810 60, 860 0, 930 -40 L 1060 -40 C 1000 80, 960 200, 940 330 C 930 400, 900 420, 870 370 C 840 300, 810 220, 770 150 Z" fill="#c8c6b9" filter="url(#b4)"/>
+  <!-- the main fold from the fist down to the right: the turn into shade -->
+  <path d="M 800 190 C 880 260, 960 340, 1050 410 C 1120 460, 1180 470, 1230 460 L 1230 520 C 1160 540, 1090 520, 1020 470 C 940 410, 870 330, 812 250 Z" fill="#7f796c" filter="url(#b14)"/>
+  <!-- second, weaker fold higher up -->
+  <path d="M 900 60 C 980 110, 1080 150, 1230 170 L 1230 200 C 1080 190, 980 150, 905 100 Z" fill="#9a958a" filter="url(#b14)"/>
+  <!-- upper right of the belly, cooler half-light -->
+  <path d="M 1060 -40 L 1230 -40 L 1230 150 C 1160 130, 1100 100, 1050 60 Z" fill="#b3b0a6" filter="url(#b14)"/>
+  <!-- the hollow along the lower free edge, warm grey-brown -->
+  <path d="M 900 540 C 980 580, 1060 560, 1130 560 C 1180 555, 1210 545, 1230 540 L 1230 680 L 900 680 Z" fill="#665f55" filter="url(#b14)"/>
+ </g>
+</svg>

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+ <defs>
+  <filter id="s1"><feGaussianBlur stdDeviation="1.2"/></filter>
+  <filter id="s2"><feGaussianBlur stdDeviation="2.5"/></filter>
+  <filter id="s4"><feGaussianBlur stdDeviation="4"/></filter>
+ </defs>
+ <!-- Tonal study of the head: three-quarter to the left, tipped back a little, lit from low left by the cold break.
+      Laugh: AU6 cheeks lifted and bunched, eyes narrowed from below (crow's feet), AU12 corners up and back,
+      upper teeth showing, deep nasolabial fold curving round the cheek; brows relaxed. -->
+ <!-- the head mass: shadow family first (side plane, under jaw), merging with hair on the right -->
+ <path d="M 468 396 C 495 384, 530 388, 544 408 C 552 430, 550 462, 540 482 C 528 502, 506 520, 484 526 C 470 527, 458 518, 452 506 Z" fill="#5f463c"/>
+ <!-- light family: the front plane of the face, one shape -->
+ <path d="M 462 402 C 478 396, 500 396, 512 404 C 518 420, 517 440, 513 458 C 510 474, 502 490, 494 502 C 488 512, 476 518, 463 516 C 456 510, 451 500, 448 490 C 446 482, 440 474, 436 470 C 440 462, 446 456, 448 448 C 446 436, 448 420, 452 410 Z" fill="#d6ad92" filter="url(#s1)"/>
+ <!-- halftone: the turn from front to side (cheekbone corner down to the jaw) -->
+ <path d="M 510 404 C 520 420, 524 444, 520 466 C 516 486, 508 502, 498 512 C 504 494, 510 476, 512 458 C 514 440, 514 420, 510 404 Z" fill="#a9785f" filter="url(#s4)"/>
+ <!-- forehead: lightest, cool in the cold light -->
+ <path d="M 460 404 C 476 397, 498 398, 508 405 C 506 418, 496 428, 478 430 C 466 430, 458 424, 455 416 Z" fill="#e2c3ab" filter="url(#s2)"/>
+ <!-- hair: one dark mass over the crown and the shadow side, hairline graded -->
+ <path d="M 458 406 C 468 388, 500 378, 528 382 C 546 386, 556 398, 556 414 C 554 430, 548 446, 542 458 C 538 444, 532 430, 524 418 C 514 406, 494 400, 470 404 Z" fill="#2b211c"/>
+ <!-- brow ridge underside / far socket (left), small and tucked -->
+ <path d="M 452 440 C 456 436, 462 436, 466 440 C 465 446, 460 449, 455 448 Z" fill="#7d5848" filter="url(#s1)"/>
+ <!-- near socket: the shadow under the brow, the eye a narrowed crescent pushed up by the cheek -->
+ <path d="M 474 438 C 482 432, 496 432, 504 438 C 503 446, 494 450, 484 450 C 478 449, 475 445, 474 438 Z" fill="#7a5545" filter="url(#s1)"/>
+ <path d="M 477 444 C 484 440, 494 440, 501 444 C 495 447, 485 448, 477 444 Z" fill="#3a2621"/>
+ <path d="M 458 444 C 461 442, 464 442, 466 444 C 463 446, 460 446, 458 444 Z" fill="#3a2621"/>
+ <!-- crow's feet: light raking across them, two short shadow creases at the outer corner -->
+ <path d="M 502 444 L 509 441 M 502 447 L 509 449" stroke="#8a604d" stroke-width="1.4" filter="url(#s1)"/>
+ <!-- lifted cheek bunched under the near eye: the lightest flesh -->
+ <ellipse cx="491" cy="459" rx="12" ry="8" fill="#e6c2a4" filter="url(#s2)"/>
+ <ellipse cx="458" cy="458" rx="6" ry="5" fill="#ddb699" filter="url(#s2)"/>
+ <!-- nose: front plane lit, underside in shadow, cast shadow falling right -->
+ <path d="M 452 446 C 448 455, 440 465, 436 470 C 440 474, 446 476, 452 474 Z" fill="#e0b99c" filter="url(#s1)"/>
+ <path d="M 437 471 C 443 477, 452 479, 460 476 C 456 473, 450 473, 446 470 Z" fill="#6f4a3c" filter="url(#s1)"/>
+ <path d="M 458 452 C 464 460, 466 468, 462 476 C 470 472, 474 466, 470 458 Z" fill="#b5826a" filter="url(#s2)"/>
+ <!-- nasolabial fold, deep, curving round the lifted cheek to the mouth corner -->
+ <path d="M 466 472 C 476 474, 486 478, 494 486" stroke="#8a5c4a" stroke-width="2.4" fill="none" filter="url(#s1)"/>
+ <!-- the open laughing mouth: an upturned crescent, upper teeth, dark inside low -->
+ <path d="M 452 486 C 462 488, 474 488, 487 484 C 484 492, 474 499, 463 499 C 456 497, 453 492, 452 486 Z" fill="#3d2422"/>
+ <path d="M 454 487 C 462 489, 474 489, 485 485 C 482 489, 474 491, 464 491 C 458 490, 455 489, 454 487 Z" fill="#cfc2b0"/>
+ <!-- upper lip lit, lower lip with its shadow beneath -->
+ <path d="M 451 484 C 460 483, 474 484, 488 482 C 485 479, 474 480, 462 481 C 455 481, 452 482, 451 484 Z" fill="#b47460" filter="url(#s1)"/>
+ <path d="M 456 499 C 463 503, 472 502, 480 496 C 476 504, 466 507, 459 505 Z" fill="#b97a66" filter="url(#s1)"/>
+ <path d="M 456 508 C 464 512, 474 511, 482 505 C 478 512, 466 515, 458 513 Z" fill="#7b5446" filter="url(#s1)"/>
+ <!-- chin: lit front, underside of jaw in shadow running to the neck -->
+ <path d="M 456 512 C 462 519, 474 520, 484 514 C 482 520, 472 525, 462 522 Z" fill="#cfa287" filter="url(#s1)"/>
+ <path d="M 462 522 C 480 528, 505 526, 530 512 C 520 530, 498 540, 470 534 Z" fill="#4d3731" filter="url(#s2)"/>
+ <!-- the bun at the back of the head, lit rim on top -->
+ <ellipse cx="556" cy="404" rx="17" ry="15" fill="#2b211c"/>
+ <path d="M 545 392 C 552 387, 562 387, 568 393" stroke="#6b5444" stroke-width="2.5" fill="none" filter="url(#s1)"/>
+ <path d="M 470 392 C 488 384, 510 382, 528 386" stroke="#7a6250" stroke-width="3" fill="none" filter="url(#s1)"/>
+ 
+ <!-- half loose: three or four damp ropes breaking out of the bun, streaming downwind with the sheet -->
+ <path d="M 560 396 C 590 388, 620 382, 662 374 C 630 386, 600 396, 566 410 Z" fill="#2b211c" filter="url(#s1)"/>
+ <path d="M 566 408 C 600 410, 630 404, 676 404 C 640 414, 606 420, 562 420 Z" fill="#2f241e" filter="url(#s1)"/>
+ <path d="M 556 418 C 586 428, 612 436, 640 446 C 610 442, 584 436, 552 430 Z" fill="#30251f" filter="url(#s1)"/>
+ <path d="M 604 394 C 626 390, 644 388, 668 384" stroke="#6b5444" stroke-width="2" fill="none" filter="url(#s1)"/>
+ <!-- ear in the side plane, mostly shadow, one warm halftone -->
+ <path d="M 530 440 C 538 438, 542 450, 540 462 C 538 470, 532 470, 529 462 Z" fill="#7d5747" filter="url(#s1)"/>
+ <!-- warm flush on the lit cheek (the warmest note in the picture) -->
+ <ellipse cx="486" cy="466" rx="9" ry="6" fill="#d9967c" opacity="0.55" filter="url(#s2)"/>
+</svg>
