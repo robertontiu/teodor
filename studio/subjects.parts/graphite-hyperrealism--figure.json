@@ -1,0 +1,52 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "figure": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--figure.md",
+    "summary": "The figure as the camera saw it: lens perspective kept (near parts enlarged), a close crop instead of a whole body, weight shown by contact and occlusion, focus ranking the parts; layer 1's anatomy and gesture as the check, not the method.",
+    "rules": [
+     {
+      "rule": "Keep the lens's perspective: parts near the camera are drawn larger; layer 1 canons hold only for parts at the same distance.",
+      "source": "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion; docs/styles/graphite-hyperrealism.md section 7"
+     },
+     {
+      "rule": "Crop close; let the frame cut forms, but keep one line of action running through the fragment.",
+      "source": "docs/styles/graphite-hyperrealism.md section 7; judgement"
+     },
+     {
+      "rule": "Contact with the ground is the passage's darkest value (carbon), with grass pressed under the body and crossing its edges.",
+      "source": "docs/subjects/figure.md section 4; judgement"
+     },
+     {
+      "rule": "Focus ranks the parts; blur grows gradually with distance from the focal plane and is larger behind it than in front.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field"
+     },
+     {
+      "rule": "No contour lines on the body; anatomy shows as tone only.",
+      "source": "docs/styles/graphite-hyperrealism.md section 6"
+     }
+    ],
+    "keep": [
+     "layer 1 anatomy, gesture, weight",
+     "a real, unidealised build"
+    ],
+    "avoid": [
+     "correcting the lens back to textbook proportions",
+     "a crop without a line of action",
+     "parts sharp out of focus order"
+    ],
+    "flags": [
+     "Layer 1's 'hand about a face long' check conflicts with lens perspective when the hand is nearer the camera; perspective wins."
+    ],
+    "sources": [
+     "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/subjects/figure.md",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,61 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "sex-age": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--sex-age.md",
+    "summary": "Viewed close, surface carries age: overblending makes a man younger and can make him a boy; keep in-focus texture and fine lines, add a few indented grey hairs where focus allows, avoid over-ageing; never trace a real person's photograph (at this fidelity it is a likeness).",
+    "rules": [
+     {
+      "rule": "Keep skin texture and fine lines at the photographic level in focus; smoothing makes a face younger.",
+      "source": "docs/subjects/sex-age.md section 4 (Fink and Matts 2008; Burt and Perrett 1995; Porcheron et al. 2013; Panhard et al. 2012)"
+     },
+     {
+      "rule": "Grey hairs are reserved white: indent before tone, or lift last with an electric eraser at 2-3 px; mid-forties is a little grey at most.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; docs/styles/graphite-hyperrealism.md section 8; docs/subjects/sex-age.md section 4 (Fink and Matts 2008; Burt and Perrett 1995; Porcheron et al. 2013; Panhard et al. 2012)"
+     },
+     {
+      "rule": "Put the grey where the focus can carry it (stubble near the focal plane); out-of-focus hair cannot show single grey hairs.",
+      "source": "judgement from Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field"
+     },
+     {
+      "rule": "Expression folds (crow's feet, nasolabial fold) crisp; age-only folds (jowls, marionette lines, neck bands, age spots) absent or faint for mid-forties.",
+      "source": "docs/subjects/sex-age.md sections 4 and 6; judgement"
+     },
+     {
+      "rule": "Male cues from structure: brow ridge, jaw angle, thick neck, beard-zone tone and stubble; moderate eye and lip contrast.",
+      "source": "docs/subjects/sex-age.md sections 1 and 5"
+     },
+     {
+      "rule": "Pore size grows from the youngest group and plateaus from about 40: a mid-forties face has visible fine texture on cheek and nose.",
+      "source": "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID"
+     },
+     {
+      "rule": "The reference is a rendered or invented face, varied from the studio's defaults; never a traced photograph of a real person, no identifying marks.",
+      "source": "AGENTS.md rule 5; docs/styles/graphite-hyperrealism.md section 6; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 structure cues and their weights",
+     "thumbnail legibility of adult man from structure and hair value"
+    ],
+    "avoid": [
+     "overblended boyish skin",
+     "over-ageing with deep folds and grey",
+     "a traced photograph of a real man",
+     "large eyes and a smooth jaw"
+    ],
+    "flags": [
+     "The brief's grey hairs conflict with out-of-focus hair: the grey moves to the stubble near the focal plane."
+    ],
+    "sources": [
+     "docs/subjects/sex-age.md",
+     "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID",
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "docs/styles/graphite-hyperrealism.md",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+    ]
+   }
+  }
+ }
+}

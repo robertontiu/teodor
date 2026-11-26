@@ -1,0 +1,73 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "hands-feet": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--hands-feet.md",
+    "summary": "In the focal plane the hand gets the picture's most surface and sharpest edges: joint creases as valleys pointing to the knuckle, the nail as a glossy plate and cross-contour, straight light tendons and soft meandering veins; layer 1's construction underneath, a hierarchy of values and edges over it.",
+    "rules": [
+     {
+      "rule": "Put the picture's sharpest edges on the focal-plane hand only; everything else softens with its distance from that plane.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "Backs of fingers carry about 3 times the cheek's texture (mid band 5.3 vs 1.9 L*), concentrated in joint creases whose darks reach shadow values.",
+      "source": "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Creases follow the hand's action: distal joint a single straight crease, middle joint a spiral, creases pointing to the knuckle; others secondary and light.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "Draw each crease as a valley with a lit lip, darkest inside the joint and fading at both ends.",
+      "source": "judgement; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "The nail follows the finger's cylinder and is a cross-contour; add a specular along its curve, a lighter free edge and a soft cuticle overlap; the free edge is the hardest edge of the hand.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands; judgement for the surface"
+     },
+     {
+      "rule": "Tendons straight and as light as the skin or lighter; veins meander in the hollows, slightly darker; neither outlined.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "An extended thumb shows the anatomical snuffbox: two tendon ridges and a triangular hollow on the radial back of the wrist.",
+      "source": "Wikipedia, Anatomical snuff box: https://en.wikipedia.org/wiki/Anatomical_snuff_box"
+     },
+     {
+      "rule": "Create a hierarchy with values and edges; veins are tertiary; leave out what serves no purpose.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "Plan crisp edges as reserved lights or masked (clip) blending; the engine cannot sharpen an edge afterwards.",
+      "source": "docs/calibration/graphite-hyperrealism.md What still limits 3; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 palm block, knuckle arc, thumb from the wrist",
+     "contact and pressure between fingers",
+     "perspective size from the camera distance"
+    ],
+    "avoid": [
+     "a catalogue of equal wrinkles",
+     "outlined fingers or nails",
+     "age spots and deep wrinkles on a 45-year-old hand",
+     "detail on parts outside the focal plane"
+    ],
+    "flags": [
+     "Nail surface rules are common observation, not a measured source (judgement).",
+     "The edge-width measure was too noisy with film grain to give a number for the hand's sharp edge."
+    ],
+    "sources": [
+     "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands",
+     "Wikipedia, Anatomical snuff box: https://en.wikipedia.org/wiki/Anatomical_snuff_box",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+    ]
+   }
+  }
+ }
+}

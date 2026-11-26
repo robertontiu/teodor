@@ -3038,6 +3038,396 @@
      "docs/styles/graphite-hyperrealism.md and docs/calibration/graphite-hyperrealism.md (technique sources, engine measures)",
      "studio/targets.parts/graphite-hyperrealism.json (45 public-domain LoC FSA/OWI black-and-white photographs: key L* 50, p5-p95 17-82, hard-edge share 0.17)"
     ]
+   },
+   "drapery": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--drapery.md",
+    "summary": "Layer 1's fold logic with the photograph's values: white cotton as light as the lightest skin, its deep valleys nearly black, matte with no specular; in focus a fine regular weave, seams, wear and frayed threads; out of focus only the fold values.",
+    "rules": [
+     {
+      "rule": "Lit white cotton is as light as the lightest skin (photograph p99.9 L* 83.5); deep fold valleys reach near black (p5 L* 17).",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Shadows on white fabric are at least a middle grey; reflected light about two steps below the highlights.",
+      "source": "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883"
+     },
+     {
+      "rule": "Cotton is matte: no specular streaks; the lightest values are broad lit planes, halftones broad and soft.",
+      "source": "docs/subjects/drapery.md section 3; judgement from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "In focus the weave is a fine regular, directional texture (work cotton period 0.8 mm, a clear FFT peak skin lacks); draw it at its spacing and direction, then blend lightly so the period survives.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; judgement for the method"
+     },
+     {
+      "rule": "Seams as small ridges with tiny reserved stitch lights; frayed threads indented or lifted against dark.",
+      "source": "docs/styles/graphite-hyperrealism.md section 8; judgement"
+     },
+     {
+      "rule": "Avoid overusing stumps (muddy flat values); small circular strokes blend without directional edges; blend each fold plane clipped.",
+      "source": "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883; docs/calibration/graphite-hyperrealism.md"
+     },
+     {
+      "rule": "Out of focus, weave, seams and soil vanish; fold values and soft fold edges remain.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     }
+    ],
+    "keep": [
+     "layer 1 support points, tension, gravity, fold types",
+     "creases hard, rolls soft"
+    ],
+    "avoid": [
+     "sharp highlights on cotton",
+     "pale timid valleys on white cloth",
+     "weave drawn out of focus",
+     "the 1930s work shirt's coarse weave as a target for fine shirting"
+    ],
+    "flags": [
+     "The measured weave is a coarse work cotton; a modern shirting's weave is finer and falls below 1 px at 5 px/mm unless enlarged."
+    ],
+    "sources": [
+     "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "docs/subjects/drapery.md",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   },
+   "face": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--face.md",
+    "summary": "Layer 1's planes and action units underneath, then what a lens records: skin texture by zone (faint pores, strong folds and stubble), wet eye optics (reserved catchlight, grey sclera, wet rims, clumped lashes), no line anywhere, and focus that grades texture away with distance from the focal plane.",
+    "rules": [
+     {
+      "rule": "Lay each plane's tone smooth first, then texture inside it with irregular marks; no mirror circles, no outlined spots.",
+      "source": "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633"
+     },
+     {
+      "rule": "Pores are a faint, even stipple near film-grain amplitude (smooth lit skin 1.5-2 L* of 0.25-2 mm texture), never dots that read one by one; pore diameter about 0.2-0.5 mm, 10-90 per cm2.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/; Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID"
+     },
+     {
+      "rule": "Texture by zone: crow's feet and the beard zone carry 2-3 times the texture of smooth cheek or forehead (mid band 4.4-5.1 vs 1.5-2 L*); texture continues at full strength in shadow.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "A wrinkle is a small valley: a graded dark with a lit lip on one side, not a sharp line; deepest creases about 15 L* below their skin, not black.",
+      "source": "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Stubble: a grey beard-zone tone first, then short firm marks varying in direction by tract; measured 0.15-0.2 mm wide, 0.5-1.5 mm long, about 0.3 per mm2, at least 11 L* darker than the skin.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Grey hairs in stubble: indent with the stylus before any tone.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; docs/styles/graphite-hyperrealism.md section 8"
+     },
+     {
+      "rule": "Pupil and lash line are the face's darkest values (photographs L* 3-13): carbon pencil, never burnished 8B.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; docs/styles/graphite-hyperrealism.md section 4"
+     },
+     {
+      "rule": "Reserve the catchlight from the start (indent or never tone it); iris fibres radiate from the pupil and go around it; soft iris edge.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "One catchlight per open eye, the same source in both, shaped like the source; eyes without catchlights read lifeless.",
+      "source": "Wikipedia, Catch light: https://en.wikipedia.org/wiki/Catch_light"
+     },
+     {
+      "rule": "The sclera is grey (about L* 50-70 in sun, darker than lit skin) and shaded as a sphere under the lid; lift only to the reference's value.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "Lids have thickness; the lower-lid rim and the inner corner are wet with small speculars.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "Upper lashes 90-160 in up to six rows, longest at the centre, curving down then up, stuck into clumps; at life size they read as a dark band with a few tapered clumps, not an even fringe.",
+      "source": "Wikipedia, Eyelash: https://en.wikipedia.org/wiki/Eyelash; Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913; judgement from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Small sharp speculars on oily zones (nose tip, forehead, lit lip), none on cheek and temple; lifted last with an eraser and seek.",
+      "source": "judgement; nose-tip p99.9 L* 80.6 from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "No outline anywhere: every feature edge is two tones meeting.",
+      "source": "Proko community, Making realistic faces: https://proko.com/community/topics/making-realistic-faces; docs/styles/graphite-hyperrealism.md section 6"
+     },
+     {
+      "rule": "Hard edges only in the focal plane; blur grows gradually with distance from it and removes pores, single hairs and lash clumps first while keeping values and the expression.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/; Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect; out-of-focus texture 0.6-1.2 L* from LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Follow the photograph's values, not a tutorial's advice to add contrast.",
+      "source": "docs/styles/graphite-hyperrealism.md sections 1 and 10; flag against Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     }
+    ],
+    "keep": [
+     "layer 1 planes, thirds and the expression's action units",
+     "the photograph's geometry and values",
+     "slight asymmetry of the two halves"
+    ],
+    "avoid": [
+     "overblended plastic skin (also makes the face younger)",
+     "pores drawn one by one at equal contrast everywhere",
+     "white sclera",
+     "outlined eyes, lips or wrinkles",
+     "texture out of focus",
+     "burnished 8B glare in the darks"
+    ],
+    "flags": [
+     "Only two 1936 large-format photographs measured; fine-band skin values are mostly film grain, so the mid band (0.25-2 mm) is the texture measure.",
+     "Regional skin sheen is judgement: the measured skin-reflectance paper (Weyrich et al. 2006) was not reachable.",
+     "At 5 px/mm life-size stubble is under 1 px: hair-by-hair stubble needs the face drawn at about 1.5-2 x life or larger (judgement).",
+     "A tutorial's advice to exaggerate contrast is overridden by the style's photographic ruler."
+    ],
+    "sources": [
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913",
+     "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633",
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Proko community, Making realistic faces: https://proko.com/community/topics/making-realistic-faces",
+     "Wikipedia, Catch light: https://en.wikipedia.org/wiki/Catch_light",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Wikipedia, Eyelash: https://en.wikipedia.org/wiki/Eyelash",
+     "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   },
+   "figure": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--figure.md",
+    "summary": "The figure as the camera saw it: lens perspective kept (near parts enlarged), a close crop instead of a whole body, weight shown by contact and occlusion, focus ranking the parts; layer 1's anatomy and gesture as the check, not the method.",
+    "rules": [
+     {
+      "rule": "Keep the lens's perspective: parts near the camera are drawn larger; layer 1 canons hold only for parts at the same distance.",
+      "source": "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion; docs/styles/graphite-hyperrealism.md section 7"
+     },
+     {
+      "rule": "Crop close; let the frame cut forms, but keep one line of action running through the fragment.",
+      "source": "docs/styles/graphite-hyperrealism.md section 7; judgement"
+     },
+     {
+      "rule": "Contact with the ground is the passage's darkest value (carbon), with grass pressed under the body and crossing its edges.",
+      "source": "docs/subjects/figure.md section 4; judgement"
+     },
+     {
+      "rule": "Focus ranks the parts; blur grows gradually with distance from the focal plane and is larger behind it than in front.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field"
+     },
+     {
+      "rule": "No contour lines on the body; anatomy shows as tone only.",
+      "source": "docs/styles/graphite-hyperrealism.md section 6"
+     }
+    ],
+    "keep": [
+     "layer 1 anatomy, gesture, weight",
+     "a real, unidealised build"
+    ],
+    "avoid": [
+     "correcting the lens back to textbook proportions",
+     "a crop without a line of action",
+     "parts sharp out of focus order"
+    ],
+    "flags": [
+     "Layer 1's 'hand about a face long' check conflicts with lens perspective when the hand is nearer the camera; perspective wins."
+    ],
+    "sources": [
+     "Wikipedia, Perspective distortion: https://en.wikipedia.org/wiki/Perspective_distortion",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/subjects/figure.md",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   },
+   "hair": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--hair.md",
+    "summary": "In focus: strands after values, light strands indented or lifted. Out of focus (this brief): no strands at all, a dark mass with a soft blurred sheen band, edges melting into the grass, darks in carbon laid first.",
+    "rules": [
+     {
+      "rule": "In focus: general values first, then thin strokes following the strands, brush blending, darker layers, lifted highlights.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388"
+     },
+     {
+      "rule": "In focus, light strands are indented before tone or lifted with an eraser pen.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729; docs/styles/graphite-hyperrealism.md section 8"
+     },
+     {
+      "rule": "Out of focus: no strands and no indents; keep the mass, its shadow side and one or two soft sheen bands (out-of-focus structure 0.6-1.2 L*).",
+      "source": "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Edges soften gradually with distance from the focal plane; hair farther away melts wider.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "An out-of-focus glint becomes a soft round disc, never a streak.",
+      "source": "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh"
+     },
+     {
+      "rule": "Dark hair is near black (photograph median L* 4, lights to 40-54): carbon first, blended lightly; graphite alone stops near L* 40.",
+      "source": "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/; docs/calibration/graphite-hyperrealism.md What still limits 2"
+     },
+     {
+      "rule": "Blend inner tones clipped to the mass with a large brush, but blend across the edge unclipped so it blurs into the ground.",
+      "source": "docs/calibration/graphite-hyperrealism.md; docs/manual/graphite.md; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 mass first, silhouette wider than the skull",
+     "hairline graded into skin, never outlined"
+    ],
+    "avoid": [
+     "strands or indented lines in out-of-focus hair",
+     "a grey mass where the photograph is near black",
+     "hard silhouette edges"
+    ],
+    "flags": [
+     "Layer 1's 'a handful of strands at the light' is overruled out of focus by the optics: draw none."
+    ],
+    "sources": [
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   },
+   "hands-feet": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--hands-feet.md",
+    "summary": "In the focal plane the hand gets the picture's most surface and sharpest edges: joint creases as valleys pointing to the knuckle, the nail as a glossy plate and cross-contour, straight light tendons and soft meandering veins; layer 1's construction underneath, a hierarchy of values and edges over it.",
+    "rules": [
+     {
+      "rule": "Put the picture's sharpest edges on the focal-plane hand only; everything else softens with its distance from that plane.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "Backs of fingers carry about 3 times the cheek's texture (mid band 5.3 vs 1.9 L*), concentrated in joint creases whose darks reach shadow values.",
+      "source": "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Creases follow the hand's action: distal joint a single straight crease, middle joint a spiral, creases pointing to the knuckle; others secondary and light.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "Draw each crease as a valley with a lit lip, darkest inside the joint and fading at both ends.",
+      "source": "judgement; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "The nail follows the finger's cylinder and is a cross-contour; add a specular along its curve, a lighter free edge and a soft cuticle overlap; the free edge is the hardest edge of the hand.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands; judgement for the surface"
+     },
+     {
+      "rule": "Tendons straight and as light as the skin or lighter; veins meander in the hollows, slightly darker; neither outlined.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "An extended thumb shows the anatomical snuffbox: two tendon ridges and a triangular hollow on the radial back of the wrist.",
+      "source": "Wikipedia, Anatomical snuff box: https://en.wikipedia.org/wiki/Anatomical_snuff_box"
+     },
+     {
+      "rule": "Create a hierarchy with values and edges; veins are tertiary; leave out what serves no purpose.",
+      "source": "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands"
+     },
+     {
+      "rule": "Plan crisp edges as reserved lights or masked (clip) blending; the engine cannot sharpen an edge afterwards.",
+      "source": "docs/calibration/graphite-hyperrealism.md What still limits 3; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 palm block, knuckle arc, thumb from the wrist",
+     "contact and pressure between fingers",
+     "perspective size from the camera distance"
+    ],
+    "avoid": [
+     "a catalogue of equal wrinkles",
+     "outlined fingers or nails",
+     "age spots and deep wrinkles on a 45-year-old hand",
+     "detail on parts outside the focal plane"
+    ],
+    "flags": [
+     "Nail surface rules are common observation, not a measured source (judgement).",
+     "The edge-width measure was too noisy with film grain to give a number for the hand's sharp edge."
+    ],
+    "sources": [
+     "Proko, details for realistic hands: https://www.proko.com/lesson/how-to-draw-hands-details-for-realistic-hands",
+     "Wikipedia, Anatomical snuff box: https://en.wikipedia.org/wiki/Anatomical_snuff_box",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+    ]
+   },
+   "sex-age": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--sex-age.md",
+    "summary": "Viewed close, surface carries age: overblending makes a man younger and can make him a boy; keep in-focus texture and fine lines, add a few indented grey hairs where focus allows, avoid over-ageing; never trace a real person's photograph (at this fidelity it is a likeness).",
+    "rules": [
+     {
+      "rule": "Keep skin texture and fine lines at the photographic level in focus; smoothing makes a face younger.",
+      "source": "docs/subjects/sex-age.md section 4 (Fink and Matts 2008; Burt and Perrett 1995; Porcheron et al. 2013; Panhard et al. 2012)"
+     },
+     {
+      "rule": "Grey hairs are reserved white: indent before tone, or lift last with an electric eraser at 2-3 px; mid-forties is a little grey at most.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; docs/styles/graphite-hyperrealism.md section 8; docs/subjects/sex-age.md section 4 (Fink and Matts 2008; Burt and Perrett 1995; Porcheron et al. 2013; Panhard et al. 2012)"
+     },
+     {
+      "rule": "Put the grey where the focus can carry it (stubble near the focal plane); out-of-focus hair cannot show single grey hairs.",
+      "source": "judgement from Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field"
+     },
+     {
+      "rule": "Expression folds (crow's feet, nasolabial fold) crisp; age-only folds (jowls, marionette lines, neck bands, age spots) absent or faint for mid-forties.",
+      "source": "docs/subjects/sex-age.md sections 4 and 6; judgement"
+     },
+     {
+      "rule": "Male cues from structure: brow ridge, jaw angle, thick neck, beard-zone tone and stubble; moderate eye and lip contrast.",
+      "source": "docs/subjects/sex-age.md sections 1 and 5"
+     },
+     {
+      "rule": "Pore size grows from the youngest group and plateaus from about 40: a mid-forties face has visible fine texture on cheek and nose.",
+      "source": "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID"
+     },
+     {
+      "rule": "The reference is a rendered or invented face, varied from the studio's defaults; never a traced photograph of a real person, no identifying marks.",
+      "source": "AGENTS.md rule 5; docs/styles/graphite-hyperrealism.md section 6; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 structure cues and their weights",
+     "thumbnail legibility of adult man from structure and hair value"
+    ],
+    "avoid": [
+     "overblended boyish skin",
+     "over-ageing with deep folds and grey",
+     "a traced photograph of a real man",
+     "large eyes and a smooth jaw"
+    ],
+    "flags": [
+     "The brief's grey hairs conflict with out-of-focus hair: the grey moves to the stubble near the focal plane."
+    ],
+    "sources": [
+     "docs/subjects/sex-age.md",
+     "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID",
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "docs/styles/graphite-hyperrealism.md",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+    ]
    }
   }
  }

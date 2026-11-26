@@ -1,0 +1,63 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "drapery": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--drapery.md",
+    "summary": "Layer 1's fold logic with the photograph's values: white cotton as light as the lightest skin, its deep valleys nearly black, matte with no specular; in focus a fine regular weave, seams, wear and frayed threads; out of focus only the fold values.",
+    "rules": [
+     {
+      "rule": "Lit white cotton is as light as the lightest skin (photograph p99.9 L* 83.5); deep fold valleys reach near black (p5 L* 17).",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Shadows on white fabric are at least a middle grey; reflected light about two steps below the highlights.",
+      "source": "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883"
+     },
+     {
+      "rule": "Cotton is matte: no specular streaks; the lightest values are broad lit planes, halftones broad and soft.",
+      "source": "docs/subjects/drapery.md section 3; judgement from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "In focus the weave is a fine regular, directional texture (work cotton period 0.8 mm, a clear FFT peak skin lacks); draw it at its spacing and direction, then blend lightly so the period survives.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; judgement for the method"
+     },
+     {
+      "rule": "Seams as small ridges with tiny reserved stitch lights; frayed threads indented or lifted against dark.",
+      "source": "docs/styles/graphite-hyperrealism.md section 8; judgement"
+     },
+     {
+      "rule": "Avoid overusing stumps (muddy flat values); small circular strokes blend without directional edges; blend each fold plane clipped.",
+      "source": "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883; docs/calibration/graphite-hyperrealism.md"
+     },
+     {
+      "rule": "Out of focus, weave, seams and soil vanish; fold values and soft fold edges remain.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     }
+    ],
+    "keep": [
+     "layer 1 support points, tension, gravity, fold types",
+     "creases hard, rolls soft"
+    ],
+    "avoid": [
+     "sharp highlights on cotton",
+     "pale timid valleys on white cloth",
+     "weave drawn out of focus",
+     "the 1930s work shirt's coarse weave as a target for fine shirting"
+    ],
+    "flags": [
+     "The measured weave is a coarse work cotton; a modern shirting's weave is finer and falls below 1 px at 5 px/mm unless enlarged."
+    ],
+    "sources": [
+     "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "docs/subjects/drapery.md",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   }
+  }
+ }
+}

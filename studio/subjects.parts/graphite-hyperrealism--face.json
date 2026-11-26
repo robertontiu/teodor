@@ -1,0 +1,114 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "face": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--face.md",
+    "summary": "Layer 1's planes and action units underneath, then what a lens records: skin texture by zone (faint pores, strong folds and stubble), wet eye optics (reserved catchlight, grey sclera, wet rims, clumped lashes), no line anywhere, and focus that grades texture away with distance from the focal plane.",
+    "rules": [
+     {
+      "rule": "Lay each plane's tone smooth first, then texture inside it with irregular marks; no mirror circles, no outlined spots.",
+      "source": "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633"
+     },
+     {
+      "rule": "Pores are a faint, even stipple near film-grain amplitude (smooth lit skin 1.5-2 L* of 0.25-2 mm texture), never dots that read one by one; pore diameter about 0.2-0.5 mm, 10-90 per cm2.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/; Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID"
+     },
+     {
+      "rule": "Texture by zone: crow's feet and the beard zone carry 2-3 times the texture of smooth cheek or forehead (mid band 4.4-5.1 vs 1.5-2 L*); texture continues at full strength in shadow.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "A wrinkle is a small valley: a graded dark with a lit lip on one side, not a sharp line; deepest creases about 15 L* below their skin, not black.",
+      "source": "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Stubble: a grey beard-zone tone first, then short firm marks varying in direction by tract; measured 0.15-0.2 mm wide, 0.5-1.5 mm long, about 0.3 per mm2, at least 11 L* darker than the skin.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Grey hairs in stubble: indent with the stylus before any tone.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; docs/styles/graphite-hyperrealism.md section 8"
+     },
+     {
+      "rule": "Pupil and lash line are the face's darkest values (photographs L* 3-13): carbon pencil, never burnished 8B.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913; LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; docs/styles/graphite-hyperrealism.md section 4"
+     },
+     {
+      "rule": "Reserve the catchlight from the start (indent or never tone it); iris fibres radiate from the pupil and go around it; soft iris edge.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "One catchlight per open eye, the same source in both, shaped like the source; eyes without catchlights read lifeless.",
+      "source": "Wikipedia, Catch light: https://en.wikipedia.org/wiki/Catch_light"
+     },
+     {
+      "rule": "The sclera is grey (about L* 50-70 in sun, darker than lit skin) and shaded as a sphere under the lid; lift only to the reference's value.",
+      "source": "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/; Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "Lids have thickness; the lower-lid rim and the inner corner are wet with small speculars.",
+      "source": "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913"
+     },
+     {
+      "rule": "Upper lashes 90-160 in up to six rows, longest at the centre, curving down then up, stuck into clumps; at life size they read as a dark band with a few tapered clumps, not an even fringe.",
+      "source": "Wikipedia, Eyelash: https://en.wikipedia.org/wiki/Eyelash; Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913; judgement from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "Small sharp speculars on oily zones (nose tip, forehead, lit lip), none on cheek and temple; lifted last with an eraser and seek.",
+      "source": "judgement; nose-tip p99.9 L* 80.6 from LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/"
+     },
+     {
+      "rule": "No outline anywhere: every feature edge is two tones meeting.",
+      "source": "Proko community, Making realistic faces: https://proko.com/community/topics/making-realistic-faces; docs/styles/graphite-hyperrealism.md section 6"
+     },
+     {
+      "rule": "Hard edges only in the focal plane; blur grows gradually with distance from it and removes pores, single hairs and lash clumps first while keeping values and the expression.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/; Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect; out-of-focus texture 0.6-1.2 L* from LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Follow the photograph's values, not a tutorial's advice to add contrast.",
+      "source": "docs/styles/graphite-hyperrealism.md sections 1 and 10; flag against Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     }
+    ],
+    "keep": [
+     "layer 1 planes, thirds and the expression's action units",
+     "the photograph's geometry and values",
+     "slight asymmetry of the two halves"
+    ],
+    "avoid": [
+     "overblended plastic skin (also makes the face younger)",
+     "pores drawn one by one at equal contrast everywhere",
+     "white sclera",
+     "outlined eyes, lips or wrinkles",
+     "texture out of focus",
+     "burnished 8B glare in the darks"
+    ],
+    "flags": [
+     "Only two 1936 large-format photographs measured; fine-band skin values are mostly film grain, so the mid band (0.25-2 mm) is the texture measure.",
+     "Regional skin sheen is judgement: the measured skin-reflectance paper (Weyrich et al. 2006) was not reachable.",
+     "At 5 px/mm life-size stubble is under 1 px: hair-by-hair stubble needs the face drawn at about 1.5-2 x life or larger (judgement).",
+     "A tutorial's advice to exaggerate contrast is overridden by the style's photographic ruler."
+    ],
+    "sources": [
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "Tuts+, realistic eye: https://design.tutsplus.com/tutorials/how-to-draw-a-realistic-eye--cms-27913",
+     "Skillshare, How to Draw Skin Texture (class notes): https://www.skillshare.com/en/classes/how-to-draw-skin-texture-realistic-drawing-tips/478193633",
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "Skillshare, Shading Folds of Fabric with Graphite Pencil (class notes): https://www.skillshare.com/en/classes/shading-folds-of-fabric-with-graphite-pencil-how-to-get-a-realistic-effect/2141936883",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Proko community, Making realistic faces: https://proko.com/community/topics/making-realistic-faces",
+     "Wikipedia, Catch light: https://en.wikipedia.org/wiki/Catch_light",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "Wikipedia, Eyelash: https://en.wikipedia.org/wiki/Eyelash",
+     "Flament et al. 2015, Facial skin pores, CCID: https://www.dovepress.com/facial-skin-pores-a-multiethnic-study-peer-reviewed-fulltext-article-CCID",
+     "LoC FSA/OWI 2017762300 (measured): https://www.loc.gov/item/2017762300/",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   }
+  }
+ }
+}

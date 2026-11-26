@@ -1,0 +1,63 @@
+{
+ "styles": {
+  "graphite-hyperrealism": {
+   "hair": {
+    "doc": "docs/styles/subjects/graphite-hyperrealism--hair.md",
+    "summary": "In focus: strands after values, light strands indented or lifted. Out of focus (this brief): no strands at all, a dark mass with a soft blurred sheen band, edges melting into the grass, darks in carbon laid first.",
+    "rules": [
+     {
+      "rule": "In focus: general values first, then thin strokes following the strands, brush blending, darker layers, lifted highlights.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388"
+     },
+     {
+      "rule": "In focus, light strands are indented before tone or lifted with an eraser pen.",
+      "source": "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388; Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729; docs/styles/graphite-hyperrealism.md section 8"
+     },
+     {
+      "rule": "Out of focus: no strands and no indents; keep the mass, its shadow side and one or two soft sheen bands (out-of-focus structure 0.6-1.2 L*).",
+      "source": "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect; LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+     },
+     {
+      "rule": "Edges soften gradually with distance from the focal plane; hair farther away melts wider.",
+      "source": "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field; Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/"
+     },
+     {
+      "rule": "An out-of-focus glint becomes a soft round disc, never a streak.",
+      "source": "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh"
+     },
+     {
+      "rule": "Dark hair is near black (photograph median L* 4, lights to 40-54): carbon first, blended lightly; graphite alone stops near L* 40.",
+      "source": "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/; docs/calibration/graphite-hyperrealism.md What still limits 2"
+     },
+     {
+      "rule": "Blend inner tones clipped to the mass with a large brush, but blend across the edge unclipped so it blurs into the ground.",
+      "source": "docs/calibration/graphite-hyperrealism.md; docs/manual/graphite.md; judgement"
+     }
+    ],
+    "keep": [
+     "layer 1 mass first, silhouette wider than the skull",
+     "hairline graded into skin, never outlined"
+    ],
+    "avoid": [
+     "strands or indented lines in out-of-focus hair",
+     "a grey mass where the photograph is near black",
+     "hard silhouette edges"
+    ],
+    "flags": [
+     "Layer 1's 'a handful of strands at the light' is overruled out of focus by the optics: draw none."
+    ],
+    "sources": [
+     "Skillshare, Drawing Realistic Hair and Beard with Graphite (lesson notes): https://www.skillshare.com/en/classes/drawing-realistic-hair-and-beard-with-graphite/1384601388",
+     "Veronica's Art, graphite portrait techniques: https://veronicasart.com/?p=5729",
+     "Dessindigo, blur effect: https://dessindigo.com/en/blog/drawing-tutorial/draw-blur-effect",
+     "Wildlife Art Store, create depth: https://www.wildlifeartstore.com/create-depth-in-your-drawing/",
+     "Wikipedia, Depth of field: https://en.wikipedia.org/wiki/Depth_of_field",
+     "Wikipedia, Bokeh: https://en.wikipedia.org/wiki/Bokeh",
+     "docs/styles/graphite-hyperrealism.md",
+     "docs/calibration/graphite-hyperrealism.md",
+     "LoC FSA/OWI 2017762891 (measured): https://www.loc.gov/item/2017762891/"
+    ]
+   }
+  }
+ }
+}
