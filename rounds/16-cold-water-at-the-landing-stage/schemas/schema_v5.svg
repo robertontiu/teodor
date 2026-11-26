@@ -1,0 +1,289 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<defs>
+  <linearGradient id="water" x1="0.15" y1="0" x2="0.45" y2="1">
+    <stop offset="0" stop-color="#6aa684"/>
+    <stop offset="0.2" stop-color="#3f8f7e"/>
+    <stop offset="0.42" stop-color="#2a6f80"/>
+    <stop offset="0.62" stop-color="#25508a"/>
+    <stop offset="0.82" stop-color="#1f3478"/>
+    <stop offset="1" stop-color="#18205a"/>
+  </linearGradient>
+  <filter id="b2"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="b4"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="b8"><feGaussianBlur stdDeviation="8"/></filter>
+  <filter id="b16"><feGaussianBlur stdDeviation="16"/></filter>
+</defs>
+
+<!-- ============ WATER: one body, light far, cold and deep near ============ -->
+<rect width="1200" height="1600" fill="url(#water)"/>
+<!-- far: small sun glints, few, getting smaller toward the top -->
+<g stroke="#d9dc8e" fill="none" stroke-linecap="round">
+  <path d="M640,70 q30,-5 60,0" stroke-width="5"/><path d="M860,50 q26,-4 52,0" stroke-width="5"/>
+  <path d="M1010,120 q34,-6 70,0" stroke-width="6"/><path d="M720,170 q40,-6 80,0" stroke-width="6"/>
+  <path d="M1060,250 q36,-6 74,0" stroke-width="7"/><path d="M590,250 q30,-5 60,0" stroke-width="6"/>
+  <path d="M900,330 q40,-7 84,0" stroke-width="7"/>
+</g>
+<g stroke="#235e6e" fill="none" stroke-linecap="round" opacity="0.8">
+  <path d="M760,120 q40,6 90,0" stroke-width="8"/><path d="M620,200 q40,6 90,0" stroke-width="9"/>
+  <path d="M940,240 q40,6 100,0" stroke-width="9"/><path d="M1050,380 q30,6 80,0" stroke-width="10"/>
+  <path d="M520,380 q50,8 120,0" stroke-width="11"/>
+</g>
+<!-- rings round the child, flattened, broken -->
+<g fill="none" stroke-linecap="round">
+  <path d="M720,712 Q860,748 1010,700" stroke="#cfeee2" stroke-width="10"/>
+  <path d="M660,760 Q860,812 1080,742" stroke="#1d4f72" stroke-width="16"/>
+  <path d="M1010,690 Q1080,670 1140,640" stroke="#a9dcc8" stroke-width="7"/>
+  <path d="M700,812 Q860,850 1020,810" stroke="#8cc8b6" stroke-width="8"/>
+</g>
+<!-- near: broad, long cold horizontals; a few pale glints -->
+<g fill="none" stroke-linecap="round">
+  <path d="M800,960 q140,-14 300,0" stroke="#6f9ad6" stroke-width="10"/>
+  <path d="M740,1060 q180,-18 380,0" stroke="#152060" stroke-width="26"/>
+  <path d="M860,1170 q120,-12 260,0" stroke="#7d9ce0" stroke-width="10"/>
+  <path d="M700,1350 q220,-22 460,0" stroke="#7a96dc" stroke-width="12"/>
+  <path d="M640,1450 q260,-24 540,0" stroke="#111a52" stroke-width="34"/>
+  <path d="M760,1540 q200,-18 420,0" stroke="#5f80cc" stroke-width="10"/>
+</g>
+
+<!-- ============ JETTY top-left: planks, posts, a real shadow ============ -->
+<polygon points="0,250 470,0 590,0 0,350" fill="#162254" opacity="0.85" filter="url(#b8)"/>
+<polygon points="0,0 470,0 0,250" fill="#d9792e"/>
+<g stroke="#7a3418" stroke-width="5">
+  <path d="M0,62 L352,0"/><path d="M0,124 L235,0"/><path d="M0,186 L118,0"/>
+</g>
+<g stroke="#f0a050" stroke-width="4" opacity="0.8">
+  <path d="M0,40 L300,-12"/><path d="M0,102 L190,0"/>
+</g>
+<polygon points="0,250 470,0 490,0 0,272" fill="#5a2a2a"/>
+<path d="M70,240 L82,330" stroke="#2c1e3a" stroke-width="20"/>
+<path d="M330,85 L338,160" stroke="#2c1e3a" stroke-width="16"/>
+<path d="M60,336 q20,-4 40,0" stroke="#d8e2c8" stroke-width="4" fill="none"/>
+
+<!-- ============ MAN: submerged body seen through the water ============ -->
+<path d="M0,1270 Q320,1250 660,1290 L640,1600 L0,1600 Z" fill="#5a5a96" opacity="0.55" filter="url(#b16)"/>
+<g fill="none" stroke-linecap="round" opacity="0.8">
+  <path d="M30,1320 q160,-10 320,4" stroke="#b87a8a" stroke-width="18"/>
+  <path d="M80,1390 q200,-12 400,6" stroke="#9a6a8e" stroke-width="16"/>
+  <path d="M40,1470 q180,-8 360,6" stroke="#7a5e92" stroke-width="16"/>
+  <path d="M200,1300 q140,-6 300,10" stroke="#1d2a6a" stroke-width="10"/>
+  <path d="M60,1430 q120,-6 260,8" stroke="#1d2a6a" stroke-width="9"/>
+</g>
+<!-- the waterline: dark band hugging the body, broken foam crest on top -->
+<path d="M0,1250 Q330,1218 670,1252" stroke="#14205a" stroke-width="30" fill="none" opacity="0.9"/>
+<!-- rings round the man (off-centre, flattened, only partly seen) -->
+<g fill="none" stroke-linecap="round">
+  <path d="M640,1262 Q760,1300 820,1360" stroke="#dbeaf0" stroke-width="10"/>
+  <path d="M700,1240 Q860,1300 930,1420" stroke="#1a2a6a" stroke-width="16"/>
+  <path d="M600,1380 Q760,1420 840,1500" stroke="#9cbbe6" stroke-width="8"/>
+</g>
+
+<!-- ============ MAN: torso, shoulders hunched with cold ============ -->
+<!-- body mass -->
+<path d="M0,1010 Q70,960 150,955 Q215,960 250,995 L470,1005 Q560,1010 610,1060 Q655,1140 665,1240 Q330,1205 0,1248 Z" fill="#e8866a"/>
+<!-- lit planes: shoulder top left, upper chest -->
+<path d="M0,1030 Q70,975 150,970 Q200,975 230,1005 Q180,1030 120,1060 Q60,1080 0,1090 Z" fill="#f4ac88"/>
+<path d="M250,1040 Q330,1030 400,1050 Q420,1100 380,1140 Q300,1150 250,1120 Z" fill="#f2a482"/>
+<path d="M420,1045 Q500,1040 560,1080 Q560,1130 520,1150 Q450,1140 420,1100 Z" fill="#e48c72"/>
+<!-- cold planes: under the pectorals, the right flank, the armpit -->
+<path d="M240,1130 Q320,1160 400,1150 Q350,1185 260,1180 Z" fill="#9a6a92"/>
+<path d="M430,1150 Q500,1165 560,1150 Q560,1190 470,1195 Z" fill="#8a5e94"/>
+<path d="M560,1060 Q630,1100 660,1235 L600,1225 Q590,1140 545,1110 Z" fill="#6a5aa4"/>
+<path d="M0,1100 Q60,1090 110,1070 Q90,1150 0,1190 Z" fill="#7a68a8" opacity="0.8"/>
+<!-- collarbones, sternum -->
+<path d="M190,1032 Q250,1018 330,1040" stroke="#a8586a" stroke-width="7" fill="none"/>
+<path d="M410,1040 Q480,1022 545,1056" stroke="#a8586a" stroke-width="7" fill="none"/>
+<path d="M392,1060 L398,1180" stroke="#b86a72" stroke-width="9" fill="none" filter="url(#b4)"/>
+<!-- grey chest hair -->
+<g stroke="#d4d6de" stroke-width="3" opacity="0.8" fill="none">
+  <path d="M340,1110 l10,14 M362,1130 l-6,14 M410,1104 l8,15 M428,1140 l-8,12 M384,1150 l6,14 M450,1120 l6,12 M316,1136 l8,12"/>
+</g>
+<!-- goose-flesh: violet stipple on the shoulders -->
+<g fill="#7a66aa" opacity="0.7">
+  <circle cx="60" cy="1040" r="3"/><circle cx="90" cy="1020" r="3"/><circle cx="120" cy="1045" r="3"/><circle cx="40" cy="1060" r="3"/>
+  <circle cx="150" cy="1010" r="3"/><circle cx="80" cy="1070" r="3"/><circle cx="520" cy="1060" r="3"/><circle cx="545" cy="1085" r="3"/><circle cx="500" cy="1050" r="3"/>
+</g>
+<!-- water running on the chest -->
+<g fill="#f6f4ec"><circle cx="270" cy="1100" r="5"/><circle cx="460" cy="1120" r="4"/><circle cx="160" cy="1050" r="4"/><circle cx="330" cy="1180" r="4"/></g>
+
+<!-- neck: stretched, head thrown back, tendons -->
+<path d="M265,1000 Q290,960 300,930 L470,960 Q460,990 470,1010 Z" fill="#d8786a"/>
+<path d="M300,950 Q330,990 340,1030" stroke="#b86070" stroke-width="10" fill="none" filter="url(#b2)"/>
+<path d="M430,965 Q450,1000 455,1030" stroke="#6a5a9a" stroke-width="16" fill="none" filter="url(#b4)"/>
+<path d="M440,970 Q470,990 470,1010 L460,1010 Z" fill="#6a5aa0"/>
+
+<!-- ============ MAN: raised arm (his left, our right); elbow high, angled ============ -->
+<!-- upper arm -->
+<path d="M560,1070 Q630,920 712,790 Q745,770 772,792 Q760,860 690,960 Q650,1040 620,1110 Z" fill="#e8866a"/>
+<path d="M575,1060 Q630,940 705,810 Q690,900 640,990 Q610,1050 600,1080 Z" fill="#f2a482"/>
+<path d="M772,792 Q765,860 700,960 Q660,1040 628,1110 L605,1100 Q650,1010 700,930 Q745,860 755,800 Z" fill="#6a5aa4"/>
+<!-- elbow: angular, bony, lit on top -->
+<path d="M705,792 Q730,758 768,770 Q790,790 772,808 Q745,790 705,800 Z" fill="#f0a080"/>
+<!-- water dripping from the elbow -->
+<g stroke="#e6f0f4" stroke-linecap="round" fill="none">
+  <path d="M776,812 l2,30" stroke-width="5"/><path d="M782,860 l1,16" stroke-width="4"/><path d="M770,830 l0,12" stroke-width="3"/>
+</g>
+<!-- forearm: from the high elbow down over the crown -->
+<path d="M712,778 Q630,745 548,722 L540,768 Q620,790 708,812 Z" fill="#ec9274"/>
+<path d="M712,778 Q630,745 548,722 L546,738 Q630,758 710,792 Z" fill="#f6b494"/>
+<path d="M540,768 Q620,790 708,812 L706,800 Q620,778 544,754 Z" fill="#8a5a8c"/>
+
+<!-- ============ MAN: head thrown back, laughing and gasping ============ -->
+<g transform="translate(375,895) rotate(16)">
+  <!-- ears -->
+  <path d="M-108,-30 Q-140,-24 -134,14 Q-128,40 -104,34 Z" fill="#f09a7a"/>
+  <path d="M-118,-12 Q-124,6 -114,22" stroke="#b05a64" stroke-width="5" fill="none"/>
+  <path d="M106,-30 Q134,-24 130,12 Q124,38 102,32 Z" fill="#7a5a9a"/>
+  <!-- head mass (halftone) -->
+  <path d="M-108,-70 Q-112,-150 0,-152 Q108,-150 108,-70 L106,30 Q100,110 50,140 Q0,160 -50,140 Q-100,110 -106,30 Z" fill="#e2806a"/>
+  <!-- lit plane: forehead, left temple, left cheek, nose bridge -->
+  <path d="M-104,-70 Q-100,-120 -10,-124 Q40,-120 50,-90 Q20,-60 8,-30 L4,40 Q-20,60 -40,70 Q-80,80 -100,40 Z" fill="#f7b897"/>
+  <!-- shadow plane: right side of the face, cold violet with cobalt reflected light at the edge -->
+  <path d="M60,-110 Q108,-100 108,-60 L106,30 Q100,110 50,140 Q30,148 20,150 Q60,100 66,40 Q70,-20 46,-60 Z" fill="#8a5a92"/>
+  <path d="M106,-40 L104,30 Q98,100 60,132 Q90,80 94,10 Z" fill="#5e6ab4"/>
+  <!-- wet white hair slicked back over the crown; blue-grey shadows -->
+  <path d="M-106,-70 Q-108,-160 0,-166 Q108,-160 108,-70 Q80,-112 0,-116 Q-70,-112 -106,-70 Z" fill="#e6eaf2"/>
+  <path d="M40,-150 Q100,-140 108,-70 Q90,-100 60,-112 Z" fill="#9aa4c8"/>
+  <path d="M-70,-136 Q0,-160 70,-136" stroke="#aab4d4" stroke-width="5" fill="none"/>
+  <!-- water streaming down the forehead from the hair -->
+  <g stroke="#fbfaf4" stroke-linecap="round" fill="none">
+    <path d="M-50,-112 q-4,30 -2,52" stroke-width="5"/><path d="M20,-114 q2,24 0,40" stroke-width="4"/><path d="M-10,-110 q-2,18 0,28" stroke-width="3"/>
+  </g>
+  <!-- forehead creases -->
+  <path d="M-62,-86 Q0,-98 56,-86" stroke="#b4586a" stroke-width="5" fill="none" filter="url(#b2)"/>
+  <path d="M-54,-70 Q0,-80 50,-70" stroke="#b4586a" stroke-width="4" fill="none" filter="url(#b2)"/>
+  <!-- brows: bushy grey, the sockets deep -->
+  <path d="M-90,-42 Q-56,-62 -16,-46" stroke="#cdd0da" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M16,-46 Q54,-62 90,-42" stroke="#a8acc4" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <path d="M-82,-30 Q-50,-44 -18,-32 Q-40,-14 -78,-18 Z" fill="#b0566c"/>
+  <path d="M18,-32 Q50,-44 82,-30 Q76,-16 40,-14 Z" fill="#7e4a7c"/>
+  <!-- eyes squeezed shut: dark creased lids, the lower lids pushed up by the cheeks -->
+  <path d="M-76,-20 Q-50,-30 -22,-22" stroke="#2a1830" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M22,-22 Q50,-30 76,-20" stroke="#2a1830" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M-72,-12 Q-48,-4 -26,-12" stroke="#fbd2b6" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M26,-12 Q48,-4 70,-12" stroke="#c87a86" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <g stroke="#8a3a56" stroke-width="3.5" stroke-linecap="round"><path d="M-80,-22 l-22,-8 M-82,-14 l-24,2 M-80,-6 l-20,10"/><path d="M80,-22 l20,-8 M82,-14 l22,2 M80,-6 l18,10"/></g>
+  <!-- nose seen from below: lit ridge, shadow side, nostrils -->
+  <path d="M-14,-26 Q-18,14 -30,40 Q0,54 30,40 Q16,14 12,-26 Z" fill="#f3a888"/>
+  <path d="M8,-24 Q16,16 30,40 L16,46 Q10,18 2,-20 Z" fill="#a85670"/>
+  <path d="M-6,-20 Q-8,10 -14,32" stroke="#fde4cc" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <ellipse cx="-14" cy="44" rx="9" ry="6" fill="#4a1c34"/><ellipse cx="14" cy="44" rx="9" ry="6" fill="#4a1c34"/>
+  <!-- cheeks pushed up: round, lit, flushed raw red from the cold -->
+  <ellipse cx="-62" cy="22" rx="34" ry="24" fill="#f2906e"/>
+  <ellipse cx="-66" cy="14" rx="16" ry="9" fill="#fcd6b8"/>
+  <ellipse cx="60" cy="22" rx="30" ry="22" fill="#c85a6c"/>
+  <!-- deep laugh folds -->
+  <path d="M-32,46 Q-66,70 -60,110" stroke="#8a3452" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#b2)"/>
+  <path d="M32,46 Q66,70 60,110" stroke="#5a2a58" stroke-width="8" fill="none" stroke-linecap="round" filter="url(#b2)"/>
+  <!-- mouth wide open: the shout, the gasp -->
+  <path d="M-50,68 Q0,56 50,68 Q52,112 22,128 Q0,134 -22,128 Q-52,112 -50,68 Z" fill="#34122a"/>
+  <path d="M-42,70 Q0,62 42,70 L38,82 L28,78 L18,83 L6,79 L-6,83 L-18,79 L-28,83 L-38,80 Z" fill="#ece0c8"/>
+  <path d="M-24,110 Q0,100 24,110 Q14,124 0,124 Q-14,124 -24,110 Z" fill="#c4464e"/>
+  <path d="M-54,66 Q0,50 54,66" stroke="#c85462" stroke-width="7" fill="none"/>
+  <path d="M-30,132 Q0,142 30,132" stroke="#d4707a" stroke-width="6" fill="none"/>
+  <!-- grey stubble on chin and jaw -->
+  <g fill="#b4b8ca" opacity="0.6"><ellipse cx="0" cy="142" rx="42" ry="10"/><ellipse cx="-78" cy="88" rx="14" ry="24"/><ellipse cx="78" cy="88" rx="14" ry="24" fill="#7a7aa8"/></g>
+  <!-- drops on the face -->
+  <g fill="#fdfcf4"><circle cx="-88" cy="-48" r="5"/><circle cx="36" cy="-74" r="4"/><circle cx="-34" cy="150" r="5"/><circle cx="92" cy="46" r="4"/><circle cx="-56" cy="40" r="3"/></g>
+</g>
+
+<!-- ============ MAN: the hand on the crown, fingers pushed back into the wet hair ============ -->
+<g stroke-linecap="round" fill="none">
+  <!-- back of the hand -->
+  <path d="M550,720 Q520,712 486,716 Q470,730 474,752 Q505,760 542,768 Z" fill="#f0a080" stroke="none"/>
+  <path d="M548,722 Q518,714 488,718 Q478,726 478,734 Q510,734 546,738 Z" fill="#f8c0a0" stroke="none"/>
+  <!-- four fingers, jointed, lying back across the crown -->
+  <path d="M488,716 Q460,708 446,706 Q430,703 412,708" stroke="#f2a888" stroke-width="16"/>
+  <path d="M480,730 Q452,726 436,726 Q420,726 400,732" stroke="#eea080" stroke-width="17"/>
+  <path d="M478,745 Q450,746 434,748 Q418,750 402,758" stroke="#e8987a" stroke-width="16"/>
+  <path d="M484,758 Q462,764 448,768 Q436,772 424,780" stroke="#de8c76" stroke-width="14"/>
+  <!-- the white hair between the fingers -->
+  <path d="M482,723 Q450,717 410,720" stroke="#e8ecf4" stroke-width="3"/>
+  <path d="M478,738 Q446,737 404,745" stroke="#dfe4f0" stroke-width="3"/>
+  <path d="M478,752 Q448,756 412,768" stroke="#d6dcec" stroke-width="3"/>
+  <!-- knuckles lit, joints shadowed -->
+  <g fill="#fcd4b8" stroke="none"><ellipse cx="486" cy="716" rx="6" ry="5"/><ellipse cx="480" cy="730" rx="6" ry="5"/><ellipse cx="478" cy="745" rx="6" ry="5"/><ellipse cx="484" cy="758" rx="5" ry="4"/></g>
+  <g fill="#a2566e" stroke="none"><ellipse cx="446" cy="708" rx="3" ry="3"/><ellipse cx="436" cy="728" rx="3" ry="3"/><ellipse cx="434" cy="749" rx="3" ry="3"/><ellipse cx="448" cy="768" rx="3" ry="3"/></g>
+  <!-- thumb down the temple -->
+  <!-- cast shadow of the hand on the hair below -->
+  <path d="M410,770 Q470,782 530,778" stroke="#8a92c0" stroke-width="10" filter="url(#b2)"/>
+</g>
+
+<!-- ============ CHILD: leaning into the throw, head turned toward the old man ============ -->
+<g>
+  <!-- shoulders and chest, twisted: left shoulder forward and low -->
+  <path d="M780,640 Q820,605 880,606 Q935,610 960,640 Q975,680 965,712 Q870,724 780,712 Q760,676 780,640 Z" fill="#ec9474"/>
+  <path d="M790,640 Q825,612 870,612 Q860,650 830,690 Q800,700 785,690 Z" fill="#f6b090"/>
+  <path d="M920,622 Q965,640 966,712 L920,714 Q930,670 912,640 Z" fill="#7a5a9e"/>
+  <!-- his right arm (our left): forward and down, hand skimming the water -->
+  <path d="M796,632 Q760,646 736,664 Q716,676 700,684 L708,706 Q728,700 750,688 Q780,672 808,660 Z" fill="#f2a482"/>
+  <path d="M736,664 Q750,668 760,676" stroke="#c87074" stroke-width="5" fill="none"/>
+  <path d="M702,682 Q680,676 664,678 Q652,684 656,694 Q670,700 686,702 L708,706 Z" fill="#f6b090"/>
+  <path d="M664,680 l-12,-4 M660,688 l-14,0 M664,696 l-12,4" stroke="#d07a76" stroke-width="5" stroke-linecap="round"/>
+  <!-- his left arm (our right): swung across the body, hand cupped in the throw -->
+  <path d="M930,650 Q890,680 850,700 Q810,712 780,716 L782,738 Q820,736 862,722 Q910,700 948,672 Z" fill="#e08870"/>
+  <path d="M850,702 Q860,708 866,720" stroke="#9a5a7e" stroke-width="5" fill="none"/>
+  <path d="M782,716 Q760,712 744,718 Q736,728 744,738 Q760,742 782,738 Z" fill="#f2a888"/>
+  <!-- head, leaning left (toward the man), chin tucked into the throw -->
+  <g transform="translate(868,540) rotate(-20)">
+    <!-- head mass -->
+    <path d="M-56,-24 Q-60,-82 0,-84 Q60,-82 58,-24 L56,18 Q50,62 0,72 Q-46,64 -54,20 Z" fill="#ea9676"/>
+    <!-- lit plane left -->
+    <path d="M-54,-20 Q-50,-60 -10,-64 Q0,-30 -6,10 Q-10,50 -20,66 Q-46,56 -52,18 Z" fill="#f8c0a0"/>
+    <!-- shadow plane right -->
+    <path d="M34,-50 Q60,-40 58,-20 L56,18 Q50,60 8,72 Q40,40 42,0 Z" fill="#8e5e94"/>
+    <!-- ear -->
+    <path d="M54,-12 Q74,-10 70,14 Q64,28 52,22 Z" fill="#a8607a"/>
+    <!-- wet dark hair: cap with pointed strands stuck down on the forehead -->
+    <path d="M-58,-14 Q-66,-92 0,-92 Q66,-92 62,-10 Q52,-40 40,-32 L34,-18 L26,-38 L14,-22 L4,-42 L-8,-24 L-18,-44 L-30,-24 L-40,-40 L-48,-20 Z" fill="#1c2048"/>
+    <path d="M-34,-76 Q0,-86 34,-76" stroke="#5a6ab0" stroke-width="5" fill="none"/>
+    <!-- brows up -->
+    <path d="M-36,-16 Q-24,-24 -10,-18" stroke="#3a2a40" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M10,-18 Q24,-24 36,-16" stroke="#3a2a40" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- eyes OPEN, bright, looking down-left at the old man -->
+    <path d="M-34,-4 Q-24,-12 -12,-6 Q-22,2 -34,-2 Z" fill="#f2eee6"/>
+    <path d="M12,-6 Q24,-12 34,-4 Q24,2 12,-2 Z" fill="#e2dcd8"/>
+    <circle cx="-29" cy="-4" r="4.5" fill="#1a1828"/><circle cx="17" cy="-4" r="4.5" fill="#1a1828"/>
+    <circle cx="-30" cy="-6" r="1.5" fill="#ffffff"/><circle cx="16" cy="-6" r="1.5" fill="#ffffff"/>
+    <!-- small upturned nose -->
+    <path d="M-6,0 Q-10,14 -12,20 Q0,24 8,20 Z" fill="#f0a484"/>
+    <path d="M2,2 Q6,14 8,20 L2,22 Z" fill="#b06676"/>
+    <!-- cheeks -->
+    <ellipse cx="-34" cy="18" rx="13" ry="9" fill="#f6a090"/><ellipse cx="32" cy="18" rx="11" ry="8" fill="#c86a7a"/>
+    <!-- mouth open in a shriek of laughter, lopsided -->
+    <path d="M-26,30 Q0,26 24,28 Q20,54 0,58 Q-22,54 -26,30 Z" fill="#34122a"/>
+    <path d="M-22,31 Q0,28 20,30 L18,36 Q0,34 -20,37 Z" fill="#f0e8da"/>
+    <path d="M-12,48 Q0,44 12,48 Q6,54 0,55 Q-6,54 -12,48 Z" fill="#c8505a"/>
+    <!-- drops on his face -->
+    <g fill="#fbfaf2"><circle cx="-44" cy="6" r="3"/><circle cx="20" cy="40" r="2.5"/></g>
+  </g>
+</g>
+
+<!-- ============ THE THROWN WATER v5: a ragged fan rising at the boy's hands, flying fragments, an asymmetric burst on the hand and hair ============ -->
+<g>
+  <!-- the sheet tearing up off the surface at his hands -->
+  <path d="M736,712 Q730,660 708,616 L700,640 L688,596 L676,630 L660,600 L652,640 Q628,620 610,628 Q636,660 640,700 Q690,716 736,712 Z" fill="#c8ece0" opacity="0.85"/>
+  <path d="M724,706 Q716,664 700,630 L692,650 Q680,640 668,646 Q680,676 684,704 Z" fill="#fbf8ec"/>
+  <path d="M708,616 L700,640 L688,596 L676,630 L660,600 L652,640" stroke="#fdfbf2" stroke-width="5" fill="none" stroke-linejoin="bevel"/>
+  <!-- flying fragments, torn, elongated along their flight -->
+  <g fill="#f8faf2">
+    <path d="M626,604 Q604,596 584,604 Q602,614 626,610 Z"/>
+    <path d="M588,626 Q560,618 536,630 Q562,638 588,632 Z"/>
+    <path d="M546,602 Q534,598 524,604 Q534,608 546,606 Z"/>
+    <path d="M520,650 Q500,644 484,654 Q502,660 520,656 Z"/>
+    <path d="M610,650 Q600,646 590,652 Q600,656 610,654 Z"/>
+    <path d="M500,618 Q490,614 480,620 Q490,624 500,622 Z"/>
+  </g>
+  <g fill="#cfeee2" opacity="0.8">
+    <path d="M650,620 Q620,610 596,618 Q622,632 650,630 Z"/>
+    <path d="M560,646 Q536,640 516,650 Q538,660 560,654 Z"/>
+  </g>
+  <!-- the burst where it strikes: flung on, up and to the left, not a ring -->
+  <path d="M526,706 L506,676 L486,684 L470,656 L456,680 L432,654 L428,684 L398,672 L414,700 L384,708 L412,718 L394,738 L430,734 L446,752 L470,730 L500,726 Z" fill="#fdfbf2"/>
+  <path d="M500,712 L480,690 L460,700 L440,688 L430,708 L450,720 L480,722 Z" fill="#d8eef0"/>
+  <g fill="#fdfaf0">
+    <ellipse cx="420" cy="640" rx="7" ry="5"/><ellipse cx="392" cy="662" rx="6" ry="4"/><ellipse cx="370" cy="696" rx="8" ry="6"/>
+    <ellipse cx="452" cy="630" rx="5" ry="4"/><ellipse cx="352" cy="728" rx="5" ry="4"/><ellipse cx="480" cy="640" rx="4" ry="3"/>
+    <ellipse cx="340" cy="680" rx="4" ry="3"/>
+  </g>
+</g>
+</svg>

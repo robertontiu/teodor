@@ -6,7 +6,8 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 
 - **Studio v8 is built** (`studio/v8/`, manual in `docs/MANUAL.md`): a medium-agnostic core with nine media (oil, watercolour, ink, charcoal, graphite, pastel, gouache, egg tempera, woodblock), 15 researched currents in `studio/styles.json` (docs in `docs/styles/`), measured style targets for 9 of them (`studio/targets.json`, `report` command), and a v8 brief made with `tools/make_brief.py`. `oil-v7` reproduces v7 exactly for comparison.
 - **Every medium is calibrated against real data** (reports in `docs/calibration/`): pigments from published measurements (`studio/pigments.json`), mark statistics from public-domain Met works (`studio/calibration_refs.json`). Oil now mixes with a spectral Kubelka-Munk model (`media/spectral.py`).
-- **No painting has been made with v8 yet.** The next round should be the end-to-end test: a new current and medium, `report`, finishing.
+- **Round 16** (*Cold Water at the Landing Stage*, Post-Impressionism, oil) was the first v8 painting and the end-to-end test. Its lessons are in `docs/experiments.md`, and three follow-ups are at the end of `docs/proposals-v8.md`. Robert asked whether the mid-phase critics are still needed: they are (see round 16 in the experiments log).
+- **Style guide:** a published artifact (Claude, private to Robert) with the 15 currents, a public-domain example each, and a filter by feeling, for picking a style.
 
 ### Earlier state (Nov 24, 2026)
 

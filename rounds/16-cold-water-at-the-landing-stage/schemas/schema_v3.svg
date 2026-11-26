@@ -1,0 +1,230 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<defs>
+  <linearGradient id="water" x1="0.2" y1="0" x2="0.5" y2="1">
+    <stop offset="0" stop-color="#a9cf8a"/>
+    <stop offset="0.22" stop-color="#5fb487"/>
+    <stop offset="0.5" stop-color="#2f8a7a"/>
+    <stop offset="0.78" stop-color="#2d5a92"/>
+    <stop offset="1" stop-color="#22307a"/>
+  </linearGradient>
+  <radialGradient id="manhead" cx="0.38" cy="0.35" r="0.75">
+    <stop offset="0" stop-color="#f6b892"/>
+    <stop offset="0.45" stop-color="#ec8c6e"/>
+    <stop offset="0.8" stop-color="#c25a62"/>
+    <stop offset="1" stop-color="#7a4a8a"/>
+  </radialGradient>
+  <radialGradient id="manbody" cx="0.35" cy="0.25" r="0.85">
+    <stop offset="0" stop-color="#f3b08c"/>
+    <stop offset="0.5" stop-color="#e2806a"/>
+    <stop offset="0.85" stop-color="#a75a78"/>
+    <stop offset="1" stop-color="#5e4a92"/>
+  </radialGradient>
+  <radialGradient id="childhead" cx="0.4" cy="0.35" r="0.75">
+    <stop offset="0" stop-color="#f7c8a0"/>
+    <stop offset="0.6" stop-color="#ef9a78"/>
+    <stop offset="1" stop-color="#b25e72"/>
+  </radialGradient>
+  <linearGradient id="under" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#7a7a8a" stop-opacity="0.85"/>
+    <stop offset="1" stop-color="#24306e" stop-opacity="0"/>
+  </linearGradient>
+  <filter id="b2"><feGaussianBlur stdDeviation="2"/></filter>
+  <filter id="b6"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="b14"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+
+<!-- WATER -->
+<rect width="1200" height="1600" fill="url(#water)"/>
+<!-- far sunlit glints (top) -->
+<g stroke="#e9e08a" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.9">
+  <path d="M600,90 q60,-12 130,0"/><path d="M820,60 q50,-10 120,0"/><path d="M960,150 q60,-12 140,0"/>
+  <path d="M700,200 q70,-14 150,0"/><path d="M1000,260 q50,-10 120,0"/><path d="M560,280 q40,-8 90,0"/>
+  <path d="M1040,360 q40,-8 100,0"/><path d="M640,350 q30,-6 70,0"/>
+</g>
+<g stroke="#1f6a6a" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.6">
+  <path d="M760,130 q40,8 90,0"/><path d="M620,240 q40,8 90,0"/><path d="M900,300 q40,8 100,0"/><path d="M1080,200 q30,6 70,0"/>
+</g>
+<!-- mid-water ripples (around child, flattened ellipses, broken) -->
+<g fill="none" stroke-linecap="round">
+  <path d="M700,640 q150,40 320,-10" stroke="#9fdcc0" stroke-width="12"/>
+  <path d="M640,700 q220,70 470,-20" stroke="#1e5a74" stroke-width="16"/>
+  <path d="M980,560 q90,-30 160,10" stroke="#9fdcc0" stroke-width="9"/>
+  <path d="M720,760 q160,40 300,0" stroke="#86cdb0" stroke-width="10"/>
+</g>
+<!-- lower water: long cold horizontals -->
+<g fill="none" stroke-linecap="round">
+  <path d="M760,980 q120,-20 260,0 q60,6 120,-4" stroke="#7aa8e0" stroke-width="14"/>
+  <path d="M700,1080 q160,-24 330,0" stroke="#1a2466" stroke-width="20"/>
+  <path d="M820,1180 q120,-18 260,0" stroke="#86a6e6" stroke-width="12"/>
+  <path d="M680,1330 q200,-30 420,0" stroke="#86a6e6" stroke-width="14"/>
+  <path d="M760,1430 q180,-24 380,0" stroke="#18215e" stroke-width="22"/>
+  <path d="M640,1520 q200,-26 460,0" stroke="#6f90d8" stroke-width="12"/>
+  <path d="M900,880 q90,-14 200,0" stroke="#6fbfb0" stroke-width="10"/>
+</g>
+
+<!-- LANDING STAGE top-left (far bank, warm orange planks) -->
+<polygon points="0,0 400,0 0,210" fill="#d9792e"/>
+<g stroke="#a8461e" stroke-width="9">
+  <path d="M0,60 L290,0"/><path d="M0,120 L190,0"/><path d="M0,176 L96,0"/>
+</g>
+<polygon points="0,210 400,0 432,0 0,236" fill="#5a2e3a"/>
+<rect x="30" y="190" width="18" height="90" fill="#3a2a40" transform="rotate(-28 40 230)"/>
+<!-- reflection of stage in water -->
+<polygon points="0,236 432,0 470,0 0,280" fill="#7d6a3a" opacity="0.45" filter="url(#b6)"/>
+
+<!-- MAN: submerged body (refracted) -->
+<path d="M0,1250 Q200,1240 380,1250 Q560,1260 700,1300 L720,1600 L0,1600 Z" fill="url(#under)" opacity="0.6" filter="url(#b14)"/>
+<path d="M60,1300 Q300,1290 600,1320 L560,1600 L40,1600 Z" fill="#a8707a" opacity="0.35" filter="url(#b14)"/>
+
+<!-- ring of disturbed water around man (flattened, broken, off-centre) -->
+<g fill="none" stroke-linecap="round">
+  <path d="M0,1230 Q300,1180 650,1230" stroke="#eaf4ee" stroke-width="16"/>
+  <path d="M640,1210 Q720,1240 760,1290" stroke="#d8ecea" stroke-width="12"/>
+  <path d="M0,1310 Q340,1290 690,1320" stroke="#1d2a6a" stroke-width="18"/>
+  <path d="M30,1380 Q330,1350 640,1400" stroke="#9cc0ea" stroke-width="10"/>
+</g>
+
+<!-- MAN: shoulders and chest above water -->
+<path d="M0,1070 Q80,1010 190,990 Q250,985 290,1000 L470,1000 Q540,1000 600,1060 Q650,1140 655,1235 Q330,1200 0,1240 Z" fill="url(#manbody)"/>
+<!-- collarbone and sternum shadows -->
+<path d="M200,1075 Q270,1060 330,1080" stroke="#a85a6a" stroke-width="8" fill="none" filter="url(#b2)"/>
+<path d="M400,1080 Q470,1060 540,1090" stroke="#a85a6a" stroke-width="8" fill="none" filter="url(#b2)"/>
+<path d="M360,1095 L365,1200" stroke="#b86a72" stroke-width="10" fill="none" filter="url(#b6)"/>
+<!-- chest hair grey -->
+<g stroke="#d0d0d8" stroke-width="3" opacity="0.7"><path d="M320,1130 l10,14 M345,1150 l-6,14 M380,1125 l8,15 M400,1160 l-8,12 M360,1170 l6,14"/></g>
+<!-- cold violet shadow under right pectoral and armpit -->
+<path d="M520,1120 Q600,1130 640,1200 L560,1220 Z" fill="#5e4a92" opacity="0.75" filter="url(#b6)"/>
+<path d="M0,1100 Q60,1060 120,1060 Q90,1140 0,1180 Z" fill="#6a5aa0" opacity="0.55" filter="url(#b14)"/>
+<g fill="#c88aa0" opacity="0.6"><circle cx="120" cy="1060" r="3"/><circle cx="140" cy="1080" r="3"/><circle cx="100" cy="1090" r="3"/><circle cx="160" cy="1050" r="3"/><circle cx="540" cy="1050" r="3"/><circle cx="560" cy="1080" r="3"/><circle cx="520" cy="1070" r="3"/></g>
+<!-- water droplets streaming on chest -->
+<g fill="#f6f2e8"><circle cx="250" cy="1110" r="5"/><circle cx="430" cy="1140" r="4"/><circle cx="470" cy="1100" r="5"/><circle cx="160" cy="1090" r="4"/></g>
+
+<!-- MAN: raised arm (his left, our right): upper arm up to elbow, forearm to crown -->
+<path d="M560,1070 Q600,1000 650,900 L690,815 Q720,810 735,840 L700,930 Q660,1030 625,1110 Z" fill="url(#manbody)"/>
+<path d="M640,920 Q690,900 720,840" stroke="#6a4a8e" stroke-width="16" fill="none" filter="url(#b6)" opacity="0.8"/>
+<!-- elbow -->
+<ellipse cx="712" cy="828" rx="30" ry="26" fill="#e48470"/>
+<!-- forearm from elbow to wrist at the crown -->
+<path d="M700,806 Q620,780 530,776 L520,812 Q610,818 700,852 Z" fill="#ec9274"/>
+<path d="M528,812 Q610,820 698,852" stroke="#8a4a7a" stroke-width="10" fill="none" filter="url(#b2)"/>
+<!-- MAN: head (rotated, thrown back, face up toward child) -->
+<g transform="translate(375,895) rotate(18)">
+  <!-- neck / throat -->
+  <path d="M-80,90 Q-70,170 -60,215 L80,215 Q85,160 85,95 Z" fill="#e48a70"/>
+  <path d="M40,120 Q60,170 70,215 L85,215 Q90,150 85,100 Z" fill="#8c5a86" opacity="0.8"/>
+  <!-- ears -->
+  <ellipse cx="-120" cy="-5" rx="20" ry="38" fill="#e07a6a"/>
+  <ellipse cx="118" cy="-5" rx="18" ry="36" fill="#a8566e"/>
+  <!-- head -->
+  <ellipse cx="0" cy="0" rx="118" ry="148" fill="url(#manhead)"/>
+  <!-- wet white hair slicked back (crown) -->
+  <path d="M-112,-60 Q-105,-150 0,-160 Q105,-152 114,-60 Q80,-110 0,-112 Q-75,-110 -112,-60 Z" fill="#dfe4ee"/>
+  <path d="M-80,-120 Q0,-150 80,-120" stroke="#9aa8cc" stroke-width="6" fill="none"/>
+  <path d="M-60,-135 Q10,-155 70,-132" stroke="#9aa8cc" stroke-width="5" fill="none"/>
+  <path d="M60,-100 Q100,-90 114,-60" stroke="#7a86b0" stroke-width="8" fill="none"/>
+  <!-- forehead creases (raised brows) -->
+  <path d="M-60,-78 Q0,-92 60,-78" stroke="#b8606a" stroke-width="5" fill="none" filter="url(#b2)"/>
+  <path d="M-50,-62 Q0,-74 50,-62" stroke="#b8606a" stroke-width="4" fill="none" filter="url(#b2)"/>
+  <!-- brow ridge shadow & brows (grey) -->
+  <path d="M-88,-36 Q-50,-56 -14,-40" stroke="#c8ccd8" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <path d="M14,-40 Q50,-56 88,-36" stroke="#c8ccd8" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <!-- eye pockets in shadow -->
+  <ellipse cx="-46" cy="-18" rx="34" ry="16" fill="#b0526a" filter="url(#b6)"/>
+  <ellipse cx="46" cy="-18" rx="34" ry="16" fill="#8e4a74" filter="url(#b6)"/>
+  <!-- squeezed laughing eyes: crescents -->
+  <path d="M-74,-14 Q-46,-30 -20,-14" stroke="#2a1e3a" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M20,-14 Q46,-30 74,-14" stroke="#2a1e3a" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <!-- crow's feet -->
+  <g stroke="#8a3e5a" stroke-width="3.5" stroke-linecap="round"><path d="M-80,-16 l-22,-10 M-80,-10 l-24,2 M-78,-4 l-20,12"/><path d="M80,-16 l22,-10 M80,-10 l24,2 M78,-4 l20,12"/></g>
+  <!-- nose -->
+  <path d="M-12,-22 Q-16,20 -26,42 Q0,56 26,42 Q14,20 10,-22 Z" fill="#f0a080"/>
+  <path d="M8,-20 Q16,22 26,42 L14,46 Q8,20 2,-18 Z" fill="#b05a6a"/>
+  <path d="M-6,-16 Q-8,14 -14,34" stroke="#fde0c8" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <ellipse cx="-14" cy="46" rx="8" ry="5" fill="#5a2438"/><ellipse cx="14" cy="46" rx="8" ry="5" fill="#5a2438"/>
+  <!-- raised cheeks (light, flushed red with cold) -->
+  <ellipse cx="-62" cy="28" rx="34" ry="24" fill="#f4987a"/>
+  <ellipse cx="-66" cy="22" rx="16" ry="10" fill="#fbd2b4"/>
+  <ellipse cx="62" cy="28" rx="32" ry="24" fill="#d86a6a"/>
+  <!-- nasolabial folds -->
+  <path d="M-30,46 Q-62,72 -56,108" stroke="#8a3a52" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#b2)"/>
+  <path d="M30,46 Q62,72 56,108" stroke="#6a3058" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#b2)"/>
+  <!-- open laughing mouth -->
+  <path d="M-48,74 Q0,64 48,74 Q46,118 0,128 Q-46,118 -48,74 Z" fill="#3a1428"/>
+  <path d="M-40,76 Q0,68 40,76 L36,88 Q0,82 -36,88 Z" fill="#f2eadc"/>
+  <path d="M-26,110 Q0,100 26,110 Q14,122 0,123 Q-14,122 -26,110 Z" fill="#c84a52"/>
+  <path d="M-52,72 Q0,58 52,72" stroke="#c45a62" stroke-width="7" fill="none"/>
+  <!-- grey stubble on chin and jaw -->
+  <g fill="#b8bccc" opacity="0.55"><ellipse cx="0" cy="138" rx="46" ry="12"/><ellipse cx="-80" cy="96" rx="14" ry="26"/><ellipse cx="80" cy="96" rx="14" ry="26"/></g>
+  <!-- jaw shadow -->
+  <path d="M-110,40 Q-100,120 -40,146" stroke="#8c4a72" stroke-width="12" fill="none" filter="url(#b6)" opacity="0.6"/>
+  <path d="M110,40 Q100,120 40,146" stroke="#5e4a92" stroke-width="18" fill="none" filter="url(#b6)" opacity="0.8"/>
+  <!-- water drops on face -->
+  <g fill="#fbf8ee"><circle cx="-90" cy="-40" r="5"/><circle cx="30" cy="-70" r="4"/><circle cx="-30" cy="140" r="5"/><circle cx="96" cy="40" r="4"/></g>
+</g>
+
+<!-- HAND v3 lying over the crown, fingers pointing back over the wet hair -->
+<g>
+  <path d="M532,776 L520,816 L446,806 Q436,780 454,750 Z" fill="#ee9878"/>
+  <path d="M520,816 L446,806 L448,794 L516,800 Z" fill="#a85a78"/>
+  <g stroke-linecap="round" fill="none">
+    <path d="M456,754 Q424,746 394,752" stroke="#f2a484" stroke-width="17"/>
+    <path d="M452,770 Q414,766 382,772" stroke="#f0a080" stroke-width="18"/>
+    <path d="M448,786 Q412,788 386,796" stroke="#ec9a7c" stroke-width="17"/>
+    <path d="M446,802 Q416,808 396,816" stroke="#e48e74" stroke-width="15"/>
+    <path d="M458,760 Q424,754 396,760" stroke="#a85a78" stroke-width="3"/>
+    <path d="M454,777 Q416,774 386,780" stroke="#a85a78" stroke-width="3"/>
+    <path d="M450,794 Q414,796 390,804" stroke="#a85a78" stroke-width="3"/>
+    <path d="M516,812 Q502,840 494,864" stroke="#e48a70" stroke-width="20"/>
+  </g>
+  <g fill="#fbd2b4"><ellipse cx="430" cy="750" rx="6" ry="4"/><ellipse cx="420" cy="766" rx="6" ry="4"/><ellipse cx="418" cy="784" rx="6" ry="4"/><ellipse cx="420" cy="802" rx="5" ry="4"/></g>
+  <g fill="#9a4a68"><ellipse cx="454" cy="760" rx="4" ry="3"/><ellipse cx="450" cy="776" rx="4" ry="3"/><ellipse cx="446" cy="792" rx="4" ry="3"/></g>
+</g>
+<!-- CHILD: shoulders in water, arms swept forward-left splashing -->
+<g>
+  <path d="M770,610 Q850,585 940,610 Q965,650 960,690 Q860,705 780,690 Q760,650 770,610 Z" fill="#ef9a78"/>
+  <path d="M900,620 Q955,640 960,690 L920,692 Z" fill="#7a5a96" opacity="0.8"/>
+  <!-- arms: from shoulders reaching forward-left to hands at water -->
+  <path d="M790,625 Q740,650 690,668 L684,692 Q740,690 800,662 Z" fill="#f2a482"/>
+  <path d="M880,650 Q820,690 770,712 L768,734 Q830,722 900,676 Z" fill="#e88c72"/>
+  <!-- hands (open, pushing water), fingers spread -->
+  <path d="M690,662 Q660,650 640,652 L630,662 Q650,664 660,672 L628,676 L630,688 L662,684 L640,700 L650,708 L682,694 Z" fill="#f4ac8a"/>
+  <path d="M772,708 Q742,700 724,706 L718,716 Q738,716 746,722 L716,730 L720,742 L750,734 L734,752 L746,758 L774,736 Z" fill="#ee9e7e"/>
+  <!-- head -->
+  <g transform="translate(862,540) rotate(-14)">
+    <ellipse cx="0" cy="0" rx="62" ry="72" fill="url(#childhead)"/>
+    <!-- dark wet hair cap with fringe stuck to forehead -->
+    <path d="M-62,-6 Q-66,-80 0,-80 Q66,-82 64,-4 Q50,-44 24,-30 Q10,-46 -8,-30 Q-26,-46 -44,-28 Q-56,-30 -62,-6 Z" fill="#1f2350"/>
+    <path d="M-30,-66 Q0,-76 30,-66" stroke="#4a5aa0" stroke-width="5" fill="none"/>
+    <!-- grin -->
+    <path d="M-28,26 Q0,52 28,26 Q16,44 0,46 Q-16,44 -28,26 Z" fill="#3a1428"/>
+    <path d="M-24,27 Q0,36 24,27 L20,32 Q0,38 -20,32 Z" fill="#f4ecde"/>
+    <!-- crescent eyes -->
+    <path d="M-34,-4 Q-22,-14 -10,-4" stroke="#1e1a36" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M10,-4 Q22,-14 34,-4" stroke="#1e1a36" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <!-- cheeks and nose -->
+    <ellipse cx="-34" cy="16" rx="14" ry="10" fill="#f6b0a0"/><ellipse cx="34" cy="16" rx="12" ry="9" fill="#e0807a"/>
+    <path d="M-4,-2 Q-8,12 -10,18 Q0,22 8,18 Z" fill="#e88a74"/>
+    <ellipse cx="60" cy="4" rx="9" ry="16" fill="#b8607a"/>
+  </g>
+  <!-- small ring of water round child -->
+  <path d="M740,700 Q860,730 990,690" stroke="#eaf6f0" stroke-width="12" fill="none" stroke-linecap="round"/>
+</g>
+
+<!-- SPRAY v2: a torn sheet thrown from the child's cupped hands, widening and breaking into drops on the man's head -->
+<g>
+  <!-- translucent body of the sheet -->
+  <path d="M690,668 Q640,630 590,622 Q530,616 480,650 Q450,672 430,712 Q470,700 500,690 Q540,676 580,680 Q640,684 690,690 Z" fill="#cfeee0" opacity="0.75"/>
+  <!-- the thick tongue near the hands -->
+  <path d="M700,670 Q660,646 610,640 Q640,660 700,684 Z" fill="#fbf7ea"/>
+  <!-- ragged leading edge on the man's head -->
+  <path d="M520,640 Q480,650 452,684 L436,700 L446,690 L430,722 L452,706 L444,734 L470,700 L476,718 L492,684 Q520,660 560,652 Z" fill="#fbf7ea"/>
+  <!-- top lacy edge -->
+  <path d="M640,640 Q600,626 560,628 Q600,616 646,628 Z" fill="#f4f6ee"/>
+  <g fill="#fbf8ec">
+    <ellipse cx="560" cy="610" rx="8" ry="5"/><ellipse cx="520" cy="622" rx="6" ry="4"/><ellipse cx="610" cy="612" rx="5" ry="4"/>
+    <ellipse cx="470" cy="636" rx="9" ry="6"/><ellipse cx="430" cy="680" rx="7" ry="6"/><ellipse cx="410" cy="722" rx="9" ry="7"/>
+    <ellipse cx="398" cy="748" rx="6" ry="5"/><ellipse cx="500" cy="720" rx="5" ry="4"/><ellipse cx="540" cy="700" rx="6" ry="4"/>
+    <ellipse cx="455" cy="760" rx="7" ry="5"/><ellipse cx="380" cy="770" rx="5" ry="4"/><ellipse cx="590" cy="700" rx="4" ry="3"/>
+  </g>
+</g>
+</svg>
