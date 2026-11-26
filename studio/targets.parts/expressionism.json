@@ -1,0 +1,365 @@
+{
+ "expressionism": {
+  "_n": 25,
+  "_pool": 25,
+  "_source": "The Met Open Access (CC0), public-domain works; Cleveland Museum of Art Open Access (CC0 works)",
+  "_rule": "Paintings, drawings and prints in colour (oil, tempera, watercolour, gouache, pastel, coloured chalk or crayon, colour prints) begun 1905-1925 by artists whose first-named nationality is German or Austrian (Met and Cleveland; postcards and other sheets under 16 cm, Met prints without a catalogued size, ornament and design drawings excluded, which removes the Wiener Werkstaette postcards); black-and-white prints and drawings (black chalk, crayon, charcoal, woodcut) are excluded because they would set the colour measures, not the current",
+  "_met_object_ids": [
+   483434,
+   483454,
+   483381,
+   483436,
+   483438,
+   334899,
+   485728,
+   483451,
+   437848,
+   483458,
+   483437,
+   436819,
+   335408,
+   483445,
+   919350,
+   483459
+  ],
+  "_measured": "2026-11-26",
+  "_cma_object_ids": [
+   136592,
+   146911,
+   149565,
+   136366,
+   156570,
+   140334,
+   135691,
+   142792,
+   144705
+  ],
+  "_pool_by_source": {
+   "met": 16,
+   "cma": 9
+  },
+  "_works": [
+   {
+    "source": "met",
+    "id": 483434,
+    "accession": null,
+    "date": 1917,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483434",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279448.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483454,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483454",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-1586-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483381,
+    "accession": null,
+    "date": 1912,
+    "medium": "Blue pastel on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483381",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/LC-1984_433_243-overall-20241204-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 136592,
+    "accession": "1961.154",
+    "date": 1923,
+    "medium": "color lithograph",
+    "url": "https://clevelandart.org/art/1961.154",
+    "image": "https://openaccess-cdn.clevelandart.org/1961.154/1961.154_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483436,
+    "accession": null,
+    "date": 1908,
+    "medium": "Gouache and watercolor over graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483436",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DT7919.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483438,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor, graphite, and gouache on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483438",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279450.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 146911,
+    "accession": "1972.314",
+    "date": 1912,
+    "medium": "brush and black wash and  black gouache with green-yellow gouache",
+    "url": "https://clevelandart.org/art/1972.314",
+    "image": "https://openaccess-cdn.clevelandart.org/1972.314/1972.314_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 149565,
+    "accession": "1979.14",
+    "date": 1915,
+    "medium": "oil on canvas",
+    "url": "https://clevelandart.org/art/1979.14",
+    "image": "https://openaccess-cdn.clevelandart.org/1979.14/1979.14_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 136366,
+    "accession": "1960.238",
+    "date": 1916,
+    "medium": "color woodcut",
+    "url": "https://clevelandart.org/art/1960.238",
+    "image": "https://openaccess-cdn.clevelandart.org/1960.238/1960.238_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 334899,
+    "accession": null,
+    "date": 1905,
+    "medium": "Colored pencil",
+    "url": "https://www.metmuseum.org/art/collection/search/334899",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP819711.jpg"
+   },
+   {
+    "source": "met",
+    "id": 485728,
+    "accession": null,
+    "date": 1913,
+    "medium": "Gouache, watercolor, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/485728",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DT6691.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483451,
+    "accession": null,
+    "date": 1911,
+    "medium": "Watercolor and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483451",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13070-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 156570,
+    "accession": "1992.277",
+    "date": 1924,
+    "medium": "pastel",
+    "url": "https://clevelandart.org/art/1992.277",
+    "image": "https://openaccess-cdn.clevelandart.org/1992.277/1992.277_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 140334,
+    "accession": "1964.285",
+    "date": 1916,
+    "medium": "Gouache, watercolor, and graphite",
+    "url": "https://clevelandart.org/art/1964.285",
+    "image": "https://openaccess-cdn.clevelandart.org/1964.285/1964.285_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437848,
+    "accession": null,
+    "date": 1910,
+    "medium": "Oil on canvas",
+    "url": "https://www.metmuseum.org/art/collection/search/437848",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DP355176.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 135691,
+    "accession": "1959.228",
+    "date": 1914,
+    "medium": "color woodcut",
+    "url": "https://clevelandart.org/art/1959.228",
+    "image": "https://openaccess-cdn.clevelandart.org/1959.228/1959.228_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483458,
+    "accession": null,
+    "date": 1914,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483458",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13960-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483437,
+    "accession": null,
+    "date": 1912,
+    "medium": "Watercolor, graphite, and gouache on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483437",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13958-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 436819,
+    "accession": null,
+    "date": 1912,
+    "medium": "Oil on canvas",
+    "url": "https://www.metmuseum.org/art/collection/search/436819",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DP243354.jpg"
+   },
+   {
+    "source": "met",
+    "id": 335408,
+    "accession": null,
+    "date": 1908,
+    "medium": "Brush and black ink, white gouache (whiteout, white paint) Touches of silver paint(?), graphite(?)",
+    "url": "https://www.metmuseum.org/art/collection/search/335408",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP803838.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 142792,
+    "accession": "1966.49",
+    "date": 1909,
+    "medium": "oil on canvas",
+    "url": "https://clevelandart.org/art/1966.49",
+    "image": "https://openaccess-cdn.clevelandart.org/1966.49/1966.49_web.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 144705,
+    "accession": "1969.46",
+    "date": 1923,
+    "medium": "watercolor",
+    "url": "https://clevelandart.org/art/1969.46",
+    "image": "https://openaccess-cdn.clevelandart.org/1969.46/1969.46_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483445,
+    "accession": null,
+    "date": 1914,
+    "medium": "Watercolor, gouache, and graphite on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483445",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP279455.jpg"
+   },
+   {
+    "source": "met",
+    "id": 919350,
+    "accession": null,
+    "date": 1912,
+    "medium": "Color lithograph",
+    "url": "https://www.metmuseum.org/art/collection/search/919350",
+    "image": "https://images.metmuseum.org/CRDImages/dp/web-large/DP-43421-001.jpg"
+   },
+   {
+    "source": "met",
+    "id": 483459,
+    "accession": null,
+    "date": 1917,
+    "medium": "Gouache, watercolor, and charcoal on paper",
+    "url": "https://www.metmuseum.org/art/collection/search/483459",
+    "image": "https://images.metmuseum.org/CRDImages/ma/web-large/DP-13072-001.jpg"
+   }
+  ],
+  "value_mean": {
+   "mean": 65.8797,
+   "sd": 16.2986
+  },
+  "value_spread": {
+   "mean": 14.8873,
+   "sd": 6.6223
+  },
+  "value_p5": {
+   "mean": 39.4811,
+   "sd": 18.0054
+  },
+  "value_p95": {
+   "mean": 84.7824,
+   "sd": 11.8828
+  },
+  "value_dark": {
+   "mean": 0.142,
+   "sd": 0.2182
+  },
+  "value_light": {
+   "mean": 0.6168,
+   "sd": 0.3066
+  },
+  "value_middle": {
+   "mean": 0.2413,
+   "sd": 0.16
+  },
+  "value_murky": {
+   "mean": 0.1471,
+   "sd": 0.1148
+  },
+  "notan_dark_share": {
+   "mean": 0.3351,
+   "sd": 0.2072
+  },
+  "value_groups": {
+   "mean": 2.6,
+   "sd": 0.5657
+  },
+  "chroma_mean": {
+   "mean": 16.1271,
+   "sd": 6.6721
+  },
+  "chroma_p90": {
+   "mean": 25.0796,
+   "sd": 11.2685
+  },
+  "hue_spread": {
+   "mean": 0.3204,
+   "sd": 0.2349
+  },
+  "warm_share": {
+   "mean": 0.5047,
+   "sd": 0.3489
+  },
+  "cool_share": {
+   "mean": 0.0506,
+   "sd": 0.0983
+  },
+  "edge_density": {
+   "mean": 0.2162,
+   "sd": 0.1194
+  },
+  "hard_edge_share": {
+   "mean": 0.152,
+   "sd": 0.1168
+  },
+  "detail_energy": {
+   "mean": 2.7777,
+   "sd": 1.9643
+  },
+  "texture_variation": {
+   "mean": 0.5146,
+   "sd": 0.2071
+  },
+  "spectral_slope": {
+   "mean": -1.1073,
+   "sd": 0.2585
+  },
+  "focal_x": {
+   "mean": 0.475,
+   "sd": 0.1513
+  },
+  "focal_y": {
+   "mean": 0.4543,
+   "sd": 0.1402
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.1947,
+   "sd": 0.1549
+  },
+  "contrast_concentration": {
+   "mean": 1.4281,
+   "sd": 0.5477
+  }
+ }
+}

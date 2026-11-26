@@ -87,7 +87,8 @@ def fit_ks(Rob, Row, Rgb, Rgw):
 
 
 def fit_joint(films, Kw, Sw):
-    """films: list of (c, Rob_i, Row_i, Rgb_i, Rgw_i) with c the pigment weight fraction (rest zinc white, K Kw S Sw).
+    """films: list of (c, Rob_i, Row_i, Rgb_i, Rgw_i) with c the pigment weight fraction (the rest a known partner paint
+    with constants Kw, Sw: zinc white, or bone black for lead white).
     Fits the pigment's K, S per wavelength so that Duncan mixtures reproduce every film over both backgrounds."""
     n = len(films[0][1]); K, S, rms = [], [], []
     for i in range(n):
@@ -140,12 +141,22 @@ def revigo_entries():
     zob, zow, zb, zw_ = I("07A")
     Kw, Sw = fit_ks(zob, zow, zb, zw_)
     todo = [(c, n, f) for c, (n, f) in mix.items() if len(f) and f[0] == 100]
-    todo.append(("07CDEF", ["BoneBlack"], [100]))
+    todo.insert(0, ("07CDEF", ["BoneBlack"], [100]))     # bone black first: lead white is fitted on its mixtures with it
+    Kbk = Sbk = None
     for code, names, frac in todo:
+        lead_white = names[0] == "LeadWhite"
         if code == "07CDEF":
             films = [(mix[c][1][1] / 100, *I(c)) for c in ("07C", "07D", "07E", "07F")]
             K, S, rms = fit_joint(films, Kw, Sw)
+            Kbk, Sbk = K, S
             Rb, Rob, Row, Rw = (spec[f"07E_{s}"] for s in ("b", "ob", "ow", "w"))
+        elif lead_white:
+            # lead white (08A) has no tints with zinc white, so its film alone leaves S undetermined (it nearly hides);
+            # its mixtures with 0.9% and 10.2% bone black (08B, 08C) fix S against black's measured K (Duncan, weight
+            # fractions), as docs/calibration/colour.md proposed. Validated on its four tints (08D-08G) in spectral.py.
+            Rb, Rob, Row, Rw = (spec[f"{code}_{s}"] for s in ("b", "ob", "ow", "w"))
+            films = [(1.0, *map(unsaunderson, (Rob, Row, Rb, Rw)))] + [(mix[c][1][0] / 100, *I(c)) for c in ("08B", "08C")]
+            K, S, rms = fit_joint(films, Kbk, Sbk)
         else:
             Rb, Rob, Row, Rw = (spec[f"{code}_{s}"] for s in ("b", "ob", "ow", "w"))
             ib, iob, iow, iw = map(unsaunderson, (Rb, Rob, Row, Rw))
@@ -185,7 +196,8 @@ def revigo_entries():
                  spectral=dict(wavelengths_nm=[400, 700, 10], K_per_film=r3(K, 4), S_per_film=r3(S, 4),
                                R_inf=r3(Rinf, 4), unit="per film of the 100 um drawdown (wet applicator gap); Saunderson k1=0.04, k2=0.49 removed before fitting"),
                  opacity=round(float(1 - np.mean(np.abs(Row - Rob)) / max(1e-3, np.mean(Rw - Rb))), 3),
-                 fit=dict(films=("masstone + zinc-white tints (Duncan, weight fractions)" if rms not in (None, 0.0) else "masstone film only"),
+                 fit=dict(films=("masstone + its mixtures with bone black, 08B (0.9%) and 08C (10.2%) (Duncan, weight fractions)" if lead_white
+                                 else "masstone + zinc-white tints (Duncan, weight fractions)" if rms not in (None, 0.0) else "masstone film only"),
                           rms_internal_reflectance=(None if rms is None else round(rms, 4))),
                  source="revigo")
         out.append(e)
@@ -222,6 +234,200 @@ def revigo_entries():
                           engine_kmix_srgb=r3(pred, 3), engine_kmix_dE2000=round(float(colour.delta_E(lab(X), plab, method="CIE 2000")), 1),
                           spectral_km_duncan_lab=r3(lab(Xd), 1), spectral_km_dE2000=round(float(colour.delta_E(lab(X), lab(Xd), method="CIE 2000")), 1)))
     return out, tints
+
+
+# ---------------------------------------------------------------- LBNL Pigment Database (Levinson, Berdahl, Akbari 2005)
+# Earth pigments and titanium white: K and S (mm^-1) of artists' acrylic paints (Liquitex), masstone and 1:4 and 1:9 tints
+# in titanium white W03 by volume, read from the database's public charts by tools/pigments/lbnl_charts.py.
+LBNL = {  # chart -> (entry id stem, name, CI, what it stands for in the palette, status)
+    "B14-tint-ladder.pdf": ("raw_sienna", "raw sienna", "PBr7", "raw sienna", "measured (acrylic)"),
+    "B13-tint-ladder.pdf": ("burnt_sienna", "burnt sienna", "PBr7", "burnt sienna", "measured (acrylic)"),
+    "B15-tint-ladder.pdf": ("raw_umber", "raw umber", "PBr7", "raw umber", "measured (acrylic)"),
+    "Y01-tint-ladder.pdf": ("yellow_iron_oxide", "yellow iron oxide (Mars yellow)", "PY42", "yellow ochre",
+                            "measured (acrylic); a proxy: synthetic hydrated iron oxide, the chromophore of yellow ochre (PY43) without its clay"),
+    "R04-tint-ladder.pdf": ("red_iron_oxide", "red iron oxide (red oxide)", "PR101", "red ochre",
+                            "measured (acrylic); a proxy: synthetic red iron oxide, the chromophore of red ochre (PR102) without its clay"),
+}
+LBNL_TINTS = (0.2, 0.1)          # volume fraction of the paint in its 1:4 and 1:9 tints with W03
+LBNL_OVERLAP = {"U05-tint-ladder.pdf": "12A", "U10-tint-ladder.pdf": "13A", "U11-tint-ladder.pdf": "11A", "B02-tint-ladder.pdf": "07CDEF"}
+
+
+def _fill(v):
+    """Chart values with gaps (None where a curve leaves the plot) -> array, gaps interpolated in log over wavelength."""
+    a = np.array([np.nan if x is None else float(x) for x in v])
+    ok = np.isfinite(a) & (a > 0)
+    if ok.sum() < 2:
+        return None
+    return np.exp(np.interp(WL, WL[ok], np.log(a[ok])))
+
+
+def rinf_i(K, S):
+    q = K / np.maximum(S, 1e-9)
+    return 1.0 / (1.0 + q + np.sqrt(q * q + 2 * q))
+
+
+def lbnl_load():
+    path = os.path.join(os.environ.get("TEODOR_PIGMENT_DATA", os.path.expanduser("~/.cache/teodor/pigment-data")), "lbnl", "lbnl_ks.json")
+    return json.load(open(path))["charts"]
+
+
+def fit_tint_ladder(films, Kw, Sw):
+    """Masstone-tint method: per wavelength the paint's K, S (same unit as Kw, Sw) such that Duncan mixtures with the
+    white (volume fractions c) reproduce each film's R_inf (from that film's own K and S). films: [(c, R_inf_i)]."""
+    K, S, rms = [], [], []
+    for i in range(len(WL)):
+        def res(p):
+            k, s_ = np.exp(p)
+            return [rinf_i(c * k + (1 - c) * Kw[i], c * s_ + (1 - c) * Sw[i]) - R[i] for c, R in films]
+        best = None
+        for k0 in (0.1, 3, 100, 1000):
+            for s0 in (0.3, 10, 100, 1000):
+                r = least_squares(res, np.log([k0, s0]), bounds=(np.log([1e-5, 1e-3]), np.log([1e5, 1e5])))
+                if best is None or r.cost < best.cost:
+                    best = r
+        k, s_ = np.exp(best.x); K.append(k); S.append(s_); rms.append(np.sqrt(np.mean(np.square(best.fun))))
+    return np.array(K), np.array(S), float(np.mean(rms))
+
+
+def lab_of(R):
+    return lab(spec_to_xyz(R))
+
+
+def dE(R1, R2):
+    return float(colour.delta_E(lab_of(R1), lab_of(R2), method="CIE 2000"))
+
+
+def colours_of(K, S, x=1.0):
+    """The colour block of an entry, from K and S per film unit (x = 1 film, a glaze x = 0.1)."""
+    cols = {}
+    for nm, R in (("masstone", seen(rinf_i(K, S))), ("film_over_white", seen(km_film(K, S, np.full_like(K, 0.999), x))),
+                  ("film_over_black", seen(km_film(K, S, np.zeros_like(K), x))), ("glaze_over_white", seen(km_film(K, S, np.full_like(K, 0.999), 0.1))),
+                  ("glaze_over_black", seen(km_film(K, S, np.zeros_like(K), 0.1)))):
+        X = spec_to_xyz(R); lin, enc = xyz_to_srgb(X)
+        cols[nm] = dict(srgb=r3(enc, 3), linear=r3(lin, 4), lab=r3(lab(X), 1))
+    return cols
+
+
+def lbnl_entries(revigo):
+    """Earth pigments and titanium white from LBNL, in the Revigo film unit. Returns (entries, tint checks, scale info)."""
+    L = lbnl_load()
+    w = L["W03-masstone.pdf"][0]
+    Kw, Sw = _fill(w["K_per_mm"]), _fill(w["S_per_mm"])
+    # The unit: Revigo constants are per film of its 100 um drawdown (hand-ground oil paints), LBNL's per mm of dry
+    # acrylic film. Pigment loadings differ between the two sets of paints, so no single factor is exact: the factor is
+    # the geometric mean, over the four pigments both measured (cobalt blue, Prussian blue, ultramarine, bone/ivory black),
+    # of the median ratio K_revigo / K_lbnl over bands where K_lbnl > 20/mm. Its spread (about x/÷3) is the uncertainty
+    # of every LBNL paint's strength relative to the Revigo paints (not relative to titanium white: that is measured).
+    by = {e["sample"].split()[1]: e for e in revigo}
+    ratios = {}
+    for ch, code in LBNL_OVERLAP.items():
+        Kl = _fill(L[ch][0]["K_per_mm"]); Kr = np.array(by["07C-07F" if code == "07CDEF" else code]["spectral"]["K_per_film"])
+        m = Kl > 20
+        ratios[ch[:3]] = float(np.median(Kr[m] / Kl[m]))
+    f = float(np.exp(np.mean(np.log(list(ratios.values())))))
+    scale = dict(mm_per_revigo_film=round(f, 4), per_pigment=dict((k, round(v, 3)) for k, v in ratios.items()),
+                 spread_factor=round(float(np.exp(np.std(np.log(list(ratios.values()))))), 2),
+                 note="LBNL K, S (per mm) x this factor = per Revigo film. Within LBNL (earth + titanium white) mixing is measured; "
+                      "between an LBNL paint and a Revigo paint the relative strength is uncertain by about the spread factor.")
+    out, checks, fitted = [], [], {}
+
+    def make(stem, name, ci, K, S, sample, fitinfo, status, stands_for, extra=None):
+        Kf, Sf = K * f, S * f
+        cols = colours_of(Kf, Sf)
+        Ke, Se = engine_pigment(np.array(cols["glaze_over_white"]["srgb"]), np.array(cols["glaze_over_black"]["srgb"]))
+        e = dict(id="oil_" + stem, name=name, ci=ci, medium="oil", binder="acrylic emulsion (Liquitex), used as an oil proxy",
+                 sample=sample, hiding_at_film=bool(np.max(np.abs(cols["film_over_white"]["linear"][1] - cols["film_over_black"]["linear"][1])) < 0.02),
+                 colours=cols, stands_for=stands_for, status=status,
+                 engine=dict(thickness="glaze: 0.1 film", over_white=cols["glaze_over_white"]["srgb"], over_black=cols["glaze_over_black"]["srgb"],
+                             K_rgb=r3(Ke), S_rgb=r3(Se), K_rgb_linear_band=r3(band(Kf)), S_rgb_linear_band=r3(band(Sf)),
+                             note="as the Revigo entries"),
+                 spectral=dict(wavelengths_nm=[400, 700, 10], K_per_film=r3(Kf, 4), S_per_film=r3(Sf, 4), R_inf=r3(seen(rinf_i(Kf, Sf)), 4),
+                               K_per_mm=r3(K, 4), S_per_mm=r3(S, 4),
+                               unit=f"per Revigo film: LBNL per-mm values x {f:.4f} (see sources.lbnl.scale)"),
+                 opacity=None, fit=fitinfo, source="lbnl")
+        if extra:
+            e.update(extra)
+        return e
+    for ch, (stem, name, ci, stands, status) in LBNL.items():
+        cols = L[ch]
+        films = [(1.0, rinf_i(_fill(cols[0]["K_per_mm"]), _fill(cols[0]["S_per_mm"])))]
+        films += [(c, rinf_i(_fill(cols[j]["K_per_mm"]), _fill(cols[j]["S_per_mm"]))) for j, c in zip((1, 2), LBNL_TINTS)]
+        K, S, rms = fit_tint_ladder(films, Kw, Sw)
+        Km, Sm = _fill(cols[0]["K_per_mm"]), _fill(cols[0]["S_per_mm"])
+        fitted[stem] = (K, S)
+        code = ch.split("-")[0]
+        for j, c in zip((1, 2), LBNL_TINTS):
+            Rt = seen(films[j][1])
+            others = [films[0]] + [fl for fl in films[1:] if fl[0] != c]
+            Kh, Sh = fit_tint_ladder(others, Kw, Sw)[:2]
+            kin = engine_kmix(np.array(colours_of(Km, Sm)["masstone"]["srgb"], np.float32), np.array(colours_of(Kw, Sw)["masstone"]["srgb"], np.float32), 1 - c)
+            Xk = colour.RGB_to_XYZ(colour.cctf_decoding(np.clip(kin, 0, 1)), colour.RGB_COLOURSPACES["sRGB"]) * 100
+            checks.append(dict(sample=f"LBNL {code} tint 1:{int(round(1 / c - 1))}", pigment=name, paint_fraction_by_volume=c,
+                               tint_lab=r3(lab_of(Rt), 1),
+                               engine_kmix_dE2000=round(float(colour.delta_E(lab_of(Rt), lab(Xk), method="CIE 2000")), 1),
+                               duncan_from_masstone_dE2000=round(dE(Rt, seen(rinf_i(c * Km + (1 - c) * Kw, c * Sm + (1 - c) * Sw))), 1),
+                               fitted_insample_dE2000=round(dE(Rt, seen(rinf_i(c * K + (1 - c) * Kw, c * S + (1 - c) * Sw))), 1),
+                               heldout_dE2000=round(dE(Rt, seen(rinf_i(c * Kh + (1 - c) * Kw, c * Sh + (1 - c) * Sw))), 1)))
+        fitinfo = dict(films=f"LBNL {code} masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+                       rms_internal_reflectance=round(rms, 4),
+                       masstone_direct_K_per_mm=r3(Km, 3), masstone_direct_S_per_mm=r3(Sm, 3),
+                       note="fitted / masstone film's own K and S (measured over void, white and black): "
+                            f"x{np.median(K / Km):.2f} (K) and x{np.median(S / Sm):.2f} (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies")
+        out.append(make(stem, name, ci, K, S, f"LBNL {code} (Liquitex acrylic)", fitinfo, status, stands))
+    out.append(make("titanium_white", "titanium white", "PW6", Kw, Sw, "LBNL W03 (Liquitex acrylic)",
+                    dict(films="LBNL W03 masstone film's K and S as charted (measured over void, white and black)", rms_internal_reflectance=None),
+                    "measured (acrylic)", "titanium white"))
+    fitted["titanium_white"] = (Kw, Sw)
+    approx, calinfo = fors_approx(fitted, f)
+    for stem, name, ci, K, S, key, borrow in approx:
+        out.append(make(stem, name, ci, K, S, f"FORS {key} (linseed oil), S from LBNL {borrow.replace('_', ' ')}",
+                        dict(films="none: masstone K/S from the calibrated FORS spectrum; S borrowed", rms_internal_reflectance=None),
+                        f"approximation (tuned): masstone hue and value from FORS linseed oil (calibrated to LBNL), scattering borrowed from "
+                        f"{borrow.replace('_', ' ')} (a judgement); tinting strength not measured", name))
+    scale["fors_calibration"] = calinfo
+    return out, checks, scale, fitted, f
+
+
+def fors_raw(binder="linseed oil"):
+    """FORS spectra (Cosentino 2014) of one binder, as given (relative scale), at 400-700 nm / 10 nm."""
+    d = os.environ.get("TEODOR_PIGMENT_DATA", os.path.expanduser("~/.cache/teodor/pigment-data")) + "/chsos/zip/CSV/"
+    rows = list(csv.reader(open(d + binder + ".csv", encoding="latin-1")))
+    a = np.array([[float(x) if x else np.nan for x in r] for r in rows[1:]])
+    wl = a[:, 0]
+    return {key: np.array([np.nanmean(a[(wl >= w - 5) & (wl < w + 5), j + 1]) for w in WL]) / 100 for j, key in enumerate(ORDER)}
+
+
+def fors_approx(fitted, f):
+    """Burnt umber and green earth: no measured K and S anywhere we could use. Their masstone comes from the FORS linseed-oil
+    spectra with the normalisation the rest of this file uses for FORS (per wavelength, lamp black -> 0.03 and titanium
+    white -> 0.90: an assumption); its error is estimated on the earths LBNL measured (raw and burnt sienna, raw umber).
+    S is borrowed from the nearest measured earth (burnt umber: raw umber's, the same pigment calcined; green earth: raw
+    sienna's, a natural earth of a similar opacity class) -- a judgement -- and K = S * (K/S of that masstone).
+    (A per-wavelength linear map fitted on the shared pigments was tried first and rejected: FORS's linseed-oil spectra
+    have a large offset -- lamp black reads 0.18, burnt sienna is nearly neutral -- and the map turned green earth brown.)"""
+    F = fors_raw()
+    lb, tw = F["lampblack"], F["titaniumwhite"]
+    cal = lambda R: np.clip(0.03 + (R - lb) * (0.90 - 0.03) / np.maximum(tw - lb, 1e-3), 0.005, 0.95)
+    pairs = [("burntsienna", "burnt_sienna"), ("rawsienna", "raw_sienna"), ("rawumber", "raw_umber")]
+    resid = {a: round(dE(cal(F[a]), seen(rinf_i(*fitted[b]))), 1) for a, b in pairs}
+    proxy = {"yellowochre vs yellow iron oxide": round(dE(cal(F["yellowochre"]), seen(rinf_i(*fitted["yellow_iron_oxide"]))), 1),
+             "redochre vs red iron oxide": round(dE(cal(F["redochre"]), seen(rinf_i(*fitted["red_iron_oxide"]))), 1)}
+    out = []
+    for key, stem, name, ci, borrow in (("burntumber", "burnt_umber", "burnt umber", "PBr7", "raw_umber"),
+                                        ("greenearth", "green_earth", "green earth (terre verte)", "PG23", "raw_sienna")):
+        Ri = np.clip(unsaunderson_seen(cal(F[key])), 1e-4, 0.999)
+        q = (1 - Ri) ** 2 / (2 * Ri)
+        S = fitted[borrow][1]; K = q * S
+        out.append((stem, name, ci, K, S, key, borrow))
+    return out, dict(method="FORS linseed oil, normalised per wavelength (lamp black 0.03, titanium white 0.90), as for masstone_by_binder",
+                     error_on_measured_earths_dE2000=resid, note_error="FORS-derived masstone vs LBNL-measured masstone of the same pigment name "
+                     "(different samples and binders): the expected error of the two approximations",
+                     proxy_gap_dE2000=proxy, note_proxy="FORS natural ochre vs the LBNL synthetic iron oxide used for it")
+
+
+def unsaunderson_seen(Rs):
+    """Inverse of seen(): internal reflectance from a specular-excluded reflectance."""
+    return Rs / ((1 - K1) * (1 - K2) + K2 * Rs)
 
 
 # ---------------------------------------------------------------- Pigments Checker FORS (Cosentino 2014)
@@ -289,6 +495,7 @@ def handprint():
 
 def main():
     rev, tints = revigo_entries()
+    lb, lb_checks, lb_scale, _, _ = lbnl_entries(rev)
     fo = fors()
     hp, dates = handprint()
     # pigment library keyed by CI name (one entry per pigment), media blocks inside
@@ -311,6 +518,13 @@ def main():
         e["media"].setdefault("oil", []).append(dict(name=r["name"], **blk))
         if "revigo" not in e["provenance"]:
             e["provenance"].append("revigo")
+    for r in lb:
+        e = entry(r["ci"], r["name"])
+        blk = {k: r[k] for k in ("binder", "sample", "hiding_at_film", "opacity", "fit", "colours", "engine", "spectral", "status", "stands_for")}
+        e["media"].setdefault("oil", []).append(dict(name=r["name"], **blk))
+        src = "lbnl" if r["sample"].startswith("LBNL") else "fors+lbnl (approximation)"
+        if src not in e["provenance"]:
+            e["provenance"].append(src)
     for key, by in fo.items():
         name, ci = FORS_CI[key]
         e = entry(ci, name)
@@ -377,9 +591,15 @@ def main():
                               data="https://www.handprint.com/HP/WCL/waterfs.html (pages waterc/r/o/e/y/g/b/v/w)",
                               method="per paint: Tr transparency 0 (very opaque)-4, St staining 0-4, VR value range (paper value minus masstone value, 100-step scale), Gr granulation 0 (liquid)-4, Bl blossom 0-4, Df diffusion wet-in-wet 0 (inert)-4, HA CIELAB hue angle (GretagMacbeth spectrophotometer). Medians over the brands tested, per Colour Index name. CIECAM J,a,b masstone and drying shift parsed from the notes where given.",
                               status="one experienced tester's standardised swatch tests: ratings are ordinal judgements, colour values are instrument measurements; not peer reviewed"),
+            "lbnl": dict(cite="R. Levinson, P. Berdahl, H. Akbari, 'Solar spectral optical properties of pigments, Part I: model for deriving scattering and absorption coefficients from transmittance and reflectance measurements' and 'Part II: survey of common colorants', Solar Energy Materials & Solar Cells 89 (2005) 319-349, 351-389; Lawrence Berkeley National Laboratory Pigment Database",
+                         data="https://coolcolors.lbl.gov/LBNL-Pigment-Database/database.html (paints/<code>.html; spectral-charts/pdf/<code>-tint-ladder-spectral-chart.pdf)",
+                         method="artists' acrylic paints (Liquitex) drawn down as thin films (about 15-30 um) and measured over a void (R and T), an opaque white and an opaque black, 300-2500 nm; K and S (mm^-1) computed per film by LBNL. Masstones and 1:4 and 1:9 tints (volume) with titanium white W03. The numeric datafiles are encrypted for the project's partners; the values here were read from the public vector charts by tools/pigments/lbnl_charts.py (exact to the plotted precision). Earth K and S here: masstone-tint fit (Duncan, volume fractions) on each film's R_inf; scaled to the Revigo film unit (lbnl_scale).",
+                         status="measured, acrylic binder (refractive index ~1.49, close to linseed oil's ~1.48), used as oil proxies; yellow and red iron oxide are synthetic proxies for yellow and red ochre; burnt umber and green earth are approximations (FORS masstone + borrowed scattering); licence not stated (a US national laboratory's public web pages)"),
             "curtis1997": dict(cite="C. J. Curtis et al., 'Computer-Generated Watercolor', SIGGRAPH 1997, Fig. 5", doi="10.1145/258734.258896",
                                status="NOT measured: K and S were derived from colours the authors chose by eye over white and black; density, staining power and granularity are the authors' simulation settings. Kept as the graphics baseline the studio's watercolour follows.")},
         "kmix_check_tints": tints,
+        "lbnl_check_tints": lb_checks,
+        "lbnl_scale": lb_scale,
         "pigments": sorted(lib.values(), key=lambda e: (e["ci"] or "Z" + e["name"])),
         "curtis1997_watercolour": [dict(name=n, K=k, S=s, density=d, staining=w, granularity=g) for n, k, s, d, w, g in curtis],
     }
@@ -387,7 +607,10 @@ def main():
     with open(out + ".tmp", "w") as f:
         json.dump(doc, f, indent=1)
     os.replace(out + ".tmp", out)
-    print("pigments", len(lib), "oil(revigo)", len(rev), "tints", len(tints))
+    print("pigments", len(lib), "oil(revigo)", len(rev), "oil(lbnl+approx)", len(lb), "tints", len(tints))
+    print("lbnl scale", lb_scale)
+    for t in lb_checks:
+        print(f"  {t['sample']:22s} {t['pigment'][:30]:30s} kmix dE={t['engine_kmix_dE2000']:5.1f} duncan(masstone) dE={t['duncan_from_masstone_dE2000']:5.1f} fit dE={t['fitted_insample_dE2000']:5.1f} held-out dE={t['heldout_dE2000']:5.1f}")
     for key in ("engine_kmix_dE2000", "rgb3_km_dE2000", "spectral_km_dE2000"):
         v = [t[key] for t in tints]; print(key, "median", np.median(v), "max", max(v))
     for t in tints:

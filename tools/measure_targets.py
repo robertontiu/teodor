@@ -1,5 +1,6 @@
 """Measured style targets: what each current measures like, from public-domain works in The Met's
-open-access collection (Open Access API, collectionapi.metmuseum.org; images and data CC0).
+open-access collection (Open Access API, collectionapi.metmuseum.org; images and data CC0) and the
+Cleveland Museum of Art's (Open Access API, openaccess-api.clevelandart.org; CC0 works only).
 Spectre does the same for music (tools/refcurve.py: era target curves from catalogue data).
 
 How it works:
@@ -14,6 +15,7 @@ How it works:
 
   python3 tools/measure_targets.py index [--limit 4000]
   python3 tools/measure_targets.py index-csv [--per-rule 250]   # Drawings and Prints candidates via MetObjects.csv
+  python3 tools/measure_targets.py index-cma [style ...]        # Cleveland Museum of Art candidates (CMA_QUERIES)
   python3 tools/measure_targets.py measure [style ...] [--n 60] [--parts]
 
 Department 9 (Drawings and Prints, ~186,000 objects) is too large to sample at random for rare groups such as
@@ -22,6 +24,15 @@ github.com/metmuseum/openaccess, CC0; downloaded once to ~/.cache/teodor/met/ope
 pre-filter (CSV_PREFILTERS) and fetches the API records of up to --per-rule matches each into
 ~/.cache/teodor/met/records_dp_cands.jsonl. The RULES below then select from all cached records as before.
 `--parts` writes each result to studio/targets.parts/<style>.json instead of studio/targets.json (for merging).
+
+The Cleveland Museum of Art (CMA) Open Access API is queried with `cc0=1&has_image=1` (only works the museum
+releases as CC0, with an image) and the queries in CMA_QUERIES (object type, creation-date window, and a keyword
+for rare groups). `index-cma` stores each record, mapped to the Met's field names (artist nationality parsed
+from the creator line "Name (German, 1880-1938)", culture, technique as medium, the "web" image), in
+~/.cache/teodor/cma/records.jsonl. The same RULES then select from the Met and CMA records together; a
+result lists the object ids of each museum and every work's collection URL (`_works`).
+The Art Institute of Chicago is not used: its image server refuses the workspace's requests, and we don't work
+around that.
 
 A rule is a proxy for a movement, not a curator's label: "Dutch paintings 1600-1690" is mostly but
 not only the Dutch Golden Age. Currents still in copyright (surrealism, abstract-expressionism)
@@ -38,6 +49,10 @@ sys.path.insert(0, os.path.join(ROOT, "studio", "v8"))
 import eyes  # noqa: E402
 
 API = "https://collectionapi.metmuseum.org/public/collection/v1/"
+CMA_API = "https://openaccess-api.clevelandart.org/api/artworks/"
+CMA_CACHE = os.path.expanduser("~/.cache/teodor/cma")
+CMA_FIELDS = ("id,accession_number,title,creation_date,creation_date_earliest,creation_date_latest,culture,technique,"
+              "type,department,creators,images,share_license_status,url")
 UA = "TeodorResearch/1.0 (https://github.com/robertontiu/teodor)"
 CACHE = os.path.expanduser("~/.cache/teodor/met")
 DEPARTMENTS = {11: "European Paintings", 6: "Asian Art", 17: "Medieval Art", 1: "The American Wing"}
@@ -47,13 +62,13 @@ FIELDS = ("objectID", "isPublicDomain", "primaryImageSmall", "department", "clas
 
 def get(url):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
-    for attempt in range(4):
+    for attempt in range(5):
         try:
-            return urllib.request.urlopen(req, timeout=60).read()
+            return urllib.request.urlopen(req, timeout=90).read()
         except Exception:
-            if attempt == 3:
+            if attempt == 4:
                 raise
-            time.sleep(1 + 2 * attempt)
+            time.sleep(2 + 3 * attempt)
 
 
 def index(limit):
@@ -81,14 +96,81 @@ def index(limit):
 
 
 def records():
+    """Every cached record: The Met's (records*.jsonl in CACHE) and Cleveland's (CMA_CACHE/records.jsonl)."""
     out, seen = [], set()
-    for fn in ["records.jsonl"] + sorted(f for f in os.listdir(CACHE) if f.startswith("records_dp") and f.endswith(".jsonl")) if os.path.isdir(CACHE) else []:
-        for l in open(os.path.join(CACHE, fn)):
+    files = [(CACHE, fn) for fn in (["records.jsonl"] + sorted(f for f in os.listdir(CACHE) if f.startswith("records_dp") and f.endswith(".jsonl"))
+                                    if os.path.isdir(CACHE) else [])]
+    files += [(CMA_CACHE, "records.jsonl")]
+    byid = {}
+    for d, fn in files:
+        if not os.path.exists(os.path.join(d, fn)):
+            continue
+        for l in open(os.path.join(d, fn)):
             o = json.loads(l)
-            if o.get("objectID") in seen:
+            k = o.get("objectID")
+            if k in byid:      # the same object fetched twice: fill in fields the first copy lacks (e.g. dimensions)
+                byid[k].update({f: v for f, v in o.items() if v not in (None, "") and byid[k].get(f) in (None, "")})
                 continue
-            seen.add(o.get("objectID")); out.append(o)
+            byid[k] = o; out.append(o)
     return out
+
+
+def source(o):
+    return "cma" if str(o.get("objectID", "")).startswith("cma:") else "met"
+
+
+def cma_record(o):
+    """A CMA Open Access record mapped to the Met's field names (only the fields the rules read)."""
+    cr = [c for c in (o.get("creators") or []) if c.get("description")]
+    desc = cr[0]["description"] if cr else ""
+    m = re.search(r"\(([^()]*?)(?:,\s*(?:active|born|died|c\.|ca\.|\d)[^()]*)?\)\s*$", desc)
+    nationality = (m.group(1).split(",")[0].strip() if m else "")
+    img = ((o.get("images") or {}).get("web") or {}).get("url")
+    return {"objectID": f"cma:{o['id']}", "isPublicDomain": o.get("share_license_status") == "CC0", "primaryImageSmall": img,
+            "department": o.get("department"), "classification": o.get("type"),
+            "objectBeginDate": o.get("creation_date_earliest"), "objectEndDate": o.get("creation_date_latest"),
+            "artistNationality": nationality, "culture": "; ".join(o.get("culture") or []), "medium": o.get("technique"),
+            "title": o.get("title"), "artistDisplayName": desc, "objectDate": o.get("creation_date"),
+            "accessionNumber": o.get("accession_number"), "objectURL": o.get("url")}
+
+
+# current -> CMA API queries (cc0=1 and has_image=1 are always added); the RULES below decide what is used
+CMA_QUERIES = {
+    "byzantine-icon": [dict(type="Painting", created_after=1100, created_before=1850, q=w)
+                       for w in ("icon", "Byzantine", "Cretan", "Greece", "Russia", "Balkan", "Bulgaria", "Serbia", "Romania")],
+    "fauvism": [dict(type=t, created_after=1904, created_before=1910) for t in ("Painting", "Drawing", "Print")],
+    "expressionism": [dict(type=t, created_after=a, created_before=b) for t in ("Painting", "Drawing", "Print")
+                      for a, b in ((1905, 1912), (1913, 1918), (1919, 1925))],
+}
+
+
+def index_cma(styles):
+    os.makedirs(CMA_CACHE, exist_ok=True)
+    path = os.path.join(CMA_CACHE, "records.jsonl")
+    have = {json.loads(l)["objectID"] for l in open(path)} if os.path.exists(path) else set()
+    import urllib.parse
+    with open(path, "a") as f:
+        for sid in styles:
+            for q in CMA_QUERIES.get(sid, []):
+                skip, new = 0, 0
+                while True:
+                    u = CMA_API + "?" + urllib.parse.urlencode(dict(q, cc0=1, has_image=1, limit=100, skip=skip, fields=CMA_FIELDS))
+                    try:
+                        d = json.loads(get(u))
+                    except Exception as e:
+                        print(f"  {sid} {q} skip={skip}: {e}", file=sys.stderr); break
+                    for o in d.get("data", []):
+                        r = cma_record(o)
+                        if r["objectID"] in have or not r["isPublicDomain"] or not r["primaryImageSmall"]:
+                            continue
+                        have.add(r["objectID"]); new += 1
+                        f.write(json.dumps(r) + "\n")
+                    f.flush()
+                    skip += 100
+                    if skip >= d.get("info", {}).get("total", 0):
+                        break
+                    time.sleep(0.2)
+                print(f"{sid} {q}: {new} new", flush=True)
 
 
 import re  # noqa: E402
@@ -98,6 +180,11 @@ CSV_PREFILTERS = {
     "pen-and-ink-illustration": lambda o, m, b: o["Classification"] == "Drawings" and 1875 <= b <= 1920 and "pen" in m and "ink" in m,
     "etching-engraving-engraving": lambda o, m, b: o["Department"] == "Drawings and Prints" and o["Classification"] == "Prints" and 1480 <= b <= 1900 and m.startswith("engraving"),
     "etching-engraving-etching": lambda o, m, b: o["Department"] == "Drawings and Prints" and o["Classification"] == "Prints" and 1500 <= b <= 1925 and m.startswith("etching"),
+    "byzantine-icon": lambda o, m, b: 1100 <= b <= 1850 and "tempera" in m and has(o["Culture"] + " " + o["Artist Nationality"], *ORTHODOX),
+    "expressionism": lambda o, m, b: 1905 <= b <= 1925 and nat({"artistNationality": o["Artist Nationality"]}) in ("german", "austrian")
+                                     and o["Classification"] in ("Paintings", "Drawings", "Prints"),
+    "fauvism": lambda o, m, b: 1904 <= b <= 1910 and nat({"artistNationality": o["Artist Nationality"]}) == "french"
+                               and o["Classification"] in ("Paintings", "Drawings", "Prints"),
 }
 
 
@@ -152,10 +239,32 @@ def eu(o):
     return o.get("department") == "European Paintings"
 
 
+def nat(o):
+    """The artist's first-named nationality, lower case ("German|American" -> "german"; Cleveland's
+    "American, born Germany" -> "american")."""
+    return re.split(r"[|,;]", (o.get("artistNationality") or "").strip().lower() + "|")[0].strip()
+
+
+ORTHODOX = ("byzant", "greek", "greece", "cret", "russia", "balkan", "bulgaria", "serbia", "romania", "macedonia", "cyprus", "novgorod",
+            "moscow", "pskov", "yaroslavl")
+COLOUR_MEDIA = ("oil", "tempera", "watercolo", "gouache", "pastel", "color", "colour", "red chalk", "colored", "coloured")
+
+
+def small_sheet(o, cm=16):
+    """True when the record's dimensions give a sheet or image under `cm` both ways (postcard format, 14 x 9 cm)."""
+    m = re.search(r"\(([\d.]+)\s*[x×]\s*([\d.]+)\s*cm\)", o.get("dimensions") or "")
+    return bool(m) and max(float(m.group(1)), float(m.group(2))) < cm
+
+
 # current -> (description of the rule, predicate)
 RULES = {
-    "byzantine-icon": ("Medieval Art and European Paintings: Byzantine, Greek, Cretan or Russian painted works (tempera, icons), 1200-1800",
-                       lambda o: has(o.get("culture"), "byzantine", "greek", "cretan", "russian") and painting(o) and date_in(o, 1200, 1800)),
+    "byzantine-icon": ("Paintings (Met: any department; Cleveland: type Painting) in tempera (egg tempera, tempera and gold) on wood, panel or "
+                       "linen, begun 1100-1850, whose culture or artist nationality is Byzantine, Greek/Cretan, Russian or Balkan Orthodox "
+                       "(Byzant-, Greek, Greece, Cret-, Russia-, Balkan, Bulgaria, Serbia, Romania, Macedonia, Cyprus, Novgorod, Moscow, Pskov, "
+                       "Yaroslavl); oil paintings (e.g. El Greco's Spanish work), mosaics, metalwork, textiles and manuscripts on parchment excluded",
+                       lambda o: has((o.get("culture") or "") + " " + (o.get("artistNationality") or ""), *ORTHODOX) and painting(o)
+                       and date_in(o, 1100, 1850) and has(o.get("medium"), "tempera") and has(o.get("medium"), "wood", "panel", "linen")
+                       and not has(o.get("medium"), "oil", "mosaic", "parchment", "vellum", "silver", "enamel")),
     "renaissance": ("European Paintings 1400-1560 by Italian, Netherlandish, Flemish or German artists",
                     lambda o: eu(o) and date_in(o, 1400, 1560) and has(o.get("artistNationality"), "italian", "netherlandish", "flemish", "german")),
     "baroque": ("European Paintings 1600-1700 by Italian, Spanish, Flemish or French artists",
@@ -170,10 +279,22 @@ RULES = {
                       lambda o: eu(o) and date_in(o, 1865, 1895) and has(o.get("artistNationality"), "french") and has(o.get("medium"), "oil")),
     "post-impressionism": ("European Paintings 1885-1905 by French or Dutch artists",
                            lambda o: eu(o) and date_in(o, 1885, 1905) and has(o.get("artistNationality"), "french", "dutch")),
-    "fauvism": ("European Paintings 1904-1910 by French artists (few public-domain works; weak)",
-                lambda o: eu(o) and date_in(o, 1904, 1910) and has(o.get("artistNationality"), "french")),
-    "expressionism": ("Paintings 1905-1925 by German or Austrian artists (few public-domain works; weak)",
-                      lambda o: painting(o) and date_in(o, 1905, 1925) and has(o.get("artistNationality"), "german", "austrian")),
+    "fauvism": ("Paintings, drawings and prints in colour begun 1904-1910 by French artists (Met and Cleveland). No public-domain "
+                "work by a member of the 1905 Salon d'Automne group is released by either museum, so this proxy measures their "
+                "contemporaries, not the Fauves: do not use it as a Fauvist target",
+                lambda o: date_in(o, 1904, 1910) and nat(o) == "french" and has(o.get("classification"), "painting", "drawing", "print")
+                and has(o.get("medium"), *COLOUR_MEDIA) and not small_sheet(o)),
+    "expressionism": ("Paintings, drawings and prints in colour (oil, tempera, watercolour, gouache, pastel, coloured chalk or crayon, "
+                      "colour prints) begun 1905-1925 by artists whose first-named nationality is German or Austrian (Met and "
+                      "Cleveland; postcards and other sheets under 16 cm, Met prints without a catalogued size, ornament and design "
+                      "drawings excluded, which removes the Wiener Werkstaette postcards); black-and-white prints and drawings (black chalk, crayon, charcoal, woodcut) are "
+                      "excluded because they would set the colour measures, not the current",
+                      lambda o: date_in(o, 1905, 1925) and nat(o) in ("german", "austrian")
+                      and has(o.get("classification"), "painting", "drawing", "print")
+                      and not has(o.get("classification"), "ornament", "postcard", "design")
+                      and not re.search(r"^design for|postcard", (o.get("title") or "").lower())
+                      and has(o.get("medium"), *COLOUR_MEDIA) and not small_sheet(o)
+                      and not (source(o) == "met" and has(o.get("classification"), "print") and not o.get("dimensions"))),
     "ukiyo-e": ("Asian Art: Japanese woodblock prints, 1700-1868",
                 lambda o: o.get("department") == "Asian Art" and has(o.get("culture"), "japan") and has(o.get("classification"), "print") and date_in(o, 1700, 1868)),
     "pen-and-ink-illustration": ("Drawings in pen and ink without wash, colour, chalk or charcoal, 1875-1920 (any department but Modern and "
@@ -193,11 +314,21 @@ RULES = {
 }
 
 
+def greyscale(img):
+    """True for a black-and-white photograph (a greyscale image, or RGB with no pixel more than 2/255 off grey).
+    Many older museum photographs of paintings are black and white; measuring them would put zero chroma into a
+    current's colour targets. (Added 2026-11-26; targets measured before then did not apply this check.)"""
+    if img.mode in ("1", "L", "LA", "I", "I;16", "F"):
+        return True
+    a = np.asarray(img.convert("RGB").resize((128, 128)), np.int16)
+    return int((a.max(2) - a.min(2)).max()) <= 2
+
+
 def measure_style(sid, n, recs):
     desc, rule = RULES[sid]
     pool = [o for o in recs if rule(o)]
     random.Random(sid).shuffle(pool)
-    ms, ids = [], []
+    ms, used, grey = [], [], []
     for o in pool:
         if len(ms) >= n:
             break
@@ -205,15 +336,34 @@ def measure_style(sid, n, recs):
             img = Image.open(io.BytesIO(get(o["primaryImageSmall"])))
             if min(img.size) < 200:
                 continue
+            if greyscale(img):      # a black-and-white photograph of the work: its colour measures would be the camera's
+                grey.append(o["objectID"])
+                continue
             ms.append(eyes.measure(img))
-            ids.append(o["objectID"])
+            used.append(o)
         except Exception as e:
             print(f"  skip {o['objectID']}: {e}", file=sys.stderr)
         time.sleep(0.1)
     if len(ms) < 5:
         return None, len(pool)
-    t = {"_n": len(ms), "_pool": len(pool), "_source": "The Met Open Access (CC0), public-domain works",
-         "_rule": desc, "_met_object_ids": ids, "_measured": time.strftime("%Y-%m-%d")}
+    met = [o["objectID"] for o in used if source(o) == "met"]
+    cma = [o for o in used if source(o) == "cma"]
+    src = []
+    if met:
+        src.append("The Met Open Access (CC0), public-domain works")
+    if cma:
+        src.append("Cleveland Museum of Art Open Access (CC0 works)")
+    t = {"_n": len(ms), "_pool": len(pool), "_source": "; ".join(src), "_rule": desc, "_met_object_ids": met,
+         "_measured": time.strftime("%Y-%m-%d")}
+    if grey:
+        t["_skipped_greyscale_photographs"] = grey
+    if cma:
+        t["_cma_object_ids"] = [int(o["objectID"][4:]) for o in cma]
+        t["_pool_by_source"] = {"met": sum(source(o) == "met" for o in pool), "cma": sum(source(o) == "cma" for o in pool)}
+        t["_works"] = [{"source": source(o), "id": o["objectID"] if source(o) == "met" else int(o["objectID"][4:]),
+                        "accession": o.get("accessionNumber"), "date": o.get("objectBeginDate"), "medium": o.get("medium"),
+                        "url": (o.get("objectURL") or f"https://www.metmuseum.org/art/collection/search/{o['objectID']}"),
+                        "image": o.get("primaryImageSmall")} for o in used]
     for k in ms[0]:
         v = np.array([m[k] for m in ms], float)
         v = v[np.isfinite(v)]
@@ -228,8 +378,10 @@ if __name__ == "__main__":
         if name in argv:
             i = argv.index(name); v = argv[i + 1]; del argv[i:i + 2]; return int(v)
         return default
-    if not argv or argv[0] not in ("index", "index-csv", "measure"):
+    if not argv or argv[0] not in ("index", "index-csv", "index-cma", "measure"):
         sys.exit(__doc__)
+    if argv[0] == "index-cma":
+        index_cma(argv[1:] or list(CMA_QUERIES)); sys.exit()
     if argv[0] == "index":
         index(opt("--limit", 4000)); sys.exit()
     if argv[0] == "index-csv":
@@ -243,7 +395,8 @@ if __name__ == "__main__":
         sys.exit("No records cached yet: run `index` first.")
     out = os.path.join(ROOT, "studio", "targets.json")
     targets = json.load(open(out)) if os.path.exists(out) else {}
-    targets["_about"] = "Measured style targets (statistics only) from public-domain works in The Met's Open Access collection; see tools/measure_targets.py and docs/MANUAL.md, 'Report'."
+    targets["_about"] = ("Measured style targets (statistics only) from public-domain works in The Met's and the Cleveland Museum of Art's "
+                         "Open Access collections; see tools/measure_targets.py and docs/MANUAL.md, 'Report'.")
     for sid in (argv[1:] or list(RULES)):
         print(f"{sid} ...", flush=True)
         t, pool = measure_style(sid, n, recs)

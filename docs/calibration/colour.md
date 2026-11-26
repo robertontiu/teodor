@@ -10,7 +10,8 @@ Nov 25, 2026. Target from `docs/media-data.md` ("Finding: the engine's `kmix` ag
 | same, held out: K and S refitted without the predicted tint (spectral model alone, leave one tint out) | | **2.7** / 11.9; 2.1 / 5.6 without eosine | |
 | same, held out, whole engine path (refit without the light or without the strong tints, unmixing table rebuilt) | | 3.4 / 36.5; in-palette paints 3.2; without eosine 2.4 | |
 | 19 mixtures of a paint with 1-11% bone black (never used in any fit) | 10.7 / 32.1 | 5.4 / 27.8 (spectral model alone 5.2 / 20.9) | Revigo |
-| 4 tints of ~10% paint in lead white (lead white fitted only on its mixtures with black) | 14.7 / 16.6 | 7.8 / 9.6 (spectral model alone **3.0** / 4.0) | Revigo |
+| 4 tints of ~10% paint in lead white (lead white fitted only on its mixtures with black) | 14.7 / 16.6 | 7.8 / 9.6 (spectral model alone **3.0** / 4.0); since Nov 26 with a lead-white palette **2.9** / 3.9 | Revigo |
+| 10 tints of earths in titanium white, 1:4 and 1:9 by volume (Nov 26; section 5) | 12.8 / 19.6 | **1.0** / 3.6 through a titanium-white palette (spectral model, each tint held out: 0.4 / 0.5) | LBNL [P7] |
 | speed, `match` 300 strokes of 40-70 px on 1200 × 1600 (CPU s) | 15 | 25 | |
 | speed, `match` 400 strokes of 14-24 px (CPU s) | 9-10 | 14 | |
 | speed, full-canvas glaze (CPU s) | 1.0 | 3.1 | |
@@ -54,8 +55,46 @@ Where the RGB path loses against the spectral model itself: (1) small amounts of
 ## 4. What remains uncalibrated, and why
 
 - **The sparsity prior** (2.5 / 1.0 / 0.5 ΔE per paint), the glaze choices (white +4 ΔE below L* 70, veil above), `BODY_FILM` 50 µm per full deposit, `GLAZE_FILM` 30 µm per unit of opacity, and the 0.15 wetness threshold between mixing and layering are judgements; the thicknesses are set within the measured range of layer thicknesses [O1] but not fitted to anything.
-- **No earth pigments.** Revigo has no ochres, siennas or umbers, so browns are mixed from vermilion, chrome yellow, black and a green; their tints may be cleaner and stronger than earth tints. FORS [P2] has earth masstones but no K and S (no tints or films over black and white), so they cannot be added as measured two-constant paints. Titanium white and modern pigments are not in the data either.
-- **One white.** The engine's white is zinc white (the white of the tint data). Lead white's measured tints are matched by the model (3.0) but not by the engine (7.8); making lead white the second white needs its K and S in `pigments.json` from its black mixtures (a change to `tools/pigments/build_pigments.py`, which is not part of this job).
+- **Earth pigments** (added Nov 26, section 5): raw and burnt sienna and raw umber are measured (as acrylics); yellow and red ochre are stood in for by synthetic iron oxides; burnt umber and terre verte are approximations. Their strength relative to the Revigo paints rests on one cross-dataset factor (uncertain by about ×/÷2.7).
+- **One white per palette** (Nov 26, section 5): zinc white by default; lead white and titanium white are in the palette but used only when chosen, because RGB cannot tell the whites apart.
 - **Medium (oil) is clear** (K = S = 0) in glazes; real linseed oil yellows and absorbs a little in the blue. Not measured here.
 - **Mixed paint does not persist** between commands: the canvas file stores RGB, so the next command re-unmixes from RGB (a mixture of white and 2% Prussian blue becomes whatever the table says that colour is). Saving the concentrations (13 more channels per pixel) would keep the paint's identity across commands; I did not add it to keep the canvas files small.
-- **Other media** still use `base.kmix`. `media/base.py` is not part of this job; switching `base.kmix` to `spectral.mix` would give gouache, pastel and tempera the same tinting strengths (they use oil-like opaque mixing), at about 25× the per-pixel cost of `kmix`, so they would need a windowed path like oil's (`mix_window`).
+- **Other media** still use `base.kmix`. Switching it to spectral mixing is planned; section 5 lists what that needs.
+
+## 5. Lead white, titanium white and the earths (Nov 26, 2026)
+
+`pigments.json` gained K and S for lead white, titanium white and seven earths, and the spectral palette went from 13 to 22 paints. Built by `tools/pigments/build_pigments.py` (+ `tools/pigments/lbnl_charts.py`); checked by `python3 -m media.spectral validate`.
+
+**Lead white** (Revigo 08A). Its 100 µm film nearly hides, so the film alone leaves its scattering undetermined. Its two mixtures with bone black (08B: 0.9%, 08C: 10.2%) fix it against black's measured absorption (Duncan, weight fractions; rms 0.020 in internal reflectance). Lead white scatters about half as much as the Revigo zinc white per film (S 5.6 against 11 at 460 nm). Its four tints (~10% cochineal, viridian, cobalt blue or chrome yellow in lead white; never used in a fit) are predicted at a median ΔE2000 of 3.0 by the model and **2.9** through the engine with a lead-white palette (before: 7.8, when the engine could only read lead white as zinc white).
+
+**Earths and titanium white: where the data came from.** No open dataset of K and S, or of masstone and tints, for earth pigments in oil was found (searched: Zenodo, the RIT/Golden acrylic dataset [P8], the Munch Aula oil libraries, IFAC FORS, Centore, the Abed thesis; see `docs/media-data.md`, "Pigments"). The usable source is the LBNL Pigment Database [P7]: artists' acrylics (Liquitex) as 15-30 µm films measured over a void, white and black, with K and S per film, masstones and 1:4 and 1:9 tints in titanium white (W03). Its numeric files are encrypted for the project's partners, so `lbnl_charts.py` reads K and S out of the public charts, which are vector drawings (each curve a 441-point polyline; values exact to the plotted precision, about 0.3%).
+
+| palette name | measured paint | status |
+|---|---|---|
+| titanium white | LBNL W03, Liquitex titanium white (PW6) | measured (acrylic) |
+| raw sienna | LBNL B14 (PBr7) | measured (acrylic) |
+| burnt sienna | LBNL B13 (PBr7) | measured (acrylic) |
+| raw umber | LBNL B15 (PBr7) | measured (acrylic) |
+| yellow ochre | LBNL Y01, synthetic yellow iron oxide (PY42) | proxy: the ochre's chromophore without its clay; its masstone differs from the FORS natural yellow ochre by ΔE2000 14.6 |
+| red ochre | LBNL R04, synthetic red iron oxide (PR101) | proxy, as above; ΔE2000 15.4 from the FORS red ochre |
+| burnt umber | FORS linseed-oil masstone, scattering of raw umber | **approximation (tuned)**: the same FORS normalisation misses LBNL's measured raw umber, raw and burnt sienna by ΔE2000 10.8, 8.1 and 20.7 |
+| terre verte | FORS linseed-oil masstone, scattering of raw sienna | **approximation (tuned)**, as above |
+
+- **Fit.** Each earth's K and S are fitted by the masstone-tint method: per wavelength, Duncan mixtures by volume with W03 reproduce the R∞ of the masstone film and of both tints (rms 0.0002-0.0034). Duncan from the masstone film's own charted K and S alone misses the tints by 2.0-9.1; the fitted constants are 0.9× (raw sienna) to 2.2× (red iron oxide) the masstone film's, mostly larger: those paints tint more strongly in white than their masstone films imply.
+- **Units.** Revigo's constants are per film of its 100 µm drawdown (hand-ground oil), LBNL's per mm of dry acrylic. One factor converts them: 0.398 mm per Revigo film, the geometric mean of K_revigo/K_lbnl over the four pigments both measured (cobalt blue 0.29, Prussian blue 1.97, ultramarine 0.13, bone black 0.34). The spread (×/÷2.7) is the honest uncertainty of every earth's and titanium white's strength against the Revigo paints. Against titanium white the earths' strength is measured. At this factor titanium white scatters about 20-40× more per film than the Revigo zinc white.
+- **One white per palette.** The three whites differ by only 1-5 L* in RGB, but by 20-40× in scattering. With all three in the unmixing table, near-white colours were read as titanium white, and zinc-white tints missed by a median of **18.6** instead of 1.8. Now the palette has one white (`spectral.DEFAULT_WHITE`, zinc white unless `TEODOR_OIL_WHITE` says `lead white` or `titanium white`, or `Palette(white=...)`): the unmixing table and the glazes use only that white. A style could choose lead white (before about 1850) or titanium white (after about 1920); nothing in the studio does that yet (a judgement left to whoever wires styles to palettes).
+- **Results** (median / max ΔE2000, before → after):
+  - 29 tints with zinc white, engine path: 1.80 / 44.2 → 1.80 / 45.6. Without eosine: 1.58 → 1.69 (viridian 1.0 → 1.7 and 3.8 → 4.2; the eosine variants not in the palette 0.7-2.3 worse).
+  - The same, held out (engine path): 3.38 → 3.45.
+  - 19 bone-black mixtures: 5.13 → 5.13.
+  - 4 lead-white tints: 7.77 → 2.86.
+  - 10 earth tints in titanium white: kmix 12.8 → **0.95** (max 3.55, red iron oxide). That number is through the engine, but the earths' constants were fitted on these same tints, so it is not a prediction. The spectral model with each tint held out gets 0.40 (max 0.50); with two tints per paint, that check is weak.
+- **How colours unmix now.** With zinc white, a mid brown (#6b4a2b) is no longer lemon chrome yellow, vermilion, cochineal and black: it becomes mostly terre verte with eosine lake and a little raw sienna, because the approximated terre verte's masstone is a dull olive. An ochre (#c8962e) is yellow ochre in white; a brick red (#9c4a32) is red lead with some burnt sienna. The approximated paints can take over browns and olives; that is the largest risk of this change.
+- **Cost.** `spectral.mix` is 1.4× the CPU time per pixel (22 paints instead of 13). The unmixing table took 8 s to build on a heavily loaded machine (section 1: about 2 s before; built once, then cached).
+
+**What switching `base.kmix` to spectral mixing (gouache, pastel, tempera) would need.**
+1. **A windowed path.** Those media call `kmix` per dab on small windows. `spectral.mix` costs about 25× `kmix` per pixel (now 1.4× more), so they need oil's `mix_window` (mixing only where the dab's amount exceeds a threshold, with the canvas's pigment state cached in a `CanvasLatent`), or a cheaper three-paint-at-a-time path.
+2. **A white per medium.** Gouache and tempera whites are not oil whites. Gouache uses zinc or titanium white with chalk or blanc fixe and gum arabic; egg tempera historically uses lead white. The binder changes S (refractive index: gum arabic and egg are lower than oil, so they scatter more and look paler and more opaque), so the oil constants are only a first approximation. Each medium should pick its palette white (`Palette(white=...)`) and, ideally, scale S for its binder. FORS [P2] has the same pigments in gum arabic, egg tempera and oil, which bounds that shift for masstones.
+3. **Pastel** is not a mixture in a binder but juxtaposed or rubbed particles: its "mixing" on paper is partly optical (side by side) and partly physical (rubbed). Spectral Kubelka-Munk fits the rubbed part; a pastel stroke over another should rather be the film path (`film_over`), as oil does over dry paint.
+4. **Validation per medium.** No tint data for gouache or tempera was found. handprint's watercolour ratings (opacity, value range) are the nearest check.
+

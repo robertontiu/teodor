@@ -1,0 +1,229 @@
+{
+ "byzantine-icon": {
+  "_n": 10,
+  "_pool": 22,
+  "_source": "The Met Open Access (CC0), public-domain works; Cleveland Museum of Art Open Access (CC0 works)",
+  "_rule": "Paintings (Met: any department; Cleveland: type Painting) in tempera (egg tempera, tempera and gold) on wood, panel or linen, begun 1100-1850, whose culture or artist nationality is Byzantine, Greek/Cretan, Russian or Balkan Orthodox (Byzant-, Greek, Greece, Cret-, Russia-, Balkan, Bulgaria, Serbia, Romania, Macedonia, Cyprus, Novgorod, Moscow, Pskov, Yaroslavl); oil paintings (e.g. El Greco's Spanish work), mosaics, metalwork, textiles and manuscripts on parchment excluded",
+  "_met_object_ids": [
+   26485,
+   435828,
+   437567,
+   437578,
+   437558,
+   479796,
+   831188
+  ],
+  "_measured": "2026-11-26",
+  "_skipped_greyscale_photographs": [
+   437858,
+   437564,
+   436578,
+   437554,
+   437856,
+   437566,
+   437552,
+   437555,
+   437857,
+   437557,
+   437556,
+   437569
+  ],
+  "_cma_object_ids": [
+   168322,
+   97138,
+   283088
+  ],
+  "_pool_by_source": {
+   "met": 19,
+   "cma": 3
+  },
+  "_works": [
+   {
+    "source": "cma",
+    "id": 168322,
+    "accession": "2010.154",
+    "date": 1420,
+    "medium": "tempera and gold on wood",
+    "url": "https://clevelandart.org/art/2010.154",
+    "image": "https://openaccess-cdn.clevelandart.org/2010.154/2010.154_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 26485,
+    "accession": null,
+    "date": 1200,
+    "medium": "Wood, canvas, gesso, tempera",
+    "url": "https://www.metmuseum.org/art/collection/search/26485",
+    "image": "https://images.metmuseum.org/CRDImages/aa/web-large/DP156967.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 97138,
+    "accession": "1916.778",
+    "date": 1400,
+    "medium": "tempera and gold on wood",
+    "url": "https://clevelandart.org/art/1916.778",
+    "image": "https://openaccess-cdn.clevelandart.org/1916.778/1916.778_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 435828,
+    "accession": null,
+    "date": 1400,
+    "medium": "Tempera on wood, gold ground",
+    "url": "https://www.metmuseum.org/art/collection/search/435828",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DT242201.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437567,
+    "accession": null,
+    "date": 1600,
+    "medium": "Tempera on wood, gold ground",
+    "url": "https://www.metmuseum.org/art/collection/search/437567",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/EP484.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437578,
+    "accession": null,
+    "date": 1470,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/437578",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/DT238453.jpg"
+   },
+   {
+    "source": "met",
+    "id": 437558,
+    "accession": null,
+    "date": 1500,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/437558",
+    "image": "https://images.metmuseum.org/CRDImages/ep/web-large/EP446.jpg"
+   },
+   {
+    "source": "met",
+    "id": 479796,
+    "accession": null,
+    "date": 1400,
+    "medium": "Tempera and gold on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/479796",
+    "image": "https://images.metmuseum.org/CRDImages/md/web-large/DP-14093-001.jpg"
+   },
+   {
+    "source": "cma",
+    "id": 283088,
+    "accession": "2016.32",
+    "date": 1445,
+    "medium": "Tempera and gold on wood panel (poplar)",
+    "url": "https://clevelandart.org/art/2016.32",
+    "image": "https://openaccess-cdn.clevelandart.org/2016.32/2016.32_web.jpg"
+   },
+   {
+    "source": "met",
+    "id": 831188,
+    "accession": null,
+    "date": 1200,
+    "medium": "Tempera on wood",
+    "url": "https://www.metmuseum.org/art/collection/search/831188",
+    "image": "https://images.metmuseum.org/CRDImages/md/web-large/DP-22753-001.jpg"
+   }
+  ],
+  "value_mean": {
+   "mean": 43.5964,
+   "sd": 13.7477
+  },
+  "value_spread": {
+   "mean": 17.8832,
+   "sd": 3.9356
+  },
+  "value_p5": {
+   "mean": 12.1111,
+   "sd": 9.3626
+  },
+  "value_p95": {
+   "mean": 70.4606,
+   "sd": 13.8761
+  },
+  "value_dark": {
+   "mean": 0.3513,
+   "sd": 0.1716
+  },
+  "value_light": {
+   "mean": 0.2157,
+   "sd": 0.2712
+  },
+  "value_middle": {
+   "mean": 0.433,
+   "sd": 0.1435
+  },
+  "value_murky": {
+   "mean": 0.2558,
+   "sd": 0.0949
+  },
+  "notan_dark_share": {
+   "mean": 0.4555,
+   "sd": 0.1585
+  },
+  "value_groups": {
+   "mean": 2.6,
+   "sd": 0.4899
+  },
+  "chroma_mean": {
+   "mean": 22.683,
+   "sd": 8.055
+  },
+  "chroma_p90": {
+   "mean": 41.9466,
+   "sd": 12.2355
+  },
+  "hue_spread": {
+   "mean": 0.368,
+   "sd": 0.0703
+  },
+  "warm_share": {
+   "mean": 0.576,
+   "sd": 0.2042
+  },
+  "cool_share": {
+   "mean": 0.0015,
+   "sd": 0.0028
+  },
+  "edge_density": {
+   "mean": 0.3939,
+   "sd": 0.1809
+  },
+  "hard_edge_share": {
+   "mean": 0.1568,
+   "sd": 0.0715
+  },
+  "detail_energy": {
+   "mean": 5.2065,
+   "sd": 2.8825
+  },
+  "texture_variation": {
+   "mean": 0.3758,
+   "sd": 0.4649
+  },
+  "spectral_slope": {
+   "mean": -0.9892,
+   "sd": 0.1675
+  },
+  "focal_x": {
+   "mean": 0.4509,
+   "sd": 0.0678
+  },
+  "focal_y": {
+   "mean": 0.5788,
+   "sd": 0.2119
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.1246,
+   "sd": 0.1068
+  },
+  "contrast_concentration": {
+   "mean": 1.2855,
+   "sd": 0.8434
+  }
+ }
+}

@@ -1,10 +1,13 @@
 # How studio/pigments.json and studio/calibration_refs.json were built
 
-Scripts written during the real-data research (2026-11-25; docs/media-data.md describes the sources and method).
+Scripts written during the real-data research (2026-11-25; earths, lead and titanium white added 2026-11-26; docs/media-data.md describes the sources and method, docs/calibration/colour.md the validation).
 
-- `build_pigments.py` builds `studio/pigments.json` from three sources, downloaded into `$TEODOR_PIGMENT_DATA` (default `~/.cache/teodor/pigment-data/`, never committed):
-  - `revigo/repo/`: a clone of github.com/fligt/revigo-spectra (Geldof et al. 2018, Heritage Science, doi:10.1186/s40494-018-0181-6; CC0): 16 hand-ground 19th-century oil paints over black and white, with tints. Two-constant Kubelka-Munk K and S are fitted from these.
-  - `chsos/zip/`: the Pigments Checker FORS spectra (Cosentino 2014, chsopensource.org; no licence stated, so only derived colours are kept, and they are hue-only because the reflectance scale is uncalibrated).
+- `build_pigments.py` builds `studio/pigments.json` from four sources, downloaded into `$TEODOR_PIGMENT_DATA` (default `~/.cache/teodor/pigment-data/`, never committed):
+  - `revigo/repo/`: a clone of github.com/fligt/revigo-spectra (Geldof et al. 2018, Heritage Science, doi:10.1186/s40494-018-0181-6; CC0): 16 hand-ground 19th-century oil paints over black and white, with tints. Two-constant Kubelka-Munk K and S are fitted from these: each paint on its masstone film and its tints with zinc white; bone black on its tints with zinc white; lead white on its film and its two mixtures with bone black (08B, 08C).
+  - `lbnl/`: the LBNL Pigment Database (Levinson, Berdahl and Akbari 2005; coolcolors.lbl.gov): `charts/` holds the public spectral charts (`<code>-tint-ladder.pdf` for B13 burnt sienna, B14 raw sienna, B15 raw umber, R04 red oxide, Y01 yellow oxide, and the overlap paints B02, U05, U10, U11; `<code>-masstone.pdf` for the whites W01-W04), downloaded from `https://coolcolors.lbl.gov/LBNL-Pigment-Database/assets/spectral-charts/pdf/<code>-tint-ladder-spectral-chart.pdf` (or `-masstone-spectral-chart.pdf`). `lbnl_charts.py` reads K and S out of the charts' vector curves into `lbnl/lbnl_ks.json` (run it before `build_pigments.py`). The numeric datafiles of that database are encrypted for its project partners and are not used.
+  - `chsos/zip/`: the Pigments Checker FORS spectra (Cosentino 2014, chsopensource.org; no licence stated, so only derived colours are kept, and they are hue-only because the reflectance scale is uncalibrated). Also the masstones of the two approximated earths (burnt umber, green earth).
   - `handprint/`: watercolour pigment ratings parsed from handprint.com (B. MacEvoy) by `parse_handprint.py` (transparency, staining, granulation, value range, hue): factual ratings, kept with attribution.
+- After rebuilding `pigments.json`, copy the palette's constants into `studio/v8/media/spectral.py` (`_EMBEDDED`, used when a work dir has no `pigments.json`), then run `cd studio/v8 && TEODOR_PIGMENT_DATA=... python3 -m media.spectral validate`.
 - `met_candidates.py`, `met_refs.py` built `studio/calibration_refs.json`: public-domain Met works per medium for measuring real marks (`tools/calibrate_media.py`).
+
 The scripts expect those downloads in place; re-download them to rebuild.

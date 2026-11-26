@@ -164,10 +164,31 @@ PALETTE_SAMPLES = [("Revigo 07A", "zinc white"), ("Revigo 07C-07F (bone black in
                    ("Revigo 05A", "red lead"), ("Revigo 06A", "vermilion"), ("Revigo 02A", "eosine lake"),
                    ("Revigo 04A", "cochineal lake"), ("Revigo 14A", "chrome yellow"), ("Revigo 15A", "lemon chrome yellow"),
                    ("Revigo 10A", "emerald green"), ("Revigo 09A", "viridian"), ("Revigo 13A", "Prussian blue"),
-                   ("Revigo 12A", "cobalt blue"), ("Revigo 11A", "synthetic ultramarine")]
+                   ("Revigo 12A", "cobalt blue"), ("Revigo 11A", "synthetic ultramarine"),
+                   # second and third whites, the earths (2026-11-26; docs/calibration/colour.md, "Lead white, titanium white, earths")
+                   ("Revigo 08A", "lead white"), ("LBNL W03 (Liquitex acrylic)", "titanium white"),
+                   ("LBNL Y01 (Liquitex acrylic)", "yellow ochre"), ("LBNL B14 (Liquitex acrylic)", "raw sienna"),
+                   ("LBNL B13 (Liquitex acrylic)", "burnt sienna"), ("LBNL B15 (Liquitex acrylic)", "raw umber"),
+                   ("FORS burntumber (linseed oil), S from LBNL raw umber", "burnt umber"),
+                   ("LBNL R04 (Liquitex acrylic)", "red ochre"),
+                   ("FORS greenearth (linseed oil), S from LBNL raw sienna", "terre verte")]
+# Roles: zinc white stays the first paint (the ground of glazes and the white of the old validation); every white costs
+# PENALTY["white"] in the unmixing. "yellow ochre" and "red ochre" are synthetic iron oxides (the ochres' chromophores,
+# measured as acrylics by LBNL); burnt umber and terre verte are approximations (FORS masstone, borrowed scattering).
+# Every LBNL paint's strength relative to the Revigo paints rests on one cross-dataset scale (pigments.json lbnl_scale,
+# uncertain by about x/÷2.7); relative to titanium white it is measured. See studio/pigments.json for provenance.
+WHITES = ("zinc white", "lead white", "titanium white")
+BLACKS = ("bone black",)
+# One white per palette. The three whites look alike in RGB (L* 97-99) but scatter very differently (per film, titanium
+# white about 20-40x zinc white; lead white about half), so an unmixing table that could pick any of them would turn a
+# zinc-white tint into a titanium-white one (tints with zinc white then missed by a median dE2000 of 18.6 instead of 1.8).
+# A painter sets out one white: the palette's white is the only white the unmixing table and the glazes use; the
+# others stay in the palette with zero concentration. Default zinc white (the studio's white so far); a style can
+# choose lead white (before ~1850) or titanium white (after ~1920) with TEODOR_OIL_WHITE or Palette(white=...).
+DEFAULT_WHITE = os.environ.get("TEODOR_OIL_WHITE", "zinc white")
 # The palette's spectral K and S per 100 um film, 400-700 nm / 10 nm, copied from studio/pigments.json (built
-# 2026-11-25 by tools/pigments/build_pigments.py from the Revigo data), so the module works in a work dir without
-# it. Palette() reads pigments.json when it can find it and uses this copy otherwise.
+# 2026-11-26 by tools/pigments/build_pigments.py from the Revigo, LBNL and FORS data), so the module works in a work
+# dir without it. Palette() reads pigments.json when it can find it and uses this copy otherwise.
 _EMBEDDED = {
     'Revigo 07A': ([1.3476, 0.1968, 0.1128, 0.0781, 0.0549, 0.0436, 0.034, 0.0305, 0.0252, 0.023, 0.0217, 0.0199, 0.0195, 0.0194, 0.0185, 0.0186, 0.0184, 0.0179, 0.0182, 0.0174, 0.0175, 0.0159, 0.0156, 0.015, 0.0137, 0.0135, 0.0129, 0.0135, 0.0131, 0.0127, 0.0127],
         [60.468, 15.6731, 13.418, 13.0839, 12.0039, 11.3084, 10.5331, 10.1569, 9.451, 9.1173, 8.7782, 8.2944, 8.0008, 7.6324, 7.4628, 7.2596, 7.0106, 6.7379, 6.5641, 6.3666, 6.1468, 6.0835, 5.8985, 5.7224, 5.5847, 5.3869, 5.2873, 5.0795, 4.998, 4.8532, 4.7565]),
@@ -195,10 +216,28 @@ _EMBEDDED = {
         [13.126, 3.7911, 3.4517, 3.6784, 3.6678, 3.8215, 3.8344, 3.9312, 3.7542, 3.6994, 3.5604, 3.1636, 2.6998, 2.2541, 2.0027, 1.8106, 1.7154, 1.5263, 1.4953, 1.6729, 1.7627, 2.0127, 2.0976, 2.3227, 2.867, 3.3063, 3.4607, 3.4479, 3.5604, 1.1019, 1.0706]),
     'Revigo 11A': ([11.8785, 2.7773, 1.9065, 0.723, 0.5671, 0.5254, 0.6145, 1.8161, 3.289, 5.3853, 8.9612, 13.6808, 19.6998, 25.5298, 31.2732, 36.4827, 40.4548, 43.1633, 45.7759, 47.0558, 47.6367, 46.9183, 45.8285, 44.099, 41.3794, 37.5849, 33.1413, 27.7526, 22.1581, 16.5792, 11.6943],
         [3.5234, 1.1142, 1.0007, 0.3212, 0.2721, 0.2553, 0.2591, 0.8787, 0.775, 0.4591, 0.0831, 0.0952, 0.1291, 0.1325, 0.1162, 0.102, 0.0853, 0.0697, 0.0612, 0.0653, 0.0609, 0.0883, 0.0955, 0.1006, 0.1098, 0.1264, 0.1467, 0.1648, 0.1736, 0.1611, 0.1297]),
+    'Revigo 08A': ([0.1745, 0.0005, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        [21.582, 6.1116, 5.7964, 5.9694, 5.824, 5.7061, 5.5501, 5.4725, 5.2824, 5.1864, 5.0915, 4.9297, 4.8238, 4.6746, 4.6224, 4.5475, 4.443, 4.3283, 4.2486, 4.1736, 4.0621, 4.0643, 3.9719, 3.8926, 3.8312, 3.7354, 3.6881, 3.5778, 3.541, 3.4686, 3.4162]),
+    'LBNL W03 (Liquitex acrylic)': ([26.6311, 5.5253, 0.7016, 0.2043, 0.1443, 0.1287, 0.1304, 0.136, 0.1263, 0.1176, 0.1434, 0.128, 0.1267, 0.141, 0.1364, 0.1442, 0.1508, 0.1508, 0.145, 0.1447, 0.1544, 0.1575, 0.1579, 0.1603, 0.1613, 0.1626, 0.1638, 0.1629, 0.1622, 0.1658, 0.1624],
+        [250.2439, 380.5245, 414.6947, 394.0228, 378.8743, 363.0122, 347.7052, 332.4687, 321.888, 310.879, 296.3076, 287.8354, 278.1334, 267.1927, 259.2976, 250.3173, 241.9788, 234.0524, 227.3844, 220.5845, 212.8253, 206.4602, 200.187, 194.5811, 188.7598, 183.2058, 178.4274, 173.1771, 168.162, 163.8595, 159.2704]),
+    'LBNL Y01 (Liquitex acrylic)': ([317.1465, 469.3181, 459.5053, 377.5884, 300.821, 260.4762, 236.044, 214.2637, 198.5916, 175.7733, 142.7828, 109.7335, 77.7109, 49.2161, 29.1397, 16.931, 10.1985, 7.1111, 5.9567, 5.4898, 5.5324, 5.6968, 5.9025, 6.1294, 6.1513, 6.0144, 5.9448, 5.5213, 5.1787, 4.6621, 4.0988],
+        [28.006, 48.09, 56.6363, 62.2969, 70.3965, 74.7943, 71.6911, 68.2083, 67.4849, 69.2115, 72.2367, 75.2093, 75.264, 72.0517, 68.5583, 63.8112, 58.2898, 53.6894, 51.5664, 48.7036, 46.8465, 45.0844, 43.5699, 42.9569, 41.533, 39.8043, 39.3407, 37.1238, 36.4235, 34.7735, 33.0306]),
+    'LBNL B14 (Liquitex acrylic)': ([198.2214, 298.6871, 273.0161, 234.7317, 197.3174, 173.3176, 161.2307, 150.792, 143.9474, 132.6186, 115.1417, 99.1028, 82.4735, 64.9987, 51.5331, 40.0191, 30.5677, 23.2858, 17.7651, 14.1788, 12.0272, 10.8645, 10.2222, 9.8001, 9.3728, 8.9099, 8.5976, 7.945, 7.3189, 6.6689, 5.9421],
+        [15.666, 26.011, 26.7495, 26.5225, 26.8677, 27.138, 25.7547, 24.2592, 24.2804, 24.4825, 24.8323, 25.9225, 26.7293, 26.8006, 27.8197, 28.0601, 28.0682, 28.2663, 28.1588, 27.7702, 27.0543, 26.3012, 25.5981, 24.9287, 24.1232, 23.3224, 23.1313, 22.33, 21.7301, 21.2282, 20.5163]),
+    'LBNL B13 (Liquitex acrylic)': ([185.5788, 257.1357, 278.6512, 260.7197, 245.2099, 228.7064, 214.0937, 202.5563, 193.5896, 184.7499, 171.9213, 163.6868, 154.2256, 142.3616, 127.773, 111.2888, 91.1194, 70.0578, 52.4181, 39.6096, 31.1341, 25.6724, 22.0182, 19.39, 17.3874, 15.5678, 14.1949, 12.9637, 11.6568, 10.6687, 9.638],
+        [5.1812, 7.3435, 8.0192, 8.246, 8.0724, 7.8604, 7.7034, 7.5272, 7.4492, 7.4577, 7.7266, 7.858, 8.3498, 8.9357, 9.9946, 11.5284, 13.8337, 16.4225, 18.0983, 18.837, 18.9907, 18.6408, 18.1771, 17.551, 16.8889, 15.9745, 15.3267, 14.6683, 13.7706, 13.2064, 12.456]),
+    'LBNL B15 (Liquitex acrylic)': ([128.3977, 168.8426, 174.0601, 153.6148, 135.9087, 121.3757, 113.4384, 105.8972, 100.6844, 93.1472, 83.3629, 75.5882, 67.9353, 59.1431, 53.1956, 47.6351, 43.134, 39.7676, 37.1474, 34.6476, 32.6084, 30.7064, 29.0201, 27.4593, 25.8113, 24.3969, 23.343, 22.0339, 20.9759, 20.1221, 19.3128],
+        [1.9972, 2.7179, 2.9842, 2.9937, 2.9794, 2.8884, 2.7889, 2.4888, 2.463, 2.5155, 2.859, 3.2479, 3.9241, 4.4517, 5.191, 5.8005, 6.2481, 6.6463, 6.6589, 6.5546, 6.4839, 6.4185, 6.3502, 6.2795, 6.1508, 6.0558, 5.9787, 5.7804, 5.6725, 5.5788, 5.4497]),
+    'FORS burntumber (linseed oil), S from LBNL raw umber': ([15.7183, 18.0646, 23.0587, 34.2325, 33.9406, 53.5539, 38.8739, 28.0306, 27.9229, 29.6532, 30.7406, 34.1464, 42.9223, 46.8001, 53.0637, 54.6748, 56.3545, 56.5648, 56.1518, 48.5131, 46.2371, 42.5446, 40.5613, 38.1516, 36.1437, 34.9339, 33.1185, 30.8111, 29.1, 27.6625, 26.3023],
+        [1.9972, 2.7179, 2.9842, 2.9937, 2.9794, 2.8884, 2.7889, 2.4888, 2.463, 2.5155, 2.859, 3.2479, 3.9241, 4.4517, 5.191, 5.8005, 6.2481, 6.6463, 6.6589, 6.5546, 6.4839, 6.4185, 6.3502, 6.2795, 6.1508, 6.0558, 5.9787, 5.7804, 5.6725, 5.5788, 5.4497]),
+    'LBNL R04 (Liquitex acrylic)': ([345.7413, 522.2573, 601.5455, 596.8462, 599.2244, 590.2052, 580.9914, 568.4803, 563.4545, 555.4456, 536.1171, 527.9643, 514.8634, 491.9277, 463.8053, 408.4092, 302.0254, 209.3063, 122.2374, 71.4288, 46.4382, 35.2469, 30.1398, 27.3173, 24.9909, 22.6649, 20.6768, 17.9636, 15.5241, 13.0993, 10.8019],
+        [15.812, 24.2708, 28.0868, 27.9813, 28.0713, 28.1142, 27.919, 28.6758, 29.0102, 29.9126, 31.3872, 32.9069, 35.5425, 38.5862, 45.5411, 56.1288, 69.1812, 89.4708, 101.8784, 105.1587, 103.2357, 98.7259, 94.6566, 90.6296, 86.5576, 82.831, 80.6862, 76.5101, 74.0753, 70.9243, 67.5432]),
+    'FORS greenearth (linseed oil), S from LBNL raw sienna': ([78.4726, 232.8491, 147.1762, 157.2813, 174.9227, 147.5061, 116.4247, 100.6184, 99.0601, 93.381, 87.7883, 82.5564, 79.6972, 74.1344, 72.2557, 70.7863, 70.1, 70.0109, 70.7969, 70.8216, 71.3306, 70.5814, 70.0217, 68.2574, 66.4206, 64.3397, 63.3256, 60.2791, 58.4443, 55.8276, 54.2596],
+        [15.666, 26.011, 26.7495, 26.5225, 26.8677, 27.138, 25.7547, 24.2592, 24.2804, 24.4825, 24.8323, 25.9225, 26.7293, 26.8006, 27.8197, 28.0601, 28.0682, 28.2663, 28.1588, 27.7702, 27.0543, 26.3012, 25.5981, 24.9287, 24.1232, 23.3224, 23.1313, 22.33, 21.7301, 21.2282, 20.5163]),
 }
 LUT_N = 49                    # nodes per axis of the unmixing table
 PENALTY = {"white": 0.5, "black": 1.0, "chromatic": 2.5}   # dE2000-like cost per pigment used (tuned by eye: sparsity prior)
-_VERSION = "spectral-2"
+_VERSION = "spectral-3"
 
 
 def _pigments_path():
@@ -228,9 +267,17 @@ def _palette_ks(samples):
 
 
 class Palette:
-    def __init__(self, samples=PALETTE_SAMPLES, ks=None):
+    def __init__(self, samples=PALETTE_SAMPLES, ks=None, white=None):
         self.names = [n for _, n in samples]
         self.samples = [s for s, _ in samples]
+        self.whites = [i for i, n in enumerate(self.names) if n in WHITES]
+        self.blacks = [i for i, n in enumerate(self.names) if n in BLACKS]
+        self.chrom = [i for i in range(len(self.names)) if i not in self.whites and i not in self.blacks]
+        self.white = white or DEFAULT_WHITE
+        if self.white not in self.names:
+            raise ValueError(f"unknown white {self.white!r}; one of {[self.names[i] for i in self.whites]}")
+        self.w = self.names.index(self.white)                       # the palette's white (unmixing, glazes, grounds)
+        self.usable = [i for i in range(len(self.names)) if i not in self.whites or i == self.w]
         if ks is None:
             ks = _palette_ks(self.samples)
         self.K = np.array([k for k, _ in ks], np.float64)
@@ -256,9 +303,14 @@ class Palette:
             out[i:i + chunk] = encode(seen(rinf(cc @ self.K32, cc @ self.S32)) @ _E2LIN)
         return out.reshape(sh + (3,))
 
+    def penalty(self, used):
+        """Sparsity cost of the paints used (bool (n, P)): PENALTY per white, black and chromatic paint."""
+        return (used[:, self.whites].sum(1) * PENALTY["white"] + used[:, self.blacks].sum(1) * PENALTY["black"]
+                + used[:, self.chrom].sum(1) * PENALTY["chromatic"])
+
     # ---- unmixing table
     def _key(self):
-        h = hashlib.sha1((_VERSION + json.dumps(PENALTY) + str(LUT_N)).encode())
+        h = hashlib.sha1((_VERSION + json.dumps(PENALTY) + str(LUT_N) + self.white).encode())
         h.update(self.K.round(5).tobytes()); h.update(self.S.round(5).tobytes())
         return h.hexdigest()[:16]
 
@@ -266,7 +318,7 @@ class Palette:
         """Sample sparse mixtures, then give every node of the RGB cube the cheapest one (dE + penalty)."""
         from scipy.spatial import cKDTree
         P = self.P
-        chrom = list(range(2, P))
+        chrom = self.chrom
         u = np.linspace(-7.5, 7.5, 31)
         fr = np.concatenate([[0.0], 1 / (1 + np.exp(-u)), [1.0]])            # logit-spaced: tinting strengths span 1000x
         fw = np.concatenate([[0.0], 1 / (1 + np.exp(-np.linspace(-6, 6, 13))), [1.0]])
@@ -278,28 +330,28 @@ class Palette:
                 C[:, i] += W[:, j]
             rows.append(C)
         # pairs of any two palette paints
-        for i in range(P):
-            for j in range(i + 1, P):
+        for a, i in enumerate(self.usable):
+            for j in self.usable[a + 1:]:
                 add((i, j), np.stack([1 - fr, fr], 1))
         # one or two chromatic paints with white and black: s = chromatic share, v = white's part of the rest
         fs = np.concatenate([[0.0], 1 / (1 + np.exp(-np.linspace(-8, 8, 41))), [1.0]])
         fv = np.concatenate([[0.0], 1 / (1 + np.exp(-np.linspace(-7, 7, 29))), [1.0]])
         sv = np.array(np.meshgrid(fs, fv, indexing="ij")).reshape(2, -1).T
         for i in chrom:
-            add((i, 0, 1), np.stack([sv[:, 0], (1 - sv[:, 0]) * sv[:, 1], (1 - sv[:, 0]) * (1 - sv[:, 1])], 1))
+            add((i, self.w, 1), np.stack([sv[:, 0], (1 - sv[:, 0]) * sv[:, 1], (1 - sv[:, 0]) * (1 - sv[:, 1])], 1))
         g = np.array(np.meshgrid(fw, fw, fw, indexing="ij")).reshape(3, -1).T    # (chromatic share, white part of the rest, 2nd chromatic part)
         for i in chrom:
             for j in chrom:
                 if j <= i:
                     continue
                 s_, v_, h_ = g[:, 0], g[:, 1], g[:, 2]
-                add((i, j, 0, 1), np.stack([s_ * (1 - h_), s_ * h_, (1 - s_) * v_, (1 - s_) * (1 - v_)], 1))
+                add((i, j, self.w, 1), np.stack([s_ * (1 - h_), s_ * h_, (1 - s_) * v_, (1 - s_) * (1 - v_)], 1))
         C = np.unique(np.concatenate(rows).round(6), axis=0).astype(np.float32)
         C /= C.sum(1, keepdims=True)
         rgb = self.forward(C)
         lab = rgb_to_lab(rgb)
         used = C > 1e-6
-        pen = used[:, 0] * PENALTY["white"] + used[:, 1] * PENALTY["black"] + used[:, 2:].sum(1) * PENALTY["chromatic"]
+        pen = self.penalty(used)
         tree = cKDTree(lab)
         n = LUT_N
         ax = np.linspace(0, 1, n)
@@ -526,8 +578,8 @@ GLAZE_WHITE = 4.0             # extra cost (dE) of white in a darker glaze, so t
 
 def _film_over_white(pal, C, ref):
     """Colour (sRGB) of films of concentrations C (n, P, summing to the pigment share; the rest is clear oil)
-    and thickness ref over a zinc-white ground (the measured zinc white masstone)."""
-    Rg = rinf(pal.K32[0], pal.S32[0])
+    and thickness ref over a ground of the palette's white (its measured masstone; zinc white by default)."""
+    Rg = rinf(pal.K32[pal.w], pal.S32[pal.w])
     out = np.empty((len(C), 3), np.float32)
     for i in range(0, len(C), 1 << 15):
         cc = C[i:i + (1 << 15)]
@@ -555,22 +607,23 @@ def glaze_samples(ref):
         rows.append(C)
     M = P                                                     # the medium's column
     g = np.array(np.meshgrid(u, u, indexing="ij")).reshape(2, -1).T     # (paint share, split)
-    for i in range(P):
+    U = pal.usable                                            # the palette's own white only
+    for a, i in enumerate(U):
         add((i,), np.ones((1, 1)))
         add((i, M), np.stack([u, 1 - u], 1))
-        for j in range(i + 1, P):
+        for j in U[a + 1:]:
             add((i, j, M), np.stack([g[:, 0] * g[:, 1], g[:, 0] * (1 - g[:, 1]), 1 - g[:, 0]], 1))
             add((i, j), np.stack([u, 1 - u], 1))
-    for i in range(2, P):                                     # a chromatic paint with white and black, undiluted
+    for i in pal.chrom:                                       # a chromatic paint with the palette's white and black, undiluted
         sv = g
-        add((i, 0, 1), np.stack([sv[:, 0], (1 - sv[:, 0]) * sv[:, 1], (1 - sv[:, 0]) * (1 - sv[:, 1])], 1))
+        add((i, pal.w, 1), np.stack([sv[:, 0], (1 - sv[:, 0]) * sv[:, 1], (1 - sv[:, 0]) * (1 - sv[:, 1])], 1))
     C = np.unique(np.concatenate(rows).round(6), axis=0)
     C /= C.sum(1, keepdims=True)
     med = C[:, M].copy()
     C = C[:, :M].astype(np.float32)
     lab = rgb_to_lab(_film_over_white(pal, C, ref))
     used = C > 1e-6
-    pen = used[:, 0] * PENALTY["white"] + used[:, 1] * PENALTY["black"] + used[:, 2:].sum(1) * PENALTY["chromatic"]
+    pen = pal.penalty(used)
     cache[key] = (C, med, lab, pen)
     return cache[key]
 
@@ -589,7 +642,7 @@ def glaze_paint(color, ref):
         if tl[0] > GLAZE_VEIL_L:
             cost = cost + 100 * (med > 1e-6)
         else:                                                 # a glaze proper: transparent paint preferred to white
-            cost = cost + GLAZE_WHITE * (C[:, 0] > 1e-6)
+            cost = cost + GLAZE_WHITE * (C[:, pal.whites] > 1e-6).any(1)
         k = int(np.argmin(cost))
         memo[key] = (C[k].copy(), float(med[k]))
     return memo[key]
@@ -630,6 +683,12 @@ def _old_kmix(a, b, t):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     from media.base import kmix
     return kmix(np.asarray(a, np.float32), np.asarray(b, np.float32), t)
+
+
+def _mix_with(pal, a, b, t):
+    """mix() through another palette's unmixing table (e.g. one whose white is lead or titanium white)."""
+    ca, ra = pal.latent(np.asarray(a, np.float32)); cb, rb = pal.latent(np.asarray(b, np.float32))
+    return np.clip(pal.forward(ca * (1 - t) + cb * t) + ra * (1 - t) + rb * t, 0, 1).astype(np.float32)
 
 
 def _raw_revigo():
@@ -737,13 +796,13 @@ def validate(heldout=True):
         ks = []
         for smp in pal.samples:
             code = smp.split()[1]
-            if code in ("07A", "07C-07F"):
-                e = by_code[code]; ks.append((np.array(e["spectral"]["K_per_film"]), np.array(e["spectral"]["S_per_film"]))); continue
+            if code in ("07A", "07C-07F", "08A") or not smp.startswith("Revigo"):   # whites, black, non-Revigo paints: as stored
+                e = ent[smp]; ks.append((np.array(e["spectral"]["K_per_film"]), np.array(e["spectral"]["S_per_film"]))); continue
             keep = [c for c, (n, f) in mixes.items() if c[:2] == code[:2] and c != code and len(n) > 1 and n[1] == "ZincWhite"
                     and f[0] not in (0, 100) and (len(f) < 3 or f[2] == 0) and f"{c}_ow" in spec and not held(f[0] / 100)]
             films = [(1.0, {}, *I(code))] + [(mixes[c][1][0] / 100, {"w": mixes[c][1][1] / 100}, *I(c)) for c in keep]
             ks.append(_fit(films, comps))
-        fp = Palette(ks=ks); fp.build_lut()
+        fp = Palette(ks=ks, white="zinc white"); fp.build_lut()
         for t in d["kmix_check_tints"]:
             if not held(t["pigment_fraction_by_weight"]):
                 continue
@@ -791,6 +850,7 @@ def validate(heldout=True):
     films = [(1.0, {}, *I("08A"))] + [(mixes[c][1][0] / 100, {"k": mixes[c][1][1] / 100}, *I(c)) for c in ("08B", "08C")]
     Klw, Slw = _fit(films, comps2)
     lw_rgb = encode(seen(rinf(Klw, Slw)) @ _SPEC2LIN).astype(np.float32)
+    lwp = Palette(white="lead white"); lwp.ensure_lut()                 # a palette whose white is lead white
     code_of = {"Cochineal": "04A", "ViridianGreen": "09A", "CobaltBlue": "12A", "ChromeYellow": "14A"}
     lw = []
     for code in ("08D", "08E", "08F", "08G"):
@@ -802,15 +862,45 @@ def validate(heldout=True):
         R = seen(rinf(cu * Km + (1 - cu) * Klw, cu * Sm + (1 - cu) * Slw))
         mrgb = np.array(m["colours"]["masstone"]["srgb"], np.float32)
         tl = target(code)
-        ok_, ek_ = _old_kmix(mrgb, lw_rgb, 1 - cu), mix(mrgb, lw_rgb, 1 - cu)
+        ok_, ek_ = _old_kmix(mrgb, lw_rgb, 1 - cu), _mix_with(lwp, mrgb, lw_rgb, 1 - cu)
         lw.append(dict(sample=f"Revigo {code}", pigment=m["name"], c=cu, dE_kmix=float(de2000(tl, rgb_to_lab(ok_))),
                        dE_spectral=float(de2000(tl, spectrum_to_lab(R))), dE_engine=float(de2000(tl, rgb_to_lab(ek_))),
                        kmix_rgb=[float(v) for v in ok_], engine_rgb=[float(v) for v in ek_],
                        measured_rgb=[float(v) for v in spectrum_to_rgb(np.clip(spec[f"{code}_ow"] - K1, 0, 1))]))
     out["lead_white_tints"] = lw
-    print(f"held out, ~10% pigment in lead white (n={len(lw)}), dE2000 median / max: kmix {med('dE_kmix', lw):.2f} / {mx('dE_kmix', lw):.2f}, "
+    print(f"held out, ~10% pigment in lead white (n={len(lw)}; engine: a lead-white palette), dE2000 median / max: kmix {med('dE_kmix', lw):.2f} / {mx('dE_kmix', lw):.2f}, "
           f"spectral {med('dE_spectral', lw):.2f} / {mx('dE_spectral', lw):.2f}, engine {med('dE_engine', lw):.2f} / {mx('dE_engine', lw):.2f}")
+    out.update(validate_lbnl(d, ent))
     return out
+
+
+def validate_lbnl(d=None, ent=None):
+    """Earth tints in titanium white (LBNL, 1:4 and 1:9 by volume): the target is each tint film's R_inf from its own
+    charted K and S (pigments.json lbnl_check_tints). Engine path: mix(earth masstone RGB, titanium white masstone RGB)."""
+    d = d or json.load(open(_pigments_path()))
+    ent = ent or oil_entries()
+    if "lbnl_check_tints" not in d:
+        return {}
+    pal = Palette(white="titanium white"); pal.ensure_lut()          # the tints were made with titanium white
+    ti = ent["LBNL W03 (Liquitex acrylic)"]
+    trgb = np.array(ti["colours"]["masstone"]["srgb"], np.float32)
+    rows = []
+    for t in d["lbnl_check_tints"]:
+        code = t["sample"].split()[1]
+        e = ent[f"LBNL {code} (Liquitex acrylic)"]
+        c = t["paint_fraction_by_volume"]
+        mrgb = np.array(e["colours"]["masstone"]["srgb"], np.float32)
+        new = _mix_with(pal, mrgb, trgb, 1 - c)
+        old = _old_kmix(mrgb, trgb, 1 - c)
+        meas = np.array(t["tint_lab"])
+        rows.append(dict(sample=t["sample"], pigment=t["pigment"], c=c, dE_kmix=float(de2000(meas, rgb_to_lab(old))),
+                         dE_spectral_heldout=t["heldout_dE2000"], dE_engine=float(de2000(meas, rgb_to_lab(new))),
+                         unmixed_as={pal.names[i]: round(float(v), 3) for i, v in enumerate(pal.concentrations(mrgb)) if v > 0.01}))
+    med = lambda k: float(np.median([r[k] for r in rows]))
+    mx = lambda k: float(np.max([r[k] for r in rows]))
+    print(f"LBNL earth tints in titanium white (n={len(rows)}; engine: a titanium-white palette), dE2000 median / max: kmix {med('dE_kmix'):.2f} / {mx('dE_kmix'):.2f}, "
+          f"spectral held out {med('dE_spectral_heldout'):.2f} / {mx('dE_spectral_heldout'):.2f}, engine {med('dE_engine'):.2f} / {mx('dE_engine'):.2f}")
+    return {"lbnl_tints": rows}
 
 
 if __name__ == "__main__":

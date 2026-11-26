@@ -20,6 +20,12 @@
    "method": "per paint: Tr transparency 0 (very opaque)-4, St staining 0-4, VR value range (paper value minus masstone value, 100-step scale), Gr granulation 0 (liquid)-4, Bl blossom 0-4, Df diffusion wet-in-wet 0 (inert)-4, HA CIELAB hue angle (GretagMacbeth spectrophotometer). Medians over the brands tested, per Colour Index name. CIECAM J,a,b masstone and drying shift parsed from the notes where given.",
    "status": "one experienced tester's standardised swatch tests: ratings are ordinal judgements, colour values are instrument measurements; not peer reviewed"
   },
+  "lbnl": {
+   "cite": "R. Levinson, P. Berdahl, H. Akbari, 'Solar spectral optical properties of pigments, Part I: model for deriving scattering and absorption coefficients from transmittance and reflectance measurements' and 'Part II: survey of common colorants', Solar Energy Materials & Solar Cells 89 (2005) 319-349, 351-389; Lawrence Berkeley National Laboratory Pigment Database",
+   "data": "https://coolcolors.lbl.gov/LBNL-Pigment-Database/database.html (paints/<code>.html; spectral-charts/pdf/<code>-tint-ladder-spectral-chart.pdf)",
+   "method": "artists' acrylic paints (Liquitex) drawn down as thin films (about 15-30 um) and measured over a void (R and T), an opaque white and an opaque black, 300-2500 nm; K and S (mm^-1) computed per film by LBNL. Masstones and 1:4 and 1:9 tints (volume) with titanium white W03. The numeric datafiles are encrypted for the project's partners; the values here were read from the public vector charts by tools/pigments/lbnl_charts.py (exact to the plotted precision). Earth K and S here: masstone-tint fit (Duncan, volume fractions) on each film's R_inf; scaled to the Revigo film unit (lbnl_scale).",
+   "status": "measured, acrylic binder (refractive index ~1.49, close to linseed oil's ~1.48), used as oil proxies; yellow and red iron oxide are synthetic proxies for yellow and red ochre; burnt umber and green earth are approximations (FORS masstone + borrowed scattering); licence not stated (a US national laboratory's public web pages)"
+  },
   "curtis1997": {
    "cite": "C. J. Curtis et al., 'Computer-Generated Watercolor', SIGGRAPH 1997, Fig. 5",
    "doi": "10.1145/258734.258896",
@@ -985,6 +991,173 @@
    "spectral_km_dE2000": 0.6
   }
  ],
+ "lbnl_check_tints": [
+  {
+   "sample": "LBNL B14 tint 1:4",
+   "pigment": "raw sienna",
+   "paint_fraction_by_volume": 0.2,
+   "tint_lab": [
+    82.0,
+    6.2,
+    17.7
+   ],
+   "engine_kmix_dE2000": 6.5,
+   "duncan_from_masstone_dE2000": 5.2,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.5
+  },
+  {
+   "sample": "LBNL B14 tint 1:9",
+   "pigment": "raw sienna",
+   "paint_fraction_by_volume": 0.1,
+   "tint_lab": [
+    86.1,
+    4.2,
+    13.3
+   ],
+   "engine_kmix_dE2000": 5.8,
+   "duncan_from_masstone_dE2000": 4.3,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.4
+  },
+  {
+   "sample": "LBNL B13 tint 1:4",
+   "pigment": "burnt sienna",
+   "paint_fraction_by_volume": 0.2,
+   "tint_lab": [
+    75.5,
+    11.5,
+    11.0
+   ],
+   "engine_kmix_dE2000": 13.2,
+   "duncan_from_masstone_dE2000": 5.1,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.5
+  },
+  {
+   "sample": "LBNL B13 tint 1:9",
+   "pigment": "burnt sienna",
+   "paint_fraction_by_volume": 0.1,
+   "tint_lab": [
+    81.2,
+    8.5,
+    8.5
+   ],
+   "engine_kmix_dE2000": 12.7,
+   "duncan_from_masstone_dE2000": 4.5,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.4
+  },
+  {
+   "sample": "LBNL B15 tint 1:4",
+   "pigment": "raw umber",
+   "paint_fraction_by_volume": 0.2,
+   "tint_lab": [
+    79.6,
+    1.0,
+    8.2
+   ],
+   "engine_kmix_dE2000": 17.3,
+   "duncan_from_masstone_dE2000": 2.5,
+   "fitted_insample_dE2000": 0.0,
+   "heldout_dE2000": 0.1
+  },
+  {
+   "sample": "LBNL B15 tint 1:9",
+   "pigment": "raw umber",
+   "paint_fraction_by_volume": 0.1,
+   "tint_lab": [
+    84.9,
+    0.5,
+    6.3
+   ],
+   "engine_kmix_dE2000": 15.5,
+   "duncan_from_masstone_dE2000": 2.0,
+   "fitted_insample_dE2000": 0.0,
+   "heldout_dE2000": 0.1
+  },
+  {
+   "sample": "LBNL Y01 tint 1:4",
+   "pigment": "yellow iron oxide (Mars yellow)",
+   "paint_fraction_by_volume": 0.2,
+   "tint_lab": [
+    85.1,
+    3.0,
+    29.7
+   ],
+   "engine_kmix_dE2000": 4.4,
+   "duncan_from_masstone_dE2000": 5.4,
+   "fitted_insample_dE2000": 0.1,
+   "heldout_dE2000": 0.4
+  },
+  {
+   "sample": "LBNL Y01 tint 1:9",
+   "pigment": "yellow iron oxide (Mars yellow)",
+   "paint_fraction_by_volume": 0.1,
+   "tint_lab": [
+    88.5,
+    1.8,
+    22.3
+   ],
+   "engine_kmix_dE2000": 4.9,
+   "duncan_from_masstone_dE2000": 5.0,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.3
+  },
+  {
+   "sample": "LBNL R04 tint 1:4",
+   "pigment": "red iron oxide (red oxide)",
+   "paint_fraction_by_volume": 0.2,
+   "tint_lab": [
+    66.4,
+    25.7,
+    14.3
+   ],
+   "engine_kmix_dE2000": 17.4,
+   "duncan_from_masstone_dE2000": 9.1,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.4
+  },
+  {
+   "sample": "LBNL R04 tint 1:9",
+   "pigment": "red iron oxide (red oxide)",
+   "paint_fraction_by_volume": 0.1,
+   "tint_lab": [
+    73.4,
+    20.9,
+    11.0
+   ],
+   "engine_kmix_dE2000": 19.9,
+   "duncan_from_masstone_dE2000": 8.4,
+   "fitted_insample_dE2000": 0.2,
+   "heldout_dE2000": 0.4
+  }
+ ],
+ "lbnl_scale": {
+  "mm_per_revigo_film": 0.3979,
+  "per_pigment": {
+   "U05": 0.286,
+   "U10": 1.967,
+   "U11": 0.133,
+   "B02": 0.335
+  },
+  "spread_factor": 2.68,
+  "note": "LBNL K, S (per mm) x this factor = per Revigo film. Within LBNL (earth + titanium white) mixing is measured; between an LBNL paint and a Revigo paint the relative strength is uncertain by about the spread factor.",
+  "fors_calibration": {
+   "method": "FORS linseed oil, normalised per wavelength (lamp black 0.03, titanium white 0.90), as for masstone_by_binder",
+   "error_on_measured_earths_dE2000": {
+    "burntsienna": 20.7,
+    "rawsienna": 8.1,
+    "rawumber": 10.8
+   },
+   "note_error": "FORS-derived masstone vs LBNL-measured masstone of the same pigment name (different samples and binders): the expected error of the two approximations",
+   "proxy_gap_dE2000": {
+    "yellowochre vs yellow iron oxide": 14.6,
+    "redochre vs red iron oxide": 15.4
+   },
+   "note_proxy": "FORS natural ochre vs the LBNL synthetic iron oxide used for it"
+  }
+ },
  "pigments": [
   {
    "ci": "NB1",
@@ -4267,6 +4440,1437 @@
    "ci": "PBr7",
    "name": "natural iron oxide earths (raw/burnt sienna, raw/burnt umber)",
    "media": {
+    "oil": [
+     {
+      "name": "raw sienna",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL B14 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL B14 masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+       "rms_internal_reflectance": 0.0032,
+       "masstone_direct_K_per_mm": [
+        365.891,
+        368.906,
+        371.946,
+        348.923,
+        351.895,
+        318.289,
+        300.709,
+        315.552,
+        313.45,
+        377.696,
+        282.381,
+        269.75,
+        228.564,
+        178.369,
+        141.864,
+        113.247,
+        88.918,
+        69.062,
+        53.686,
+        43.447,
+        37.232,
+        33.725,
+        31.738,
+        30.399,
+        29.175,
+        27.952,
+        26.512,
+        24.803,
+        23.046,
+        21.052,
+        19.069
+       ],
+       "masstone_direct_S_per_mm": [
+        28.839,
+        32.372,
+        36.338,
+        39.327,
+        47.823,
+        49.787,
+        47.971,
+        50.694,
+        52.779,
+        69.634,
+        60.835,
+        70.498,
+        74.028,
+        73.509,
+        76.556,
+        79.384,
+        81.631,
+        83.82,
+        85.084,
+        85.084,
+        83.742,
+        81.636,
+        79.47,
+        77.32,
+        75.081,
+        73.16,
+        71.322,
+        69.704,
+        68.418,
+        67.005,
+        65.834
+       ],
+       "note": "fitted / masstone film's own K and S (measured over void, white and black): x0.88 (K) and x0.88 (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies"
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.592,
+         0.361,
+         0.147
+        ],
+        "linear": [
+         0.3088,
+         0.1069,
+         0.019
+        ],
+        "lab": [
+         44.7,
+         19.4,
+         40.0
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.592,
+         0.361,
+         0.147
+        ],
+        "linear": [
+         0.3088,
+         0.1069,
+         0.019
+        ],
+        "lab": [
+         44.7,
+         19.4,
+         40.0
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.592,
+         0.361,
+         0.147
+        ],
+        "linear": [
+         0.3088,
+         0.1069,
+         0.019
+        ],
+        "lab": [
+         44.7,
+         19.4,
+         40.0
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.596,
+         0.36,
+         0.147
+        ],
+        "linear": [
+         0.3134,
+         0.1067,
+         0.019
+        ],
+        "lab": [
+         44.8,
+         19.9,
+         40.3
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.59,
+         0.361,
+         0.148
+        ],
+        "linear": [
+         0.3068,
+         0.107,
+         0.0191
+        ],
+        "lab": [
+         44.7,
+         19.2,
+         40.0
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.596,
+        0.36,
+        0.147
+       ],
+       "over_black": [
+        0.59,
+        0.361,
+        0.148
+       ],
+       "K_rgb": [
+        0.5986,
+        1.1421,
+        1.7847
+       ],
+       "S_rgb": [
+        4.1946,
+        1.9218,
+        0.6643
+       ],
+       "K_rgb_linear_band": [
+        22.711,
+        59.5881,
+        180.8578
+       ],
+       "S_rgb_linear_band": [
+        26.323,
+        27.1402,
+        25.8996
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        198.2214,
+        298.6871,
+        273.0161,
+        234.7317,
+        197.3174,
+        173.3176,
+        161.2307,
+        150.792,
+        143.9474,
+        132.6186,
+        115.1417,
+        99.1028,
+        82.4735,
+        64.9987,
+        51.5331,
+        40.0191,
+        30.5677,
+        23.2858,
+        17.7651,
+        14.1788,
+        12.0272,
+        10.8645,
+        10.2222,
+        9.8001,
+        9.3728,
+        8.9099,
+        8.5976,
+        7.945,
+        7.3189,
+        6.6689,
+        5.9421
+       ],
+       "S_per_film": [
+        15.666,
+        26.011,
+        26.7495,
+        26.5225,
+        26.8677,
+        27.138,
+        25.7547,
+        24.2592,
+        24.2804,
+        24.4825,
+        24.8323,
+        25.9225,
+        26.7293,
+        26.8006,
+        27.8197,
+        28.0601,
+        28.0682,
+        28.2663,
+        28.1588,
+        27.7702,
+        27.0543,
+        26.3012,
+        25.5981,
+        24.9287,
+        24.1232,
+        23.3224,
+        23.1313,
+        22.33,
+        21.7301,
+        21.2282,
+        20.5163
+       ],
+       "R_inf": [
+        0.0183,
+        0.02,
+        0.0224,
+        0.0256,
+        0.0303,
+        0.0344,
+        0.0351,
+        0.0353,
+        0.0368,
+        0.0399,
+        0.0458,
+        0.0541,
+        0.0648,
+        0.0788,
+        0.0973,
+        0.1181,
+        0.1426,
+        0.1712,
+        0.2015,
+        0.2274,
+        0.2452,
+        0.2548,
+        0.2593,
+        0.2614,
+        0.263,
+        0.2652,
+        0.2689,
+        0.2749,
+        0.2824,
+        0.292,
+        0.3034
+       ],
+       "K_per_mm": [
+        498.1402,
+        750.6154,
+        686.1029,
+        589.8924,
+        495.8683,
+        435.5557,
+        405.1807,
+        378.9478,
+        361.7471,
+        333.2771,
+        289.3569,
+        249.0503,
+        207.26,
+        163.3449,
+        129.5053,
+        100.57,
+        76.8183,
+        58.5184,
+        44.6445,
+        35.6321,
+        30.225,
+        27.303,
+        25.6889,
+        24.6282,
+        23.5543,
+        22.391,
+        21.6062,
+        19.9662,
+        18.3927,
+        16.7593,
+        14.9327
+       ],
+       "S_per_mm": [
+        39.3693,
+        65.3669,
+        67.2228,
+        66.6522,
+        67.52,
+        68.1991,
+        64.7228,
+        60.9645,
+        61.0179,
+        61.5258,
+        62.4049,
+        65.1445,
+        67.1722,
+        67.3512,
+        69.9122,
+        70.5165,
+        70.5369,
+        71.0346,
+        70.7644,
+        69.7878,
+        67.9888,
+        66.0963,
+        64.3294,
+        62.6471,
+        60.6227,
+        58.6103,
+        58.1301,
+        56.1165,
+        54.6089,
+        53.3475,
+        51.5586
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic)",
+      "stands_for": "raw sienna"
+     },
+     {
+      "name": "burnt sienna",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL B13 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL B13 masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+       "rms_internal_reflectance": 0.0034,
+       "masstone_direct_K_per_mm": [
+        306.262,
+        298.846,
+        289.337,
+        277.787,
+        265.818,
+        252.412,
+        241.05,
+        231.637,
+        223.393,
+        215.304,
+        206.02,
+        197.968,
+        189.059,
+        179.323,
+        167.273,
+        152.419,
+        133.804,
+        111.965,
+        83.77,
+        63.927,
+        50.188,
+        41.22,
+        34.907,
+        30.464,
+        27.084,
+        24.321,
+        21.966,
+        19.824,
+        17.887,
+        16.127,
+        14.466
+       ],
+       "masstone_direct_S_per_mm": [
+        8.493,
+        8.477,
+        8.266,
+        8.723,
+        8.688,
+        8.621,
+        8.613,
+        8.561,
+        8.545,
+        8.641,
+        9.208,
+        9.462,
+        10.194,
+        11.221,
+        13.047,
+        15.761,
+        20.289,
+        26.228,
+        28.91,
+        30.392,
+        30.606,
+        29.924,
+        28.813,
+        27.57,
+        26.304,
+        24.953,
+        23.714,
+        22.428,
+        21.128,
+        19.961,
+        18.693
+       ],
+       "note": "fitted / masstone film's own K and S (measured over void, white and black): x1.71 (K) and x1.71 (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies"
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.424,
+         0.166,
+         0.048
+        ],
+        "linear": [
+         0.1504,
+         0.0234,
+         0.0038
+        ],
+        "lab": [
+         26.4,
+         27.7,
+         32.3
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.424,
+         0.166,
+         0.048
+        ],
+        "linear": [
+         0.1504,
+         0.0234,
+         0.0038
+        ],
+        "lab": [
+         26.4,
+         27.7,
+         32.3
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.424,
+         0.166,
+         0.048
+        ],
+        "linear": [
+         0.1504,
+         0.0234,
+         0.0038
+        ],
+        "lab": [
+         26.4,
+         27.7,
+         32.3
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.425,
+         0.165,
+         0.048
+        ],
+        "linear": [
+         0.1513,
+         0.0233,
+         0.0037
+        ],
+        "lab": [
+         26.5,
+         27.9,
+         32.4
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.424,
+         0.166,
+         0.048
+        ],
+        "linear": [
+         0.1501,
+         0.0234,
+         0.0038
+        ],
+        "lab": [
+         26.4,
+         27.7,
+         32.3
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.425,
+        0.165,
+        0.048
+       ],
+       "over_black": [
+        0.424,
+        0.166,
+        0.048
+       ],
+       "K_rgb": [
+        0.977,
+        1.7234,
+        2.149
+       ],
+       "S_rgb": [
+        2.4107,
+        0.7572,
+        0.1783
+       ],
+       "K_rgb_linear_band": [
+        43.4572,
+        122.3279,
+        225.6017
+       ],
+       "S_rgb_linear_band": [
+        17.3438,
+        11.2425,
+        7.7984
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        185.5788,
+        257.1357,
+        278.6512,
+        260.7197,
+        245.2099,
+        228.7064,
+        214.0937,
+        202.5563,
+        193.5896,
+        184.7499,
+        171.9213,
+        163.6868,
+        154.2256,
+        142.3616,
+        127.773,
+        111.2888,
+        91.1194,
+        70.0578,
+        52.4181,
+        39.6096,
+        31.1341,
+        25.6724,
+        22.0182,
+        19.39,
+        17.3874,
+        15.5678,
+        14.1949,
+        12.9637,
+        11.6568,
+        10.6687,
+        9.638
+       ],
+       "S_per_film": [
+        5.1812,
+        7.3435,
+        8.0192,
+        8.246,
+        8.0724,
+        7.8604,
+        7.7034,
+        7.5272,
+        7.4492,
+        7.4577,
+        7.7266,
+        7.858,
+        8.3498,
+        8.9357,
+        9.9946,
+        11.5284,
+        13.8337,
+        16.4225,
+        18.0983,
+        18.837,
+        18.9907,
+        18.6408,
+        18.1771,
+        17.551,
+        16.8889,
+        15.9745,
+        15.3267,
+        14.6683,
+        13.7706,
+        13.2064,
+        12.456
+       ],
+       "R_inf": [
+        0.0067,
+        0.0068,
+        0.0069,
+        0.0076,
+        0.0079,
+        0.0082,
+        0.0086,
+        0.0089,
+        0.0092,
+        0.0096,
+        0.0106,
+        0.0113,
+        0.0127,
+        0.0147,
+        0.0181,
+        0.0236,
+        0.0335,
+        0.0492,
+        0.0683,
+        0.0882,
+        0.1066,
+        0.1211,
+        0.1326,
+        0.1412,
+        0.1481,
+        0.1536,
+        0.1588,
+        0.1637,
+        0.1683,
+        0.1734,
+        0.1781
+       ],
+       "K_per_mm": [
+        466.3688,
+        646.1948,
+        700.2642,
+        655.2014,
+        616.2247,
+        574.7505,
+        538.0281,
+        509.0341,
+        486.5004,
+        464.2856,
+        432.0467,
+        411.353,
+        387.5765,
+        357.7617,
+        321.0998,
+        279.6743,
+        228.9877,
+        176.0588,
+        131.7294,
+        99.541,
+        78.2416,
+        64.5159,
+        55.3329,
+        48.7279,
+        43.6954,
+        39.1226,
+        35.6724,
+        32.5784,
+        29.2942,
+        26.811,
+        24.2209
+       ],
+       "S_per_mm": [
+        13.0206,
+        18.4547,
+        20.1527,
+        20.7225,
+        20.2863,
+        19.7536,
+        19.3591,
+        18.9162,
+        18.7203,
+        18.7415,
+        19.4174,
+        19.7475,
+        20.9834,
+        22.4558,
+        25.117,
+        28.9714,
+        34.7647,
+        41.2707,
+        45.4819,
+        47.3383,
+        47.7246,
+        46.8452,
+        45.6799,
+        44.1065,
+        42.4426,
+        40.1446,
+        38.5169,
+        36.8622,
+        34.6061,
+        33.1884,
+        31.3024
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic)",
+      "stands_for": "burnt sienna"
+     },
+     {
+      "name": "raw umber",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL B15 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL B15 masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+       "rms_internal_reflectance": 0.0002,
+       "masstone_direct_K_per_mm": [
+        299.006,
+        278.097,
+        257.649,
+        234.658,
+        211.309,
+        192.605,
+        180.188,
+        170.58,
+        161.634,
+        151.053,
+        139.259,
+        127.445,
+        115.78,
+        104.769,
+        94.654,
+        86.073,
+        78.927,
+        73.12,
+        67.06,
+        62.127,
+        58.116,
+        54.531,
+        51.267,
+        48.245,
+        45.446,
+        42.642,
+        40.288,
+        38.102,
+        36.103,
+        34.213,
+        32.483
+       ],
+       "masstone_direct_S_per_mm": [
+        4.65,
+        4.481,
+        4.42,
+        4.575,
+        4.633,
+        4.584,
+        4.43,
+        4.008,
+        3.954,
+        4.079,
+        4.775,
+        5.476,
+        6.687,
+        7.886,
+        9.237,
+        10.481,
+        11.433,
+        12.221,
+        12.021,
+        11.753,
+        11.556,
+        11.399,
+        11.218,
+        11.033,
+        10.83,
+        10.585,
+        10.319,
+        9.996,
+        9.764,
+        9.486,
+        9.166
+       ],
+       "note": "fitted / masstone film's own K and S (measured over void, white and black): x1.46 (K) and x1.46 (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies"
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.263,
+         0.164,
+         0.034
+        ],
+        "linear": [
+         0.0562,
+         0.023,
+         0.0026
+        ],
+        "lab": [
+         19.5,
+         8.4,
+         24.5
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.263,
+         0.164,
+         0.034
+        ],
+        "linear": [
+         0.0562,
+         0.023,
+         0.0026
+        ],
+        "lab": [
+         19.5,
+         8.4,
+         24.5
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.263,
+         0.164,
+         0.034
+        ],
+        "linear": [
+         0.0562,
+         0.023,
+         0.0026
+        ],
+        "lab": [
+         19.5,
+         8.4,
+         24.5
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.265,
+         0.164,
+         0.034
+        ],
+        "linear": [
+         0.0569,
+         0.0229,
+         0.0026
+        ],
+        "lab": [
+         19.5,
+         8.6,
+         24.6
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.263,
+         0.164,
+         0.034
+        ],
+        "linear": [
+         0.0562,
+         0.023,
+         0.0026
+        ],
+        "lab": [
+         19.5,
+         8.4,
+         24.5
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.265,
+        0.164,
+        0.034
+       ],
+       "over_black": [
+        0.263,
+        0.164,
+        0.034
+       ],
+       "K_rgb": [
+        1.4078,
+        1.7268,
+        2.2046
+       ],
+       "S_rgb": [
+        1.3112,
+        0.752,
+        0.1122
+       ],
+       "K_rgb_linear_band": [
+        36.9356,
+        57.0154,
+        123.6453
+       ],
+       "S_rgb_linear_band": [
+        6.2329,
+        4.9603,
+        2.7932
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        128.3977,
+        168.8426,
+        174.0601,
+        153.6148,
+        135.9087,
+        121.3757,
+        113.4384,
+        105.8972,
+        100.6844,
+        93.1472,
+        83.3629,
+        75.5882,
+        67.9353,
+        59.1431,
+        53.1956,
+        47.6351,
+        43.134,
+        39.7676,
+        37.1474,
+        34.6476,
+        32.6084,
+        30.7064,
+        29.0201,
+        27.4593,
+        25.8113,
+        24.3969,
+        23.343,
+        22.0339,
+        20.9759,
+        20.1221,
+        19.3128
+       ],
+       "S_per_film": [
+        1.9972,
+        2.7179,
+        2.9842,
+        2.9937,
+        2.9794,
+        2.8884,
+        2.7889,
+        2.4888,
+        2.463,
+        2.5155,
+        2.859,
+        3.2479,
+        3.9241,
+        4.4517,
+        5.191,
+        5.8005,
+        6.2481,
+        6.6463,
+        6.6589,
+        6.5546,
+        6.4839,
+        6.4185,
+        6.3502,
+        6.2795,
+        6.1508,
+        6.0558,
+        5.9787,
+        5.7804,
+        5.6725,
+        5.5788,
+        5.4497
+       ],
+       "R_inf": [
+        0.0038,
+        0.0039,
+        0.0041,
+        0.0047,
+        0.0053,
+        0.0057,
+        0.0059,
+        0.0057,
+        0.0059,
+        0.0065,
+        0.0082,
+        0.0102,
+        0.0136,
+        0.0175,
+        0.0223,
+        0.0274,
+        0.0321,
+        0.0365,
+        0.0389,
+        0.0408,
+        0.0426,
+        0.0445,
+        0.0464,
+        0.0482,
+        0.0499,
+        0.0517,
+        0.0531,
+        0.0542,
+        0.0556,
+        0.0568,
+        0.0577
+       ],
+       "K_per_mm": [
+        322.6698,
+        424.3099,
+        437.4216,
+        386.0417,
+        341.5453,
+        305.0232,
+        285.0764,
+        266.125,
+        253.0248,
+        234.0836,
+        209.4952,
+        189.9569,
+        170.7248,
+        148.6296,
+        133.6832,
+        119.7093,
+        108.3978,
+        99.9379,
+        93.3532,
+        87.071,
+        81.9466,
+        77.1668,
+        72.9289,
+        69.0065,
+        64.865,
+        61.3107,
+        58.6622,
+        55.3723,
+        52.7134,
+        50.5678,
+        48.534
+       ],
+       "S_per_mm": [
+        5.0192,
+        6.8302,
+        7.4995,
+        7.5232,
+        7.4874,
+        7.2588,
+        7.0087,
+        6.2545,
+        6.1897,
+        6.3215,
+        7.1848,
+        8.1622,
+        9.8616,
+        11.1874,
+        13.0454,
+        14.5771,
+        15.7019,
+        16.7025,
+        16.7342,
+        16.472,
+        16.2944,
+        16.1301,
+        15.9583,
+        15.7807,
+        15.4573,
+        15.2186,
+        15.0248,
+        14.5265,
+        14.2554,
+        14.0199,
+        13.6954
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic)",
+      "stands_for": "raw umber"
+     },
+     {
+      "name": "burnt umber",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "FORS burntumber (linseed oil), S from LBNL raw umber",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "none: masstone K/S from the calibrated FORS spectrum; S borrowed",
+       "rms_internal_reflectance": null
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.211,
+         0.165,
+         0.143
+        ],
+        "linear": [
+         0.0368,
+         0.0231,
+         0.0181
+        ],
+        "lab": [
+         18.2,
+         4.5,
+         5.6
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.211,
+         0.165,
+         0.143
+        ],
+        "linear": [
+         0.0368,
+         0.0231,
+         0.0181
+        ],
+        "lab": [
+         18.2,
+         4.5,
+         5.6
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.211,
+         0.165,
+         0.143
+        ],
+        "linear": [
+         0.0368,
+         0.0231,
+         0.0181
+        ],
+        "lab": [
+         18.2,
+         4.5,
+         5.6
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.211,
+         0.165,
+         0.147
+        ],
+        "linear": [
+         0.0368,
+         0.0232,
+         0.019
+        ],
+        "lab": [
+         18.3,
+         4.7,
+         5.0
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.211,
+         0.165,
+         0.143
+        ],
+        "linear": [
+         0.0368,
+         0.0231,
+         0.0181
+        ],
+        "lab": [
+         18.2,
+         4.5,
+         5.7
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.211,
+        0.165,
+        0.147
+       ],
+       "over_black": [
+        0.211,
+        0.165,
+        0.143
+       ],
+       "K_rgb": [
+        1.5733,
+        1.7234,
+        1.7847
+       ],
+       "S_rgb": [
+        1.0033,
+        0.7572,
+        0.6643
+       ],
+       "K_rgb_linear_band": [
+        44.2363,
+        47.6535,
+        36.041
+       ],
+       "S_rgb_linear_band": [
+        6.2329,
+        4.9603,
+        2.7932
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        15.7183,
+        18.0646,
+        23.0587,
+        34.2325,
+        33.9406,
+        53.5539,
+        38.8739,
+        28.0306,
+        27.9229,
+        29.6532,
+        30.7406,
+        34.1464,
+        42.9223,
+        46.8001,
+        53.0637,
+        54.6748,
+        56.3545,
+        56.5648,
+        56.1518,
+        48.5131,
+        46.2371,
+        42.5446,
+        40.5613,
+        38.1516,
+        36.1437,
+        34.9339,
+        33.1185,
+        30.8111,
+        29.1,
+        27.6625,
+        26.3023
+       ],
+       "S_per_film": [
+        1.9972,
+        2.7179,
+        2.9842,
+        2.9937,
+        2.9794,
+        2.8884,
+        2.7889,
+        2.4888,
+        2.463,
+        2.5155,
+        2.859,
+        3.2479,
+        3.9241,
+        4.4517,
+        5.191,
+        5.8005,
+        6.2481,
+        6.6463,
+        6.6589,
+        6.5546,
+        6.4839,
+        6.4185,
+        6.3502,
+        6.2795,
+        6.1508,
+        6.0558,
+        5.9787,
+        5.7804,
+        5.6725,
+        5.5788,
+        5.4497
+       ],
+       "R_inf": [
+        0.0285,
+        0.0332,
+        0.029,
+        0.0201,
+        0.0202,
+        0.0127,
+        0.0167,
+        0.0204,
+        0.0203,
+        0.0195,
+        0.0213,
+        0.0218,
+        0.021,
+        0.0218,
+        0.0223,
+        0.0241,
+        0.0251,
+        0.0265,
+        0.0267,
+        0.0301,
+        0.0312,
+        0.0333,
+        0.0344,
+        0.036,
+        0.0371,
+        0.0377,
+        0.0391,
+        0.0405,
+        0.0419,
+        0.0432,
+        0.0442
+       ],
+       "K_per_mm": [
+        39.5008,
+        45.3972,
+        57.9476,
+        86.0279,
+        85.2944,
+        134.5835,
+        97.6921,
+        70.4424,
+        70.1718,
+        74.52,
+        77.2526,
+        85.8117,
+        107.8659,
+        117.6109,
+        133.3516,
+        137.4005,
+        141.6216,
+        142.15,
+        141.1122,
+        121.9159,
+        116.1962,
+        106.9166,
+        101.9326,
+        95.8769,
+        90.8309,
+        87.7907,
+        83.2285,
+        77.4297,
+        73.1299,
+        69.5172,
+        66.0989
+       ],
+       "S_per_mm": [
+        5.0192,
+        6.8302,
+        7.4995,
+        7.5232,
+        7.4874,
+        7.2588,
+        7.0087,
+        6.2545,
+        6.1897,
+        6.3215,
+        7.1848,
+        8.1622,
+        9.8616,
+        11.1874,
+        13.0454,
+        14.5771,
+        15.7019,
+        16.7025,
+        16.7342,
+        16.472,
+        16.2944,
+        16.1301,
+        15.9583,
+        15.7807,
+        15.4573,
+        15.2186,
+        15.0248,
+        14.5265,
+        14.2554,
+        14.0199,
+        13.6954
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "approximation (tuned): masstone hue and value from FORS linseed oil (calibrated to LBNL), scattering borrowed from raw umber (a judgement); tinting strength not measured",
+      "stands_for": "burnt umber"
+     }
+    ],
     "watercolour": {
      "n_paints": 34,
      "transparency_0_4": 2.0,
@@ -4330,6 +5934,8 @@
    },
    "provenance": [
     "first_use: handprint",
+    "lbnl",
+    "fors+lbnl (approximation)",
     "fors",
     "handprint"
    ],
@@ -5403,8 +7009,317 @@
   },
   {
    "ci": "PG23",
-   "name": "green earth",
+   "name": "green earth (terre verte)",
    "media": {
+    "oil": [
+     {
+      "name": "green earth (terre verte)",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "FORS greenearth (linseed oil), S from LBNL raw sienna",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "none: masstone K/S from the calibrated FORS spectrum; S borrowed",
+       "rms_internal_reflectance": null
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.304,
+         0.301,
+         0.219
+        ],
+        "linear": [
+         0.0755,
+         0.0736,
+         0.0392
+        ],
+        "lab": [
+         32.2,
+         -3.6,
+         12.6
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.304,
+         0.301,
+         0.219
+        ],
+        "linear": [
+         0.0755,
+         0.0736,
+         0.0392
+        ],
+        "lab": [
+         32.2,
+         -3.6,
+         12.6
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.304,
+         0.301,
+         0.219
+        ],
+        "linear": [
+         0.0755,
+         0.0736,
+         0.0392
+        ],
+        "lab": [
+         32.2,
+         -3.6,
+         12.6
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.304,
+         0.301,
+         0.219
+        ],
+        "linear": [
+         0.0755,
+         0.0736,
+         0.0392
+        ],
+        "lab": [
+         32.2,
+         -3.6,
+         12.6
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.304,
+         0.301,
+         0.219
+        ],
+        "linear": [
+         0.0755,
+         0.0736,
+         0.0392
+        ],
+        "lab": [
+         32.2,
+         -3.6,
+         12.6
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.304,
+        0.301,
+        0.219
+       ],
+       "over_black": [
+        0.304,
+        0.301,
+        0.219
+       ],
+       "K_rgb": [
+        1.295,
+        1.3035,
+        1.5481
+       ],
+       "S_rgb": [
+        1.5497,
+        1.5308,
+        1.0475
+       ],
+       "K_rgb_linear_band": [
+        73.7958,
+        75.6947,
+        134.6398
+       ],
+       "S_rgb_linear_band": [
+        26.323,
+        27.1402,
+        25.8996
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        78.4726,
+        232.8491,
+        147.1762,
+        157.2813,
+        174.9227,
+        147.5061,
+        116.4247,
+        100.6184,
+        99.0601,
+        93.381,
+        87.7883,
+        82.5564,
+        79.6972,
+        74.1344,
+        72.2557,
+        70.7863,
+        70.1,
+        70.0109,
+        70.7969,
+        70.8216,
+        71.3306,
+        70.5814,
+        70.0217,
+        68.2574,
+        66.4206,
+        64.3397,
+        63.3256,
+        60.2791,
+        58.4443,
+        55.8276,
+        54.2596
+       ],
+       "S_per_film": [
+        15.666,
+        26.011,
+        26.7495,
+        26.5225,
+        26.8677,
+        27.138,
+        25.7547,
+        24.2592,
+        24.2804,
+        24.4825,
+        24.8323,
+        25.9225,
+        26.7293,
+        26.8006,
+        27.8197,
+        28.0601,
+        28.0682,
+        28.2663,
+        28.1588,
+        27.7702,
+        27.0543,
+        26.3012,
+        25.5981,
+        24.9287,
+        24.1232,
+        23.3224,
+        23.1313,
+        22.33,
+        21.7301,
+        21.2282,
+        20.5163
+       ],
+       "R_inf": [
+        0.0428,
+        0.0253,
+        0.0394,
+        0.0368,
+        0.0338,
+        0.0398,
+        0.0468,
+        0.0504,
+        0.0512,
+        0.0542,
+        0.0578,
+        0.0631,
+        0.0667,
+        0.0709,
+        0.0746,
+        0.0764,
+        0.077,
+        0.0775,
+        0.0766,
+        0.0757,
+        0.0737,
+        0.0727,
+        0.0715,
+        0.0715,
+        0.0712,
+        0.071,
+        0.0715,
+        0.0723,
+        0.0725,
+        0.0739,
+        0.0735
+       ],
+       "K_per_mm": [
+        197.2056,
+        585.1613,
+        369.861,
+        395.2558,
+        439.5894,
+        370.6901,
+        292.5811,
+        252.859,
+        248.943,
+        234.6711,
+        220.6165,
+        207.4684,
+        200.2831,
+        186.3033,
+        181.5823,
+        177.8894,
+        176.1647,
+        175.9408,
+        177.9162,
+        177.9783,
+        179.2575,
+        177.3745,
+        175.968,
+        171.5343,
+        166.9182,
+        161.6889,
+        159.1403,
+        151.4843,
+        146.8735,
+        140.2974,
+        136.357
+       ],
+       "S_per_mm": [
+        39.3693,
+        65.3669,
+        67.2228,
+        66.6522,
+        67.52,
+        68.1991,
+        64.7228,
+        60.9645,
+        61.0179,
+        61.5258,
+        62.4049,
+        65.1445,
+        67.1722,
+        67.3512,
+        69.9122,
+        70.5165,
+        70.5369,
+        71.0346,
+        70.7644,
+        69.7878,
+        67.9888,
+        66.0963,
+        64.3294,
+        62.6471,
+        60.6227,
+        58.6103,
+        58.1301,
+        56.1165,
+        54.6089,
+        53.3475,
+        51.5586
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "approximation (tuned): masstone hue and value from FORS linseed oil (calibrated to LBNL), scattering borrowed from raw sienna (a judgement); tinting strength not measured",
+      "stands_for": "green earth (terre verte)"
+     }
+    ],
     "watercolour": {
      "n_paints": 3,
      "transparency_0_4": 2,
@@ -5425,6 +7340,7 @@
    },
    "provenance": [
     "first_use: handprint",
+    "fors+lbnl (approximation)",
     "fors",
     "handprint"
    ],
@@ -6065,8 +7981,384 @@
   },
   {
    "ci": "PR101",
-   "name": "indian red",
+   "name": "red iron oxide (red oxide)",
    "media": {
+    "oil": [
+     {
+      "name": "red iron oxide (red oxide)",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL R04 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL R04 masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+       "rms_internal_reflectance": 0.0025,
+       "masstone_direct_K_per_mm": [
+        431.456,
+        436.52,
+        426.746,
+        436.077,
+        447.373,
+        443.444,
+        433.559,
+        430.515,
+        428.411,
+        433.857,
+        415.555,
+        419.202,
+        425.012,
+        420.867,
+        400.209,
+        375.142,
+        340.983,
+        253.766,
+        158.384,
+        99.461,
+        67.459,
+        52.602,
+        45.128,
+        41.038,
+        37.795,
+        34.559,
+        31.213,
+        27.672,
+        23.938,
+        20.454,
+        17.215
+       ],
+       "masstone_direct_S_per_mm": [
+        19.56,
+        20.083,
+        19.653,
+        20.162,
+        20.684,
+        20.809,
+        20.483,
+        21.394,
+        21.753,
+        23.064,
+        24.009,
+        25.818,
+        28.984,
+        32.693,
+        38.978,
+        51.259,
+        77.355,
+        108.278,
+        131.912,
+        146.351,
+        149.909,
+        147.288,
+        141.682,
+        136.105,
+        130.875,
+        126.263,
+        121.767,
+        117.829,
+        114.192,
+        110.723,
+        107.623
+       ],
+       "note": "fitted / masstone film's own K and S (measured over void, white and black): x2.23 (K) and x2.25 (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies"
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.607,
+         0.204,
+         0.032
+        ],
+        "linear": [
+         0.3263,
+         0.0344,
+         0.0025
+        ],
+        "lab": [
+         36.8,
+         41.1,
+         45.6
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.607,
+         0.204,
+         0.032
+        ],
+        "linear": [
+         0.3263,
+         0.0344,
+         0.0025
+        ],
+        "lab": [
+         36.8,
+         41.1,
+         45.6
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.607,
+         0.204,
+         0.032
+        ],
+        "linear": [
+         0.3263,
+         0.0344,
+         0.0025
+        ],
+        "lab": [
+         36.8,
+         41.1,
+         45.6
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.607,
+         0.204,
+         0.032
+        ],
+        "linear": [
+         0.3263,
+         0.0344,
+         0.0025
+        ],
+        "lab": [
+         36.8,
+         41.1,
+         45.6
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.607,
+         0.204,
+         0.032
+        ],
+        "linear": [
+         0.3263,
+         0.0344,
+         0.0025
+        ],
+        "lab": [
+         36.8,
+         41.1,
+         45.6
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.607,
+        0.204,
+        0.032
+       ],
+       "over_black": [
+        0.607,
+        0.204,
+        0.032
+       ],
+       "K_rgb": [
+        0.5768,
+        1.5956,
+        2.2127
+       ],
+       "S_rgb": [
+        4.3484,
+        0.9649,
+        0.1028
+       ],
+       "K_rgb_linear_band": [
+        90.9055,
+        404.2728,
+        580.9788
+       ],
+       "S_rgb_linear_band": [
+        92.18,
+        54.2848,
+        28.247
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        345.7413,
+        522.2573,
+        601.5455,
+        596.8462,
+        599.2244,
+        590.2052,
+        580.9914,
+        568.4803,
+        563.4545,
+        555.4456,
+        536.1171,
+        527.9643,
+        514.8634,
+        491.9277,
+        463.8053,
+        408.4092,
+        302.0254,
+        209.3063,
+        122.2374,
+        71.4288,
+        46.4382,
+        35.2469,
+        30.1398,
+        27.3173,
+        24.9909,
+        22.6649,
+        20.6768,
+        17.9636,
+        15.5241,
+        13.0993,
+        10.8019
+       ],
+       "S_per_film": [
+        15.812,
+        24.2708,
+        28.0868,
+        27.9813,
+        28.0713,
+        28.1142,
+        27.919,
+        28.6758,
+        29.0102,
+        29.9126,
+        31.3872,
+        32.9069,
+        35.5425,
+        38.5862,
+        45.5411,
+        56.1288,
+        69.1812,
+        89.4708,
+        101.8784,
+        105.1587,
+        103.2357,
+        98.7259,
+        94.6566,
+        90.6296,
+        86.5576,
+        82.831,
+        80.6862,
+        76.5101,
+        74.0753,
+        70.9243,
+        67.5432
+       ],
+       "R_inf": [
+        0.0108,
+        0.011,
+        0.011,
+        0.0111,
+        0.0111,
+        0.0113,
+        0.0114,
+        0.0119,
+        0.0121,
+        0.0127,
+        0.0137,
+        0.0146,
+        0.0161,
+        0.0182,
+        0.0224,
+        0.0306,
+        0.0482,
+        0.0811,
+        0.1334,
+        0.1929,
+        0.2436,
+        0.2744,
+        0.2901,
+        0.2978,
+        0.3038,
+        0.3114,
+        0.3207,
+        0.3333,
+        0.3497,
+        0.3681,
+        0.3893
+       ],
+       "K_per_mm": [
+        868.865,
+        1312.4586,
+        1511.7137,
+        1499.9041,
+        1505.8805,
+        1483.2149,
+        1460.0602,
+        1428.6192,
+        1415.989,
+        1395.8623,
+        1347.2888,
+        1326.8003,
+        1293.8773,
+        1236.2386,
+        1165.5657,
+        1026.3525,
+        759.0049,
+        525.9972,
+        307.1886,
+        179.5041,
+        116.7015,
+        88.5773,
+        75.7429,
+        68.6497,
+        62.8035,
+        56.9581,
+        51.9617,
+        45.1434,
+        39.0129,
+        32.9191,
+        27.1458
+       ],
+       "S_per_mm": [
+        39.7363,
+        60.9938,
+        70.5835,
+        70.3185,
+        70.5445,
+        70.6524,
+        70.1618,
+        72.0636,
+        72.904,
+        75.1719,
+        78.8775,
+        82.6966,
+        89.3201,
+        96.969,
+        114.4469,
+        141.0546,
+        173.8557,
+        224.8445,
+        256.0254,
+        264.2691,
+        259.4364,
+        248.1031,
+        237.8767,
+        227.7567,
+        217.5235,
+        208.1585,
+        202.7685,
+        192.2737,
+        186.1549,
+        178.2364,
+        169.7395
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic); a proxy: synthetic red iron oxide, the chromophore of red ochre (PR102) without its clay",
+      "stands_for": "red ochre"
+     }
+    ],
     "watercolour": {
      "n_paints": 30,
      "transparency_0_4": 1.0,
@@ -6091,6 +8383,7 @@
     }
    },
    "provenance": [
+    "lbnl",
     "handprint"
    ]
   },
@@ -9104,25 +11397,25 @@
       "hiding_at_film": false,
       "opacity": 0.845,
       "fit": {
-       "films": "masstone film only",
-       "rms_internal_reflectance": null
+       "films": "masstone + its mixtures with bone black, 08B (0.9%) and 08C (10.2%) (Duncan, weight fractions)",
+       "rms_internal_reflectance": 0.0197
       },
       "colours": {
        "masstone": {
         "srgb": [
-         0.956,
-         0.958,
-         0.937
+         0.979,
+         0.981,
+         0.979
         ],
         "linear": [
-         0.9019,
-         0.9062,
-         0.8627
+         0.953,
+         0.9573,
+         0.953
         ],
         "lab": [
-         96.1,
-         -1.1,
-         2.5
+         98.3,
+         -0.2,
+         0.2
         ]
        },
        "measured_over_white": {
@@ -9161,70 +11454,70 @@
        },
        "film_over_white": {
         "srgb": [
-         0.976,
-         0.978,
-         0.96
+         0.98,
+         0.982,
+         0.98
         ],
         "linear": [
-         0.9456,
-         0.9497,
-         0.9124
+         0.9554,
+         0.9593,
+         0.955
         ],
         "lab": [
-         97.9,
-         -0.9,
-         2.0
+         98.4,
+         -0.2,
+         0.2
         ]
        },
        "film_over_black": {
         "srgb": [
-         0.848,
-         0.871,
-         0.89
+         0.816,
+         0.84,
+         0.863
         ],
         "linear": [
-         0.6876,
-         0.7314,
-         0.7672
+         0.6308,
+         0.6733,
+         0.7161
         ],
         "lab": [
-         88.2,
-         -1.1,
-         -3.0
+         85.4,
+         -0.9,
+         -3.6
         ]
        },
        "glaze_over_white": {
         "srgb": [
          0.98,
-         0.981,
-         0.978
+         0.982,
+         0.98
         ],
         "linear": [
-         0.9546,
-         0.9582,
-         0.9512
+         0.9556,
+         0.9592,
+         0.9558
         ],
         "lab": [
-         98.3,
-         -0.3,
-         0.3
+         98.4,
+         -0.2,
+         0.1
         ]
        },
        "glaze_over_black": {
         "srgb": [
-         0.479,
-         0.521,
-         0.575
+         0.429,
+         0.464,
+         0.506
         ],
         "linear": [
-         0.1952,
-         0.234,
-         0.2904
+         0.1544,
+         0.1819,
+         0.2197
         ],
         "lab": [
-         55.1,
+         49.3,
          -0.9,
-         -8.7
+         -7.0
         ]
        }
       },
@@ -9232,33 +11525,33 @@
        "thickness": "glaze: 0.1 of the 100 um drawdown (K_rgb, S_rgb are per unit of that glaze)",
        "over_white": [
         0.98,
-        0.981,
-        0.978
+        0.982,
+        0.98
        ],
        "over_black": [
-        0.479,
-        0.521,
-        0.575
+        0.429,
+        0.464,
+        0.506
        ],
        "K_rgb": [
         0.0102,
         0.0102,
-        0.0112
+        0.0102
        ],
        "S_rgb": [
-        0.9346,
-        1.1069,
-        1.3822
+        0.7628,
+        0.8797,
+        1.042
        ],
        "K_rgb_linear_band": [
-        0.0033,
-        0.0034,
-        0.0123
+        0.0001,
+        0.0,
+        0.0009
        ],
        "S_rgb_linear_band": [
-        5.6227,
-        6.4312,
-        8.2775
+        4.1424,
+        4.6428,
+        5.7148
        ],
        "note": "sRGB-encoded 0..1 (the engine's hx convention), specular excluded (colour away from glare); feed over_white/over_black to media.base.pigment()"
       },
@@ -9269,103 +11562,103 @@
         10
        ],
        "K_per_film": [
-        0.0543,
-        0.0367,
-        0.027,
-        0.019,
-        0.014,
-        0.0116,
-        0.0083,
-        0.008,
-        0.0061,
-        0.0055,
-        0.0043,
-        0.0044,
-        0.0037,
-        0.0034,
-        0.003,
-        0.003,
-        0.003,
-        0.0025,
-        0.0028,
-        0.0026,
-        0.0029,
-        0.0027,
-        0.0026,
-        0.0025,
-        0.0022,
-        0.0023,
-        0.0019,
-        0.0021,
-        0.0015,
-        0.0015,
-        0.0016
+        0.1745,
+        0.0005,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
        ],
        "S_per_film": [
-        9.8776,
-        9.601,
-        9.3372,
-        8.9409,
-        8.6724,
-        8.2953,
-        8.0927,
-        7.7512,
-        7.5791,
-        7.3548,
-        7.118,
-        6.9726,
-        6.7339,
-        6.5219,
-        6.3834,
-        6.223,
-        6.0761,
-        5.9171,
-        5.7743,
-        5.657,
-        5.4883,
-        5.4775,
-        5.3479,
-        5.2094,
-        5.1404,
-        5.0195,
-        4.9023,
-        4.77,
-        4.6932,
-        4.5932,
-        4.4953
+        21.582,
+        6.1116,
+        5.7964,
+        5.9694,
+        5.824,
+        5.7061,
+        5.5501,
+        5.4725,
+        5.2824,
+        5.1864,
+        5.0915,
+        4.9297,
+        4.8238,
+        4.6746,
+        4.6224,
+        4.5475,
+        4.443,
+        4.3283,
+        4.2486,
+        4.1736,
+        4.0621,
+        4.0643,
+        3.9719,
+        3.8926,
+        3.8312,
+        3.7354,
+        3.6881,
+        3.5778,
+        3.541,
+        3.4686,
+        3.4162
        ],
        "R_inf": [
-        0.7891,
-        0.8142,
-        0.8314,
-        0.8481,
-        0.8613,
-        0.8678,
-        0.8801,
-        0.88,
-        0.8888,
-        0.8909,
-        0.8975,
-        0.8964,
-        0.9005,
-        0.902,
-        0.9046,
-        0.9038,
-        0.9038,
-        0.9071,
-        0.9039,
-        0.9055,
-        0.9021,
-        0.9038,
-        0.9036,
-        0.9046,
-        0.907,
-        0.906,
-        0.9093,
-        0.9062,
-        0.9135,
-        0.9131,
-        0.9123
+        0.7585,
+        0.9371,
+        0.9565,
+        0.9566,
+        0.9565,
+        0.9565,
+        0.9564,
+        0.9564,
+        0.9563,
+        0.9563,
+        0.9563,
+        0.9562,
+        0.9562,
+        0.9561,
+        0.9561,
+        0.9561,
+        0.956,
+        0.956,
+        0.9559,
+        0.9559,
+        0.9558,
+        0.9558,
+        0.9558,
+        0.9557,
+        0.9557,
+        0.9557,
+        0.9556,
+        0.9556,
+        0.9555,
+        0.9555,
+        0.9555
        ],
        "unit": "per film of the 100 um drawdown (wet applicator gap); Saunderson k1=0.04, k2=0.49 removed before fitting"
       }
@@ -10805,6 +13098,315 @@
    "ci": "PW6",
    "name": "titanium white",
    "media": {
+    "oil": [
+     {
+      "name": "titanium white",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL W03 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL W03 masstone film's K and S as charted (measured over void, white and black)",
+       "rms_internal_reflectance": null
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.946,
+         0.956,
+         0.954
+        ],
+        "linear": [
+         0.8819,
+         0.9034,
+         0.8989
+        ],
+        "lab": [
+         95.9,
+         -0.9,
+         -0.0
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.946,
+         0.956,
+         0.954
+        ],
+        "linear": [
+         0.8819,
+         0.9034,
+         0.8989
+        ],
+        "lab": [
+         95.9,
+         -0.9,
+         -0.0
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.946,
+         0.956,
+         0.954
+        ],
+        "linear": [
+         0.8819,
+         0.9034,
+         0.8989
+        ],
+        "lab": [
+         95.9,
+         -0.9,
+         -0.0
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.957,
+         0.964,
+         0.959
+        ],
+        "linear": [
+         0.9052,
+         0.9204,
+         0.9084
+        ],
+        "lab": [
+         96.7,
+         -0.8,
+         0.5
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.93,
+         0.945,
+         0.948
+        ],
+        "linear": [
+         0.8485,
+         0.8791,
+         0.8864
+        ],
+        "lab": [
+         94.9,
+         -1.1,
+         -0.9
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.957,
+        0.964,
+        0.959
+       ],
+       "over_black": [
+        0.93,
+        0.945,
+        0.948
+       ],
+       "K_rgb": [
+        0.0292,
+        0.0252,
+        0.0329
+       ],
+       "S_rgb": [
+        18.0471,
+        24.0617,
+        29.2766
+       ],
+       "K_rgb_linear_band": [
+        0.1861,
+        0.1395,
+        0.3999
+       ],
+       "S_rgb_linear_band": [
+        216.8873,
+        261.3947,
+        357.4374
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        26.6311,
+        5.5253,
+        0.7016,
+        0.2043,
+        0.1443,
+        0.1287,
+        0.1304,
+        0.136,
+        0.1263,
+        0.1176,
+        0.1434,
+        0.128,
+        0.1267,
+        0.141,
+        0.1364,
+        0.1442,
+        0.1508,
+        0.1508,
+        0.145,
+        0.1447,
+        0.1544,
+        0.1575,
+        0.1579,
+        0.1603,
+        0.1613,
+        0.1626,
+        0.1638,
+        0.1629,
+        0.1622,
+        0.1658,
+        0.1624
+       ],
+       "S_per_film": [
+        250.2439,
+        380.5245,
+        414.6947,
+        394.0228,
+        378.8743,
+        363.0122,
+        347.7052,
+        332.4687,
+        321.888,
+        310.879,
+        296.3076,
+        287.8354,
+        278.1334,
+        267.1927,
+        259.2976,
+        250.3173,
+        241.9788,
+        234.0524,
+        227.3844,
+        220.5845,
+        212.8253,
+        206.4602,
+        200.187,
+        194.5811,
+        188.7598,
+        183.2058,
+        178.4274,
+        173.1771,
+        168.162,
+        163.8595,
+        159.2704
+       ],
+       "R_inf": [
+        0.4492,
+        0.7039,
+        0.8591,
+        0.9021,
+        0.9101,
+        0.9118,
+        0.9104,
+        0.9083,
+        0.9094,
+        0.9102,
+        0.904,
+        0.9062,
+        0.9056,
+        0.9016,
+        0.9017,
+        0.8991,
+        0.8968,
+        0.8958,
+        0.8961,
+        0.8953,
+        0.8921,
+        0.8905,
+        0.8894,
+        0.8879,
+        0.8866,
+        0.8853,
+        0.8841,
+        0.8832,
+        0.8823,
+        0.8806,
+        0.8803
+       ],
+       "K_per_mm": [
+        66.9254,
+        13.8853,
+        1.7631,
+        0.5133,
+        0.3625,
+        0.3233,
+        0.3276,
+        0.3418,
+        0.3173,
+        0.2956,
+        0.3603,
+        0.3217,
+        0.3183,
+        0.3543,
+        0.3427,
+        0.3624,
+        0.379,
+        0.379,
+        0.3644,
+        0.3636,
+        0.3881,
+        0.3958,
+        0.3967,
+        0.4029,
+        0.4053,
+        0.4085,
+        0.4116,
+        0.4093,
+        0.4077,
+        0.4166,
+        0.4081
+       ],
+       "S_per_mm": [
+        628.8752,
+        956.277,
+        1042.1484,
+        990.1988,
+        952.1298,
+        912.2677,
+        873.8005,
+        835.5104,
+        808.9206,
+        781.2543,
+        744.6358,
+        723.3446,
+        698.9629,
+        671.4684,
+        651.6278,
+        629.0599,
+        608.1048,
+        588.1852,
+        571.4282,
+        554.3397,
+        534.8405,
+        518.8448,
+        503.08,
+        488.9919,
+        474.3628,
+        460.4052,
+        448.397,
+        435.2027,
+        422.5995,
+        411.7871,
+        400.2543
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic)",
+      "stands_for": "titanium white"
+     }
+    ],
     "watercolour": {
      "n_paints": 6,
      "transparency_0_4": 2.0,
@@ -10825,6 +13427,7 @@
    },
    "provenance": [
     "first_use: handprint",
+    "lbnl",
     "fors",
     "handprint"
    ],
@@ -12620,8 +15223,384 @@
   },
   {
    "ci": "PY42",
-   "name": "mars yellow",
+   "name": "yellow iron oxide (Mars yellow)",
    "media": {
+    "oil": [
+     {
+      "name": "yellow iron oxide (Mars yellow)",
+      "binder": "acrylic emulsion (Liquitex), used as an oil proxy",
+      "sample": "LBNL Y01 (Liquitex acrylic)",
+      "hiding_at_film": true,
+      "opacity": null,
+      "fit": {
+       "films": "LBNL Y01 masstone + 1:4 and 1:9 tints in titanium white W03 (Duncan, volume fractions), fitted on R_inf of each film",
+       "rms_internal_reflectance": 0.001,
+       "masstone_direct_K_per_mm": [
+        361.598,
+        353.466,
+        332.896,
+        306.002,
+        274.484,
+        243.596,
+        230.35,
+        220.253,
+        206.669,
+        184.665,
+        152.556,
+        120.347,
+        88.736,
+        60.278,
+        37.773,
+        23.281,
+        14.901,
+        10.868,
+        9.126,
+        8.572,
+        8.647,
+        8.931,
+        9.248,
+        9.44,
+        9.505,
+        9.421,
+        9.149,
+        8.757,
+        8.161,
+        7.484,
+        6.779
+       ],
+       "masstone_direct_S_per_mm": [
+        31.869,
+        35.944,
+        40.85,
+        50.427,
+        64.176,
+        70.12,
+        70.053,
+        70.119,
+        70.187,
+        72.673,
+        77.147,
+        82.459,
+        85.921,
+        88.231,
+        88.859,
+        87.738,
+        85.163,
+        82.053,
+        79.005,
+        76.044,
+        73.221,
+        70.684,
+        68.264,
+        66.157,
+        64.178,
+        62.351,
+        60.545,
+        58.88,
+        57.399,
+        55.823,
+        54.632
+       ],
+       "note": "fitted / masstone film's own K and S (measured over void, white and black): x1.83 (K) and x1.83 (S) (medians); above 1, the paint tints more strongly in white than its masstone film implies"
+      },
+      "colours": {
+       "masstone": {
+        "srgb": [
+         0.753,
+         0.554,
+         0.164
+        ],
+        "linear": [
+         0.527,
+         0.267,
+         0.023
+        ],
+        "lab": [
+         62.1,
+         10.3,
+         56.9
+        ]
+       },
+       "film_over_white": {
+        "srgb": [
+         0.753,
+         0.554,
+         0.164
+        ],
+        "linear": [
+         0.527,
+         0.267,
+         0.023
+        ],
+        "lab": [
+         62.1,
+         10.3,
+         56.9
+        ]
+       },
+       "film_over_black": {
+        "srgb": [
+         0.753,
+         0.554,
+         0.164
+        ],
+        "linear": [
+         0.527,
+         0.267,
+         0.023
+        ],
+        "lab": [
+         62.1,
+         10.3,
+         56.9
+        ]
+       },
+       "glaze_over_white": {
+        "srgb": [
+         0.758,
+         0.554,
+         0.163
+        ],
+        "linear": [
+         0.5345,
+         0.2675,
+         0.0228
+        ],
+        "lab": [
+         62.2,
+         10.8,
+         57.2
+        ]
+       },
+       "glaze_over_black": {
+        "srgb": [
+         0.75,
+         0.553,
+         0.165
+        ],
+        "linear": [
+         0.5225,
+         0.2667,
+         0.0231
+        ],
+        "lab": [
+         62.0,
+         10.0,
+         56.7
+        ]
+       }
+      },
+      "engine": {
+       "thickness": "glaze: 0.1 film",
+       "over_white": [
+        0.758,
+        0.554,
+        0.163
+       ],
+       "over_black": [
+        0.75,
+        0.553,
+        0.165
+       ],
+       "K_rgb": [
+        0.3059,
+        0.6846,
+        1.7302
+       ],
+       "S_rgb": [
+        7.5045,
+        3.6623,
+        0.7468
+       ],
+       "K_rgb_linear_band": [
+        21.9171,
+        51.6796,
+        272.3173
+       ],
+       "S_rgb_linear_band": [
+        47.1727,
+        65.6659,
+        68.7015
+       ],
+       "note": "as the Revigo entries"
+      },
+      "spectral": {
+       "wavelengths_nm": [
+        400,
+        700,
+        10
+       ],
+       "K_per_film": [
+        317.1465,
+        469.3181,
+        459.5053,
+        377.5884,
+        300.821,
+        260.4762,
+        236.044,
+        214.2637,
+        198.5916,
+        175.7733,
+        142.7828,
+        109.7335,
+        77.7109,
+        49.2161,
+        29.1397,
+        16.931,
+        10.1985,
+        7.1111,
+        5.9567,
+        5.4898,
+        5.5324,
+        5.6968,
+        5.9025,
+        6.1294,
+        6.1513,
+        6.0144,
+        5.9448,
+        5.5213,
+        5.1787,
+        4.6621,
+        4.0988
+       ],
+       "S_per_film": [
+        28.006,
+        48.09,
+        56.6363,
+        62.2969,
+        70.3965,
+        74.7943,
+        71.6911,
+        68.2083,
+        67.4849,
+        69.2115,
+        72.2367,
+        75.2093,
+        75.264,
+        72.0517,
+        68.5583,
+        63.8112,
+        58.2898,
+        53.6894,
+        51.5664,
+        48.7036,
+        46.8465,
+        45.0844,
+        43.5699,
+        42.9569,
+        41.533,
+        39.8043,
+        39.3407,
+        37.1238,
+        36.4235,
+        34.7735,
+        33.0306
+       ],
+       "R_inf": [
+        0.0203,
+        0.0233,
+        0.0277,
+        0.0361,
+        0.0492,
+        0.0585,
+        0.0614,
+        0.0638,
+        0.0674,
+        0.076,
+        0.0925,
+        0.1161,
+        0.1478,
+        0.1922,
+        0.251,
+        0.3157,
+        0.3761,
+        0.4171,
+        0.4372,
+        0.4408,
+        0.434,
+        0.424,
+        0.4137,
+        0.4061,
+        0.4006,
+        0.3977,
+        0.3976,
+        0.4,
+        0.4066,
+        0.4153,
+        0.4267
+       ],
+       "K_per_mm": [
+        797.005,
+        1179.4197,
+        1154.7595,
+        948.8983,
+        755.9782,
+        654.5895,
+        593.1902,
+        538.4552,
+        499.0705,
+        441.7271,
+        358.8203,
+        275.7658,
+        195.2913,
+        123.6825,
+        73.2296,
+        42.5485,
+        25.6294,
+        17.8706,
+        14.9694,
+        13.7961,
+        13.9032,
+        14.3163,
+        14.8332,
+        15.4034,
+        15.4584,
+        15.1146,
+        14.9397,
+        13.8754,
+        13.0144,
+        11.716,
+        10.3004
+       ],
+       "S_per_mm": [
+        70.3805,
+        120.8525,
+        142.3298,
+        156.5551,
+        176.91,
+        187.9618,
+        180.1633,
+        171.4109,
+        169.5928,
+        173.9319,
+        181.5345,
+        189.0048,
+        189.1423,
+        181.0695,
+        172.2903,
+        160.3607,
+        146.4851,
+        134.9241,
+        129.589,
+        122.3946,
+        117.7276,
+        113.2994,
+        109.4932,
+        107.9528,
+        104.3744,
+        100.0301,
+        98.8653,
+        93.294,
+        91.5341,
+        87.3877,
+        83.0076
+       ],
+       "unit": "per Revigo film: LBNL per-mm values x 0.3979 (see sources.lbnl.scale)"
+      },
+      "status": "measured (acrylic); a proxy: synthetic hydrated iron oxide, the chromophore of yellow ochre (PY43) without its clay",
+      "stands_for": "yellow ochre"
+     }
+    ],
     "watercolour": {
      "n_paints": 10,
      "transparency_0_4": 1.0,
@@ -12646,6 +15625,7 @@
     }
    },
    "provenance": [
+    "lbnl",
     "handprint"
    ]
   },
