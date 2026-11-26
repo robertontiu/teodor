@@ -127,6 +127,7 @@
       "opacity": "opaque particles; tone by coverage; darkest is a mid-dark grey",
       "mixing": "optical",
       "supports": {
+        "bristol_vellum": {"texture": "fine even tooth: smooth tone and deeper darks than smooth bristol (the usual hyperrealist sheet)", "tone": "#f7f6f2", "absorbency": 0.1, "tooth": 0.3},
         "bristol_smooth": {"texture": "smooth for fine tonal work", "tone": "#faf9f5", "absorbency": 0.1, "tooth": 0.2},
         "drawing_medium": {"texture": "medium-tooth drawing paper", "tone": "#f5f3ec", "absorbency": 0.15, "tooth": 0.45},
         "hot_press": {"texture": "smooth watercolour paper", "tone": "#f7f5ef", "absorbency": 0.35, "tooth": 0.15}
@@ -139,7 +140,11 @@
         "stump": "smooth modulated tone",
         "kneaded": "soft lifts",
         "hard_eraser": "crisp highlights (reduction drawing)",
-        "stylus": "indented lines that stay white under later tone"
+        "stylus": "indented lines that stay white under later tone",
+        "mechanical_pencil_0.3_0.5_0.7": "one lead width, an even line that never needs sharpening; 0.3 mm up to 2B, 0.5 mm up to 4B (hyperrealist detail and layered tone)",
+        "carbon_pencil": "matte darks past graphite's limit (about Munsell value 4)",
+        "blending_brush_tortillon_chamois": "brush dissolves strokes with little contact; tortillon for detail; chamois smooths broad areas and lifts",
+        "eraser_pen_battery_eraser": "crisp small lights; a battery eraser lifts almost to the paper, hair-thin when sharpened"
       },
       "order_of_work": ["light construction with a hard grade", "big value shapes", "build tone with softer grades", "blend where wanted", "erase lights", "darkest accents and crisp edges"],
       "finishing": ["finish clean", "finish accents", "finish lift", "finish fixative kind=final strength=0.5 (optional)", "sign"],

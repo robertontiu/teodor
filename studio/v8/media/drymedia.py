@@ -469,7 +469,21 @@ class DryTool:
         amt = np.clip(m * pe * sp["blur"] * min(1.0, ds * 3.0), 0, 0.9) * guard
         sig = max(0.8, r * sp.get("sig", 0.33))
         # one separable blur of colour, deposit, loose dust and coverage together (same as six calls)
-        st = gaussian_filter(np.concatenate([col, np.stack([dep, loose, _cov(dep)], -1)], -1), (sig, sig, 0), mode="nearest")
+        sh0 = cv.sheen[sl] if hasattr(cv, "sheen") else None
+        extra = [dep, loose, _cov(dep)] + ([sh0] if sh0 is not None else [])
+        stk = np.concatenate([col, np.stack(extra, -1)], -1)
+        cm = np.clip(cv.clip[sl], 0, 1) if cv.clip is not None else None
+        if ind is not None and ind[sl].max() > 0.01:
+            # the blender skims over an indented groove: the groove's white paper is not spread into the tone
+            g0 = 1 - np.clip(ind[sl] * 1.5, 0, 1)
+            cm = g0 if cm is None else cm * g0
+        if cm is not None:
+            # a mask (tape, an erasing shield, a careful edge): the blender spreads only what lies inside it,
+            # so the masked edge stays crisp instead of taking in the paper beyond it
+            cm = cm[..., None]
+            st = gaussian_filter(stk * cm, (sig, sig, 0), mode="nearest") / np.maximum(gaussian_filter(cm, (sig, sig, 0), mode="nearest"), 1e-3)
+        else:
+            st = gaussian_filter(stk, (sig, sig, 0), mode="nearest")
         bc, bd, bl, bcv = st[..., :3], st[..., 3], st[..., 4], st[..., 5]
         k = (amt * np.clip(mob * 1.6, 0, 1))
         col = col + (bc - col) * k[..., None]
@@ -481,11 +495,14 @@ class DryTool:
         col = np.clip(pap + (col - pap) * g[..., None], 0, 1)
         dep = dep + (bd - dep) * k
         loose = loose + (bl - loose) * k
+        if sh0 is not None:                         # the blender smears the shiny flakes with the rest of the graphite
+            cv.sheen[sl] = sh0 + (st[..., 6] - sh0) * k
         # drag: the blender carries tone along the stroke (and pulls it out over bare paper)
-        ms = m.sum() + 1e-6
-        loc = (col * m[..., None]).sum((0, 1)) / ms
-        locd = float((dep * m).sum() / ms)
-        locmov = float((mov * m).sum() / ms)
+        mw = m * guard                              # what the blender picks up to carry (not a groove's white)
+        ms = mw.sum() + 1e-6
+        loc = (col * mw[..., None]).sum((0, 1)) / ms
+        locd = float((dep * mw).sum() / ms)
+        locmov = float((mov * mw).sum() / ms)
         if self.carry is None:
             self.carry, self.carry_dep = loc.copy(), locd
         dr = np.clip(m * pe * sp["drag"] * min(1.0, ds * 1.2), 0, 0.6) * guard
@@ -608,6 +625,8 @@ class DryMedium(Medium):
         spec = dict(self.TOOLS[name])
         spec.setdefault("maxsize", self.MAXSIZE.get(spec.get("shape"), 1e9) if spec["kind"] == "stick" else 1e9)
         spec = self.adjust(spec, it)
+        if it.get("seek") and spec["kind"] == "erase":
+            spec["auto"] = True          # lift toward the asked value (the schema's, in `match`) and stop there
         t = DryTool(self, spec, size, color, rng, it)
         if it.get("brush") == "liner":
             t.liner = True
@@ -890,11 +909,11 @@ class Graphite(DryMedium):
            # (docs/calibration/graphite-hyperrealism.md)
            "plate": dict(desc="plate (smooth) bristol: almost no tooth; an even, fine tone that blends at once, but it holds "
                               "few layers: darks stay pale and burnish early", tex="plate", cap=0.5, grab=1.15, w=0.8,
-                         tooth=0.45, relief=0.2),
+                         tooth=0.45, relief=0.12),
            "vellum": dict(desc="vellum bristol: a fine even tooth; smooth tone and deeper darks than plate", tex="vellum",
-                          cap=0.8, grab=1.05, w=0.5, tooth=0.7, relief=0.5),
+                          cap=0.8, grab=1.05, w=0.5, tooth=0.7, relief=0.3),
            "hot_press": dict(desc="hot-pressed cotton paper: smooth and firm, takes many layers and erasing", tex="hotpress",
-                             cap=0.85, grab=1.05, w=0.45, tooth=0.75, relief=0.6)}
+                             cap=0.85, grab=1.05, w=0.45, tooth=0.75, relief=0.45)}
     TOOLS = {
         "pencil": _pencil("pencil; set the grade with \"grade\" (6H..9B, default 2B): narrow even line", "2B"),
         "pencil_2H": _pencil("2H: hard, light silvery line that stays on the peaks", "2H"),
@@ -913,13 +932,17 @@ class Graphite(DryMedium):
         "tortillon": _blend("tortillon: small pointed paper blender for detail; smooths and presses graphite into the tooth",
                             0.8, 0.12, 0.02, 0.45, sizef=0.6, burnish=True, accum=0.3),
         "brush": _blend("soft blending brush: dissolves strokes into continuous tone with little contact; lifts a little",
-                        0.9, 0.04, 0.05, 0.4, sig=0.5, gain=1.25, accum=0.3),
+                        0.9, 0.04, 0.02, 0.4, sig=0.5, gain=1.25, accum=0.3),
         "chamois": _blend("chamois: broad smoothing wipe that picks graphite up (lightens as it smooths)",
                           0.85, 0.1, 0.2, 0.3, sizef=1.6, sig=0.45, accum=0.3),
         "precision_eraser": _eraser("eraser pen (2.3 mm round tip): crisp small lights and clean edges; leaves a faint ghost",
                                     "hard", 1.0, maxsize=12, bound_erase=0.9, rough=True, accum=0.3),
         "electric_eraser": _eraser("battery eraser: the spinning tip lifts graphite almost to the paper; sharpened, a hair-thin white line",
                                    "hard", 1.3, maxsize=25, bound_erase=0.97, rough=True, accum=0.3),
+        # past about Munsell value 4 graphite only shines, so the darkest darks are laid with a carbon (charcoal) pencil:
+        # matte, darker, less erasable. Its darkness and behaviour are charcoal's measured pencil (L* 26)
+        "carbon_pencil": _stick("carbon pencil: matte black-grey for the darkest darks graphite cannot reach (no shine; erases poorly)",
+                                "tip", CPENCIL, 0.85, 0.75, 0.4, 0.25, mono=True, maxsize=8),
     }
     DEFAULT = {"tip": "pencil", "side": "side"}
     MAXSIZE = {"tip": 10, "side": 36}
@@ -936,7 +959,7 @@ class Graphite(DryMedium):
     accent_tool = "pencil_8B"
 
     def adjust(self, spec, it):
-        if "grade" in it and spec["kind"] == "stick":
+        if "grade" in it and spec["kind"] == "stick" and spec.get("grade"):
             g = str(it["grade"]).upper()
             if spec.get("maxgrade") and g in GRADES and GRADES.index(g) > GRADES.index(spec["maxgrade"]):
                 g = spec["maxgrade"]           # leads that thin are not made softer
@@ -945,11 +968,40 @@ class Graphite(DryMedium):
             spec["lead_px"] = spec["lead_mm"] * self.PPM
         return spec
 
+    def transfer(self, cv, strength=0.35, color=None):
+        """The outline laid down first, as a hyperrealist traces or grids it: the schema's contours drawn once
+        with a hard pencil, light enough to be covered or lifted (the value of the line from `strength`, or the
+        grey given). Every contour is a pencil stroke on the tooth, not a mark pasted in."""
+        from scipy.ndimage import sobel, label, maximum_filter
+        if cv.ref is None:
+            raise SystemExit("transfer needs a schema (ref) first.")
+        lum = gaussian_filter(cv.ref.mean(-1), 1.5)
+        e = np.hypot(sobel(lum, 0), sobel(lum, 1))
+        e = e / (np.percentile(e, 99) + 1e-6)
+        thin = (e > 0.35) & (e >= maximum_filter(e, 3))
+        lab, n = label(thin, structure=np.ones((3, 3)))
+        val = hx(color) if color else np.full(3, 1 - 0.4 * float(np.clip(strength, 0.05, 1)), np.float32)
+        rng = np.random.default_rng(13)
+        ys, xs = np.nonzero(lab)
+        comp = lab[ys, xs]
+        order = np.argsort(comp, kind="stable")
+        ys, xs, comp = ys[order], xs[order], comp[order]
+        cuts = np.flatnonzero(np.diff(comp)) + 1
+        for py, px in zip(np.split(ys, cuts), np.split(xs, cuts)):
+            if len(px) < 6:
+                continue
+            t = self.make_tool({"brush": "pencil", "grade": "2H"}, 2.0, val, rng)
+            t.step = 1.0
+            for x, y in zip(px[::2], py[::2]):
+                t.dab(cv, float(x), float(y), 0.0, 0.45)
+            t.end(cv)
+
     def optics(self, cv, img, light, fill):
         # graphite's metallic shine under a raking light: the flattened flakes catch it, strongest on
         # dense soft darks and burnished passages; silvery, cool
         sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6) * _cov(cv.dep)
-        rk = np.clip(0.55 + light * 7, 0.15, 1.3)
+        # the paper's relief modulates the shine (smooth bristol: hardly; relief 1 on drawing paper)
+        rk = np.clip(0.55 + light * 7 * self.sup(cv).get("relief", 1.0), 0.15, 1.3)
         k = np.clip(sh * rk * 0.32, 0, 0.42)[..., None]
         shine = np.array([0.6, 0.615, 0.65], np.float32)
         return img + (shine - img) * k * (img < shine)

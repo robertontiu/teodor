@@ -1,0 +1,129 @@
+{
+ "graphite-hyperrealism": {
+  "name": "Graphite hyperrealism",
+  "doc": "docs/styles/graphite-hyperrealism.md",
+  "period": "USA and Europe, from photorealism (late 1960s) and hyperrealism (1970s on); graphite practice continuing today",
+  "media": [
+   "graphite"
+  ],
+  "support": {
+   "graphite": "vellum"
+  },
+  "ground": "#f7f6f2",
+  "technique": [
+   "transfer by grid, projection or tracing",
+   "indented white lines before any tone",
+   "layered tone, hard over soft, many light passes in crossed directions",
+   "blending in stages (brush, tortillon, chamois)",
+   "lifting lights with kneaded, pen and battery erasers",
+   "carbon pencil or powder past graphite's darkest"
+  ],
+  "palette": {
+   "principle": "monochrome: the paper's white to graphite's dark grey, carbon for the darkest darks; the photograph's full value range as far as the media allow",
+   "colors": [
+    "#f7f6f2",
+    "#c9c9cb",
+    "#9d9ea2",
+    "#75767b",
+    "#55565b",
+    "#3f4044",
+    "#2e2d2c"
+   ],
+   "avoid": [
+    "glare of over-burnished soft graphite in the darks",
+    "visible outline",
+    "hatching visible at viewing distance"
+   ]
+  },
+  "light": "one photographic light; soft penumbras and dark contact shadows as the camera records them",
+  "value_key": "full (photographic): key about L* 50, spread about 21, p5-p95 L* 17-82 (measured on public-domain photographs)",
+  "composition": "the photograph's: close crops, objects or faces filling the frame, shallow depth of field, lens perspective; studio tests such as an egg under one light or crumpled paper",
+  "drawing": "transferred from the photograph mechanically or semi-mechanically, then built as tone; no contour lines survive",
+  "edges": "crisp in the focal plane, lost and soft out of focus (depth of field); hard-edge share near a photograph's (about 0.17)",
+  "marks": {
+   "tools": [
+    "mech_03",
+    "mech_05",
+    "mech_07",
+    "pencil",
+    "carbon_pencil",
+    "brush",
+    "tortillon",
+    "stump",
+    "chamois",
+    "kneaded",
+    "precision_eraser",
+    "electric_eraser",
+    "stylus"
+   ],
+   "length": "short, layered, crossed; invisible at viewing distance",
+   "direction": "crossed in several directions, then blended",
+   "visible": false
+  },
+  "process": [
+   "photograph (schema)",
+   "transfer the outline lightly (grid, projection or tracing)",
+   "indent the white lines",
+   "tone in value bands, darkest first, hard over soft",
+   "blend each part in stages, masked at the edges",
+   "correct against the photograph: layer, blend, repeat",
+   "lift the lights",
+   "darkest accents, clean margins, optional fixative"
+  ],
+  "finishing": [
+   "finished when it looks like the photograph: no visible strokes at viewing distance, smooth gradients, full value range, photographic edges",
+   "highlights lifted last; darkest accents in carbon or the softest graphite",
+   "fixative optional (dulls shine, can darken)"
+  ],
+  "pitfalls": [
+   "overblended airbrushed plastic look",
+   "graphite glare in forced darks",
+   "outline or hatching left showing",
+   "technical demonstration with no subject; clinical coldness"
+  ],
+  "felt_bias": {
+   "arousal": -0.2,
+   "tension": 0.0,
+   "care": 0.4
+  },
+  "engine_gaps": [
+   "value bands step at their edges (core hatch has no feathering at a layer boundary)",
+   "match corrections leave dashes that need blending",
+   "per-part masks are written by hand as polygons",
+   "graphite and carbon cannot reach a photograph's blacks (by nature)",
+   "fixed raking light for the sheen",
+   "2400x3200 works but takes about an hour for a full drawing on 2 vCPU"
+  ],
+  "judgement_calls": [
+   "ground #f7f6f2",
+   "default support vellum among the three the sources name",
+   "sheet size 48x64 cm",
+   "felt_bias",
+   "palette greys (from the engine's grade values)",
+   "test subjects"
+  ],
+  "sources": [
+   "https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)",
+   "https://en.wikipedia.org/wiki/Photorealism",
+   "https://www.metmuseum.org/perspectives/materials-and-techniques-drawing-graphite",
+   "https://strathmoreartist.com/blog-reader/the-difference-between-bristol-smooth-and-bristol-vellum",
+   "https://strathmoreartist.com/blog-reader/what-is-bristol-paper",
+   "https://strathmoreartist.com/blog-reader/tips-for-graphite-shading-which-paper-to-use",
+   "https://www.wildlifeartstore.com/paper-for-pencil-drawing/",
+   "https://www.wildlifeartstore.com/draw-with-mechanical-pencils/",
+   "https://www.wildlifeartstore.com/drawing-tools-for-blending-pencil/",
+   "https://www.wildlifeartstore.com/white-lines-in-a-pencil-drawing/",
+   "https://sibleyfineart.com/_blog/?p=780",
+   "https://sibleyfineart.com/tutorial--indenting.htm",
+   "https://sibleyfineart.com/draw-with-mike-videos/ds005-layer-burnish.htm",
+   "https://sibleyfineart.com/_blog/2012/05/",
+   "https://vitruvianstudio.com/blog/3-ways-to-reduce-graphite-shine-in-your-drawings/",
+   "https://www.creativebloq.com/how-to/get-more-from-graphite-with-these-tips",
+   "https://www.art-is-fun.com/grid-method",
+   "https://eclecticlight.co/2023/10/13/painting-on-the-edge-depth-of-field/",
+   "https://news.artnet.com/in-the-studio/go-inside-artists-studio-cj-hendry-watch-make-viral-photorealistic-drawings-1404796",
+   "https://mymodernmet.com/dylan-eakin-hyperrealistic-pencil-drawing",
+   "https://www.loc.gov/collections/fsa-owi-black-and-white-negatives/"
+  ]
+ }
+}

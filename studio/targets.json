@@ -2433,5 +2433,237 @@
    "mean": 1.4346,
    "sd": 0.5187
   }
+ },
+ "graphite-hyperrealism": {
+  "_n": 45,
+  "_source": "Library of Congress, Prints & Photographs, FSA/OWI Black-and-White Negatives (no known restrictions on publication); random items, film rebate cropped (6% each side), converted to grey",
+  "_rule": "the kind of photograph a graphite hyperrealist copies: monochrome photographs with optical focus, depth of field and a full value range. Proxy, not the style: hyperrealist drawings are in copyright. Near-black frames (p95 < L* 40) excluded. Colour measures omitted (monochrome)",
+  "_loc_items": [
+   "http://www.loc.gov/item/2017772851/",
+   "http://www.loc.gov/item/2017772841/",
+   "http://www.loc.gov/item/2017733766/",
+   "http://www.loc.gov/item/2017788340/",
+   "http://www.loc.gov/item/2017788349/",
+   "http://www.loc.gov/item/2017698364/",
+   "http://www.loc.gov/item/2017698359/",
+   "http://www.loc.gov/item/2017717635/",
+   "http://www.loc.gov/item/2017717639/",
+   "http://www.loc.gov/item/2017722110/",
+   "http://www.loc.gov/item/2017782115/",
+   "http://www.loc.gov/item/2017782103/",
+   "http://www.loc.gov/item/2017714677/",
+   "http://www.loc.gov/item/2017714672/",
+   "http://www.loc.gov/item/2017746869/",
+   "http://www.loc.gov/item/2017746852/",
+   "http://www.loc.gov/item/2017696117/",
+   "http://www.loc.gov/item/2017696134/",
+   "http://www.loc.gov/item/2017720438/",
+   "http://www.loc.gov/item/2017720440/",
+   "http://www.loc.gov/item/2017796911/",
+   "http://www.loc.gov/item/2017796910/",
+   "http://www.loc.gov/item/2017793571/",
+   "http://www.loc.gov/item/2017717117/",
+   "http://www.loc.gov/item/2017717123/",
+   "http://www.loc.gov/item/2017752241/",
+   "http://www.loc.gov/item/2017752242/",
+   "http://www.loc.gov/item/2017721415/",
+   "http://www.loc.gov/item/2017721407/",
+   "http://www.loc.gov/item/2017794921/",
+   "http://www.loc.gov/item/2017714889/",
+   "http://www.loc.gov/item/2017714913/",
+   "http://www.loc.gov/item/2017728230/",
+   "http://www.loc.gov/item/2017728225/",
+   "http://www.loc.gov/item/2017748643/",
+   "http://www.loc.gov/item/2017715463/",
+   "http://www.loc.gov/item/2017788732/",
+   "http://www.loc.gov/item/2017788726/",
+   "http://www.loc.gov/item/2017698639/",
+   "http://www.loc.gov/item/2017698643/",
+   "http://www.loc.gov/item/2017748229/",
+   "http://www.loc.gov/item/2017748239/",
+   "http://www.loc.gov/item/2017698000/",
+   "http://www.loc.gov/item/2017698020/",
+   "http://www.loc.gov/item/2017730132/"
+  ],
+  "_measured": "2026-11-26",
+  "_tool": "studio/v8/eyes.py measure() via the same method as tools/measure_targets.py",
+  "value_mean": {
+   "mean": 50.1321,
+   "sd": 12.2763
+  },
+  "value_spread": {
+   "mean": 21.0912,
+   "sd": 5.0097
+  },
+  "value_p5": {
+   "mean": 17.0714,
+   "sd": 12.7138
+  },
+  "value_p95": {
+   "mean": 82.0959,
+   "sd": 9.1457
+  },
+  "value_dark": {
+   "mean": 0.2942,
+   "sd": 0.1889
+  },
+  "value_light": {
+   "mean": 0.3163,
+   "sd": 0.2144
+  },
+  "value_middle": {
+   "mean": 0.3895,
+   "sd": 0.1694
+  },
+  "value_murky": {
+   "mean": 0.2267,
+   "sd": 0.1232
+  },
+  "notan_dark_share": {
+   "mean": 0.4804,
+   "sd": 0.1902
+  },
+  "value_groups": {
+   "mean": 1.8889,
+   "sd": 0.5259
+  },
+  "edge_density": {
+   "mean": 0.3057,
+   "sd": 0.1319
+  },
+  "hard_edge_share": {
+   "mean": 0.1736,
+   "sd": 0.0646
+  },
+  "detail_energy": {
+   "mean": 3.3681,
+   "sd": 1.4782
+  },
+  "texture_variation": {
+   "mean": 0.5198,
+   "sd": 0.1926
+  },
+  "spectral_slope": {
+   "mean": -1.2407,
+   "sd": 0.2184
+  },
+  "focal_x": {
+   "mean": 0.489,
+   "sd": 0.1902
+  },
+  "focal_y": {
+   "mean": 0.4323,
+   "sd": 0.2344
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.195,
+   "sd": 0.1491
+  },
+  "contrast_concentration": {
+   "mean": 1.4018,
+   "sd": 0.4258
+  },
+  "_finished_drawings": {
+   "_n": 8,
+   "_source": "The Met Open Access (CC0): finished 19th-century graphite portrait drawings, the most worked square window (the head) of each",
+   "_met_object_ids": [
+    337339,
+    409002,
+    409006,
+    365595,
+    369551,
+    343430,
+    420456,
+    10787
+   ],
+   "value_mean": {
+    "mean": 82.9371,
+    "sd": 5.9029
+   },
+   "value_spread": {
+    "mean": 10.5655,
+    "sd": 3.6269
+   },
+   "value_p5": {
+    "mean": 60.1104,
+    "sd": 11.9451
+   },
+   "value_p95": {
+    "mean": 91.6135,
+    "sd": 4.3858
+   },
+   "value_dark": {
+    "mean": 0.0072,
+    "sd": 0.019
+   },
+   "value_light": {
+    "mean": 0.8977,
+    "sd": 0.0907
+   },
+   "value_middle": {
+    "mean": 0.095,
+    "sd": 0.0778
+   },
+   "value_murky": {
+    "mean": 0.051,
+    "sd": 0.0466
+   },
+   "notan_dark_share": {
+    "mean": 0.2078,
+    "sd": 0.0554
+   },
+   "value_groups": {
+    "mean": 1.125,
+    "sd": 0.3307
+   },
+   "edge_density": {
+    "mean": 0.1955,
+    "sd": 0.0739
+   },
+   "hard_edge_share": {
+    "mean": 0.0325,
+    "sd": 0.0295
+   },
+   "detail_energy": {
+    "mean": 2.1407,
+    "sd": 1.0626
+   },
+   "texture_variation": {
+    "mean": 0.6213,
+    "sd": 0.1381
+   },
+   "spectral_slope": {
+    "mean": -1.127,
+    "sd": 0.2771
+   },
+   "focal_x": {
+    "mean": 0.4517,
+    "sd": 0.1459
+   },
+   "focal_y": {
+    "mean": 0.5058,
+    "sd": 0.1035
+   },
+   "hard_edges_near_focus": {
+    "mean": 0.194,
+    "sd": 0.1835
+   },
+   "contrast_concentration": {
+    "mean": 1.246,
+    "sd": 0.4939
+   },
+   "fine_grain_flat": {
+    "mean": 0.8231,
+    "sd": 0.3362
+   },
+   "fine_mottle_flat": {
+    "mean": 1.5916,
+    "sd": 0.3834
+   },
+   "fine_dark_L_0.1pct": {
+    "mean": 42.0097,
+    "sd": 8.8014
+   }
+  }
  }
 }
