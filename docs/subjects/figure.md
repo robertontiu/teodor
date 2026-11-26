@@ -13,6 +13,8 @@ The human body as it really is: a proportion canon that shifts with age, sex and
 
 **By sex and build.** The hip-to-shoulder circumference ratio averages 1:1.03 in women and 1:1.18 in men; the female waist-to-hip ratio in art has stayed within about 0.67-0.80 for 2,500 years (Body proportions, Wikipedia). Men: shoulders about two head-heights wide, hips narrower; women: shoulders narrower, hips as wide or wider, the waist higher and narrower (**judgement** for the head-unit widths). Builds (slim, average, heavy, muscular, frail) change the widths of trunk and limbs, not the lengths (**judgement**).
 
+How a body reads as a woman or a man, a child or an old person, and how strongly (waist-to-hip ratio, shoulders, muscle and fat, posture, silhouette at a distance): see [`sex-age`](sex-age.md).
+
 **The masses.** Three big masses (head, ribcage, pelvis) joined by a flexible spine and neck, with the limbs hung from the shoulder girdle and the pelvis. The ribcage is an egg, the pelvis a box, and they twist and tilt against each other (common teaching, see section 5).
 
 ## 2. Gesture, weight and balance

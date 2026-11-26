@@ -36,6 +36,7 @@ The head and face as they really are: a skull with a few big masses on it, plane
 
 - **Age.** Children: a bigger cranium over a smaller face, so the eyes sit lower on the head; a small nose; full cheeks ([Tuts+, drawing different ages](https://design.tutsplus.com/tutorials/human-anatomy-fundamentals-drawing-different-ages--cms-21905): "the face takes up less of the head" in children; baby eyes are "wider apart than an adult's"). Old age: the nose tip droops as cartilage is lost and "the earlobe droops"; skin loses elasticity and "hangs at the jaw", cheeks sag into jowls (Tuts+). The Asaro head's mature side has more, smaller planes (1stDibs).
 - **Sex.** Men: a stronger brow ridge, a squarer and wider jaw, a larger nose; women: a smoother brow, a narrower jaw, fuller lips (**judgement**, the common teaching; no measured source fetched).
+  - How strongly each cue reads as female or male (facial contrast, brow, jaw, skin colour, hair), at full size and at thumbnail size, with measured weights: see [`sex-age`](sex-age.md).
 - **Individuality.** No two faces share proportions: vary nose length, jaw width, eye spacing and lip fullness between people in one picture (habit "faces near-identical", `docs/habits.md`).
 
 ## 5. Expressions (facial action units)

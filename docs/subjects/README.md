@@ -14,6 +14,7 @@ A painter reads layer 1 for every subject in the schema, then layer 2 for the ch
 |---|---|
 | `face` | the head and face: proportions, planes, orientation and foreshortening, age and sex, features, expressions (facial action units) |
 | `figure` | the human body: proportion canons, gesture and line of action, anatomy that shows, weight and balance, foreshortening, poses |
+| `sex-age` | how a person reads as a woman or a man, a child, an adult or an old person: face and body cues with measured weights, what survives at thumbnail size, avoiding stereotypes |
 | `hands-feet` | hands and feet: proportions, construction, gestures and grips |
 | `hair` | hair as masses and locks, wet and dry, in wind, by type and age |
 | `drapery` | cloth and clothing: fold types, gravity, wind, material, how cloth reveals the body |

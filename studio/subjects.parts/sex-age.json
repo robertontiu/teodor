@@ -1,0 +1,79 @@
+{
+ "subjects": {
+  "sex-age": {
+   "doc": "docs/subjects/sex-age.md",
+   "summary": "How a painted person reads as female or male, child, adult or old. Ambiguity reads male, so a woman needs positive feminine cues; several moderate cues agreeing beat one exaggerated cue. At thumbnail size only hair, outline (jaw, neck, shoulder-hip, waist), facial contrast and skin colour survive.",
+   "key": {
+    "male_bias": {"value": "ambiguous bodies and faces are categorised as male, and faster; feminine cues must be present, not just masculine ones absent", "source": "Johnson, Iida and Tassinary 2012, Proc R Soc B (PubMed 23075835)"},
+    "face_accuracy": {"value": "hair hidden: humans 96%; 12 full-face distances 85%; 16 2-D+3-D measures 94%", "source": "Burton, Bruce and Dench 1993, Perception"},
+    "face_feature_rank_isolated": {"value": "brows+eyes > brows > eyes > jaw > chin > nose+mouth > mouth; nose alone carries nothing", "source": "Brown and Perrett 1993, Perception 22:829-840"},
+    "face_feature_rank_swapped": {"value": "jaw > brows+eyes > chin > brows", "source": "Brown and Perrett 1993"},
+    "facial_contrast": {"value": "higher eye/lip-to-skin luminance contrast reads female, lower reads male; can flip an androgynous face; strongest face cue that survives blur", "source": "Russell 2009, Perception; 'strongest at blur' is judgement"},
+    "skin_colour": {"value": "redder skin reads male, greener-yellower female; redder lips read female; beard zone darker in men", "source": "Dupuis-Roy et al. 2009 (ScienceDaily); Dupuis-Roy and Gosselin 2015 (Medical Xpress)"},
+    "brow_to_eye": {"value": "larger lid band under the brow in women; important, but less than eye and mouth luminance", "source": "Dupuis-Roy et al. 2009 (ScienceDaily)"},
+    "fwhr": {"value": "not sexually dimorphic: do not use", "source": "Lefevre et al. 2012"},
+    "lower_face": {"value": "lower third 64.3 mm women vs 72.6 mm men; lower-face/face height and cheekbone prominence differ strongly", "source": "Farkas via face.md section 9; Lefevre et al. 2012"},
+    "hair": {"value": "most dominant single social cue; can override the face early in perception", "source": "Macrae and Martin 2007"},
+    "thumbnail": {"value": "hair masked: 6.5% error at 80x40 px, 31% at 21x12 px", "source": "Moghaddam and Yang 2000, MERL TR2000-01"},
+    "whr": {"value": "women about 0.72, men about 0.89, boundary about 0.80; body shape outweighs motion", "source": "Johnson 2012 (Live Science); Johnson and Tassinary 2005"},
+    "shoulders": {"value": "biacromial 41.1 cm men, 36.7 cm women (ratio 1.12); hip:shoulder circumference 1:1.03 women, 1:1.18 men", "source": "Healthline (US 1988-94 survey); figure.md"},
+    "gait": {"value": "point-light walkers: humans about 66% correct, ideal observer on shoulder/(shoulder+hip) about 79%; hip/shoulder sway disputed", "source": "Pollick lecture (Pollick et al. 2005; Cutting et al. 1978; Mather and Murdoch 1994)"},
+    "muscle_fat": {"value": "men about 78% more arm muscle, 50% more thigh muscle, 90% more upper-body strength; body fat 23.2% men, 33.9% women", "source": "Lassek and Gaulin 2009 (NHANES III)"},
+    "posture_cultural": {"value": "head cant, bashful knee bend, feminine touch, licensed withdrawal are display stereotypes, not anatomy: never use them to signal sex", "source": "Goffman 1979 via Wikipedia, Gender Advertisements"},
+    "age_skin": {"value": "skin topography explains much of perceived age; uneven colour looks older", "source": "Fink and Matts 2008; Fink, Grammer and Matts 2006"},
+    "age_contrast": {"value": "facial contrast falls with age; lower contrast reads older (and more male)", "source": "Porcheron, Mauger and Russell 2013"},
+    "grey_hair": {"value": "45-65: 74% have some grey, mean 27%; at 50 only 6-23% are half grey", "source": "Panhard et al. 2012 (Cosmetics Design summary)"},
+    "head_heights": {"value": "4 at birth, about 5 at 2, 5.5-6 at 5-9, 6.5-7 adolescent, 7.5 adult, less when stooped in old age", "source": "figure.md (USF; Tuts+)"}
+   },
+   "cue_weights": {
+    "face_full_size": {"high": ["brow ridge and brow band", "jaw width and chin", "facial contrast (eyes, lips vs skin)"], "medium": ["skin colour and beard zone", "lower-face height", "cheekbones vs jaw", "skin texture", "neck and Adam's apple (profile)"], "low": ["nose shape (except profile/3-D)", "lip shape alone"], "none": ["face width-to-height ratio"], "source": "Brown and Perrett 1993; Bruce et al. 1993; Russell 2009; Lefevre 2012; weights are judgement from these rankings"},
+    "thumbnail_survive": ["hair silhouette", "jaw and neck outline", "shoulder-to-hip and waist line", "facial contrast as dark eye band and mouth vs skin", "skin colour", "head-to-body ratio and stoop (age)", "hair value (age)"],
+    "thumbnail_vanish": ["skin texture and stubble texture", "lip and nose shape", "exact brow-to-lid gap", "wrinkles as lines", "Adam's apple frontally"],
+    "thumbnail_source": "Moghaddam and Yang 2000; Sinha et al. 2006; the split is judgement"
+   },
+   "checks": {
+    "woman": [
+     "Eye darks and lips stand clearly off a lighter skin; no grey beard zone",
+     "Jaw narrows to a small chin; outline rounded, not square at the jaw angle",
+     "Brow a thin higher arch with light on the lid band beneath",
+     "Neck slimmer than the jaw, long, on sloping shoulders",
+     "Waist in, hips out (WHR well under 0.8); shoulders no wider than hips",
+     "Smooth continuous forms, no separate muscle blocks",
+     "With short or hidden hair, the above still reads alone"
+    ],
+    "man": [
+     "Lower facial contrast; darker, redder skin with cooler beard zone",
+     "Wide jaw angle, broad chin; heavy straight brow low over a shadowed eye",
+     "Thick neck, trapezius high; Adam's apple in profile",
+     "Wedge: shoulders clearly wider than hips, little waist (WHR about 0.9)",
+     "Separate arm and shoulder masses, crisper plane breaks"
+    ],
+    "child": [
+     "4-6 heads tall for the age",
+     "Small low face under a large cranium; eyes below the half line, big eyes, small nose and chin, full cheeks",
+     "Short thick limbs; body midpoint near the navel",
+     "Smooth even rosy skin, no facial plane breaks",
+     "Sex, if it matters, from hair and clothes"
+    ],
+    "old": [
+     "Stoop, forward head, shorter neck, arms hanging lower",
+     "Grey or white thinner hair; temple or crown recession in men",
+     "Hollow temples, dropped cheek, jowl breaking the jawline, deep nasolabial folds as value shapes",
+     "Lower facial contrast, uneven skin colour",
+     "Old woman: keep one or two female cues strong (neck, jaw outline, hair, body line)"
+    ]
+   },
+   "avoid": [
+    "a 'neutral' woman with no positive feminine cues (reads male)",
+    "same skin value and feature darks for woman and man",
+    "grey beard zone or hard jaw shadow on a woman",
+    "sex carried only by hair and clothing",
+    "stereotyped poses (head cant, knee bend) as the sex signal",
+    "ageing by drawn lines on a young structure",
+    "over-ageing a 40-year-old with deep folds and grey",
+    "children as small adults",
+    "using face width-to-height ratio as a sex cue"
+   ]
+  }
+ }
+}

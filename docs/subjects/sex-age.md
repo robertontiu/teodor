@@ -1,0 +1,167 @@
+# Sex and age (layer 1)
+
+How a painted person reads as a woman or a man, and as a child, an adult or an old person; which cues carry that reading, how much each weighs, and which still work at thumbnail size. Researched 2026-11, after a painted woman of about forty was read as "a lot like a man". Every value names its source; values marked **judgement** have no published source and are editorial choices for Teodor. This page extends `face` (section 4 "Sex", section 9 "Sex, measured" and "Age, measured") and `figure` (section 1 "By age" and "By sex and build"); it repeats their numbers only where needed and contradicts none of them. Read with `hair`, `drapery` and `light-shadow`.
+
+## 0. The one finding to remember: ambiguity reads male
+
+Sex categorisation is not neutral. In four studies of body shapes, viewers' judgements were "functionally biased towards a male percept": shapes that occur only in women were still called male, and male judgements were faster ([Johnson, Iida and Tassinary 2012, *Proc. R. Soc. B*](https://www.pubmed.gov/23075835/); press summary: "bodies that we knew to be exclusive to women were nevertheless ... perceived to be men", [Live Science](https://www.livescience.com/24038-brain-bias-male-bodies.html)). The same male default runs through the face literature (an androgynous face goes male when its contrast drops or its skin reddens, section 1).
+
+**For a painter this means:** a woman is not "a person with the male cues taken out". A face or body that is merely neutral (flat contrast, an even oval, no waist, a plain blocky light pattern, short hair) will be read as a man. Feminine cues have to be present and visible, especially at small size; masculine cues only have to be not contradicted. Children are the exception: before puberty the face and body carry little sex information, so a child's sex is read mostly from hair and clothes (section 4).
+
+## 1. The face: which cues say female or male, and how much
+
+**Overall.** With hair hidden under a swimming cap, people sorted 179 faces by sex with 96% accuracy; 12 full-face distances alone separated them at 85%, and 16 picture-plane plus 3-D measures at 94% ([Burton, Bruce and Dench 1993, *Perception*](https://research.bond.edu.au/en/publications/whats-the-difference-between-men-and-women-evidence-from-facial-m/)). Accuracy fell for laser-scanned heads with no skin or brows, for inverted faces and for photographic negatives, so sex is read from "2-D, 3-D and textural cues" together, and the average male head has "a more protuberant nose and brow and a more prominent chin and jaw" ([Bruce et al. 1993, *Perception*](https://research.bond.edu.au/en/publications/sex-discrimination-how-do-we-tell-the-difference-between-male-and/); DOI [10.1068/p220131](https://doi.org/10.1068/p220131)). No single cue decides; several weak ones add up.
+
+**Ranking of the features (shape).** Brown and Perrett averaged 16 male and 16 female faces, masked off hair, ears and neck, and showed single features: every feature except the nose carried sex information, ranked **brows and eyes > brows alone > eyes alone > whole jaw > chin > nose and mouth > mouth alone**. When a feature was swapped from the male average into the female (and back), the perceived sex moved most for the **jaw**, then **brows and eyes**, then **chin**, then **brows** ([Brown and Perrett 1993, *Perception* 22: 829-840](https://www.scilit.com/publications/7edfffe06fbef2a5ea19576e83e897de)). So the upper face (brow, brow-to-eye gap, eyes) and the lower outline (jaw, chin) are the two big carriers; nose and mouth shape carry little on their own.
+
+| cue | female | male | weight | source |
+|---|---|---|---|---|
+| **Brow ridge and brows** | smooth, flatter glabella, forehead more upright; brows thinner, higher and more arched | protruding ridge, sloping forehead, heavy straight brows set low, close to the eye | high (top-ranked region) | Brown and Perrett 1993; Bruce et al. 1993; glabella flatter in women, [Skomina 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7224454) |
+| **Brow-to-eye distance** | larger: the lid shows a band of skin under the brow | smaller: the brow sits on the lid, the eye in shadow | high in older work, smaller than luminance in Bubbles studies | "eyelid-to-eyebrow gap, which previous studies had identified as essential" ([ScienceDaily on Dupuis-Roy et al. 2009](https://www.sciencedaily.com/releases/2009/05/090527121049.htm)) |
+| **Jaw and chin** | narrower jaw at the angle (gonion), tapering to a smaller, rounder, pointed chin; "more rounded" face shape | wider at the jaw angle, squarer, a taller and broader chin | high (top in substitution) | Brown and Perrett 1993; "wider faces especially at the jaw", Skomina 2020 |
+| **Lower face height** | shorter lower third: Farkas lower third 64.3 mm against 72.6 mm in men | longer lower third and longer upper lip | medium to high | Farkas norms in `face` section 9; lower-face/face-height "large sex differences in all 4 samples" ([Lefevre et al. 2012](https://research-portal.st-andrews.ac.uk/en/publications/no-evidence-for-sexual-dimorphism-of-facial-width-to-height-ratio/)) |
+| **Cheekbones and cheeks** | more prominent cheekbones relative to the narrower jaw; fuller soft cheeks | flatter cheeks over a wider jaw | medium | cheekbone prominence "large sex differences" (Lefevre 2012); fuller cheeks, `face` section 9 (judgement) |
+| **Nose** | smaller, narrower (31.4 against 34.9 mm wide), less projecting, tip slightly lifted | longer, wider, more projecting | low alone, real in 3-D and profile | nose carried no information alone (Brown and Perrett); changing nose and chin shifted masculinity (Bruce et al. 1993); widths, Farkas via `face` |
+| **Lips** | fuller, taller vermilion; redder against the skin | thinner, longer upper lip | low as shape, medium as colour and contrast | Skomina 2020; colour below |
+| **Facial contrast** (eyes and lips against skin) | higher: skin lighter, eyes and lips not lighter | lower | **high, and the strongest cue that survives blur** (judgement for "strongest") | [Russell 2009, *Perception*](https://cupola.gettysburg.edu/psyfac/4) |
+| **Skin colour** | greener-yellower skin, redder lips | redder skin, darker (beard shadow) around mouth and chin | medium; faster than shape | Dupuis-Roy et al. via ScienceDaily (2009) and [Medical Xpress (2015)](https://medicalxpress.com/news/2015-06-contrast-lip-skin-marker-gender.pdf) |
+| **Skin texture** | finer, smoother, no beard stubble | coarser, pores, beard shadow on upper lip, chin and jaw | medium at full size, nil at thumbnail | Bruce et al. 1993 (texture matters: scans without it fell); men's upper lip and chin "reflect less light" (ScienceDaily 2009) |
+| **Face width-to-height (fWHR)** | no reliable difference | no reliable difference | **about zero: do not use** | no sex difference in 3 of 4 samples, the fourth reversed (Lefevre et al. 2012) |
+| **Neck and throat** | longer-looking, slimmer neck; a small or invisible laryngeal prominence, set higher | thicker neck, sternomastoids showing, a visible Adam's apple further forward | medium in three-quarter and profile; low frontal | [Adam's apple, Wikipedia](https://en.wikipedia.org/wiki/Adams_Apple): in men "the laryngeal prominence becomes more anteriorly focused"; many women have a minor visible one; neck widths judgement |
+
+**Facial contrast in detail.** "Female faces have greater contrast between eyes, lips, and surrounding skin than do male faces", because female skin is lighter while "female eyes and lips are not lighter than those of males"; in Russell's illusion two copies of one androgynous face differ only in this contrast, and "the face with more contrast is perceived as female, while the face with less contrast is perceived as male"; cosmetics raise it ([ScienceDaily summary of Russell 2009](https://sciencedaily.com/releases/2009/10/091020153100.htm)). In a Bubbles study the luminance of the eye and mouth regions was "paramount" for sex, more than the brow-to-lid gap, and red and green around eyes and mouth sped the judgement: redder skin pushes a face to male, a redder mouth to female ([ScienceDaily 2009](https://www.sciencedaily.com/releases/2009/05/090527121049.htm)); colour from the mouth region was used about 12 ms after the face appeared, eye and brow regions mattered mostly in greyscale, and real distances between features were "not critical" ([Medical Xpress 2015](https://medicalxpress.com/news/2015-06-contrast-lip-skin-marker-gender.pdf)).
+
+For a painter: the darks of the eye (lash line, upper-lid shadow, iris) and the red-dark of the lips must stand clearly off a lighter, cleaner skin. In a man the skin is darker and redder, with a grey-blue beard zone round the mouth and jaw (`face` section 3, colour zones), so his features sit in less contrast. A woman painted with the same skin value and the same muted features as a man will read as a man; this is the cheapest single fix (Russell's own manipulation).
+
+**Hair.** Hair is the most dominant single cue to sex in a real picture, and the one most often mistaken. Hair cues alone were enough to trigger sex-category and stereotype knowledge, and early in perception a hairstyle could override the face, so that female faces primed male concepts ([Macrae and Martin 2007, *Eur. J. Soc. Psych.*](https://abdn.elsevierpure.com/en/publications/a-boy-primed-sue-feature-based-processing-and-person-construal)). The best face studies hide the hair precisely because it would swamp everything else (Burton 1993, Brown and Perrett 1993). See section 3 for the risk.
+
+**What survives at thumbnail size.** At 80 × 40 pixels, people with the hair masked misjudged sex 6.5% of the time; at 21 × 12 pixels, 31% ([Moghaddam and Yang 2000, MERL TR2000-01](https://classes.csail.mit.edu/6.869/handouts/MerlTR2000-01%20GenderSVM.pdf)). So a face a dozen pixels wide, with no hair to help, is barely better than a coin toss on its features alone; the authors suggest humans lean on hair. Face recognition in general survives very low resolution, but "high-frequency information by itself is insufficient", eyebrows are "among the most important" features, and colour "play[s] a significant role, especially when shape cues are degraded" ([Sinha et al. 2006, nineteen results](https://mplab.ucsd.edu/users/marni/Igert/19points.htm)). Sorted by size:
+
+- **Survive blur (low spatial frequency):** hair silhouette and its mass against the face; the head-and-neck outline (jaw width, neck width, shoulders); the dark of the brow-and-eye band and the dark of the mouth against the skin (facial contrast); skin colour and the beard zone's darkness; the brow band as one dark bar (a heavy straight low bar against a thin high arch).
+- **Vanish at thumbnail:** skin texture and stubble as texture, lash detail, lip shape, nose shape, the exact brow-to-lid gap, small differences in eye size, the Adam's apple seen frontally (all **judgement**, from the resolutions above: at 12 pixels across, a feature 1/20 of the face is under one pixel).
+
+## 2. The body
+
+**Proportions (adults).**
+- **Waist-to-hip ratio (WHR):** women average about 0.72, men about 0.89; below about 0.80 reads female, above it male ([Live Science on Johnson 2012](https://www.livescience.com/24038-brain-bias-male-bodies.html)). Health cut-offs place normal weight below 0.80 for women and below 0.90 for men, abdominal obesity above 0.85 and 0.90 (WHO) ([Waist-hip ratio, Wikipedia](https://en.wikipedia.org/wiki/Waist%E2%80%93hip_ratio)). In art the female WHR has stayed within 0.67-0.80 (`figure`). In animated walkers that varied in WHR and in gait, **body shape held primacy over motion** for sex judgements, and viewers' eyes went to the waist and hips ([Johnson and Tassinary 2005, *Psych. Science*](https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2005.01633.x/)). **WHR is the strongest single body cue.**
+- **Shoulder-to-hip:** shoulders (biacromial) about 41.1 cm in men and 36.7 cm in women (US survey 1988-94, [Healthline](https://www.healthline.com/health/average-shoulder-width)), a ratio of 1.12; hip-to-shoulder circumference 1:1.03 in women and 1:1.18 in men (`figure`). Shoulder width over shoulder-plus-hip width ("centre of moment") is the classic form cue in walkers: an ideal observer using it alone would be about 79% right, while human observers of point-light walkers averaged about 66% across 21 experiments ([Pollick, Glasgow lecture summarising Pollick et al. 2005 and Cutting et al. 1978](https://www.psy.gla.ac.uk/~frank/Talk_folder/FIMS_faculty_lecture.pdf)). In outline: a man is a wedge (wide shoulders over narrow hips), a woman an hourglass or pear (shoulders about as wide as the hips, a narrow waist set higher).
+- **Bust:** breasts sit on the pectorals, their lower curve at about the 4th-6th rib, and change the profile and the fall of cloth more than the frontal outline (**judgement**; nipples about 5.5 heads from the floor in `figure`). A flat-chested woman is common and must carry sex in waist, hips, neck, face and contrast.
+- **Muscle and fat:** men carry about 78% more arm muscle (2.5 against 1.4 L), about 50% more thigh muscle, and about 90% more upper-body strength; body fat averages 23.2% in men and 33.9% in women (NHANES III, ages 18-49; [Lassek and Gaulin 2009](https://www.anth.ucsb.edu/sites/secure.lsit.ucsb.edu.anth.d7/files/sitefiles/people/gaulin/Lassek%20&%20Gaulin_muscle%20mass.pdf)). On the surface: in men the deltoid, biceps, forearm extensor mass and the trapezius show as separate masses with crisp plane breaks; in women a continuous subcutaneous layer rounds the same forms into longer, smoother curves, with fat on hips, buttocks, outer and inner thighs and upper arms (gynoid), while men gain it on the belly (android) (**judgement** for the surface description; the distribution terms are standard anatomy).
+- **Neck:** shorter and thicker-looking in men, with the trapezius rising high from the shoulder to the neck; in women the neck looks longer because the trapezius slope is lower and the neck slimmer (**judgement**; Adam's apple as in section 1).
+- **Arms, wrists and hands:** men's forearm is thicker near the elbow and the wrist wider and squarer; women's wrists are narrower, hands smaller and narrower with more tapered fingers (**judgement** for proportions; muscle volumes above). The finger-length ratio (2D:4D) differs by sex on average but far too little to paint (**judgement**: leave it out).
+- **Feet and height:** men are taller on average; height alone says little in a picture without a known scale (**judgement**).
+
+**Posture, gesture and gait.** Separate what is anatomical from what is learned:
+- **Anatomical or biomechanical:** the wider female pelvis and its carrying angle put the knees closer and make the thighs converge more; men's wider shoulders swing the arms further from the body (**judgement**, standard anatomy teaching). In gait, a lateral sway of the shoulders in men and the hips in women has been proposed (Mather and Murdoch 1994), but biomechanics describes female hip motion as more vertical than lateral, so the cue is disputed (Pollick lecture above). Walk-based sex judgements were mediated by perceived gender rather than by the body itself (Johnson and Tassinary 2005).
+- **Cultural (learned, varies by time and place):** Goffman's catalogue of advertising photographs lists the head cant and body cant, the "bashful knee bend", the "feminine touch" (fingers tracing or cradling instead of gripping) and "licensed withdrawal" (gaze lost into distance) as poses given to women, and taking space, height and an executive role as poses given to men ([Gender Advertisements, Wikipedia](https://en.wikipedia.org/wiki/Gender_Advertisements)). These are **stereotypes of display**, not anatomy. Teodor may use a pose because the feeling calls for it, never to tell the viewer the sex; a woman can stand square with weight on both feet and a man can tilt his head.
+
+**What carries at a distance.** In silhouette: the shoulder line against the hip line, the waist's in-curve, the neck's width under the head, the hair mass, and clothing outline. Of these, WHR and shoulder-to-hip are the anatomical ones (Johnson and Tassinary 2005; centre of moment), hair and clothes the social ones.
+
+## 3. Clothing and hair as social cues
+
+Hair and clothing drive the reading harder than anatomy at any size: they are large, high-contrast shapes, they are seen first, and they act as category triggers on their own (Macrae and Martin 2007). The risk is twofold: relying on them makes a figure a costume (the stereotype does the work and the person underneath reads as neutral, therefore male, section 0), and they mislead whenever the subject departs from the convention. **Avoid stereotypes: a woman may have short hair, wear trousers or work clothes, and a man may have long hair.** In that case the anatomical cues must carry the reading, at thumbnail size too: facial contrast and skin colour, the brow band and brow-to-eye gap, the jaw and chin outline, the neck, the waist and hip line, the softness of the muscle masses. Short hair on a woman still differs from a man's cut: it sits close at the nape and temples on a smaller jaw, and her hairline is rounded at the temples without recession (**judgement**; recession is a male pattern, section 4).
+
+## 4. Age, for both sexes
+
+Consistent with `figure` section 1 ("By age") and `face` sections 4 and 9; this section adds the perception side.
+
+| | head in body heights | face | skin | hair and hairline | posture |
+|---|---|---|---|---|---|
+| **infant, toddler** | 4 at birth, about 5 at two (`figure`) | the baby schema: "a large head, a high, jutting forehead, large eyes, plump cheeks, a small nose and mouth", with "short and thick limbs, and a chubby body" ([Glocker et al. 2009](https://www.cceb.upenn.edu/csa/assets/user-content/documents/BabySchemainInfantFacesInducesCutenessPerceptionandMotivationforCaretakinginAdults.pdf)); eyes below the head's half line (`face`) | smooth, even, high contrast of eyes to skin (**judgement**, follows from Porcheron 2013 below) | fine, thin, low hairline at the sides | belly forward, legs apart, a wide base (**judgement**) |
+| **child** | 5.5-6 at 5-9 (`figure`) | face still small under the cranium; nose short with a low bridge; no brow ridge, no jaw angle: boys and girls look alike in the face (**judgement**, sexual dimorphism develops at puberty; Skomina 2020 for adults) | smooth, rosy | sex read from hair and clothes | loose, mobile; midpoint near the navel (`figure`) |
+| **adolescent** | 6.5-7 (`figure`) | the face lengthens downward; in boys the brow, nose and jaw grow last | as adult, maybe uneven | adult | as adult, often slouched (**judgement**) |
+| **adult** | about 7.5 (`figure`) | the sex cues of section 1 are strongest | clear, even tone | full; grey begins | upright |
+| **old** (65+) | 7 or less as the spine compresses and stoops (**judgement**, `figure`) | narrower eye fissure, hooded lids, thinner lips, longer nose with a drooping tip, longer ears, jowls, deep nasolabial folds (`face` section 9); "all the gender-dependent characteristics were even more pronounced" (Skomina 2020) | wrinkled surface, uneven colour, lower contrast of features | grey or white, thinner; recession in men | stoop, head forward, shorter neck, arms hanging lower (`figure`) |
+
+**What carries age, measured.**
+- **Skin surface:** texture and wrinkles explain a large share of perceived age ([Fink and Matts 2008](https://www.psych.uni-goettingen.de/de/biopers/publications_department/finkmatts2008)); skin colour distribution "seems to have a major influence on the perception of female facial age": even tone looks younger, blotchy tone older, with shape and texture held constant ([Fink, Grammer and Matts 2006](https://evolution.anthro.univie.ac.at/projects/face%20and%20body/skin%20texture2/index.html)).
+- **Facial contrast falls with age,** and raising it makes faces look younger, lowering it older ([Porcheron, Mauger and Russell 2013, PLoS ONE](https://cupola.gettysburg.edu/psyfac/23)). Note the interaction with sex: low contrast pushes a face both older and more male. An older woman painted with faded features needs her femininity carried by other cues (shape, hair, neck, body), or her eyes and lips kept a little darker than "realistic" fading would suggest (**judgement**).
+- **Colour and shape both carry age:** age estimates of adult male faces were reasonably accurate across 20-60; exaggerating the colour differences between old and young blends made old faces look older, and blends looked younger than their parts, increasingly so with age, because averaging erases wrinkles ([Burt and Perrett 1995](https://research-portal.st-andrews.ac.uk/en/publications/perception-of-age-in-adult-caucasian-male-faces-computer-graphic-/)). Smoothing a face makes it younger.
+- **Grey hair:** among people aged 45-65, 74% have some grey, averaging 27% of the hair; at 50 only 6-23% are half grey or more, men more than women, Asian and African populations less than European (Panhard et al. 2012, [summary](https://www.cosmeticsdesign-europe.com/Article/2012/10/02/50-shades-of-grey-Not-quite-as-L-Oreal-study-finds-grey-hair-less-common-than-previously-thought)). A forty-year-old has a little grey at most; white hair alone makes a figure old.
+- **Hairline:** in men, recession at the temples and thinning at the crown rise with age; women thin diffusely along the parting and keep the frontal line (**judgement**, the common clinical description; no figures fetched).
+- **Muscle loss** with age flattens the forms and softens the plane breaks of the body; the face's planes, by contrast, become more numerous and crisper (`face` section 9, Asaro's mature side) (**judgement** for the body).
+
+**Age at thumbnail size:** the head-to-body ratio and posture (stoop, forward head) and hair value (white, grey, dark) survive; wrinkles do not, though the hollows of the temple, under the cheekbone and the jowl break in the jawline do, as value shapes (**judgement**, as in section 1's resolution argument).
+
+**Middle age (about 40) in particular:** the adult sex cues are at full strength; a few fine lines at the eyes and a slightly deeper nasolabial fold, a touch of grey at most, the cheek pad starting to drop (**judgement**, between the adult and old rows above). A forty-year-old woman painted with deep folds, low contrast, a heavy jaw shadow and short dark hair has every cue pointing to "man, fifty".
+
+## 5. How painters make sex and age read without caricature
+
+The aim is a weathered, plain, strong or tired woman, or a gentle, soft or delicate man, who still reads for what they are. Caricature comes from pushing one cue to its limit (lashes and lipstick, a square jaw and stubble); a real reading comes from several moderate cues agreeing (Burton 1993: many weak measures add up to 94%).
+
+- **Keep the structural cues, drop the ideal.** A plain or weathered woman keeps the smaller jaw and chin, the flatter brow with a visible lid band under it, the narrower neck, the higher waist; she loses the smoothness. A gentle man keeps the brow ridge, the jaw angle, the beard zone and the thicker neck; he loses the hardness of expression and pose (**judgement**, follows from the cue ranking in section 1).
+- **Facial contrast and skin colour are not idealisation.** They are measured differences, so a woman without make-up still has lighter skin around eyes and lips that do not lighten with it (Russell 2009). A weathered woman's skin may be tanned and lined, but the eye and mouth darks still stand off it more than a man's do.
+- **Let the body speak through cloth.** The waist and hip line under a work dress or a coat, the narrower shoulders inside a heavy garment (see `drapery`: cloth reveals the body where it touches) (**judgement**).
+- **Observed examples (never rules):** Käthe Kollwitz's self-portraits observe an ageing woman's face, heavy and unidealised, without losing it ([MoMA, *Self-Portrait en Face*](https://www.moma.org/collection/works/427550)); Rembrandt's late portraits of old women and old men, Millet's field workers, and Paula Modersohn-Becker's peasant women likewise keep sex and age legible through structure, skin and hands while refusing prettiness (**judgement** for the reading; named only as examples of observation).
+
+## 6. Common mistakes
+
+- **The neutral person:** a face or body with no feminine cues, intended as "just a woman", reads male (section 0). Check: name three positive female cues visible at thumbnail size.
+- **Uniform skin and feature values across sexes:** woman and man painted with the same skin value and the same feature darks; the woman goes male (Russell). Check facial contrast.
+- **Beard-zone grey on a woman:** the cool, grey lower third (`face` section 3) applied to her lowers the contrast round the mouth and reads as stubble. Keep her lower third clean and warm (**judgement**).
+- **Heavy jaw shadow:** a strong side light carving a hard jaw angle and a shadowed brow on a woman's face makes a male skull; soften the jaw angle and keep light on the lid band (**judgement**).
+- **Ageing by lines alone:** a few drawn wrinkles on a young structure look like a mask; age is in the drop of the cheek pad, the jowl, the hollow temple, the stoop and the hair value (`face` section 9).
+- **Over-ageing:** deep folds and grey on a forty-year-old add twenty years and push the sex towards male (section 4).
+- **Children as small adults:** use the head ratio and the baby-schema face (`figure`).
+- **Sex carried only by costume:** hair and dress doing everything; the person underneath is neutral (section 3).
+- **Stereotyped pose as the sex signal:** a head cant or a bent knee to say "woman" (section 2, cultural).
+
+## 7. Checks for Teodor (at thumbnail size, about 120 px tall for the whole picture)
+
+Look at the picture at thumbnail size, then squint. For each figure, check the cues for what it should read as; at least five should agree.
+
+**A woman:**
+1. Facial contrast: the eye darks and the lips stand clearly off a lighter skin; no grey or blue beard zone.
+2. The jaw narrows to a small chin; the face outline is rounded, not square at the jaw angle.
+3. The brow band is a thin, higher arch with light on the lid below it, not one heavy low dark bar.
+4. The neck is slimmer than the jaw and rises long from sloping shoulders.
+5. The body's outline goes in at the waist and out at the hips (WHR well under 0.8); shoulders no wider than the hips.
+6. The forms (arms, shoulders, thighs) are smooth curves without separate muscle blocks.
+7. If the hair is short or hidden, cues 1-6 still read alone.
+
+**A man:**
+1. Lower facial contrast: a darker, redder skin with a cooler beard zone round mouth and jaw.
+2. A wide jaw angle and a broad chin; a heavy straight brow low over a shadowed eye.
+3. A thick neck, the trapezius rising high; in profile a visible Adam's apple.
+4. A wedge: shoulders clearly wider than the hips, little waist (WHR about 0.9).
+5. Arm and shoulder masses separate, with crisper plane breaks.
+
+**A child:**
+1. A big head on the body: 4-6 heads tall for the age (`figure`).
+2. The face small and low under a large cranium, eyes below the half line, large eyes, small nose and chin, full cheeks.
+3. Short, thick limbs; the body's midpoint near the navel.
+4. Smooth, even, rosy skin; no plane breaks in the face.
+5. The child's sex, if it matters, carried by hair and clothes, since the face carries little.
+
+**An old person:**
+1. A stoop, a forward head and a shorter neck; arms hanging lower.
+2. Grey or white hair, thinner; in men, recession at the temples or crown.
+3. The face's value shapes include hollow temples, a dropped cheek, a jowl breaking the jawline and deep nasolabial folds.
+4. Lower facial contrast and uneven skin colour.
+5. For an old woman: keep a female cue or two strong (neck, jaw outline, hair, body line), since low contrast and folds both push towards male.
+
+## Sources
+
+- [Johnson, Iida and Tassinary 2012, Person (mis)perception: functionally biased sex categorization of bodies, *Proc. R. Soc. B* (PubMed)](https://www.pubmed.gov/23075835/); [Live Science summary with WHR values](https://www.livescience.com/24038-brain-bias-male-bodies.html)
+- [Johnson and Tassinary 2005, Perceiving sex directly and indirectly: meaning in motion and morphology, *Psychological Science*](https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2005.01633.x/)
+- [Burton, Bruce and Dench 1993, What's the difference between men and women? Evidence from facial measurement, *Perception*](https://research.bond.edu.au/en/publications/whats-the-difference-between-men-and-women-evidence-from-facial-m/)
+- [Bruce et al. 1993, Sex discrimination: how do we tell the difference between male and female faces?, *Perception*](https://research.bond.edu.au/en/publications/sex-discrimination-how-do-we-tell-the-difference-between-male-and/) (DOI [10.1068/p220131](https://doi.org/10.1068/p220131))
+- [Brown and Perrett 1993, What gives a face its gender?, *Perception* 22: 829-840](https://www.scilit.com/publications/7edfffe06fbef2a5ea19576e83e897de)
+- [Russell 2009, A sex difference in facial contrast and its exaggeration by cosmetics, *Perception* (abstract)](https://cupola.gettysburg.edu/psyfac/4); [ScienceDaily summary](https://sciencedaily.com/releases/2009/10/091020153100.htm)
+- [Dupuis-Roy, Fortin, Fiset and Gosselin 2009, Uncovering gender discrimination cues in a realistic setting (ScienceDaily)](https://www.sciencedaily.com/releases/2009/05/090527121049.htm); [Dupuis-Roy and Gosselin 2015 (Medical Xpress)](https://medicalxpress.com/news/2015-06-contrast-lip-skin-marker-gender.pdf)
+- [Lefevre et al. 2012, No evidence for sexual dimorphism of facial width-to-height ratio in four large adult samples](https://research-portal.st-andrews.ac.uk/en/publications/no-evidence-for-sexual-dimorphism-of-facial-width-to-height-ratio/)
+- [Skomina, Verdenik and Ihan Hren 2020, aging and facial sexual dimorphism, PLoS ONE](https://pmc.ncbi.nlm.nih.gov/articles/PMC7224454)
+- [Macrae and Martin 2007, A boy primed Sue: feature-based processing and person construal](https://abdn.elsevierpure.com/en/publications/a-boy-primed-sue-feature-based-processing-and-person-construal)
+- [Moghaddam and Yang 2000, Gender classification with support vector machines, MERL TR2000-01](https://classes.csail.mit.edu/6.869/handouts/MerlTR2000-01%20GenderSVM.pdf)
+- [Sinha, Balas, Ostrovsky and Russell 2006, Face recognition by humans: nineteen results (summary)](https://mplab.ucsd.edu/users/marni/Igert/19points.htm)
+- [Pollick, gait and gender lecture (meta-analysis of point-light walkers, centre of moment)](https://www.psy.gla.ac.uk/~frank/Talk_folder/FIMS_faculty_lecture.pdf)
+- [Lassek and Gaulin 2009, Costs and benefits of fat-free muscle mass in men](https://www.anth.ucsb.edu/sites/secure.lsit.ucsb.edu.anth.d7/files/sitefiles/people/gaulin/Lassek%20&%20Gaulin_muscle%20mass.pdf)
+- [Healthline, average shoulder width (US survey data)](https://www.healthline.com/health/average-shoulder-width)
+- [Waist-hip ratio, Wikipedia](https://en.wikipedia.org/wiki/Waist%E2%80%93hip_ratio); [Adam's apple, Wikipedia](https://en.wikipedia.org/wiki/Adams_Apple); [Gender Advertisements, Wikipedia](https://en.wikipedia.org/wiki/Gender_Advertisements)
+- [Glocker et al. 2009, Baby schema in infant faces](https://www.cceb.upenn.edu/csa/assets/user-content/documents/BabySchemainInfantFacesInducesCutenessPerceptionandMotivationforCaretakinginAdults.pdf)
+- [Porcheron, Mauger and Russell 2013, Aspects of facial contrast decrease with age and are cues for age perception](https://cupola.gettysburg.edu/psyfac/23)
+- [Fink and Matts 2008, skin colour distribution and topography in perceived female age and health](https://www.psych.uni-goettingen.de/de/biopers/publications_department/finkmatts2008); [Fink, Grammer and Matts 2006, visible skin colour distribution and perceived age](https://evolution.anthro.univie.ac.at/projects/face%20and%20body/skin%20texture2/index.html)
+- [Burt and Perrett 1995, Perception of age in adult Caucasian male faces](https://research-portal.st-andrews.ac.uk/en/publications/perception-of-age-in-adult-caucasian-male-faces-computer-graphic-/)
+- [Panhard et al. 2012, greying of human hair (Cosmetics Design summary)](https://www.cosmeticsdesign-europe.com/Article/2012/10/02/50-shades-of-grey-Not-quite-as-L-Oreal-study-finds-grey-hair-less-common-than-previously-thought)
+- [MoMA, Käthe Kollwitz, *Self-Portrait en Face*](https://www.moma.org/collection/works/427550)
+- Within the repo: `face` (sections 3, 4, 9), `figure` (section 1), `hair`, `drapery`.
