@@ -5,7 +5,10 @@ posed human mannequins and houses), and this renders it with perspective, propor
 soft shadows, ambient occlusion and atmospheric perspective, as a schema to paint over.
 
 Units are meters. y is up. The camera looks along -z by default (put it at +z looking toward
-the origin). Object rotation "rot" is degrees around y.
+the origin). Object rotation "rot" is degrees around y. The camera can roll and look straight down
+or up. People ("person"), hands, animals and water come from figure.py. Every render also records
+which part of which object each pixel shows; render_file saves these as element masks
+(<canvas>_elements.npz + <canvas>_elements.json; see docs/MANUAL.md, "The schema").
 """
 import numpy as np, json, math, sys
 
@@ -86,6 +89,54 @@ class Node:
 
     def __init__(self, f, color, emit=0.0, bound=None, kind="solid"):
         self.f, self.color, self.emit, self.bound, self.kind = f, hx(color) if isinstance(color, str) else color, emit, bound, kind
+        self.owner, self.element, self.colorf, self.gloss, self.planes, self.frame, self.scale = None, "object", None, 0.0, 0.0, None, 1.0
+        self.subf, self.sub, self.glossf, self.plane, self.nsmooth = None, None, None, False, 0.0
+
+
+def from_part(d):
+    """A render node from a figure.py part (dict)."""
+    c, r = d["bound"]
+    n = Node(d["f"], d["color"], d.get("emit", 0.0), (list(np.asarray(c, np.float32)), float(r)))
+    n.element, n.colorf, n.gloss = d.get("element", "object"), d.get("colorf"), d.get("gloss", 0.0)
+    n.planes, n.frame, n.scale = d.get("planes", 0.0), d.get("frame"), d.get("scale", 1.0)
+    n.plane = d.get("plane", False)
+    n.subf, n.sub, n.glossf = d.get("subf"), d.get("sub"), d.get("glossf")
+    n.nsmooth = d.get("nsmooth", 0.0)
+    return n
+
+
+def node_person(o):
+    import figure
+    parts, _ = figure.person(o)
+    return [from_part(d) for d in parts]
+
+
+def node_animal(o):
+    import figure
+    return [from_part(d) for d in figure.animal(o)]
+
+
+def node_water(o):
+    import figure
+    return [from_part(d) for d in figure.water(o)]
+
+
+def node_hand(o):
+    """A lone hand for studies: pos = wrist, fingers = direction the fingers point, palm = the
+    direction the palm faces, preset (see figure.HANDS), side l|r, length in meters."""
+    import figure
+    fdir = figure.nrm(o.get("fingers", [0, -1, 0]))
+    palm = figure.nrm(o.get("palm", [0, 0, 1]))
+    palm = figure.nrm(palm - (palm @ fdir) * fdir)
+    M = np.stack([np.cross(-fdir, palm), -fdir, palm], 1).astype(np.float32)
+    side = 1 if o.get("side", "l") == "l" else -1
+    L = o.get("length", 0.18)
+    pos = np.asarray(o.get("pos", [0, 1, 0]), np.float32)
+    P = figure.hand_prims(M, pos, L, side, o.get("preset", "relaxed"), o.get("extra"))
+    A = figure.Prims(); A.cone(pos, pos - fdir * L * 0.9 * o.get("forearm", 1.0), 0.1 * L, 0.13 * L)
+    fh, fa = P.fn(0.012 * L), A.fn(0.0)
+    d = figure.part(lambda p: figure.smin(fh(p), fa(p), 0.03 * L), o.get("skin", "#c49a7e"), "hands", P.spheres() + A.spheres(), pad=0.02)
+    return [from_part(d)]
 
 
 def local(pos, rot):
@@ -319,7 +370,9 @@ def node_tree(o):
 
 
 BUILDERS = {"box": node_box, "sphere": node_simple, "ellipsoid": node_simple, "capsule": node_simple,
-            "cylinder": node_simple, "house": node_house, "figure": mannequin, "fence": node_fence, "tree": node_tree}
+            "cylinder": node_simple, "house": node_house, "figure": mannequin, "fence": node_fence, "tree": node_tree,
+            "person": node_person, "animal": node_animal, "water": node_water, "hand": node_hand}
+LEGACY_ELEMENTS = {"figure": ["torso", "skin"]}
 
 
 # ---------------------------------------------------------------- renderer
@@ -327,32 +380,60 @@ class Scene:
     def __init__(self, spec):
         self.spec = spec
         self.nodes = []
-        for o in spec.get("objects", []):
-            self.nodes += BUILDERS[o["type"]](o)
         g = spec.get("ground", {})
+        counts = {}
+        for o in spec.get("objects", []):
+            t = o["type"]
+            oo = dict(o, _ground_y=g.get("y", 0.0) if g.get("enabled", True) else -1e9, _wind=spec.get("wind", [0, 0, 0]))
+            new = BUILDERS[t](oo)
+            owner = o.get("id") or f"{t}{counts.get(t, 0)}"
+            counts[t] = counts.get(t, 0) + 1
+            for i, nd in enumerate(new):
+                nd.owner, nd.otype = owner, t
+                if t in LEGACY_ELEMENTS:
+                    nd.element = LEGACY_ELEMENTS[t][min(i, 1)]
+            self.nodes += new
+        self.pix = 0.0
         self.ground_y = g.get("y", 0.0)
         self.gc1, self.gc2 = hx(g.get("color", "#6a6048")), hx(g.get("color2", g.get("color", "#6a6048")))
         self.has_ground = g.get("enabled", True)
 
     def sdf(self, p, with_mat=False):
-        ds = []
+        """Distance to the scene. Each node is evaluated only on points near its bounding sphere;
+        elsewhere the distance to the sphere stands in (a safe lower bound)."""
+        N = p.shape[0]
         if self.has_ground:
-            ds.append(p[:, 1] - self.ground_y)
-        for n in self.nodes:
-            c, r = n.bound
-            db = np.linalg.norm(p - np.asarray(c, np.float32), axis=1) - r
-            if with_mat or db.min() < 0.5:
-                ds.append(np.maximum(n.f(p), db - 0.0) if False else n.f(p))
+            D = p[:, 1] - self.ground_y
+            M = np.zeros(N, np.int32)
+        else:
+            D = np.full(N, 1e9, np.float32)
+            M = np.full(N, -1, np.int32)
+        off = 1 if self.has_ground else 0
+        for i, n in enumerate(self.nodes):
+            if getattr(n, "plane", False):
+                d = n.f(p)
             else:
-                ds.append(db)
-        D = np.stack(ds, 1)
+                c, r = n.bound
+                db = np.linalg.norm(p - np.asarray(c, np.float32), axis=1) - r
+                near = db < max(0.1, 0.5 * r)
+                if not near.any():
+                    d = db
+                elif near.all():
+                    d = n.f(p)
+                else:
+                    d = db.copy()
+                    d[near] = n.f(p[near])
+            if with_mat:
+                closer = d < D
+                M[closer] = i + off
+            D = np.minimum(D, d)
         if with_mat:
-            return D.min(1), D.argmin(1)
-        return D.min(1)
+            return D, M
+        return D
 
-    def normal(self, p):
-        e = 0.002
+    def normal(self, p, e=0.002):
         k = np.array([[1, -1, -1], [-1, -1, 1], [-1, 1, -1], [1, 1, 1]], np.float32)
+        e = np.asarray(e, np.float32).reshape(-1, 1) if np.ndim(e) else e
         n = sum(k[i][None, :] * self.sdf(p + k[i] * e)[:, None] for i in range(4))
         return norm(n)
 
@@ -368,10 +449,16 @@ class Scene:
             p = ro[idx] + rd[idx] * t[idx, None]
             d = self.sdf(p)
             t[idx] += d * 0.8
-            h = d < 0.0015 * (1 + t[idx])
+            h = d < (0.0015 * (1 + t[idx]) if not self.pix else np.maximum(0.0004, 0.6 * self.pix * t[idx]))
             hit[idx[h]] = True
             active[idx[h]] = False
             active[idx[t[idx] > tmax]] = False
+            last = (idx, d)
+        if self.pix and active.any():   # rays that ran out of steps grazing a surface count as hits
+            idx = np.nonzero(active)[0]
+            d = self.sdf(ro[idx] + rd[idx] * t[idx, None])
+            ok = d < 4 * self.pix * t[idx] + 0.002
+            hit[idx[ok]] = True
         return t, hit
 
     def shadow(self, p, ld, k=8.0, steps=56, tmax=60):
@@ -402,21 +489,35 @@ class Scene:
             sca *= 0.75
         return np.clip(1 - 1.8 * occ, 0.15, 1)
 
-    def render(self, W=450, H=600):
-        sp = self.spec
-        cam = sp.get("camera", {})
+    def camera(self, W, H):
+        """Ray origins and directions. camera: pos, look_at, fov, roll (degrees, clockwise in the
+        picture), up (a hint; straight-down and straight-up views pick a sensible one)."""
+        cam = self.spec.get("camera", {})
         ro = np.asarray(cam.get("pos", [0, 1.6, 12]), np.float32)
         ta = np.asarray(cam.get("look_at", [0, 1.4, 0]), np.float32)
         fov = R(cam.get("fov", 40))
         fw = norm(ta - ro)
-        rt = norm(np.cross(fw, [0, 1, 0]))
+        uh = np.asarray(cam.get("up", [0, 1, 0]), np.float32)
+        if abs(float(fw @ norm(uh))) > 0.999:      # looking straight down or up: the top of the picture is -z
+            uh = np.array([0, 0, -1], np.float32) if fw[1] < 0 else np.array([0, 0, 1], np.float32)
+        rt = norm(np.cross(fw, uh))
         up = np.cross(rt, fw)
+        roll = R(cam.get("roll", 0))
+        if roll:
+            rt, up = rt * math.cos(roll) + up * math.sin(roll), up * math.cos(roll) - rt * math.sin(roll)
         ys, xs = np.mgrid[0:H, 0:W].astype(np.float32)
         u = (xs + 0.5 - W / 2) / (H / 2)
         v = -(ys + 0.5 - H / 2) / (H / 2)
         f = 1 / math.tan(fov / 2)
         rd = norm(u.reshape(-1, 1) * rt + v.reshape(-1, 1) * up + f * fw).astype(np.float32)
         RO = np.broadcast_to(ro, rd.shape).astype(np.float32)
+        return RO, rd, fov
+
+    def render(self, W=450, H=600):
+        sp = self.spec
+        RO, rd, fov = self.camera(W, H)
+        fine = any(n.element != "object" or n.colorf is not None for n in self.nodes if getattr(n, "otype", "") not in LEGACY_ELEMENTS)
+        self.pix = (fov / H) if fine else 0.0
         sun = sp.get("sun", {})
         az, el = R(sun.get("azimuth", 40)), R(sun.get("elevation", 25))
         ld = np.array([math.sin(az) * math.cos(el), math.sin(el), math.cos(az) * math.cos(el)], np.float32)
@@ -436,14 +537,17 @@ class Scene:
             c = c + (scol / max(scol.max(), 1e-6)) * (glow * sd ** 8 + 0.9 * (sd > math.cos(R(sun.get("disc", 1.6)))))[:, None]
             return c
 
-        t, hit = self.march(RO, rd)
+        t, hit = self.march(RO, rd, steps=240 if fine else 180)
         img = skycol(rd)
         idx = np.nonzero(hit)[0]
         p = RO[idx] + rd[idx] * t[idx, None]
         _, mat = self.sdf(p, with_mat=True)
-        n = self.normal(p)
+        n = self.normal(p) if not fine else self.normal(p, np.maximum(0.0006, 0.5 * self.pix * t[idx]))
         base = np.zeros((len(idx), 3), np.float32)
         emit = np.zeros(len(idx), np.float32)
+        gloss = np.zeros(len(idx), np.float32)
+        pl = np.zeros(len(idx), np.float32)
+        sublab = np.zeros(len(idx), np.int32)
         off = 1 if self.has_ground else 0
         if self.has_ground:
             g = mat == 0
@@ -452,9 +556,23 @@ class Scene:
             base[g] = self.gc1 * (1 - nz[:, None]) + self.gc2 * nz[:, None]
         for i, nd in enumerate(self.nodes):
             m = mat == i + off
-            base[m] = nd.color
+            if not m.any():
+                continue
+            base[m] = nd.colorf(p[m]) if nd.colorf is not None else nd.color
             emit[m] = nd.emit
-        pe = p + n * 0.01
+            gloss[m] = nd.glossf(p[m]) if nd.glossf is not None else nd.gloss
+            if nd.subf is not None:
+                sublab[m] = nd.subf(p[m])
+            if nd.nsmooth:
+                n[m] = self.normal(p[m], nd.nsmooth)
+            if nd.planes > 0:
+                # the plane head: the form simplified (a coarse normal over a few centimetres)
+                # and, below, each plane given one value (light, two halftones, shadow)
+                pm = p[m]
+                nc = self.normal(pm, 0.08 * nd.scale)
+                n[m] = norm(n[m] * (1 - nd.planes) + nc * nd.planes)
+                pl[m] = nd.planes
+        pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * t[idx])[:, None]
         dif = np.clip(n @ ld, 0, 1)
         sh = np.zeros(len(idx), np.float32)
         lit = dif > 0
@@ -463,7 +581,19 @@ class Scene:
         ao = self.ao(pe, n)
         hemi = (0.5 + 0.5 * n[:, 1])[:, None]
         ambient = (asky * hemi + agr * (1 - hemi)) * ai
-        col = base * (scol * (dif * sh)[:, None] + ambient * ao[:, None])
+        light = dif * sh
+        if pl.any():
+            # value steps in the light (Bucci: "two or three values for halftone is enough"), with a
+            # soft edge so the plane breaks stay where the form turns
+            lv = np.array([0.0, 0.32, 0.62, 0.92], np.float32)
+            edges = (lv[1:] + lv[:-1]) / 2
+            q = lv[0] + sum((lv[i + 1] - lv[i]) * np.clip((light - edges[i]) / 0.1 + 0.5, 0, 1) for i in range(3))
+            light = light * (1 - 0.6 * pl) + q * 0.6 * pl
+        col = base * (scol * light[:, None] + ambient * ao[:, None])
+        if gloss.any():
+            hv = norm(ld[None, :] - rd[idx])
+            spec = np.clip((n * hv).sum(1), 0, 1) ** 40 * gloss * sh * (dif > 0)
+            col += scol[None, :] * spec[:, None] * 0.6
         for L in sp.get("lights", []):
             lp = np.asarray(L["pos"], np.float32)
             lv = lp - p
@@ -474,20 +604,104 @@ class Scene:
         col += base * emit[:, None]
         fogf = 1 - np.exp(-t[idx] * fden)
         sdir = np.clip(rd[idx] @ ld, 0, 1) ** 6 * 0.5
-        col = col * (1 - fogf[:, None]) + (fcol + scol * sdir[:, None] * 0.25)[None, :] * fogf[:, None] if False else col * (1 - fogf[:, None]) + (fcol[None, :] + (scol[None, :] * sdir[:, None] * 0.25)) * fogf[:, None]
+        col = col * (1 - fogf[:, None]) + (fcol[None, :] + (scol[None, :] * sdir[:, None] * 0.25)) * fogf[:, None]
         img[idx] = col
         exp_ = sp.get("exposure", 1.1)
         img = 1 - np.exp(-np.clip(img, 0, None) * exp_)
         img = img ** (1 / 1.08)
+        # what each pixel shows: node index (-1 sky, -2 ground), and depth
+        lab = np.full(W * H, -1, np.int32)
+        lab[idx] = mat - off
+        sl = np.zeros(W * H, np.int32)
+        sl[idx] = sublab
+        self.sublabels = sl.reshape(H, W)
+        dep = np.full(W * H, np.inf, np.float32)
+        dep[idx] = t[idx]
+        self.labels, self.depth, self.size = lab.reshape(H, W), dep.reshape(H, W), (W, H)
         return (np.clip(img, 0, 1).reshape(H, W, 3) * 255).astype(np.uint8)
+
+    def element_masks(self, full):
+        """Masks per object and element at the canvas size: {key: bool (H,W)}, plus an index."""
+        from PIL import Image
+        Wf, Hf = full
+        lab = self.labels
+        groups = {}
+        for i, nd in enumerate(self.nodes):
+            if nd.sub:
+                for j, el in enumerate(nd.sub):
+                    groups.setdefault((nd.owner, nd.otype, el), []).append((i, j))
+            else:
+                groups.setdefault((nd.owner, nd.otype, nd.element), []).append((i, None))
+        masks, index = {}, []
+        owners = {}
+        sub = self.sublabels
+
+        def mask_of(ids):
+            m = np.zeros(lab.shape, bool)
+            for i, j in ids:
+                m |= (lab == i) if j is None else ((lab == i) & (sub == j))
+            return m
+        for (owner, otype, el), ids in groups.items():
+            m = mask_of(ids)
+            if not m.any() and el not in ("head", "hands", "torso", "drapery"):
+                continue
+            owners.setdefault((owner, otype), []).extend(ids)
+            key = f"{owner}.{el}"
+            masks[key] = m
+            index.append({"key": key, "object": owner, "type": otype, "element": el})
+        for (owner, otype), ids in owners.items():
+            if len(ids) > 1:
+                masks[f"{owner}.all"] = mask_of(ids)
+                index.append({"key": f"{owner}.all", "object": owner, "type": otype, "element": "all"})
+        out, entries = {}, []
+        for e in index:
+            m = masks[e["key"]]
+            big = np.asarray(Image.fromarray((m * 255).astype(np.uint8)).resize((Wf, Hf), Image.BILINEAR)) > 127
+            ys, xs = np.nonzero(big)
+            e["pixels"] = int(big.sum())
+            e["share"] = round(e["pixels"] / (Wf * Hf), 5)
+            if len(xs):
+                e["bbox"] = [int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1]
+                e["centroid"] = [round(float(xs.mean()), 1), round(float(ys.mean()), 1)]
+                d = self.depth[m]
+                e["depth_m"] = round(float(np.median(d[np.isfinite(d)])), 3) if np.isfinite(d).any() else None
+            out[e["key"]] = big
+            entries.append(e)
+        return out, entries
+
+
+_PLANE_DIRS = None
+
+
+def plane_dirs():
+    """Directions of the big planes of a head (front, sides, top, under-planes, the turn of the
+    cheek and brow), as unit normals in the head's frame (x left, y up, z forward)."""
+    global _PLANE_DIRS
+    if _PLANE_DIRS is None:
+        ds = []
+        for el in (-60, -32, -10, 12, 38, 70):
+            k = {-60: 4, -32: 7, -10: 9, 12: 9, 38: 7, 70: 4}[el]
+            for i in range(k):
+                az = -180 + 360 * i / k + (0 if el % 2 else 180 / k)
+                ds.append([math.cos(R(el)) * math.sin(R(az)), math.sin(R(el)), math.cos(R(el)) * math.cos(R(az))])
+        ds.append([0, 1, 0]); ds.append([0, -1, 0]); ds.append([0, 0, 1])
+        _PLANE_DIRS = norm(np.array(ds, np.float32))
+    return _PLANE_DIRS
 
 
 def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 1600)):
+    """Render a scene JSON to out_png at the canvas size. "render_scale" in the scene multiplies the
+    render resolution (faces and hands need 1.5-2; costs time). Also writes element masks next to
+    the image: <canvas>_elements.npz and <canvas>_elements.json when out_png is a studio scene
+    version (<canvas>_scene_vN.png), else <out>_elements.npz/.json."""
     from PIL import Image
-    import subprocess, os, tempfile
+    import subprocess, os, tempfile, re
     spec = json.load(open(path_json))
-    arr = Scene(spec).render(W, H)
-    im = Image.fromarray(arr).resize(full, Image.BICUBIC)
+    sc = max(0.25, min(float(spec.get("render_scale", 1.0)), 4.0))
+    W, H = int(round(W * sc)), int(round(H * sc))
+    scene = Scene(spec)
+    arr = scene.render(W, H)
+    im = Image.fromarray(arr).resize(full, Image.LANCZOS if sc > 1 else Image.BICUBIC)
     if overlay_svg:
         tmp = tempfile.mktemp(suffix=".png")
         subprocess.run(["rsvg-convert", "-w", str(full[0]), "-h", str(full[1]), "-o", tmp, overlay_svg], check=True)
@@ -495,6 +709,13 @@ def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 
         im = Image.alpha_composite(im.convert("RGBA"), ov).convert("RGB")
         os.remove(tmp)
     im.save(out_png)
+    if spec.get("masks", True):
+        mk, entries = scene.element_masks(full)
+        m = re.match(r"(.*)_scene_v(\d+)\.png$", out_png)
+        stem = m.group(1) if m else os.path.splitext(out_png)[0]
+        np.savez_compressed(stem + "_elements.npz", **mk)
+        json.dump({"format": "teodor-elements/1", "image": os.path.basename(out_png), "scene": os.path.basename(path_json),
+                   "size": list(full), "elements": entries}, open(stem + "_elements.json", "w"), indent=1)
     return out_png
 
 

@@ -38,9 +38,8 @@ Written at the end of the long chat session that built most of this (Nov 22–24
    - Figures still read as mannequins: faces near-identical, hands like tubes or mitts, stiff gestures. Teodor wrote his own helpers for this (`rounds/13-black-noon/tools/p3/facegen.py` for shaded heads; Fable's figure rig in `rounds/14b-…/tools/pose2.py`). Folding a better figure and face builder into the studio would help every painting.
    - The surface reads as "a digital filter": square dabs everywhere and uniform edges. The stroke vocabulary needs variety in width, pressure and direction within one stroke.
 3. **Studio gaps painters worked around in v7.** Fixed in v8: `act @file`; `free`/`blend` take a number or a range; `transfer` picks a line colour that shows on the ground; hatch seams. Still open:
-   - The 3D camera can't roll and the mannequin can't lie down; two painters wrote their own compositing to get an overhead view of a lying figure (`rounds/14-…/tools/compose.py`, `rounds/14b-…/tools/compose.py`).
    - `color_shift` `value` and `sat` are multipliers (1 = unchanged), not offsets; a negative value turns colour black.
-   - `base.kmix` (gouache, tempera, pastel) is not yet spectral; lead white and earth pigments lack K and S data.
+   - `base.kmix` (gouache, tempera, pastel) is not yet spectral (what it needs: `docs/calibration/colour.md`, section 5). Lead white, titanium white and the earths are in the oil palette since Nov 26; burnt umber and terre verte are approximations, and no measured oil data for earths exists openly.
 4. **Elevate plan leftovers** (`docs/proposals-v8.md`): element-clarity view, revision tools, a stronger hand, layers with roles.
 5. **Maybe later:** Robert has mentioned a Ko-fi / Buy Me a Coffee page for Teodor and its sister project Spectre (an AI music producer built the same way: github.com/robertontiu/spectre), run as a private person. Not started.
 

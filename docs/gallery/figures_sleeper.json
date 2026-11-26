@@ -1,0 +1,138 @@
+{
+ "camera": {
+  "pos": [
+   0.1,
+   2.6,
+   -0.35
+  ],
+  "look_at": [
+   0.1,
+   0,
+   -0.35
+  ],
+  "fov": 44,
+  "roll": 8
+ },
+ "sun": {
+  "azimuth": 70,
+  "elevation": 55,
+  "color": "#fff1dc",
+  "intensity": 1.6,
+  "softness": 8
+ },
+ "sky": {
+  "zenith": "#8090a0",
+  "horizon": "#d0c8bc"
+ },
+ "ambient": {
+  "sky": "#a0a8b8",
+  "ground": "#8a7a68",
+  "intensity": 0.55
+ },
+ "ground": {
+  "color": "#c8c0b0",
+  "color2": "#bcb2a2"
+ },
+ "fog": {
+  "density": 0.0
+ },
+ "objects": [
+  {
+   "type": "person",
+   "id": "man",
+   "pos": [
+    0,
+    0,
+    0
+   ],
+   "sex": "male",
+   "age": 38,
+   "build": "average",
+   "pose": "sleep_back",
+   "expression": "sleep",
+   "joints": {
+    "neck": [
+     4,
+     -10,
+     -25
+    ]
+   },
+   "reach_l": {
+    "target": [
+     0.44,
+     0.2,
+     0.05
+    ],
+    "palm": [
+     0,
+     -1,
+     0
+    ],
+    "fingers": [
+     0.3,
+     0,
+     1
+    ],
+    "hand": "rest"
+   },
+   "skin": "#c89a7c",
+   "color": "#6a7488",
+   "bare": [
+    "feet"
+   ],
+   "hair": {
+    "style": "short",
+    "color": "#2a2018"
+   },
+   "clothes": [
+    {
+     "kind": "shirt",
+     "color": "#e4e0d6",
+     "sleeves": "short",
+     "ease": 0.02
+    },
+    {
+     "kind": "trousers",
+     "color": "#5a6478"
+    }
+   ],
+   "reach_r": {
+    "target": "head_back",
+    "offset": [
+     0,
+     0.02,
+     0
+    ],
+    "palm": [
+     0,
+     1,
+     0
+    ],
+    "fingers": [
+     0.6,
+     0,
+     -0.4
+    ],
+    "pole": [
+     -1,
+     0.3,
+     -0.6
+    ],
+    "hand": "relaxed"
+   }
+  },
+  {
+   "type": "animal",
+   "id": "cat",
+   "pos": [
+    0.44,
+    0,
+    0.05
+   ],
+   "pose": "curled",
+   "color": "#7a6a58",
+   "facing": 200
+  }
+ ],
+ "render_scale": 1.3
+}

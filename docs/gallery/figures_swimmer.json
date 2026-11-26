@@ -1,0 +1,123 @@
+{
+ "camera": {
+  "pos": [
+   0.45,
+   1.06,
+   1.45
+  ],
+  "look_at": [
+   0.0,
+   0.99,
+   0
+  ],
+  "fov": 34
+ },
+ "sun": {
+  "azimuth": 30,
+  "elevation": 30,
+  "color": "#fff4e4",
+  "intensity": 1.9,
+  "softness": 14
+ },
+ "sky": {
+  "zenith": "#5c7ea0",
+  "horizon": "#d8e0e4",
+  "sun_glow": 0.3,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#90a8c0",
+  "ground": "#2a4a50",
+  "intensity": 0.55
+ },
+ "ground": {
+  "enabled": false
+ },
+ "fog": {
+  "density": 0.01,
+  "color": "#c8d4d8"
+ },
+ "objects": [
+  {
+   "type": "water",
+   "id": "sea",
+   "y": 0.82,
+   "color": "#2e5a62",
+   "chop": 0.012,
+   "ripples": [
+    [
+     0,
+     0
+    ]
+   ],
+   "ripple_amp": 0.015,
+   "gloss": 0.9
+  },
+  {
+   "type": "person",
+   "id": "oldman",
+   "anchor": "head",
+   "pos": [
+    0,
+    1.0,
+    0
+   ],
+   "facing": 12,
+   "sex": "male",
+   "age": 74,
+   "build": "frail",
+   "pose": "tread_water",
+   "expression": "laugh",
+   "joints": {
+    "neck": [
+     -8,
+     6,
+     10
+    ],
+    "spine": [
+     8,
+     0,
+     0
+    ]
+   },
+   "reach_r": {
+    "target": "head_top",
+    "offset": [
+     -0.075,
+     -0.045,
+     -0.01
+    ],
+    "palm": [
+     1,
+     -0.35,
+     0
+    ],
+    "fingers": [
+     0.0,
+     0.35,
+     -1
+    ],
+    "pole": [
+     -1,
+     -0.6,
+     0.3
+    ],
+    "hand": "push_hair"
+   },
+   "bare": [
+    "torso",
+    "arms",
+    "legs",
+    "feet"
+   ],
+   "skin": "#c8987a",
+   "skin_gloss": 0.5,
+   "hair": {
+    "style": "slick",
+    "color": "#a8a49c",
+    "gloss": 0.7
+   }
+  }
+ ],
+ "render_scale": 1.3
+}

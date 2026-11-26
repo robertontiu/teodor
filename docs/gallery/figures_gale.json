@@ -1,0 +1,156 @@
+{
+ "camera": {
+  "pos": [
+   -0.9,
+   0.85,
+   1.75
+  ],
+  "look_at": [
+   0.05,
+   1.8,
+   -0.1
+  ],
+  "fov": 50
+ },
+ "sun": {
+  "azimuth": -25,
+  "elevation": 28,
+  "color": "#f2f0ea",
+  "intensity": 1.9,
+  "softness": 12
+ },
+ "sky": {
+  "zenith": "#46525e",
+  "horizon": "#c4cace",
+  "sun_glow": 0.3,
+  "disc": 0
+ },
+ "ambient": {
+  "sky": "#8a96a4",
+  "ground": "#4a3c30",
+  "intensity": 0.5
+ },
+ "fog": {
+  "color": "#9aa3a8",
+  "density": 0.004
+ },
+ "ground": {
+  "color": "#3e3630",
+  "color2": "#33302c"
+ },
+ "wind": [
+  0,
+  0,
+  -16
+ ],
+ "render_scale": 1.3,
+ "objects": [
+  {
+   "type": "box",
+   "id": "wall",
+   "pos": [
+    0,
+    0.35,
+    0
+   ],
+   "size": [
+    8,
+    0.7,
+    1.4
+   ],
+   "color": "#5a5650"
+  },
+  {
+   "type": "person",
+   "id": "woman",
+   "pos": [
+    0,
+    0.7,
+    0
+   ],
+   "anchor": "ground",
+   "float": true,
+   "facing": 0,
+   "sex": "female",
+   "age": 34,
+   "build": "average",
+   "pose": "lean_wind",
+   "joints": {
+    "neck": [
+     -18,
+     -6,
+     -14
+    ],
+    "head": [
+     -6,
+     0,
+     0
+    ],
+    "spine": [
+     2,
+     4,
+     0
+    ],
+    "arm_l": [
+     -30,
+     78,
+     35,
+     18
+    ],
+    "arm_r": [
+     -18,
+     70,
+     35,
+     10
+    ],
+    "wrist_l": [
+     -10,
+     0,
+     20
+    ],
+    "wrist_r": [
+     -15,
+     0,
+     30
+    ],
+    "leg_l": [
+     26,
+     6,
+     0,
+     20
+    ],
+    "leg_r": [
+     -16,
+     6,
+     0,
+     2
+    ]
+   },
+   "hand_l": "spread",
+   "hand_r": "open",
+   "expression": "laugh",
+   "skin": "#d2a68a",
+   "color": "#3d3e48",
+   "hair": {
+    "style": "bun",
+    "color": "#2e2018"
+   },
+   "clothes": [
+    {
+     "kind": "dress",
+     "color": "#3d3e48",
+     "length": 0.95,
+     "flare": 0.35,
+     "drag": 1.9,
+     "folds": 0.04
+    },
+    {
+     "kind": "shawl",
+     "color": "#b07a38",
+     "length": 0.8,
+     "width": 0.34
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,173 @@
+{
+ "subjects": {
+  "face": {
+   "doc": "docs/subjects/face.md",
+   "summary": "A ball (cranium) with a face of big planes on it; features as small planes in the light; expressions are whole-face patterns of action units.",
+   "key": {
+    "thirds": {
+     "value": "hairline-brow, brow-nose base, nose base-chin equal; hairline halfway between brow and crown",
+     "source": "Loomis via finearttutorials.com"
+    },
+    "eye_line": {
+     "value": "about half the head height",
+     "source": "judgement"
+    },
+    "hand_length": {
+     "value": "equals face length",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "planes": {
+     "value": "front, side and bottom planes; brow, socket, cheekbone corner, nose wedge, muzzle, jaw underside",
+     "source": "Asaro head (1stDibs); Loomis via Gurney"
+    },
+    "values": {
+     "value": "light, 2-3 halftones, shadow; one value per plane",
+     "source": "Bucci via Proko"
+    },
+    "happiness": {
+     "value": "AU6+12",
+     "source": "FACS, Wikipedia"
+    },
+    "laugh": {
+     "value": "AU6+12+25+26 (+10), intense laughter may add AU4; joy follows AU6",
+     "source": "Frontiers in Psychology 2014; Darwin 1872 ch. 8"
+    },
+    "sadness": {
+     "value": "AU1+4+15",
+     "source": "FACS, Wikipedia; Darwin 1872 ch. 7"
+    },
+    "surprise": {
+     "value": "AU1+2+5B+26; brows curved, mouth loose and open",
+     "source": "FACS, Wikipedia; Ekman"
+    },
+    "fear": {
+     "value": "AU1+2+4+5+7+20+26; brows level, upper lid higher, lips stretched",
+     "source": "FACS, Wikipedia; Ekman"
+    },
+    "sleep": {
+     "value": "AU43, slack mouth, maybe 25",
+     "source": "judgement"
+    }
+   },
+   "checks": [
+    "Squint: 3-5 value shapes (light front, shadow side, socket, under-nose, under-jaw) read as a head before any feature",
+    "Name the expression's AUs and see each one; a laugh needs lifted cheeks and narrowed eyes, not only an open mouth",
+    "Cover the mouth, then the eyes: each half still says the feeling",
+    "No feature outlined; eyes are lit spheres under lids",
+    "No two faces built on the same proportions",
+    "Head thrown back from below hides the face: turn it or move the eye"
+   ],
+   "avoid": [
+    "emoticon or mask with drawn features",
+    "open mouth alone (laugh/scream ambiguity)",
+    "identical faces",
+    "outlined eyes"
+   ]
+  },
+  "figure": {
+   "doc": "docs/subjects/figure.md",
+   "summary": "A gesture through the whole body, three masses (head, ribcage, pelvis) tilting against each other, weight landing on a support, limbs that overlap and shorten as they turn.",
+   "key": {
+    "adult_heads": {
+     "value": "7.5 (8 ideal, 8.5 heroic)",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "midpoint": {
+     "value": "the greater trochanters, just above the pubic arch",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "legs": {
+     "value": "3.5-4 heads floor to crotch; arms about 3 heads",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "heads_by_age": {
+     "value": "birth 4, age 5 about 6 (USF) or 5.5 (Tuts+), 7-9 about 6, teens 6.5-7, adult 7.5",
+     "source": "USF head to height; Tuts+ drawing different ages"
+    },
+    "sex": {
+     "value": "hip:shoulder circumference 1:1.03 women, 1:1.18 men; waist-hip 0.67-0.80 in art",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "line_of_action": {
+     "value": "one C, S or straight line through the spine; more curve, more force",
+     "source": "line-of-action.com; Proko gesture"
+    },
+    "contrapposto": {
+     "value": "weight on one foot, shoulders and hips tilt opposite",
+     "source": "Contrapposto, Wikipedia"
+    },
+    "balance": {
+     "value": "centre of gravity over the support or held by a visible force",
+     "source": "Proko balanced poses"
+    },
+    "foreshortening": {
+     "value": "receding forms shorten, shrink and overlap",
+     "source": "Draw Paint Academy"
+    }
+   },
+   "checks": [
+    "One clear line of action through the figure",
+    "Shoulder line and hip line tilt against each other in a weight-bearing pose",
+    "Centre of gravity over the support, or a force you can see",
+    "Measure in heads for the age; fingertips at mid-thigh",
+    "Forms turned to the eye overlap and shorten",
+    "Figures in a group lean toward or away from each other"
+   ],
+   "avoid": [
+    "mannequin tubes with visible joints",
+    "frontal stiff bodies",
+    "half-committed gesture",
+    "children as small adults",
+    "floating weight"
+   ]
+  },
+  "hands-feet": {
+   "doc": "docs/subjects/hands-feet.md",
+   "summary": "A palm block, fingers of three stacked cylinders on a curved knuckle row, a thumb that starts at the wrist and bends across the palm; the foot a wedge with an arch.",
+   "key": {
+    "hand_length": {
+     "value": "face length, about 3/4 head",
+     "source": "https://en.wikipedia.org/wiki/Body_proportions"
+    },
+    "stature_from_hand": {
+     "value": "H = 80.4 + 5.122*hand - 0.195*age + 6.383 (men) cm",
+     "source": "PubMed 24169457"
+    },
+    "digits": {
+     "value": "thumb 7.0/6.4 cm, index 7.5/7.0 cm (men/women)",
+     "source": "Greiner 1992"
+    },
+    "construction": {
+     "value": "palm as a flat 'steak', fingers as stacks of three cylinders; knuckles on concentric arcs",
+     "source": "Tuts+ how to draw hands"
+    },
+    "thumb": {
+     "value": "moves from low at the wrist; max 90 deg from little finger; spread 1.5 index lengths",
+     "source": "Tuts+ how to draw hands"
+    },
+    "phalanges": {
+     "value": "about 0.46/0.30/0.24 of the finger",
+     "source": "judgement"
+    },
+    "foot": {
+     "value": "about one head long; wedge with inner arch",
+     "source": "judgement"
+    }
+   },
+   "checks": [
+    "Hand about a face long",
+    "Palm block, then fingers, then the thumb as its own wedge from the wrist",
+    "Knuckles on an arc",
+    "A hand on something makes contact (shadow, fingers following the surface)",
+    "The hand's gesture agrees with face and body"
+   ],
+   "avoid": [
+    "tubes, mitts, paddles",
+    "all fingers curled the same",
+    "hands too small",
+    "thumb as a stick from the wrist",
+    "feet as blobs"
+   ]
+  }
+ }
+}
