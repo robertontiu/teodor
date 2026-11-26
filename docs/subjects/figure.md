@@ -63,6 +63,17 @@ In the studio: build the figure in `scene` as a `person` (proportions by age, se
 5. Where forms turn toward you, do they overlap and shorten?
 6. In a group, do the bodies lean toward or away from each other, rather than standing frontally?
 
+## 8. Masses on the limbs, knees and elbows (added 2026-11-26)
+
+A limb is not a smooth tube: each segment carries a few masses, and the joints are built from bony landmarks, not balls (critics' "mannequin", section 6).
+- **Knee:** the patella is "a flat, rounded triangular bone" that "covers and protects the anterior articular surface of the knee joint" and gives attachment to the patellar tendon ([Patella, Wikipedia](https://en.wikipedia.org/wiki/Patella)). So the knee reads as a block wider than it is deep, a flat plate in front, and the tendon running down to the shin, with the inner condyle a little fuller (**judgement** for the proportions).
+- **Thigh:** the quadriceps in front with the teardrop of vastus medialis just above the inner knee, the hamstrings behind (**judgement**, the common anatomy teaching).
+- **Calf:** "the medial gastrocnemius head is low and heavy", the lateral head ends higher; "the soleus muscle belly descends lower and is wider than gastrocnemius" and "can even be seen in front view, behind the tibia" ([Proko, how to draw the calf](https://proko.com/course-lesson/how-to-draw-the-calf-anatomy-for-artists/notes)). The ankle bone is higher on the inside (see `hands-feet`).
+- **Arm:** the deltoid caps the shoulder; biceps in front, triceps behind; the forearm's extensor mass on the thumb side and flexor mass on the palm side, both in its upper half, tapering to a flat wrist; at the elbow, the olecranon's point behind and the inner epicondyle's knob (**judgement**, common teaching).
+- **As planes:** under one light each mass gives one plane change (light to halftone), which is what a painter puts down; the studio groups the body's light (`body_planes`, default 0.35, **judgement**) as it does the head's. Women and children show the masses less (**judgement**).
+
+**Drapery in wind (studio note).** A skirt pressed by the wind onto the windward leg stays there: cloth that touches the body with the wind pushing it in does not slide along it (static friction), so the skirt wraps the near leg and shows its form, and streams only from the leeward side (see `drapery`).
+
 ## Sources
 
 - [Body proportions, Wikipedia](https://en.wikipedia.org/wiki/Body_proportions)
@@ -73,3 +84,5 @@ In the studio: build the figure in `scene` as a `person` (proportions by age, se
 - [Proko, how to draw gesture](https://www.proko.com/course-lesson/how-to-draw-gesture/notes)
 - [Proko, how to draw balanced poses](https://www.proko.com/course-lesson/how-to-draw-balanced-poses)
 - [Draw Paint Academy, foreshortening](https://drawpaintacademy.com/foreshortening/)
+- [Patella, Wikipedia](https://en.wikipedia.org/wiki/Patella)
+- [Proko, how to draw the calf](https://proko.com/course-lesson/how-to-draw-the-calf-anatomy-for-artists/notes)

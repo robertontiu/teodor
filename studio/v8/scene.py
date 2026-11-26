@@ -132,10 +132,13 @@ def node_hand(o):
     side = 1 if o.get("side", "l") == "l" else -1
     L = o.get("length", 0.18)
     pos = np.asarray(o.get("pos", [0, 1, 0]), np.float32)
-    P = figure.hand_prims(M, pos, L, side, o.get("preset", "relaxed"), o.get("extra"))
+    P = figure.hand_prims(M, pos, L, side, o.get("preset", "relaxed"), o.get("extra"), collide=o.get("_collide"))
     A = figure.Prims(); A.cone(pos, pos - fdir * L * 0.9 * o.get("forearm", 1.0), 0.1 * L, 0.13 * L)
-    fh, fa = P.fn(0.012 * L), A.fn(0.0)
-    d = figure.part(lambda p: figure.smin(fh(p), fa(p), 0.03 * L), o.get("skin", "#c49a7e"), "hands", P.spheres() + A.spheres(), pad=0.02)
+    fh, fa, fn = P.fn(0.012 * L), A.fn(0.0), P.nails.fn(0.0)
+    skin = hx(o.get("skin", "#c49a7e"))
+    nail = np.clip(skin * np.array([1.08, 0.95, 0.95], np.float32) + 0.06, 0, 1)
+    d = figure.part(lambda p: figure.smin(figure.smin(fh(p), fa(p), 0.03 * L), fn(p), 0.002 * L), skin, "hands", P.spheres() + A.spheres(), pad=0.02)
+    d["colorf"] = lambda p: np.where((fn(p) < 0.0015 * L)[:, None], nail[None], skin[None])
     return [from_part(d)]
 
 
@@ -382,21 +385,51 @@ class Scene:
         self.nodes = []
         g = spec.get("ground", {})
         counts = {}
-        for o in spec.get("objects", []):
+        objs = spec.get("objects", [])
+        built = [None] * len(objs)
+        # people and lone hands are built last, so their hands can rest on what is already there
+        # (fingers settle onto a surface instead of passing through it); the node order stays the scene's
+        order = [i for i, o in enumerate(objs) if o["type"] not in ("person", "hand")] + \
+                [i for i, o in enumerate(objs) if o["type"] in ("person", "hand")]
+        for i in order:
+            o = objs[i]
             t = o["type"]
             oo = dict(o, _ground_y=g.get("y", 0.0) if g.get("enabled", True) else -1e9, _wind=spec.get("wind", [0, 0, 0]))
-            new = BUILDERS[t](oo)
+            if t in ("person", "hand"):
+                others = [nd for b in built if b for nd in b if not getattr(nd, "plane", False)]
+                if others:
+                    oo["_collide"] = self._collider(others)
+            built[i] = BUILDERS[t](oo)
+        for i, o in enumerate(objs):
+            t = o["type"]
+            new = built[i]
             owner = o.get("id") or f"{t}{counts.get(t, 0)}"
             counts[t] = counts.get(t, 0) + 1
-            for i, nd in enumerate(new):
+            for j, nd in enumerate(new):
                 nd.owner, nd.otype = owner, t
                 if t in LEGACY_ELEMENTS:
-                    nd.element = LEGACY_ELEMENTS[t][min(i, 1)]
+                    nd.element = LEGACY_ELEMENTS[t][min(j, 1)]
             self.nodes += new
         self.pix = 0.0
         self.ground_y = g.get("y", 0.0)
         self.gc1, self.gc2 = hx(g.get("color", "#6a6048")), hx(g.get("color2", g.get("color", "#6a6048")))
         self.has_ground = g.get("enabled", True)
+
+    @staticmethod
+    def _collider(nodes):
+        """Distance to a set of nodes (bounding spheres first), for hands touching objects."""
+        def f(p):
+            p = np.asarray(p, np.float32)
+            d = np.full(len(p), 1e3, np.float32)
+            for n in nodes:
+                c, r = n.bound
+                db = np.linalg.norm(p - np.asarray(c, np.float32), axis=1) - r
+                near = db < 0.05
+                if near.any():
+                    d[near] = np.minimum(d[near], n.f(p[near]))
+                d[~near] = np.minimum(d[~near], db[~near])
+            return d
+        return f
 
     def sdf(self, p, with_mat=False):
         """Distance to the scene. Each node is evaluated only on points near its bounding sphere;
@@ -569,7 +602,7 @@ class Scene:
                 # the plane head: the form simplified (a coarse normal over a few centimetres)
                 # and, below, each plane given one value (light, two halftones, shadow)
                 pm = p[m]
-                nc = self.normal(pm, 0.08 * nd.scale)
+                nc = self.normal(pm, 0.025 * nd.scale)
                 n[m] = norm(n[m] * (1 - nd.planes) + nc * nd.planes)
                 pl[m] = nd.planes
         pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * t[idx])[:, None]

@@ -408,56 +408,128 @@ FING = [  # x at knuckle, y at knuckle, length, base radius, tip radius, spread 
 PHAL = (0.46, 0.30, 0.24)
 
 
-def hand_prims(M, O, L, side, preset, extra=None, girth=1.0):
+class HandPrims(Prims):
+    """A hand: the palm mass (palm slab, knuckle row, thenar and hypothenar pads, metacarpals, the
+    web of the thumb) blended smoothly, and each finger and the thumb as its own chain of cones,
+    joined to the palm but not to each other. Neighbouring fingers stay separate forms with a dark
+    crease between them, so a hand seen from its fingertips still reads as fingers by overlap
+    (hands-feet.md, section 2) instead of melting into a knob. Nails are kept apart for colour."""
+
+    def __init__(self):
+        super().__init__()
+        self.palm, self.chains, self.nails = Prims(), [], Prims()
+
+    def finalize(self):
+        self.cones = self.palm.cones + [c for ch in self.chains for c in ch.cones]
+        self.ells = self.palm.ells + [e for ch in self.chains for e in ch.ells]
+
+    def fn(self, k):
+        fp = self.palm.fn(k)
+        chs = [ch.fn(k * 0.25) for ch in self.chains]
+
+        def f(p):
+            d = fp(p)
+            if chs:
+                dc = chs[0](p)
+                for g in chs[1:]:
+                    dc = np.minimum(dc, g(p))
+                d = smin(d, dc, k)
+            return d
+        return f
+
+
+def _chain_pose(base, Rf, segs, angs, collide, seek, axis_flex=True):
+    """Walk a finger: segs [(length, r_start, r_end)], angs the flexion at each joint (deg). With a
+    collide(p) -> distance function, each joint is bent so its segment rests on the surface instead
+    of passing through it: a phalanx that would sink in is extended (or curled) to the nearest angle
+    that keeps it out; with `seek`, a phalanx that hangs just above a surface curls down onto it."""
+    pts, p0, R_ = [base], base, Rf
+    for j, ((ln, r1, r2), ang) in enumerate(zip(segs, angs)):
+        def end(a):
+            Rn = R_ @ rx(-R(a))
+            return Rn, p0 + Rn @ V(0, -ln, 0)
+        Rn, p1 = end(ang)
+        if collide is not None:
+            def gap(a):
+                _, q1 = end(a)
+                qs = np.stack([q1, (p0 + q1) / 2]).astype(np.float32)
+                return float(np.min(collide(qs) - np.array([r2, (r1 + r2) / 2])))
+            g0 = gap(ang)
+            if g0 < -0.1 * r2 or (seek and g0 > 0.3 * r2 and g0 < 2.5 * r1):
+                best, bestc = ang, None
+                for dlt in np.linspace(-50, 70, 25):
+                    a = ang + dlt
+                    gg = gap(a)
+                    cost = abs(dlt) * 0.002 + (10 if gg < -0.05 * r2 else 0) + (abs(gg) / r2 if seek else 0)
+                    if bestc is None or cost < bestc:
+                        best, bestc = a, cost
+                Rn, p1 = end(best)
+        pts.append(p1)
+        R_ = Rn
+        p0 = p1
+    return pts, R_
+
+
+def hand_prims(M, O, L, side, preset, extra=None, girth=1.0, collide=None):
     """Hand geometry: M local->world rotation (fingers along local -y, palm +z, thumb +x*side),
-    O the wrist, L the hand length. Returns Prims."""
+    O the wrist, L the hand length. `collide` (world points -> distance to what the hand touches)
+    keeps the fingers out of objects and lets a resting or holding hand settle onto them.
+    Returns HandPrims."""
     h = dict(HANDS.get(preset, HANDS["relaxed"])) if isinstance(preset, str) else dict(HANDS["relaxed"], **preset)
     if extra:
         h.update(extra)
-    P = Prims()
+    P = HandPrims()
     g = girth
+    seek = collide is not None and (preset if isinstance(preset, str) else "") in ("rest", "hold", "grip", "push_hair", "cup")
 
     def W(v):
         v = np.asarray(v, np.float32) * L
         v[0] *= side
         return O + M @ v
-
-    def Wd(v):
-        v = np.asarray(v, np.float32).copy(); v[0] *= side
-        return M @ v
-    # palm: a flat, slightly cupped slab with the thenar and hypothenar pads
     Mp = M @ np.diag([side, 1, 1]).astype(np.float32)
-    P.ell(W([0.0, -0.29, -0.01]), Mp, np.array([0.215, 0.24, 0.062 * g], np.float32) * L)
-    P.ell(W([0.0, -0.46, -0.0]), Mp, np.array([0.2, 0.07, 0.058 * g], np.float32) * L)          # knuckle row
-    P.ell(W([0.115, -0.21, 0.03]), Mp @ rz(R(-28)), np.array([0.095, 0.17, 0.075 * g], np.float32) * L)   # thenar
-    P.ell(W([-0.13, -0.3, 0.02]), Mp, np.array([0.07, 0.17, 0.06 * g], np.float32) * L)               # hypothenar
-    P.cone(W([0, -0.0, 0]), W([0, -0.12, 0]), 0.15 * L, 0.18 * L)  # wrist into palm
+    pa = P.palm
+    # palm: a flat, slightly cupped slab with the thenar and hypothenar pads
+    pa.ell(W([0.0, -0.29, -0.01]), Mp, np.array([0.215, 0.24, 0.062 * g], np.float32) * L)
+    pa.ell(W([0.0, -0.46, -0.0]), Mp, np.array([0.2, 0.07, 0.058 * g], np.float32) * L)          # knuckle row
+    pa.ell(W([-0.13, -0.3, 0.02]), Mp, np.array([0.07, 0.17, 0.06 * g], np.float32) * L)          # hypothenar
+    pa.cone(W([0, -0.0, 0]), W([0, -0.12, 0]), 0.15 * L, 0.18 * L)                                 # wrist into palm
     flex = h["f"]
     sp = h.get("spread", 6)
     for i, (x, y, ln, rb, rt, sw) in enumerate(FING):
         mcp, pip, dip = flex[i]
         base = W([x, y, 0.0])
-        P.cone(W([x * 0.55, -0.12, 0]), base, 0.055 * L * g, rb * L * g)  # metacarpal
-        Rf = M @ np.diag([side, 1, 1]).astype(np.float32) @ rz(R(sp * sw)) @ rx(-R(mcp))
-        p0 = base
+        pa.cone(W([x * 0.55, -0.12, 0]), base, 0.055 * L * g, rb * L * g)                         # metacarpal
+        pa.ell(base + Mp @ V(0, 0.005, -0.03) * L, Mp, V(0.05, 0.045, 0.035) * L * g)               # the knuckle on the back of the hand
+        Rf = Mp @ rz(R(sp * sw)) @ rx(-R(mcp))
         rads = np.linspace(rb, rt, 4) * L * g
-        for j, ang in enumerate((0, pip, dip)):
+        segs = [(ln * PHAL[j] * L, rads[j], rads[j + 1]) for j in range(3)]
+        pts, Rend = _chain_pose(base, Rf @ rx(R(mcp)), segs, (mcp, pip, dip), collide, seek)
+        ch = Prims()
+        for j in range(3):
+            ch.cone(pts[j], pts[j + 1], segs[j][1], segs[j][2])
             if j:
-                Rf = Rf @ rx(-R(ang))
-            p1 = p0 + Rf @ V(0, -ln * PHAL[j] * L, 0)
-            P.cone(p0, p1, rads[j], rads[j + 1])
-            p0 = p1
+                ch.ell(pts[j], Mp, V(1.1, 1.0, 1.0) * segs[j - 1][2] * 1.04)                           # the joint, a little wider than the shaft
+        P.chains.append(ch)
+        tip, nail_dir = pts[3], Rend @ V(0, 0, -1)                                                  # nail on the back of the last phalanx
+        P.nails.ell(tip + Rend @ V(0, 0.3 * segs[2][0], -0.66 * segs[2][2]), Rend, V(0.72, 0.3 * segs[2][0] / segs[2][2], 0.3) * segs[2][2])
+    # the thumb: its real base is low on the wrist; the pad faces across the palm, so it flexes
+    # toward the little finger, not toward the palm (hands-feet.md, section 1)
     t_out, t_palm, t_opp, t_mcp, t_ip = h["thumb"]
-    base = W([0.1, -0.1, 0.02])
-    # the thumb's pad faces across the palm, so it flexes toward the little finger, not the palm
-    Rt = M @ np.diag([side, 1, 1]).astype(np.float32) @ rz(R(t_out)) @ rx(-R(t_palm * 0.7)) @ ry(-R(t_opp + 45))
-    p0 = base
-    for j, (ln, ang, r1, r2) in enumerate(((0.25, 0, 0.07, 0.062), (0.17, t_mcp, 0.062, 0.055), (0.145, t_ip, 0.055, 0.045))):
-        if j:
-            Rt = Rt @ rx(-R(ang))
-        p1 = p0 + Rt @ V(0, -ln * L, 0)
-        P.cone(p0, p1, r1 * L * g, r2 * L * g)
-        p0 = p1
+    base = W([0.1, -0.08, 0.025])
+    Rt = Mp @ rz(R(t_out)) @ rx(-R(t_palm * 0.7)) @ ry(-R(t_opp + 45))
+    segs = [(0.25 * L, 0.07 * L * g, 0.062 * L * g), (0.17 * L, 0.062 * L * g, 0.054 * L * g), (0.145 * L, 0.054 * L * g, 0.044 * L * g)]
+    pts, Rend = _chain_pose(base, Rt, segs, (0, t_mcp, t_ip), collide, seek)
+    met_mid = (pts[0] + pts[1]) / 2
+    # the thenar pad wraps the thumb's metacarpal; the web joins the thumb to the index finger
+    pa.ell(met_mid + (W([0.0, -0.25, 0.03]) - met_mid) * 0.4, frame_along(pts[1] - pts[0]), V(0.105, 0.17, 0.085) * L * g)
+    pa.cone(pts[1] - (pts[1] - pts[0]) * 0.15, W([0.1, -0.36, 0.0]), 0.045 * L * g, 0.032 * L * g)
+    ch = Prims()
+    ch.cone(pts[1], pts[2], segs[1][1], segs[1][2]); ch.cone(pts[2], pts[3], segs[2][1], segs[2][2])
+    ch.ell(pts[2], Mp, V(1.06, 1, 1) * segs[1][2])
+    P.chains.append(ch)
+    pa.cone(pts[0], pts[1], segs[0][1], segs[0][2])
+    P.nails.ell(pts[3] + Rend @ V(0, 0.3 * segs[2][0], -0.66 * segs[2][2]), Rend, V(0.74, 0.3 * segs[2][0] / segs[2][2], 0.3) * segs[2][2])
+    P.finalize()
     return P
 
 
@@ -466,12 +538,12 @@ def hand_prims(M, O, L, side, preset, extra=None, girth=1.0):
 EXPRESSIONS = {
     "neutral": {},
     "calm": {"25": 0.05},
-    "smile": {"6": 0.7, "12": 0.75},
-    "laugh": {"6": 1.0, "12": 1.0, "25": 1.0, "26": 0.75, "10": 0.45, "7": 0.35},
+    "smile": {"6": 0.75, "12": 0.8},
+    "laugh": {"6": 1.0, "12": 1.0, "25": 1.0, "26": 0.6, "10": 0.45, "7": 0.3},
     "gasp": {"1": 0.7, "2": 0.6, "5": 0.6, "25": 1.0, "26": 0.55, "27": 0.15},
     "surprise": {"1": 1.0, "2": 1.0, "5": 0.8, "25": 1.0, "26": 0.9},
-    "fear": {"1": 1.0, "2": 0.7, "4": 0.7, "5": 1.0, "7": 0.25, "20": 1.0, "25": 1.0, "26": 0.45},
-    "scream": {"1": 0.8, "2": 0.5, "4": 0.9, "5": 0.8, "7": 0.5, "20": 1.0, "25": 1.0, "26": 0.9, "27": 0.8, "10": 0.3},
+    "fear": {"1": 1.0, "2": 0.7, "4": 0.7, "5": 1.0, "20": 1.0, "25": 1.0, "26": 0.45},
+    "scream": {"1": 0.9, "2": 0.6, "4": 0.9, "5": 0.9, "20": 1.0, "25": 1.0, "26": 0.8, "27": 0.9, "10": 0.3},
     "sorrow": {"1": 1.0, "4": 0.7, "15": 0.9, "17": 0.6, "41": 0.35},
     "sleep": {"43": 1.0, "25": 0.12, "26": 0.08},
     "anger": {"4": 1.0, "5": 0.5, "7": 0.8, "23": 0.9, "17": 0.3},
@@ -489,211 +561,469 @@ def au_of(expr):
     return a
 
 
+class Poly:
+    """A convex block as the intersection of half-spaces, mirrored in x (a symmetric head): the
+    painter's big planes made literal. Planes are (normal, point); `tri` takes three landmarks."""
+
+    def __init__(self, inside):
+        self.inside = V(*inside)
+        self.N, self.P = [], []
+
+    def plane(self, n, p):
+        self.N.append(nrm(V(*n))); self.P.append(V(*p))
+        return self
+
+    def tri(self, a, b, c):
+        a, b, c = V(*a), V(*b), V(*c)
+        n = nrm(np.cross(b - a, c - a))
+        if float(n @ (self.inside - a)) > 0:
+            n = -n
+        self.N.append(n); self.P.append(a)
+        return self
+
+    def done(self):
+        self.Na = np.stack(self.N); self.Ca = (self.Na * np.stack(self.P)).sum(1)
+        return self
+
+    def __call__(self, q, k):
+        qm = q.copy(); qm[:, 0] = np.abs(qm[:, 0])
+        D = qm @ self.Na.T - self.Ca
+        d = D[:, 0]
+        for j in range(1, D.shape[1]):
+            d = smax(d, D[:, j], k)
+        return d
+
+
+def ell_d(q, c, r):
+    """Ellipsoid distance (approximate, conservative), centre c, radii r; q (N,3)."""
+    a = (q - c) / r
+    k0 = np.sqrt((a * a).sum(1))
+    b = a / r
+    k1 = np.sqrt((b * b).sum(1))
+    return k0 * (k0 - 1) / (k1 + 1e-9)
+
+
+def seg_d(q, a, b, r):
+    pa, ba = q - a, b - a
+    h = np.clip((pa @ ba) / float(ba @ ba + 1e-12), 0, 1)
+    return np.linalg.norm(pa - h[:, None] * ba, axis=1) - r
+
+
+def mirror(q):
+    qm = q.copy(); qm[:, 0] = np.abs(qm[:, 0])
+    return qm
+
+
+def face_shape(body):
+    """Landmarks of a head one unit tall (crown y=+0.5, chin y=-0.5, x = the person's left, z
+    forward, origin at mid height over the ear). Adult values are Farkas's North American norms
+    (Farkas 2005 via Al-Sebaei 2015, docs/subjects/face.md): thirds upper/middle/lower 67.1/54.8/72.6
+    mm (men) and 63.0/50.6/64.3 (women), eye fissure 31.3/30.7, intercanthal 33.3/31.8, nose width
+    34.9/31.4, over a head height of about 232/218 mm (judgement, the common vertex-menton means).
+    Sex, child and old modifiers follow face.md section 4."""
+    fem, old, child = body.fem, body.old, body.child
+    g = lambda m, f: m + (f - m) * fem
+    S = {}
+    fv = 1 - 0.16 * child                       # children: the face (eye line to chin) is a smaller share
+    ye = -0.5 + 0.5 * fv
+    S["ye"] = ye
+    S["Y"] = lambda t: ye - t * (ye + 0.5)      # t: fraction of the way from the eye line to the chin
+    Y = S["Y"]
+    S["t_sn"] = g(0.36, 0.365) + 0.08 * child   # nose base, as a share of eye line to chin (Met references: 0.32-0.38 adults, 0.45 a boy)
+    S["t_sto"] = g(0.565, 0.57) + 0.07 * child    # mouth line (references 0.54-0.61 adults, 0.65 a boy)
+    S["y_sn"], S["y_sto"] = Y(S["t_sn"]), Y(S["t_sto"])
+    S["y_brow"] = ye + g(0.066, 0.074) - 0.006 * child
+    S["x_eye"] = g(0.134, 0.136) * (1 + 0.07 * child)          # pupil: (en-en + ex-ex) / 4; a child's eyes are wider apart (Tuts+)          # pupil: (en-en + ex-ex) / 4
+    S["w_eye"] = g(0.135, 0.141) * (1 + 0.16 * child) * (1 - 0.06 * old)   # fissure; the eye gap narrows with age (Skomina 2020)
+    S["re"] = g(0.052, 0.055) * (1 + 0.28 * child)             # a 24 mm eyeball
+    S["z_e"] = 0.212 + 0.004 * fem
+    S["zg"] = g(0.352, 0.338) - 0.012 * child                  # glabella: flatter brow region in women (Skomina 2020)
+    S["tilt"] = R(g(14, 7) - 7 * child)                        # forehead slope back from vertical
+    S["ridge"] = g(0.024, 0.008) * (1 - child)                 # brow ridge
+    S["z_n"] = g(0.318, 0.322) - 0.018 * child                 # nasion: children's bridge is low
+    S["z_tip"] = g(0.448, 0.428) - 0.06 * child + 0.006 * old
+    S["x_al"] = g(0.07, 0.066) * (1 - 0.12 * child) * (1 + 0.15 * old)   # nose width about the inner-eye distance (Farkas: 34.9/33.3, 31.4/31.8 mm); wider when old
+    S["bw"] = g(0.022, 0.018) * (1 - 0.2 * child)              # nose bridge half width
+    S["y_tip"] = S["y_sn"] + 0.034 - 0.014 * old + 0.006 * fem + 0.008 * child   # the tip droops with age
+    S["x_zy"] = g(0.283, 0.286) * (1 - 0.02 * child)              # zygomatic half width (zy-zy about 0.57-0.6 of the head height)
+    S["x_t"] = g(0.268, 0.272)
+    S["x_go"] = g(0.232, 0.212) * (1 - 0.14 * child)            # men: wider jaw at gonion (Skomina 2020)
+    S["y_go"] = Y(g(0.72, 0.66))
+    S["z_go"] = g(-0.045, -0.025)
+    S["x_ch"] = g(0.085, 0.06) * (1 - 0.2 * child)
+    S["z_pog"] = g(0.352, 0.338) - 0.035 * child
+    S["cx"] = g(0.114, 0.116) * (1 - 0.12 * child)             # mouth half width (ch-ch 53 / 50 mm)
+    S["hu"] = g(0.026, 0.032) * (1 - 0.45 * old)               # vermilion heights; they narrow with age
+    S["hl"] = g(0.034, 0.042) * (1 - 0.4 * old)
+    S["tu"] = g(0.011, 0.014) * (1 - 0.3 * old)
+    S["tl"] = g(0.013, 0.017) * (1 - 0.3 * old)
+    S["z_bar"] = g(0.372, 0.366) - 0.02 * child                # front of the muzzle barrel (upper lip)
+    S["full"] = g(0.75, 1.0) + 0.9 * child - 0.3 * old         # cheek fullness
+    return S
+
+
 def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_col=None, gloss=0.0, gaze=(0, 0)):
-    """A head built from the masses a painter uses (cranium ball, face front, brow ridge, cheekbones,
-    nose wedge, muzzle barrel, jaw, cheek pads, lids), deformed by action units. O = head centre
-    (mid height, at the ear), M = head local->world, H = head height."""
+    """A head built the way a painter blocks one in: the cranium ball with its flat side, then the big
+    planes of the face as literal planes (forehead front and sides, the cheek's front and side, the
+    jaw's side and underside, the chin, the nose's front, sides and base), the muzzle barrel, eye
+    sockets carved under the brow with eyeballs and lids in them, lips as volumes on the barrel, and
+    soft masses (cheek pads, brows, jowls) that the action units move. O = head centre (mid height,
+    at the ear), M = head local->world, H = head height. `planes` (0-1) sets how crisp the plane
+    breaks are; 0 is a soft form."""
     H = body.u
     au = au_of(o.get("expression", "neutral"))
     A = lambda k: float(au.get(k, 0.0))
     fem, old, child = body.fem, body.old, body.child
-    sx = body.g(1.0, 0.94)
-    # ---------- action units -> parameters (normalized head units)
-    jaw = R(3 + 20 * A("26") + 12 * A("27") + 2 * A("25"))
-    cx = 0.105 + 0.045 * A("12") + 0.04 * A("20") - 0.02 * A("23") - 0.025 * max(A("26") - A("12") - A("20"), 0) - 0.006 * A("15")
-    cy = -0.312 + 0.045 * A("12") - 0.03 * A("15") - 0.012 * A("20") + 0.01 * A("10") - 0.006 * A("17")
-    up_mid = -0.298 + 0.03 * A("10") + 0.006 * A("25") + 0.005 * A("12") - 0.008 * A("17") * (1 - A("25"))
-    opening = 0.0045 * A("25") + 0.30 * math.sin(jaw - R(3)) + 0.01 * A("20") * A("25")
-    lo_mid = up_mid - opening - 0.004
-    # outline exponents (superellipse): 2 = oval (surprise), high = square (fear's stretched mouth),
-    # low upper with a deep lower = the laugh's upturned crescent
-    pu = 2.0 + 3.0 * A("20") - 0.8 * A("12")
-    pl = 2.0 + 2.0 * A("20") + 0.4 * A("12")
-    lid_u = 0.04 + 0.022 * A("5") - 0.012 * A("7") - 0.03 * A("6") * 0.4 - 0.02 * A("41") - 0.045 * max(A("43"), A("45"))
-    lid_l = -0.036 + 0.03 * A("6") + 0.012 * A("7") + 0.008 * A("43") - 0.006 * A("5")
-    lid_u = max(lid_u, lid_l + 0.002)
-    if A("43") > 0.6:
-        lid_u = lid_l + 0.001
-    brow_in = 0.035 * A("1") - 0.026 * A("4")
-    brow_out = 0.032 * A("2") - 0.012 * A("4") - 0.01 * old
-    knit = 0.016 * A("4")
-    cheek_up = 0.045 * A("6") + 0.02 * A("12") + 0.012 * A("10")
-    chin_up = 0.02 * A("17")
+    S = face_shape(body)
+    Y, ye = S["Y"], S["ye"]
+    planes = float(o.get("planes", 0.45))
+    kp = (0.008 + 0.045 * (1 - planes)) * (1 + 0.5 * fem + 0.6 * child) * (1 - 0.3 * old)   # plane-break softness (judgement)
+
+    # ---------- action units -> parameters (judgement, calibrated by eye against face.md section 5)
+    au["25"] = max(A("25"), 0.7 * A("10") * (1 - A("23")))      # a raised upper lip parts the lips (AU10)
+    jaw = R(2 + 22 * A("26") + 12 * A("27") + A("25"))
+    drop = 0.42 * math.sin(jaw - R(2))
+    sto = S["y_sto"]
+    cx = S["cx"] + 0.034 * A("12") + 0.04 * A("20") - 0.02 * A("23") - 0.022 * max(A("26") - A("12") - A("20"), 0) - 0.006 * A("15")
+    cy = sto + 0.042 * A("12") - 0.03 * A("15") - 0.014 * A("20") + 0.008 * A("10") - 0.004 * A("17")
+    up_mid = sto + 0.002 + 0.024 * A("10") + 0.005 * A("25") + 0.01 * A("12") * A("25") - 0.006 * A("17") * (1 - A("25"))
+    lo_mid = up_mid - 0.004 * A("25") - drop - 0.022 * A("20") * A("25") - 0.01 * A("27")
+    if A("25") < 0.2 and drop < 0.01:
+        lo_mid = up_mid
+    drop_c = drop * 0.92            # how far the lower lip's edge moved with the jaw (rotation plus glide; judgement)
+    pu = max(2.0 + 3.0 * A("20") - 0.9 * A("12"), 1.05)
+    pl = 2.0 + 2.5 * A("20") + 0.8 * A("12")
+    lid_u = 0.022 + 0.003 * fem + 0.003 * child + 0.017 * A("5") - 0.003 * A("7") - 0.002 * A("6") - 0.012 * A("41") - 0.004 * old
+    lid_l = 0.019 - 0.004 * A("5") - 0.007 * A("7") - 0.006 * A("6") - 0.002 * A("12")
+    closed = max(A("43"), A("45"))
+    lid_u = lid_u * (1 - closed) - 0.004 * closed
+    lid_l = lid_l * (1 - closed) - 0.004 * closed
+    b_in = 0.03 * A("1") - 0.022 * A("4") - 0.004 * A("6")       # inner brow lift
+    b_out = 0.03 * A("2") - 0.01 * A("4") - 0.012 * old - 0.004 * A("6")
+    knit = 0.014 * A("4")
+    cheek_up = 0.028 * A("6") + 0.014 * A("12") + 0.01 * A("10") - 0.03 * old
     sneer = A("9")
+    cheek_up += 0.015 * sneer
+    b_in -= 0.012 * sneer
+    chin_up = 0.02 * A("17")
 
     M = np.asarray(M, np.float32)
-    Mt = M.T
-    pivot = V(0, -0.12, -0.035)
-    Rj = rx(jaw)                      # jaw opens by rotating down about the jaw hinge
-    Rjt = Rj.T
-    lips = hx(lip_col) if lip_col else hx(skin) * V(1.02, 0.78, 0.78)
+    pivot = V(0, ye - 0.07, -0.03)               # the jaw hinge, in front of the ear
+    Rj = rx(jaw)
+    glide = V(0, -0.01, 0.16) * math.sin(jaw - R(2))   # the condyle slides forward as the mouth opens (judgement)
     sk = hx(skin)
-    teeth, mouthc = hx("#d8d0c0"), hx("#3a1612")
+    lips = hx(lip_col) if lip_col else sk * V(1.0, 0.8, 0.8)
+    teeth, mouthc = hx("#a89e8c"), hx("#1e0c0a")
+    hd = o.get("hair")
+    hcol = (hd if isinstance(hd, str) else hd.get("color")) if hd else None
+    brow_col = hx(o.get("brows", hcol or "#3a2a20"))
 
-    # ---------- primitives, normalized units (scaled by H when evaluated)
-    skull = Prims()
-    crn = 1 + 0.08 * child
-    skull.ell(V(0, 0.1 + 0.02 * child, -0.06), np.eye(3), V(0.32 * sx, 0.385, 0.405) * crn)
-    fsc = 1 - 0.12 * child                     # a child's face is smaller and sits lower
-    fy = -0.03 * child
-    skull.ell(V(0, -0.06 + fy, 0.1), np.eye(3), V(0.272 * sx, 0.26 * fsc, 0.24))      # face front to the upper jaw
-    skull.ell(V(0, -0.15 + fy, 0.15), np.eye(3), V(0.2 * sx, 0.12 * fsc, 0.13))       # maxilla under the cheeks
-    bro = body.g(0.05, 0.036) * (1 - 0.5 * child)
-    for s in (1, -1):
-        skull.cone(V(s * 0.205, 0.075 + fy, 0.215), V(s * 0.03, 0.07 + fy, 0.29), bro * 0.85, bro)
-        skull.ell(V(s * 0.19, -0.06 + fy, 0.18), rz(R(s * 15)), V(0.08, 0.05, 0.08) * fsc)   # cheekbone
-        skull.ell(V(s * 0.325, -0.07 + fy, -0.07), ry(R(s * 22)) @ rx(R(-12)), V(0.022, 0.12 + 0.02 * old, 0.065))  # ear
-    mz = Prims()   # the muzzle barrel and upper lip (skull-fixed)
-    mz.ell(V(0, -0.26 + fy, 0.18), np.eye(3), V(0.165 * sx, 0.085, 0.14) * fsc)         # upper muzzle (maxilla)
-    mz.ell(V(0, -0.286 + fy + 0.5 * (up_mid + 0.298), 0.297), rx(R(-12)), V(0.1 * sx, 0.034 + 0.008 * fem - 0.008 * old, 0.045) * fsc)
-    nose = Prims()
-    nl = 1 + 0.08 * old - 0.25 * child
-    tip = V(0, -0.19 * nl + fy - 0.01 * old + 0.012 * sneer, 0.4 - 0.03 * child)
-    nose.cone(V(0, 0.03 + fy, 0.292), tip, 0.03, body.g(0.044, 0.038))
-    for s in (1, -1):
-        nose.ell(V(s * 0.048, -0.2 * nl + fy + 0.012 * sneer, 0.315), np.eye(3), V(0.038, 0.034, 0.042) * (1 + 0.1 * sneer))
-    nose.ell(tip + V(0, -0.012, -0.03), np.eye(3), V(0.03, 0.03, 0.04))
-    jw = Prims()   # mandible, chin, lower lip: these move with the jaw
-    gx = body.g(0.255, 0.235) * (1 - 0.1 * child)
-    jr = body.g(0.075, 0.06)
-    for s in (1, -1):
-        jw.cone(V(s * gx, -0.24 + fy, -0.05), V(s * 0.055, -0.455 + fy + chin_up * 0.5, 0.215), jr, body.g(0.062, 0.05))
-        jw.ell(V(s * 0.115, -0.32 + fy, 0.1), np.eye(3), V(0.075, 0.085, 0.09))
-    jw.ell(V(0, -0.435 + fy + chin_up, 0.225 + chin_up * 0.5), np.eye(3), V(body.g(0.1, 0.08), 0.075, 0.075) * fsc)
-    jw.ell(V(0, -0.36 + fy, 0.17), np.eye(3), V(0.15 * sx, 0.08, 0.13) * fsc)          # lower muzzle, moves with the jaw
-    lip_lo_y = -0.345 + fy + chin_up * 0.6
-    jw.ell(V(0, lip_lo_y, 0.282), rx(R(14)), V(0.088 * sx, 0.036 + 0.008 * fem - 0.008 * old, 0.046) * fsc)
-    soft = Prims()   # cheek pads, brows, jowls: soft tissue moved by the action units
-    for s in (1, -1):
-        soft.ell(V(s * (0.145 + 0.01 * A("12")), -0.15 + fy + cheek_up - 0.03 * old, 0.215 + 0.025 * cheek_up / 0.06),
-                 rz(R(s * -20)), V(0.085, 0.08, 0.07) * (1 + 0.6 * cheek_up) * (1 + 0.1 * child) * (1 - 0.15 * old))
-        soft.ell(V(s * (0.07 - knit), 0.068 + fy + brow_in, 0.285 + 0.01 * A("4")), rz(R(s * (8 - 25 * A("1") + 10 * A("4")))), V(0.06, 0.026, 0.038))
-        soft.ell(V(s * 0.17, 0.072 + fy + brow_out, 0.248), rz(R(s * (-8 + 10 * A("2")))), V(0.07, 0.024, 0.036))
-        soft.ell(V(s * 0.17, -0.2 + fy, 0.12), np.eye(3), V(0.09, 0.11, 0.1) * (1 - 0.45 * old) * (1 + 0.15 * child))  # buccal fat
-        if old > 0:
-            soft.ell(V(s * 0.17, -0.38 + fy, 0.11), np.eye(3), V(0.07, 0.07, 0.08) * old)      # jowls
-            soft.ell(V(s * 0.115, -0.07 + fy, 0.25), np.eye(3), V(0.06, 0.025, 0.035) * old)   # under-eye bags
-    eyes = [V(s * 0.108, -0.005 + fy * 0.5, 0.245) for s in (1, -1)]
-    re = 0.054 * (1 + 0.1 * child)
-    teeth_up = (V(0, -0.315 + fy, 0.17), V(0.082, 0.03, 0.105))
+    # ---------- the cranium: a ball with its side cut flat (Loomis)
+    cr_c = V(0, 0.1 + 0.02 * child, -0.06)
+    cr_r = V(0.33 * body.g(1, 0.97), 0.385, 0.405) * (1 + 0.08 * child)     # head breadth about 0.65 of its height (151/232 mm)
+    x_side = 0.318 * body.g(1, 0.97) * (1 + 0.05 * child)
+
+    # ---------- the upper face: forehead, temples, cheek planes (fixed to the skull)
+    zg, tl_, yb = S["zg"], S["tilt"], S["y_brow"]
+    xe, re_, ze = S["x_eye"], S["re"], S["z_e"]
+    zfh = lambda y: zg - (y - yb) * math.tan(tl_)            # forehead front at height y
+    up = Poly((0, ye - 0.05, 0.0))
+    xt, xz, xg, ygo, zgo = S["x_t"], S["x_zy"], S["x_go"], S["y_go"], S["z_go"]
+    ysn = S["y_sn"]
+    F1 = (0.13, yb + 0.12, zfh(yb + 0.12) - 0.024)                  # forehead: the front plane's outer edge, high and low
+    F2 = (0.15, yb + 0.005, zfh(yb) - 0.03)
+    T1 = (xt, yb + 0.15, 0.08)                                       # temple
+    Ac = (0.075, ye - 0.06, 0.318)                                   # cheek front, beside the nose under the inner eye
+    Bk = (xe + 0.062, ye - 0.075, 0.245 - 0.008 * fem)               # cheekbone corner (zygoma), under the outer eye
+    Cc = (0.105, ysn - 0.005, 0.312)                                 # cheek beside the nostril
+    Dz = (xz, ye - 0.04, 0.06)                                       # zygomatic arch
+    Mc = (0.158, Y(0.6), 0.25 + 0.012 * fem)                         # where the muzzle turns into the side of the face
+    E2 = (xz - 0.045, Y(0.5), 0.075)                                 # side of the face under the arch (masseter)
+    Go = (xg, ygo, zgo)
+    up.plane((0, math.sin(tl_), math.cos(tl_)), (0, yb, zg))         # forehead front
+    Or = (xe + 0.08, ye + 0.01, ze + 0.0)                            # the outer rim of the orbit
+    up.tri(F1, Or, T1)                                               # forehead side, turning to the temple
+    up.plane((0.95, 0.05, 0.3), (xt, ye, 0.12))                      # temple
+    up.plane((0, 0.8, 0.6), (0, 0.31, zfh(0.31)))                    # forehead top turns back to the crown
+    up.plane((0, -0.94, 0.34), (0, ye - 0.01, zg))                   # under the brow: the socket's roof
+    up.plane((0, 0, -1), (0, 0, -0.12))
+    up.plane((0, 1, 0), (0, 0.33, 0))
+    up.done()
+    # the mandible's landmarks (its block moves with the jaw; the cheek block shares its side planes)
+    xc, zp = S["x_ch"], S["z_pog"]
+    zme = zp - 0.075
+    Me = (0, -0.5, zme)
+    J3 = (xc + 0.055, -0.475, zp - 0.1)                              # the jawline near the chin
+    G = (xg + 0.012, Y(0.62), -0.06)
+    Nl = (0.118, Y(0.5), 0.306)                                      # beside the top of the mouth corner (the nasolabial line)
+    Bk2 = (Bk[0] + 0.02, Bk[1] - 0.045, Bk[2] - 0.045)               # just below the cheekbone corner
+    ck = Poly((0, ye - 0.1, 0.0))                                    # the cheeks and the middle of the face
+    jw = Poly((0, Y(0.62), 0.12))
+    for P_ in (ck, jw):                                              # shared planes: no step at the side of the face
+        P_.tri(Bk2, Mc, E2)                                          # lower cheek, under the zygoma down to the mouth's corner
+        P_.tri(Dz, E2, G)                                            # side of the face
+        P_.plane((0.25, -0.3, -0.92), Go)                            # ramus back
+        P_.tri(Me, Go, (-Go[0], Go[1], Go[2]))                       # underside, rising from the chin to the jaw angle
+        P_.tri(J3, Go, (xc + 0.02, -0.5, zme - 0.03))                # the jawline's lower turn
+        P_.plane((0, 0, -1), (0, 0, -0.13))
+    ck.tri(Ac, Bk, Nl)                                               # cheek front, its lower edge running from the zygoma to the mouth
+    ck.tri(Bk, Dz, (xz - 0.045, Y(0.6), 0.2))                        # cheekbone side (gives way to the lower cheek below)
+    ck.plane((0.8, 0.55, 0.22), (Dz[0], Dz[1] + 0.02, Dz[2]))         # top of the cheekbone, turning in to the temple
+    ck.plane((0.95, 0.05, 0.3), (xt, ye, 0.12))                      # temple
+    ck.plane((0, -0.1, 1), (0, Y(0.4), 0.33))                        # behind the barrel
+    ck.plane((0, 0.2, 1), (0, ye, 0.318))                            # the nose root between the eyes
+    yb0, yb1 = S["y_sto"] + 0.005, Y(0.8)
+    ck.plane((0, -0.43, yb0 - yb1), (0, yb0, 0.33))                  # under the cheeks: front at the mouth, back at the jaw angle
+    ck.plane((0, 1, 0), (0, yb, 0))
+    ck.done()
+    J1 = (Mc[0] - 0.005, Y(0.66), Mc[2] - 0.01)
+    jw.plane((0, -0.12, 1), (0, Y(0.88), zp))                        # chin front
+    jw.tri((xc, Y(0.8), zp - 0.015), (xc, -0.49, zp - 0.05), J3)     # chin side
+    jw.plane((0, -0.7, 0.72), (0, -0.495, zme + 0.03))               # chin's lower turn
+    jw.plane((0, 1, 0), (0, Y(0.45), 0))
+    jw.done()
+
+    # ---------- the nose: a wedge with front, sides and base, alae and a tip
+    yn, zn = ye + 0.035, S["z_n"]
+    T = V(0, S["y_tip"], S["z_tip"])
+    ysn = S["y_sn"]
+    zsn = S["z_tip"] - 0.068
+    xa = S["x_al"]
+    bw = S["bw"]
+    nz = Poly((0, (yn + ysn) / 2, 0.25))
+    dT = T - V(0, yn, zn)
+    nz.plane((0, float(dT[2]), float(-dT[1])), (0, yn, zn))                                           # dorsum (front)
+    nz.tri((bw, yn, zn - 0.012), (bw + 0.016, T[1] + 0.01, T[2] - 0.02), (xa - 0.02, ysn + 0.03, 0.335))   # side
+    nz.tri((0, float(T[1]) - 0.02, float(T[2]) - 0.01), (0, ysn, zsn), (xa - 0.004, ysn + 0.004, 0.34))   # base
+    nz.plane((0, 0, -1), (0, 0, 0.27))
+    nz.plane((0, 1, 0.2), (0, yn + 0.02, zn))
+    nz.done()
+    al_c = V(xa - 0.02, ysn + 0.016 + 0.01 * sneer, 0.335)
+    al_r = V(0.026, 0.025, 0.033) * (1 + 0.1 * sneer)
+    tip_c = T - V(0, 0.006, 0.022)
+    tip_r = V(body.g(0.031, 0.026), 0.027, 0.026) * (1 - 0.15 * child)
+
+    # ---------- eyes
+    eyes = [V(s * xe, ye, ze) for s in (1, -1)]
+    lift_mean = 0.5 * (b_in + b_out)
+    sock_c = V(xe + 0.004, ye + 0.014 + 0.45 * lift_mean, ze + 0.074)
+    sock_r = V(0.08, 0.056 + 0.35 * max(lift_mean, 0), 0.078)
+    lid_r = V(S["w_eye"] / 2 + 0.004, re_ + 0.012, re_ + 0.007)
+    hw = S["w_eye"] / 2
     gaze_dir = nrm(ry(R(gaze[0])) @ rx(-R(gaze[1])) @ V(0, 0, 1))
-    sa, ma, na, ja, xa = skull.arrays(), mz.arrays(), nose.arrays(), jw.arrays(), soft.arrays()
 
-    def mouth2d(q):
-        x, y = np.abs(q[:, 0]), q[:, 1]
+    def fissure(q, e):
+        """Signed 2D distance-like value to the eye opening (negative inside), from the frontal view:
+        the upper lid's arc peaks toward the nose, the lower lid's lowest point lies outward, and the
+        outer corner sits a little higher (canthal tilt)."""
+        u = (np.abs(q[:, 0]) - abs(e[0]))
+        s = np.clip(u / hw, -1, 1)
+        v = q[:, 1] - e[1] - 0.004 * s
+        base = np.maximum(1 - s * s, 0)
+        vu = lid_u * base ** 0.55 * (1 - 0.15 * s)
+        vl = -lid_l * base ** 0.75 * (1 + 0.2 * s)
+        return np.maximum.reduce([v - vu, vl - v, np.abs(u) - hw]), v - vu, s
+
+    # ---------- the mouth: an opening on the barrel, lips as volumes around it
+    def edges(q):
+        x = np.abs(q[:, 0])
         t = np.clip(x / cx, 0, 1)
         yu = up_mid + (cy - up_mid) * (1 - (1 - t ** pu) ** (1 / pu))
         yl = lo_mid + (cy - lo_mid) * (1 - (1 - t ** pl) ** (1 / pl))
-        return np.maximum.reduce([x - cx, y - yu, yl - y])
+        return x, t, yu, yl
+
+    def mouth2d(q):
+        x, t, yu, yl = edges(q)
+        return np.maximum.reduce([x - cx, q[:, 1] - yu, yl - q[:, 1]])
+
+    opened = lo_mid < up_mid - 0.006
+
+    def barrel(q, y0, y1, zc_front):
+        rxb, rzb = body.g(0.158, 0.148) * (1 - 0.1 * child), 0.19
+        zc = zc_front - rzb
+        e = np.sqrt((q[:, 0] / rxb) ** 2 + ((q[:, 2] - zc) / rzb) ** 2) - 1
+        d = e * min(rxb, rzb)
+        return smax(smax(d, q[:, 1] - y0, 0.02), y1 - q[:, 1], 0.02)
 
     def local(p):
-        return ((p - O) @ M) / H     # world -> head local, normalized
+        return ((p - O) @ M) / H
+
+    def skull(q):
+        """The cranium and the forehead block only: what the hair sits on."""
+        d = ell_d(q, cr_c, cr_r)
+        d = smax(d, np.abs(q[:, 0]) - x_side, 0.05)
+        return smin(d, up(q, kp), 0.05)
 
     def sdf_local(q):
-        d = smin_exp(skull.raw(q, sa), 0.06)
-        d = smin(d, smin_exp(mz.raw(q, ma), 0.03), 0.06)
-        qj = (q - pivot) @ Rj + pivot          # points in the jaw's rest frame
-        dj = smin_exp(jw.raw(qj, ja), 0.05)
-        d = smin(d, dj, 0.07)
-        d = smin(d, smin_exp(soft.raw(q, xa), 0.03), 0.06)
-        d = smin(d, smin_exp(nose.raw(q, na), 0.02), 0.035)
-        # eye sockets
-        for e in eyes:
-            # no hole around the eye: only the fold between brow and upper lid, and a soft hollow
-            # at the inner corner beside the nose root
-            sock = np.linalg.norm((q - e - V(0, 0.036, 0.05)) / V(0.07, 0.03, 0.05), axis=1) - 1
-            d = smax(d, -sock * 0.03, 0.02)
-            inner = np.linalg.norm((q - e - V(-np.sign(e[0]) * 0.05, 0.0, 0.06)) / V(0.025, 0.035, 0.03), axis=1) - 1
-            d = smax(d, -inner * 0.02, 0.015)
-        # nasolabial furrow (deepens with the cheek raised)
-        fold = 0.008 * (A("12") + 0.6 * A("10") + 0.5 * old)
-        if fold > 0.002:
-            for s in (1, -1):
-                a = V(s * 0.065, -0.195 + fy, 0.31); b = V(s * (cx + 0.025), cy - 0.015, 0.25)
-                g = rc_batch(q, a[None], b[None], np.array([fold], np.float32), np.array([fold * 0.6], np.float32))[:, 0]
-                d = smax(d, -g, 0.008)
-        # forehead furrows when the brows lift; a vertical crease when they knit
+        qm = mirror(q)
+        qj = (q - pivot - glide) @ Rj + pivot      # points in the jaw's rest frame
+        qjm = mirror(qj)
+        # cranium with its flat side plane
+        d = smin(skull(q), ck(q, kp), 0.045)
+        if S["ridge"] > 0.002:                          # the brow ridge (bony, fixed)
+            br = seg_d(qm, V(0.03, yb - 0.004, zg - 0.012), V(xe + 0.07, yb + 0.002 - 0.01 * old, zfh(yb) - 0.085), S["ridge"])
+            d = smin(d, br, 0.025)
+        if child > 0:                                    # frontal bossing of the child's forehead
+            d = smin(d, ell_d(qm, V(0.09, yb + 0.15, zfh(yb + 0.15) - 0.12), V(0.13, 0.13, 0.12)), 0.04 * child + 1e-3)
+        if old > 0:                                      # temples hollow with age
+            d = smax(d, -ell_d(qm, V(S["x_t"] + 0.02, yb + 0.05, 0.12), V(0.03, 0.06, 0.06) * (0.3 + 0.7 * old)), 0.02)
+        # eye sockets: the plane under the brow turns into the socket
+        d = smax(d, -ell_d(qm, sock_c, sock_r), 0.022)
+        # cheek pads (malar fat): lifted and rounded by AU6/12, low and flat with age
+        pad_c = V(xe - 0.005 + 0.014 * A("12"), ye - 0.088 + cheek_up, 0.248 + 0.018 * A("6"))
+        pad_r = V(0.08, 0.058, 0.042) * (0.7 + 0.3 * S["full"]) * (1 + 0.18 * A("6") + 0.08 * A("12"))
+        d = smin(d, ell_d(qm, pad_c, pad_r), 0.045)
+        # the mandible, joined by the soft cheek; more blending as the jaw opens
+        dj = jw(qj, kp)
+        dj = smin(dj, ell_d(qj, V(0, Y(0.86) + chin_up, zp - 0.045 + 0.5 * chin_up), V(S["x_ch"] * 0.95, 0.055, 0.05)), 0.03)
+        d = smin(d, dj, 0.045 + 0.08 * (jaw - R(2)))
+        # the muzzle barrel: upper part on the skull, lower part on the jaw
+        d = smin(d, barrel(q, S["y_sn"] - 0.005, sto - 0.01, S["z_bar"]), 0.035)
+        d = smin(d, barrel(qj, sto + 0.01, Y(0.76), S["z_bar"] - 0.016 + chin_up * 0.5), 0.05)
+        if old > 0:   # jowls just above the jawline, outside the chin, and the fold between (not a muzzle)
+            d = smin(d, ell_d(qjm, V(xc + 0.065, Y(0.86), zp - 0.1), V(0.06, 0.03, 0.045) * old + 1e-3), 0.05)
+            d = smin(d, ell_d(qm, V(xe - 0.01, ye - 0.055, 0.262), V(0.04, 0.014, 0.018) * old + 1e-3), 0.01)   # lower-lid bags
+            d = smin(d, ell_d(qm, V(xe + 0.035, ye + 0.04, ze + 0.045), V(0.045, 0.016, 0.025) * old + 1e-3), 0.01)  # hooding
+        # the nose
+        dn = nz(q, kp * 0.6)
+        dn = smin(dn, ell_d(qm, al_c, al_r), 0.015)
+        dn = smin(dn, ell_d(q, tip_c, tip_r), 0.015)
+        d = smin(d, dn, 0.022)
+        # folds: nasolabial (cheek raised, age), marionette (age), glabella, forehead
+        fold = 0.007 * (A("12") + 0.6 * A("10") + 0.4 * A("6")) + 0.006 * old + 0.003
+        a = V(xa + 0.004, ysn + 0.024, 0.335); b = V(cx + 0.02, cy - 0.02, S["z_bar"] - 0.06)
+        d = smax(d, -seg_d(qm, a, b, fold), 0.012)
+        if old > 0:
+            d = smax(d, -seg_d(qjm, V(S["cx"] + 0.005, sto - 0.03, S["z_bar"] - 0.04), V(xc + 0.035, Y(0.9), zp - 0.07), 0.005 * old + 1e-4), 0.012)
         lift = 0.5 * (A("1") + A("2"))
-        if lift > 0.2:
-            mask = np.clip(1 - np.abs(q[:, 0]) / 0.22, 0, 1) * np.clip((q[:, 1] - 0.12) / 0.04, 0, 1) * np.clip((0.3 - q[:, 1]) / 0.05, 0, 1)
-            d = d + 0.0025 * lift * mask * np.sin(q[:, 1] * 160) * (q[:, 2] > 0)
+        if lift > 0.2 or old > 0.3:
+            amp = 0.002 * lift + 0.0006 * old
+            mk = np.clip(1 - np.abs(q[:, 0]) / 0.2, 0, 1) * np.clip((q[:, 1] - yb - 0.05) / 0.03, 0, 1) * np.clip((0.28 - q[:, 1]) / 0.05, 0, 1)
+            d = d + amp * mk * np.sin(q[:, 1] * 150) * (q[:, 2] > 0)
         if A("4") > 0.3:
-            mask = np.exp(-(q[:, 0] / 0.02) ** 2) * np.exp(-((q[:, 1] - 0.11) / 0.05) ** 2)
-            d = d + 0.006 * A("4") * mask
-        # the mouth: carve the opening, then the teeth and the dark inside
-        mo = mouth2d(q)
-        cav = np.maximum(mo, 0.14 - q[:, 2])
-        if lo_mid >= up_mid - 0.006:
-            t = np.clip(np.abs(q[:, 0]) / cx, 0, 1)
-            yline = up_mid - 0.004 + (cy - up_mid) * t ** pu
-            slit = np.maximum.reduce([np.abs(q[:, 1] - yline) - 0.003 * (1 - t ** 4), np.abs(q[:, 0]) - cx, 0.295 - q[:, 2]])
+            mk = np.exp(-((qm[:, 0] - 0.018) / 0.01) ** 2) * np.exp(-((q[:, 1] - yb - 0.02) / 0.035) ** 2) * (q[:, 2] > 0.25)
+            d = d + 0.005 * A("4") * mk
+        # eyebrows: soft ridges of tissue and hair, moved by AU1/2/4
+        sb = np.clip((qm[:, 0] - (0.032 - knit)) / (xe + 0.085 - 0.032), 0, 1)
+        arch = body.g(0.01, 0.018)
+        ybc = yb + 0.016 + arch * np.sin(math.pi * sb ** 0.8) + b_in * (1 - sb) + b_out * sb - 0.006 * sb * old
+        # lips: volumes on the barrel
+        x, t, yu, yl = edges(q)
+        tt = np.clip(x / (cx + 0.012), 0, 1)
+        wl = np.clip(1 - tt ** 2, 0, 1) ** 0.8
+        front = np.clip((q[:, 2] - (S["z_bar"] - 0.07)) / 0.04, 0, 1)
+        su = (q[:, 1] - yu) / (S["hu"] * (1 - 0.35 * tt))
+        bu = np.clip(1 - np.clip(su, 0, 1) ** 1.6, 0, 1) * np.clip((su + 0.15) / 0.15, 0, 1)
+        bu = bu * bu * (3 - 2 * bu)
+        # the lower lip rides on the jaw: its edge in the jaw's rest frame
+        sl = (yl + drop_c - qj[:, 1]) / (S["hl"] * (1 - 0.3 * A("20")) * (1 - 0.35 * tt))
+        bl = np.clip(1 - np.clip(sl, 0, 1), 0, 1) ** 0.3 * (0.7 + 0.3 * np.clip(sl / 0.35, 0, 1)) * np.clip((sl + 0.15) / 0.15, 0, 1) * (sl < 1)
+        frontj = np.clip((qj[:, 2] - (S["z_bar"] - 0.075)) / 0.04, 0, 1)
+        d = d - S["tu"] * bu * wl * front - S["tl"] * bl * (1 + 0.4 * A("17") * (1 - A("25"))) * wl * frontj
+        # the mouth: a closed line, or the opening with the teeth and the dark inside
+        if not opened:
+            yline = up_mid - 0.002 + (cy - up_mid) * t ** pu
+            slit = np.maximum.reduce([np.abs(q[:, 1] - yline) - 0.0025 * (1 - t ** 4), x - cx, S["z_bar"] - 0.04 - q[:, 2]])
             d = smax(d, -slit, 0.004)
-        if lo_mid < up_mid - 0.006:
-            d = smax(d, -cav, 0.006)
-            tu = np.maximum(np.abs(np.linalg.norm((q[:, [0, 2]] - teeth_up[0][[0, 2]]) / teeth_up[1][[0, 2]], axis=1) - 1) * 0.08 - 0.008,
-                            np.abs(q[:, 1] - (-0.31 + fy)) - 0.022)
-            tu = np.maximum(tu, -q[:, 2] + 0.16)
-            tl = np.maximum(np.abs(np.linalg.norm((qj[:, [0, 2]] - teeth_up[0][[0, 2]] - V(0, 0)) / (teeth_up[1][[0, 2]] * 0.93), axis=1) - 1) * 0.08 - 0.008,
-                            np.abs(qj[:, 1] - (-0.345 + fy)) - 0.02)
-            tl = np.maximum(tl, -qj[:, 2] + 0.16)
-            d = np.minimum(d, np.minimum(tu, tl))
-            tongue = np.linalg.norm((qj - V(0, -0.37 + fy, 0.12)) / V(0.075, 0.03, 0.1), axis=1) - 1
-            d = np.minimum(d, tongue * 0.03)
+        else:
+            mo = mouth2d(q)
+            d = smax(d, -np.maximum(mo, 0.2 - q[:, 2]), 0.006)
+            rxt, rzt = body.g(0.145, 0.136) * 0.9, 0.17
+            zct = S["z_bar"] - 0.03 - rzt
+            ring = lambda qq: np.abs(np.sqrt((qq[:, 0] / rxt) ** 2 + ((qq[:, 2] - zct) / rzt) ** 2) - 1) * 0.15 - 0.006
+            tu_ = np.maximum.reduce([ring(q), np.abs(q[:, 1] - (sto + 0.012)) - 0.024, 0.2 - q[:, 2]])
+            tl_d = np.maximum.reduce([ring(qj), np.abs(qj[:, 1] - (sto - 0.034)) - 0.022, 0.2 - qj[:, 2]])
+            d = np.minimum(d, np.minimum(tu_, tl_d))
+            d = np.minimum(d, ell_d(qj, V(0, sto - 0.05, 0.24), V(0.075, 0.03, 0.09)))
         # eyeballs and lids
-        for i, e in enumerate(eyes):
-            qe = q - e
-            ball = np.linalg.norm(qe, axis=1) - re
-            r_ = np.linalg.norm(qe, axis=1)
-            shell = np.abs(r_ - (re + 0.009)) - 0.006
-            xe = qe[:, 0]
-            up = np.maximum(shell, (lid_u - 0.32 * xe ** 2 / re) - qe[:, 1])
-            lo = np.maximum(shell, qe[:, 1] - (lid_l + 0.22 * xe ** 2 / re))
-            lids = np.maximum(np.minimum(up, lo), -qe[:, 2] - 0.01)
-            d = smin(d, smin(ball, lids, 0.004), 0.03)
+        for e in eyes:
+            fs, _, _ = fissure(q, e)
+            lids = np.maximum(ell_d(q, e, lid_r), -fs)
+            d = smin(d, lids, 0.01)
+            d = np.minimum(d, np.linalg.norm(q - e, axis=1) - re_)
+        # ears
+        ear_c = V(x_side + 0.004, ye - 0.035 - 0.012 * old, -0.065)
+        Me = (ry(R(-12)) @ rx(R(-14))).T
+        qe = (qm - ear_c) @ Me.T
+        de = ell_d(qe, V(-0.006, 0, 0), V(0.02, 0.112 + 0.016 * old, 0.062))
+        de = smax(de, -ell_d(qe, V(0.018, -0.02, 0.008), V(0.016, 0.045, 0.032)), 0.01)
+        if o.get("ears", True):
+            d = smin(d, de, 0.015)
         return d
 
     def f(p):
-        return sdf_local(local(p)) * H * 0.9
+        return sdf_local(local(p)) * H * 0.8
 
     def colorf(p):
         q = local(p)
+        qm = mirror(q)
         n = len(q)
         c = np.broadcast_to(sk, (n, 3)).copy()
-        # warmer cheeks, nose and ears; cooler jaw (the three colour zones of the face)
-        warm = np.exp(-((np.abs(q[:, 0]) - 0.16) / 0.08) ** 2 - ((q[:, 1] + 0.14) / 0.1) ** 2) + np.exp(-(q[:, 0] / 0.05) ** 2 - ((q[:, 1] + 0.15) / 0.08) ** 2)
-        c *= (1 + 0.06 * np.clip(warm, 0, 1)[:, None] * V(1, -0.6, -0.8))
-        cool = np.clip((-q[:, 1] - 0.33) / 0.1, 0, 1) * (1 - fem) * 0.5
-        c *= (1 - 0.06 * cool[:, None] * V(1, 0.6, -0.4))
+        # the three colour zones: forehead lighter and cooler, cheeks, nose and ears warmer, jaw cooler
+        warm = np.exp(-((qm[:, 0] - 0.15) / 0.08) ** 2 - ((q[:, 1] - ye + 0.12) / 0.1) ** 2) + np.exp(-(q[:, 0] / 0.05) ** 2 - ((q[:, 1] - S["y_tip"]) / 0.07) ** 2)
+        c *= (1 + 0.07 * np.clip(warm, 0, 1)[:, None] * V(1, -0.6, -0.8))
+        cool = np.clip((S["y_sto"] - 0.02 - q[:, 1]) / 0.1, 0, 1) * (1 - fem) * (1 - child) * 0.6
+        c *= (1 - 0.07 * cool[:, None] * V(1, 0.6, -0.4))
+        # eyebrows (hair over the brow ridge)
+        sb = np.clip((qm[:, 0] - (0.032 - knit)) / (xe + 0.085 - 0.032), 0, 1)
+        arch = body.g(0.01, 0.018)
+        ybc = yb + 0.016 + arch * np.sin(math.pi * sb ** 0.8) + b_in * (1 - sb) + b_out * sb - 0.006 * sb * old
+        bh = 0.014 * (1.2 - 0.6 * sb) * body.g(1, 0.8)
+        wgt = np.clip(1.4 - np.abs(q[:, 1] - ybc) / bh, 0, 1) * np.clip((qm[:, 0] - 0.028 + knit) / 0.015, 0, 1) \
+            * np.clip((xe + 0.09 - qm[:, 0]) / 0.03, 0, 1) * (q[:, 2] > 0.2) * body.g(0.6, 0.5)
+        c = c * (1 - wgt[:, None]) + brow_col[None] * wgt[:, None]
         # lips
-        qj_ = (q - pivot) @ Rj + pivot
-        dl = np.minimum(ell_batch(q, ma["C"][1:2], ma["Mt"][1:2], ma["Rd"][1:2])[:, 0],
-                        ell_batch(qj_, ja["C"][-1:], ja["Mt"][-1:], ja["Rd"][-1:])[:, 0])
-        lipm = (dl < 0.006) & (np.abs(q[:, 0]) < cx + 0.012) & (q[:, 2] > 0.24)
-        c[lipm] = c[lipm] * 0.4 + lips * 0.6
-        # mouth inside, teeth
-        if lo_mid < up_mid - 0.006:
+        x, t, yu, yl = edges(q)
+        su = (q[:, 1] - yu) / S["hu"]
+        sl = (yl - q[:, 1]) / (S["hl"] * (1 - 0.3 * A("20")))
+        on_lip = ((su > -0.05) & (su < 1.0) | (sl > -0.05) & (sl < 1.0)) & (x < cx * (1.0 - 0.04 * t)) & (q[:, 2] > S["z_bar"] - 0.06)
+        lw = body.g(0.5, 0.68) * (1 - 0.3 * old)
+        c[on_lip] = c[on_lip] * (1 - lw) + lips * lw
+        if opened:
             mo = mouth2d(q)
-            inside = (mo < 0.004) & (q[:, 2] < 0.27)
+            inside = (mo < 0.003) & (q[:, 2] < S["z_bar"] - 0.012)
             c[inside] = mouthc
-            qj = (q - pivot) @ Rj + pivot
-            tm = inside & (((np.abs(q[:, 1] - (-0.31 + fy)) < 0.024) & (q[:, 2] > 0.15)) | ((np.abs(qj[:, 1] - (-0.345 + fy)) < 0.022) & (qj[:, 2] > 0.15)))
+            qj = (q - pivot - glide) @ Rj + pivot
+            rxt, rzt = body.g(0.145, 0.136) * 0.9, 0.17
+            zct = S["z_bar"] - 0.03 - rzt
+            ring = lambda qq: np.abs(np.sqrt((qq[:, 0] / rxt) ** 2 + ((qq[:, 2] - zct) / rzt) ** 2) - 1) < 0.08
+            tm = inside & ((ring(q) & (np.abs(q[:, 1] - (sto + 0.012)) < 0.025)) | (ring(qj) & (np.abs(qj[:, 1] - (sto - 0.034)) < 0.023)))
             c[tm] = teeth
-        # eyes: sclera, iris, pupil
+        else:
+            yline = up_mid - 0.002 + (cy - up_mid) * t ** pu
+            ml = (np.abs(q[:, 1] - yline) < 0.004) & (x < cx) & (q[:, 2] > S["z_bar"] - 0.05)
+            c[ml] = c[ml] * 0.35 + mouthc * 0.65
+        # nostrils: the dark under the alae
+        nos = ell_d(qm, V(xa * 0.55, ysn + 0.004, zsn + 0.022), V(0.017, 0.007, 0.016)) < 0.002
+        c[nos] = c[nos] * 0.4 + mouthc * 0.3
+        # eyes: sclera, iris, pupil; the lash line of the upper lid
         for e in eyes:
             qe = q - e
-            on = np.abs(np.linalg.norm(qe, axis=1) - re) < 0.0015
-            dirn = qe / (np.linalg.norm(qe, axis=1, keepdims=True) + 1e-9)
+            r_ = np.linalg.norm(qe, axis=1)
+            on = np.abs(r_ - re_) < 0.0025
+            dirn = qe / (r_[:, None] + 1e-9)
             cosg = dirn @ gaze_dir
-            m = on
-            c[m] = hx(eye_col)
-            c[m & (cosg > 0.86)] = hx(iris_col)
-            c[m & (cosg > 0.975)] = hx("#0c0806")
+            c[on] = hx(eye_col) * 0.9
+            ir = on & (cosg > 0.87)
+            c[ir] = hx(iris_col)
+            c[on & (cosg > 0.975)] = hx("#0c0806")
+            fs, du, s = fissure(q, e)
+            lash = (du > -0.002) & (du < 0.007 + 0.002 * fem) & (np.abs(s) < 0.97) & (r_ > re_ + 0.002) & (q[:, 2] > e[2]) & (closed < 0.5)
+            c[lash] = c[lash] * body.g(0.35, 0.2) + brow_col * body.g(0.35, 0.5)
+            if closed >= 0.5:
+                lash = (np.abs(du) < 0.004) & (np.abs(s) < 0.95) & (q[:, 2] > e[2])
+                c[lash] = c[lash] * 0.5 + brow_col * 0.3
         return c
-    return dict(f=f, colorf=colorf, color=sk, element="head", bound=(O, H * 0.62), gloss=gloss, planes=o.get("planes", 0.45),
-                frame=M, scale=H, lift=(lid_l, lid_u))
+    return dict(f=f, colorf=colorf, color=sk, element="head", bound=(O, H * 0.64), gloss=gloss, planes=planes,
+                frame=M, scale=H, lift=(lid_l, lid_u), polys=dict(up=up, ck=ck, jw=jw, nose=nz, k=kp, sdf=sdf_local), skull=skull,
+                marks=dict(crown=(0, 0.5, -0.06), chin=(0, -0.5, zp - 0.075), brow=(0, yb, zg), eye_l=(xe, ye, ze + re_), eye_r=(-xe, ye, ze + re_),
+                           en_l=(xe - hw, ye, ze + 0.03), ex_l=(xe + hw, ye + 0.004, ze), en_r=(-xe + hw, ye, ze + 0.03), ex_r=(-xe - hw, ye + 0.004, ze),
+                           al_l=(xa, ysn + 0.01, 0.33), al_r=(-xa, ysn + 0.01, 0.33), sn=(0, ysn, zsn),
+                           ch_l=(cx, cy, S["z_bar"] - 0.04), ch_r=(-cx, cy, S["z_bar"] - 0.04), up_mid=(0, up_mid, S["z_bar"]), lo_mid=(0, lo_mid, S["z_bar"]),
+                           lid_u=(xe, ye + lid_u, ze + re_), lid_l=(xe, ye - lid_l, ze + re_)))
 
 
-def hair_part(o, body, O, M, wind, collide):
+def hair_part(o, body, O, M, wind, collide, skull=None):
     """Hair as masses: a cap following the cranium, plus a bun, a ponytail or long locks that hang
     and stream (rope simulation), or a receding/bald crown."""
     hd = o.get("hair")
@@ -717,10 +1047,13 @@ def hair_part(o, body, O, M, wind, collide):
         hl = front + (np.clip(-z, 0, 0.4) / 0.4) * (-0.62 - front)
         side = np.clip((np.abs(q[:, 0]) - 0.2) / 0.1, 0, 1) * np.clip((z + 0.1) / 0.25, 0, 1)
         hl = hl + side * (0.17 - front)
-        hl = hl + 0.03 * np.cos(q[:, 0] * 14) * (z > 0)          # an irregular front edge
+        hl = hl + (0.03 if style in ("short", "receding", "slick") else 0.008) * np.cos(q[:, 0] * 14) * (z > 0)   # an irregular front edge for short hair
         t = th * np.clip((q[:, 1] - hl) / 0.1, 0.12, 1.0)        # thin at the hairline, full above
         d = np.linalg.norm((q - V(0, 0.1, -0.06)) / V(0.32, 0.385, 0.405), axis=1) - 1
-        d = d * 0.37 - t - 0.004
+        d = d * 0.37
+        if skull is not None:          # sit on the head's own forehead and temple planes
+            d = np.minimum(d, skull(q))
+        d = d - t - 0.004
         d = np.maximum(d, (hl - q[:, 1]) * 0.5)
         if style in ("receding", "bald"):
             crown = np.linalg.norm((q[:, [0, 2]] - V(0, 0.02)) / V(0.24, 0.3), axis=1) - 1
@@ -830,11 +1163,20 @@ def cloth_sim(G, wind, collide, drag=1.1, r=0.035, iters=300, flutter=0.25, seed
     gust = w[None, None] * (1 + flutter * np.sin(ii * 0.5 + jj * 0.7 + ph[0]))[..., None] \
         + (wn * flutter * 0.3 * np.sin(jj * 0.9 + ph[1]))[..., None] * side[None, None]
     dt = 0.016
+    cm = np.zeros((nr, nc), bool)                  # in contact last step, and the surface normal there
+    cn = np.zeros((nr, nc, 3), np.float32)
     for it in range(iters):
         vel = (P - prev) * 0.94
         prev = P.copy()
         acc = g + drag * (gust - vel / dt) * 0.5
         P = P + vel + acc * dt * dt
+        if cm.any():
+            # static friction: cloth pressed onto the body by the wind does not slide off it (a skirt
+            # in a gale wraps the windward leg); only the motion along the surface normal remains
+            dlt = P - prev
+            dn = (dlt * cn).sum(-1, keepdims=True)
+            hold = cm[..., None] & (dn < 0.002)
+            P = np.where(hold, prev + dn * cn, P)
         P[0] = G[0]
         for _ in range(3):
             dv = P[1:] - P[:-1]
@@ -852,13 +1194,20 @@ def cloth_sim(G, wind, collide, drag=1.1, r=0.035, iters=300, flutter=0.25, seed
                 flat = P.reshape(-1, 3)
                 dd = collide(flat)
                 bad = dd < r
+                cmf = np.zeros(len(flat), bool)
                 if bad.any():
                     e = 0.004
                     gr = np.stack([(collide(flat[bad] + V(*(e * np.eye(3)[k]))) - dd[bad]) / e for k in range(3)], 1)
-                    flat[bad] += nrm(gr) * (r - dd[bad])[:, None]
+                    nb_ = nrm(gr)
+                    flat[bad] += nb_ * (r - dd[bad])[:, None]
                     pf = prev.reshape(-1, 3)
                     pf[bad] = flat[bad]
                     prev = pf.reshape(P.shape)
+                    cmf[bad] = True
+                    cnf = cn.reshape(-1, 3)
+                    cnf[bad] = nb_
+                    cn = cnf.reshape(cn.shape)
+                cm = cmf.reshape(nr, nc) | (cm & (dd.reshape(nr, nc) < r * 1.6))
                 P = flat.reshape(P.shape)
                 P[0] = G[0]
     for _ in range(2):
@@ -1228,37 +1577,117 @@ def person(o):
     neck = Prims()
     nr = body.g(0.27, 0.22) * (1 - 0.15 * body.old) * wf ** 0.5
     neck.cone(J["neckb"] - Rc @ V(0, 0.08 * u, 0), J["atlas"], nr * u * 1.1, nr * u * 0.88)
-    arm_prims = []
-    for side, s in ((1, "l"), (-1, "r")):
-        A_ = Prims()
-        sh, el, wr = J[f"sh_{s}"], J[f"el_{s}"], J[f"wr_{s}"]
-        g_ = bl * (1 - 0.15 * body.fem)
-        du = nrm(el - sh)
-        A_.ell(sh + du * 0.22 * u + Rc @ V(side * 0.05 * u, 0, 0), Rc, V(0.24, 0.3, 0.25) * u * g_)   # deltoid
-        A_.cone(sh, el, 0.21 * u * g_, 0.15 * u * g_)
-        A_.cone(el, wr, 0.17 * u * g_, 0.105 * u * g_)
-        A_.ell(el + (wr - el) * 0.25, frame_along(wr - el), V(0.18, 0.32, 0.16) * u * g_)       # forearm muscles
-        arm_prims.append(A_)
+    # ---------- what the hands can touch: other objects in the scene, the person's own head and body
+    ext = o.get("_collide")
+    head = head_part(o, body, J["head"], J["Rhead"], skin, lip_col=o.get("lips"), gloss=o.get("face_gloss", gloss_skin),
+                     gaze=o.get("gaze", [0, 0]))
+    hfn, tfn0 = head["f"], tprims.fn(0.05 * u)
+    hc_, hr_ = J["head"], 0.75 * u
+
+    def touch(p, legs=None):
+        p = np.asarray(p, np.float32)
+        d = tfn0(p)
+        near = np.linalg.norm(p - hc_, axis=1) < hr_
+        if near.any():
+            d[near] = np.minimum(d[near], hfn(p[near]))
+        for g in (legs or []):
+            d = np.minimum(d, g(p))
+        if ext is not None:
+            d = np.minimum(d, ext(p))
+        return d
+    m = body.fem * 0.4 + body.child * 0.6               # how much the muscle masses show (less in women and children; judgement)
+    mus = (1 - m) * (1.0 + 0.5 * (o.get("build") == "muscular")) * (1 - 0.4 * body.old)
     leg_prims, foot_prims = [], []
     for side, s in ((1, "l"), (-1, "r")):
         Lg = Prims()
         g_ = bl * body.g(1.0, 1.04)
         hp, kn, an = J[f"hip_{s}"], J[f"kn_{s}"], J[f"an_{s}"]
-        Lg.cone(hp + Rp @ V(-side * 0.02 * u, 0.02 * u, 0), kn, 0.36 * u * g_ * bt ** 0.5, 0.22 * u * g_)
-        Lg.ell(hp + (kn - hp) * 0.4 + J[f"Rthigh_{s}"] @ V(0, 0, 0.05 * u), J[f"Rthigh_{s}"], V(0.3, 0.7, 0.31) * u * g_)
-        Lg.ell(kn + J[f"Rshin_{s}"] @ V(0, 0.03 * u, 0.02 * u), J[f"Rshin_{s}"], V(0.18, 0.22, 0.18) * u * g_)
-        Lg.cone(kn, an, 0.2 * u * g_, 0.12 * u * g_)
-        Lg.ell(kn + (an - kn) * 0.3 + J[f"Rshin_{s}"] @ V(0, 0, -0.07 * u), J[f"Rshin_{s}"], V(0.19, 0.42, 0.2) * u * g_)
+        Rt_, Rs_ = J[f"Rthigh_{s}"], J[f"Rshin_{s}"]
+        fwd_t, med_t = Rt_ @ V(0, 0, 1), Rt_ @ V(-side, 0, 0)
+        fwd_s, med_s = Rs_ @ V(0, 0, 1), Rs_ @ V(-side, 0, 0)
+        Lt = float(np.linalg.norm(kn - hp))
+        Lg.cone(hp + Rp @ V(-side * 0.02 * u, 0.02 * u, 0), kn, 0.35 * u * g_ * bt ** 0.5, 0.2 * u * g_)
+        # thigh: the quadriceps in front, the hamstrings behind, the teardrop of vastus medialis above the knee
+        Lg.ell(hp + (kn - hp) * 0.42 + fwd_t * 0.05 * u, Rt_, V(0.31, 0.38 * Lt / u, 0.29) * u * g_)
+        Lg.ell(hp + (kn - hp) * 0.5 - fwd_t * 0.07 * u, Rt_, V(0.27, 0.32 * Lt / u, 0.22) * u * g_)
+        Lg.ell(hp + (kn - hp) * 0.82 + med_t * 0.075 * u + fwd_t * 0.04 * u, Rt_, V(0.11, 0.17, 0.11) * u * g_ * (0.8 + 0.3 * mus))
+        # the knee: a block wider than deep, the flat patella in front, the tendon down to the shin (not a ball)
+        Lg.ell(kn + Rs_ @ V(0, 0.01 * u, -0.01 * u), Rs_, V(0.175, 0.13, 0.15) * u * g_)
+        pat = kn + (Rt_ @ V(0, 0.03 * u, 0) + fwd_t * 0.13 * u) * g_
+        Lg.ell(pat, Rt_, V(0.085, 0.1, 0.04) * u * g_)
+        Lg.cone(pat - Rt_ @ V(0, 0.07 * u, 0), kn + Rs_ @ V(0, -0.2 * u, 0) + fwd_s * 0.11 * u * g_, 0.035 * u * g_, 0.04 * u * g_)
+        Lg.ell(kn + med_s * 0.085 * u - Rs_ @ V(0, 0.02 * u, 0), Rs_, V(0.07, 0.09, 0.08) * u * g_)
+        # shin: the calf's two heads behind (the inner one lower and fuller), the soleus under them, the ankle bones
+        Lg.cone(kn, an, 0.16 * u * g_, 0.1 * u * g_)
+        Ls = float(np.linalg.norm(an - kn))
+        Lg.ell(kn + (an - kn) * 0.33 - fwd_s * 0.08 * u + med_s * 0.045 * u, Rs_, V(0.12, 0.25 * Ls / u, 0.13) * u * g_ * (0.9 + 0.25 * mus))
+        Lg.ell(kn + (an - kn) * 0.27 - fwd_s * 0.075 * u - med_s * 0.05 * u, Rs_, V(0.1, 0.2 * Ls / u, 0.1) * u * g_ * (0.85 + 0.25 * mus))
+        Lg.ell(kn + (an - kn) * 0.55 - fwd_s * 0.05 * u, Rs_, V(0.14, 0.24 * Ls / u, 0.11) * u * g_)
+        Lg.ell(an + med_s * 0.07 * u + Rs_ @ V(0, 0.02 * u, 0), Rs_, V(0.045, 0.05, 0.045) * u * g_)
+        Lg.ell(an - med_s * 0.075 * u - Rs_ @ V(0, 0.03 * u, 0), Rs_, V(0.04, 0.05, 0.04) * u * g_)
         leg_prims.append(Lg)
         Ft = Prims()
         Rf = J[f"Rfoot_{s}"]
         Ft.ell(an + Rf @ V(0, -0.16 * u, 0.32 * u * lf ** 0.5), Rf, V(0.17, 0.12, 0.52 * lf ** 0.5) * u)
         Ft.ell(J[f"heel_{s}"] + Rf @ V(0, 0.08 * u, 0.05 * u), Rf, V(0.13, 0.15, 0.17) * u)
         foot_prims.append(Ft)
+    lfn0 = [P.fn(0.05 * u) for P in leg_prims]
+    # a hand that touches something rests on it: a reaching hand with a resting grip settles onto the
+    # surface under its palm (within 6 cm), and a palm inside a surface is pushed out (the wrist moves with it)
+    for side, s in ((1, "l"), (-1, "r")):
+        Mh = J[f"Rhand_{s}"]
+        pc = J[f"wr_{s}"] + Mh @ (V(0, -0.3, 0.075) * hand_len)
+        hp_ = pose.get(f"hand_{s}", (pose.get(f"reach_{s}") or {}).get("hand", "relaxed"))
+        if f"reach_{s}" in pose and hp_ in ("rest", "hold", "cup", "grip") and pose[f"reach_{s}"].get("settle", True):
+            pn = nrm(Mh @ V(0, 0, 1))
+            for t_ in np.linspace(0, 0.06, 25):
+                if float(touch((pc + pn * t_)[None], lfn0)[0]) < 0.004 * hand_len:
+                    J[f"wr_{s}"] = J[f"wr_{s}"] + pn * t_
+                    pc = pc + pn * t_
+                    break
+        for _ in range(3):
+            d0 = float(touch(pc[None], lfn0)[0])
+            if d0 >= 0.004 * hand_len:
+                break
+            e = 0.003
+            gr = nrm(np.array([float(touch((pc + V(*(e * np.eye(3)[k])))[None], lfn0)[0]) - d0 for k in range(3)], np.float32))
+            sh_ = gr * (0.004 * hand_len - d0)
+            J[f"wr_{s}"] = J[f"wr_{s}"] + sh_
+            pc = pc + sh_
+    arm_prims = []
+    for side, s in ((1, "l"), (-1, "r")):
+        A_ = Prims()
+        sh, el, wr = J[f"sh_{s}"], J[f"el_{s}"], J[f"wr_{s}"]
+        g_ = bl * (1 - 0.15 * body.fem)
+        du, df = nrm(el - sh), nrm(wr - el)
+        L1_, L2_ = float(np.linalg.norm(el - sh)), float(np.linalg.norm(wr - el))
+        bfront = Rc @ V(0, 0, 1)
+        fr = df - (df @ du) * du                            # the side the elbow bends toward is the front of the arm
+        fr = nrm(fr) if np.linalg.norm(fr) > 0.15 else nrm(bfront - (bfront @ du) * du + 1e-6)
+        lat = nrm(np.cross(du, fr)) * side
+        if float(lat @ (Rc @ V(side, 0, 0))) < 0:
+            lat = -lat
+        A_.ell(sh + du * 0.2 * u + lat * 0.04 * u, frame_along(du), V(0.22, 0.29, 0.23) * u * g_ * (0.9 + 0.15 * mus))   # deltoid
+        A_.cone(sh, el, 0.19 * u * g_, 0.13 * u * g_)
+        A_.ell(sh + du * 0.55 * L1_ + fr * 0.045 * u, frame_along(du), V(0.13, 0.3 * L1_ / u, 0.12) * u * g_ * (0.85 + 0.25 * mus))   # biceps
+        A_.ell(sh + du * 0.45 * L1_ - fr * 0.05 * u, frame_along(du), V(0.14, 0.34 * L1_ / u, 0.13) * u * g_)   # triceps
+        # the elbow: the olecranon's point behind, the inner epicondyle's knob
+        A_.ell(el - fr * 0.06 * u, frame_along(du), V(0.06, 0.07, 0.06) * u * g_)
+        A_.ell(el - lat * 0.075 * u, frame_along(du), V(0.05, 0.05, 0.05) * u * g_)
+        A_.cone(el, wr, 0.13 * u * g_, 0.085 * u * g_)
+        Mh = J[f"Rhand_{s}"]
+        rad = nrm(Mh @ V(side, 0, 0))                       # the thumb side of the forearm
+        palm_ = nrm(Mh @ V(0, 0, 1))
+        A_.ell(el + (wr - el) * 0.28 + rad * 0.045 * u - fr * 0.01 * u, frame_along(df), V(0.12, 0.34 * L2_ / u, 0.11) * u * g_)   # extensors and brachioradialis
+        A_.ell(el + (wr - el) * 0.3 - rad * 0.035 * u + palm_ * 0.025 * u, frame_along(df), V(0.12, 0.3 * L2_ / u, 0.11) * u * g_)  # flexors
+        A_.ell(wr - df * 0.03 * u, np.stack([rad, -df, nrm(np.cross(rad, -df))], 1), V(0.11, 0.07, 0.065) * u * g_)       # the flat wrist
+        arm_prims.append(A_)
     hand_prims_ = []
     for side, s in ((1, "l"), (-1, "r")):
         hp = pose.get(f"hand_{s}", "relaxed")
-        hand_prims_.append(hand_prims(J[f"Rhand_{s}"], J[f"wr_{s}"], hand_len, side, hp, girth=bl ** 0.5))
+        wants = (f"reach_{s}" in pose) or ext is not None
+        hand_prims_.append(hand_prims(J[f"Rhand_{s}"], J[f"wr_{s}"], hand_len, side, hp, girth=bl ** 0.5,
+                                      collide=(lambda p: touch(p, lfn0)) if wants else None))
 
     def col(part_name):
         return skin if part_name in bare else cloth
@@ -1275,16 +1704,21 @@ def person(o):
     groups = [("torso", skin if "torso" in bare else torso_col, gloss_skin if "torso" in bare else 0, tprims.fn(0.13 * u), tprims.spheres(), None),
               ("neck", skin, gloss_skin, neck.fn(0.0), neck.spheres(), 0.1 * u)]
     for P in arm_prims:
-        groups.append(("arms", skin if "arms" in bare else torso_col, gloss_skin if "arms" in bare else 0, P.fn(0.08 * u), P.spheres(), 0.1 * u))
+        groups.append(("arms", skin if "arms" in bare else torso_col, gloss_skin if "arms" in bare else 0, P.fn(0.05 * u), P.spheres(), 0.1 * u))
     for P in leg_prims:
-        groups.append(("legs", col("legs"), 0, P.fn(0.12 * u), P.spheres(), 0.14 * u))
+        groups.append(("legs", col("legs"), 0, P.fn(0.08 * u), P.spheres(), 0.14 * u))
     for P in foot_prims:
         groups.append(("feet", skin if "feet" in bare else o.get("shoes", "#1e1a18"), 0, P.fn(0.06 * u), P.spheres(), 0.05 * u))
+    nail = hx(skin) * V(1.08, 0.95, 0.95) + 0.06
     for P in hand_prims_:
         groups.append(("hands", skin, gloss_skin, P.fn(0.012 * hand_len), P.spheres(), 0.03 * u))
-    parts.append(body_part(groups, 0.1 * u, names))
-    parts.append(head_part(o, body, J["head"], J["Rhead"], skin, lip_col=o.get("lips"), gloss=o.get("face_gloss", gloss_skin),
-                           gaze=o.get("gaze", [0, 0])))
+        groups.append(("hands", np.clip(nail, 0, 1), 0.25, P.nails.fn(0.0), P.nails.spheres(), 0.002 * u))
+    bp = body_part(groups, 0.1 * u, names)
+    # the body's light grouped into planes like the head's (default a little less), so the muscle
+    # masses read as plane changes; 0 is the smooth form
+    bp.update(planes=float(o.get("body_planes", 0.35)), scale=u)
+    parts.append(bp)
+    parts.append(head)
     # cloth collides with the body: torso, legs and arms
     tfn = tprims.fn(0.05 * u)
     lfn = [P.fn(0.05 * u) for P in leg_prims]
@@ -1296,7 +1730,8 @@ def person(o):
             d = np.minimum(d, g(p))
         return d
     hp_ = J["head"]
-    parts += hair_part(o, body, J["head"], J["Rhead"], wind, lambda p: np.minimum(collide(p), np.linalg.norm(p - hp_, axis=1) - 0.5 * u))
+    parts += hair_part(o, body, J["head"], J["Rhead"], wind, lambda p: np.minimum(collide(p), np.linalg.norm(p - hp_, axis=1) - 0.5 * u),
+                       skull=head.get("skull"))
     for cl in clothes:
         k = cl.get("kind")
         if k == "dress":

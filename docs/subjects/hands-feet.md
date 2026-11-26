@@ -55,6 +55,12 @@ The palm block takes one light and one shadow plane; each finger is a small cyli
 4. Does a resting or holding hand make contact (cast shadow, fingers following the surface)?
 5. Is the gesture of the hand the same feeling as the face and the body?
 
+## 8. Hands in the studio's blockouts (added 2026-11-26)
+
+- **Fingers stay separate forms.** Each finger and the thumb is its own chain of three cylinders joined to the palm mass but not to its neighbours, with a slightly fuller joint at each knuckle and a nail on the last phalanx. Seen fingertips first the hand then reads by overlap, nails and the dark gaps between fingers ("the gaps between fingers are the darkest accents", section 3), not as one knob. The hand sheet (`figure_sheet.py hands`) shows every preset fingertips first.
+- **The thumb sits in the hand.** Its base is low on the wrist (Tuts+, section 1); a thenar pad wraps its metacarpal and a web joins its first joint to the index finger's knuckle, so the free thumb starts at about a third of the hand's length and doesn't hang from the wrist like a stick (**judgement** for the sizes).
+- **Contact.** A hand on something rests on it (section 6, "hands that don't touch"): a palm inside a surface is pushed out, a reaching hand with a resting or holding grip settles onto the surface under it, and each finger joint bends just enough to lie on the surface; with those grips the fingers curl down onto it. Fingers don't squash flesh or fur, and a grip doesn't wrap an object exactly (**judgement**, a geometric approximation).
+
 ## Sources
 
 - [Body proportions, Wikipedia](https://en.wikipedia.org/wiki/Body_proportions)
