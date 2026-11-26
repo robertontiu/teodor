@@ -157,7 +157,7 @@ def gesture_path(ctrl, felt, rng, size):
             new.append(list(b))
         ctrl = new
     pts = []
-    spacing = max(0.7, size * 0.1)
+    spacing = max(0.7 * _PXS, size * 0.1)       # in a detail: the same points per canvas px as on the canvas
     if angular < 0.55 and len(ctrl) > 2:
         p = [ctrl[0]] + ctrl + [ctrl[-1]]
         for i in range(1, len(p) - 2):
@@ -1032,12 +1032,12 @@ def do_match(cv, it, felt, rng):
     cv.clip = mask if it.get("clip") else None
     smin, smax = rng2(it.get("size"), [20 * _PXS, 40 * _PXS])
     size = (smin + smax) / 2
-    sig = max(1.0, size / 3)
+    sig = max(1.0 * _PXS, size / 3)       # pixel floors in canvas px (x _PXS in a detail)
     refb = np.stack([gaussian_filter(cv.ref[..., i], sig) for i in range(3)], -1)
     err = np.abs(cv.col - refb).sum(-1)
     if mask is not None:
         err = err * (mask > 0.5)
-    g = max(4, int(size * 0.9))
+    g = max(int(4 * _PXS), int(size * 0.9))
     H2, W2 = -(-cv.H // g), -(-cv.W // g)
     errp = np.pad(err, ((0, H2 * g - cv.H), (0, W2 * g - cv.W)), mode="edge")
     e = errp.reshape(H2, g, W2, g).mean((1, 3))
@@ -1047,10 +1047,10 @@ def do_match(cv, it, felt, rng):
     cells = cells[: int(it.get("max_strokes", 400))]
     faithful = it.get("faithful", 0.85)
     adaptive = it.get("adaptive", True)
-    sharp = np.stack([gaussian_filter(cv.ref[..., i], 1.0) for i in range(3)], -1)
+    sharp = np.stack([gaussian_filter(cv.ref[..., i], 1.0 * _PXS) for i in range(3)], -1)
     if adaptive:
-        lf = gaussian_filter(cv.ref.mean(-1), 1.2)
-        det = gaussian_filter(np.hypot(sobel(lf, 0), sobel(lf, 1)), max(2.0, size / 2))
+        lf = gaussian_filter(cv.ref.mean(-1), 1.2 * _PXS)
+        det = gaussian_filter(np.hypot(sobel(lf, 0), sobel(lf, 1)), max(2.0 * _PXS, size / 2))
         det = np.clip(det / (np.percentile(det, 97) + 1e-6), 0, 1)
     follow = it.get("follow", "form")
     dspec = it.get("direction")
@@ -1533,9 +1533,9 @@ def _hatch_free(cv, it, felt, rng):
     layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
     fw = _hatch_feather(it, layers, True)
     cross = it.get("cross", 45)
-    spacing = it.get("spacing", 9)
-    size = float(np.mean(it.get("size", [3, 3]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3))
-    seg_max = it.get("length", 140)
+    spacing = it.get("spacing", 9 * _PXS)          # defaults and the walk along each line are in canvas px (x _PXS in a detail)
+    size = float(np.mean(it.get("size", [3 * _PXS, 3 * _PXS]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3 * _PXS))
+    seg_max = it.get("length", 140 * _PXS)
     cols, w = palette(it) if it.get("colors") else ([hx("#2a2a2a")], np.array([1.0]))
     if mask is not None:
         ys, xs = np.nonzero(mask > 0.5)
@@ -1564,7 +1564,7 @@ def _hatch_free(cv, it, felt, rng):
                 ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and pf[int(y), int(x)] > 0.02
                 if ok:
                     run.append([x, y])
-                if (not ok or len(run) * 3 >= seg_here) and len(run) >= 3:
+                if (not ok or len(run) * 3 * _PXS >= seg_here) and len(run) >= 3:
                     a, b = run[0], run[-1]
                     a = [a[0] + rng.normal(0, 1.5 * _PXS), a[1] + rng.normal(0, 1.5 * _PXS)]
                     ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8 * _PXS), (a[1] + b[1]) / 2 + rng.normal(0, 0.8 * _PXS)], b]
@@ -1578,7 +1578,7 @@ def _hatch_free(cv, it, felt, rng):
                     seg_here = seg_max * rng.uniform(0.6, 1.4)
                 elif not ok:
                     run = []
-                t += 3
+                t += 3 * _PXS
             off += sp
             if n > it.get("max_strokes", 1500):
                 return
@@ -1591,7 +1591,7 @@ def _hatch_setup(cv, it):
     if cv.ref is None and "value" not in it:
         sys.exit("hatch needs a schema (ref) or a flat 'value' (0 dark .. 1 light).")
     val = gaussian_filter(cv.ref.mean(-1), 3) if cv.ref is not None and "value" not in it else np.full((cv.H, cv.W), float(it["value"]), np.float32)
-    size = float(np.mean(it.get("size", [3, 3]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3))
+    size = float(np.mean(it.get("size", [3 * _PXS, 3 * _PXS]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3 * _PXS))
     cols, w = palette(it) if it.get("colors") else ([hx("#2a2a2a")], np.array([1.0]))
     return mask, val, size, cols, w
 
@@ -1618,7 +1618,7 @@ def _hatch_line(cv, it, felt, rng, pts, size, cols, w, regular, pf=None):
 def _hatch_regular(cv, it, felt, rng):
     mask, val, size, cols, w = _hatch_setup(cv, it)
     layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
-    spacing = float(it.get("spacing", 9))
+    spacing = float(it.get("spacing", 9 * _PXS))
     if mask is not None:
         ys, xs = np.nonzero(mask > 0.5)
         x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
@@ -1637,7 +1637,7 @@ def _hatch_regular(cv, it, felt, rng):
         while off < R:
             px, py = cx + nx * off, cy + ny * off
             t, run = -R, []
-            while t <= R + 2:
+            while t <= R + 2 * _PXS:
                 x, y = px + dx * t, py + dy * t
                 ok = 0 <= x < cv.W and 0 <= y < cv.H and (mask is None or mask[int(y), int(x)] > 0.5) and pf[int(y), int(x)] > 0.02
                 if ok:
@@ -1646,7 +1646,7 @@ def _hatch_regular(cv, it, felt, rng):
                     _hatch_line(cv, it, felt, rng, run, size, cols, w, True, pw); n += 1; run = []
                 else:
                     run = []
-                t += 2
+                t += 2 * _PXS
             if len(run) >= 3:
                 _hatch_line(cv, it, felt, rng, run, size, cols, w, True, pw); n += 1
             off += spacing
@@ -1658,8 +1658,8 @@ def _hatch_form(cv, it, felt, rng):
     """Evenly spaced streamlines of the form field, per value layer (each turned by `cross` from the form)."""
     mask, val, size, cols, w = _hatch_setup(cv, it)
     layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
-    spacing = float(it.get("spacing", 9))
-    seg_max = float(it.get("length", 400))
+    spacing = float(it.get("spacing", 9 * _PXS))
+    seg_max = float(it.get("length", 400 * _PXS))
     regular = bool(it.get("regular"))
     ffs = {}
     n = 0
@@ -1672,7 +1672,7 @@ def _hatch_form(cv, it, felt, rng):
         turn = math.radians(it.get("angle", 0) + li * it.get("cross", 45)) if li or "angle" in it else 0.0
         key = round(turn, 3)
         if key not in ffs:
-            ffs[key] = FormField(cv.ref.mean(-1) if cv.ref is not None else val, max(spacing * 2, 12), "form", None, seed=int(rng.integers(1 << 30)))
+            ffs[key] = FormField(cv.ref.mean(-1) if cv.ref is not None else val, max(spacing * 2, 12 * _PXS), "form", None, seed=int(rng.integers(1 << 30)))
         ff = ffs[key]
         ct, st = math.cos(turn), math.sin(turn)
         occ = np.zeros((gh, gw), bool)
@@ -1700,15 +1700,15 @@ def _hatch_form(cv, it, felt, rng):
                     elif dx * prev[0] + dy * prev[1] < 0:
                         dx, dy = -dx, -dy
                     prev = (dx, dy)
-                    px, py = px + dx * 2, py + dy * 2
-                    L += 2
+                    px, py = px + dx * 2 * _PXS, py + dy * 2 * _PXS
+                    L += 2 * _PXS
                     if not ok(px, py) or not free(px, py):
                         break
                     if sgn == 1:
                         line.append([px, py])
                     else:
                         line.insert(0, [px, py])
-            if len(line) * 2 < max(6, spacing):
+            if len(line) * 2 * _PXS < max(6 * _PXS, spacing):
                 continue
             for px, py in line:
                 occ[min(gh - 1, int(py / cell)), min(gw - 1, int(px / cell))] = True

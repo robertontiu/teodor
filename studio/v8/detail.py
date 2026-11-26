@@ -12,9 +12,11 @@ The detail is an ordinary named canvas, `<parent>_detail`, so every command work
 detail is in its meta: `detail` (parent, region, scale, margin, parent size) and `px_scale` (detail px per canvas px).
 At open every medium array of the region (colour, wetness, height, ...) is resampled up (bilinear on pixel
 centres, so neighbours outside the region are used and there is no edge), and so are the support's texture
-(the weave keeps its physical size: a 4 px thread is 16 px at 4x), the schema, the element masks, the roles, the
+(the weave keeps its physical size: a 4 px thread is 16 px at 4x; a medium's `detail_texture` may restore its
+statistics, as the dry media's tooth does), the schema, the element masks, the roles, the
 order of first use and the passes. Media read `cv.px_scale` (the core passes it to tools as `_px_scale`), so a
-tool's physical features (oil: bristle clumps, single hairs, edge widths, the render's relief) keep their size in
+tool's physical features (oil: bristle clumps, single hairs, edge widths, the render's relief; dry media: lead and
+line widths, edge rise, dust haze, blender and eraser footprints) keep their size in
 canvas units while the brush itself is as big as the painter says in detail px: a 4 px brush on the canvas is a
 16 px brush in a 4x detail.
 
@@ -211,7 +213,11 @@ def open_detail(core, x, y, w, h, scale=4, margin=None):
         orig[a] = arr
     np.savez(path(core, dn, "orig.npz"), **orig)
     # the support's texture at its physical size (cubic, so threads and grain stay round, not faceted)
-    np.save(path(core, dn, "tex.npy"), np.clip(upsample(cv.tex, x, y, w, h, s, order=3), 0, 1).astype(np.float16))
+    tex = np.clip(upsample(cv.tex, x, y, w, h, s, order=3), 0, 1)
+    dtx = getattr(cv.medium, "detail_texture", None)     # a medium may restore the texture's statistics (dry media's tooth)
+    if dtx is not None:
+        tex = dtx(tex, cv.tex[y:y + h, x:x + w])
+    np.save(path(core, dn, "tex.npy"), tex.astype(np.float16))
     if cv.ref is not None:
         ref = np.clip(upsample(cv.ref, x, y, w, h, s), 0, 1)
         np.save(path(core, dn, "ref.npy"), ref.astype(np.float16))

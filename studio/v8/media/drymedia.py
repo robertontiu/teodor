@@ -126,6 +126,37 @@ def _lum(c):
     return c.mean(-1)
 
 
+def _lin_up(n, k):
+    """(n, ceil(n / k)) matrix: linear interpolation from a grid k times coarser, on pixel centres, clamped."""
+    m = -(-n // k)
+    t = np.clip((np.arange(n, dtype=np.float32) + 0.5) / k - 0.5, 0, m - 1)
+    i0 = np.floor(t).astype(np.int32)
+    i1 = np.minimum(i0 + 1, m - 1)
+    f = (t - i0).astype(np.float32)
+    M = np.zeros((n, m), np.float32)
+    M[np.arange(n), i0] += 1 - f
+    M[np.arange(n), i1] += f
+    return M
+
+
+def _haze(shed, s1, s2, k):
+    """The dust haze: DUST_W of the shed dust blurred by s1, the rest by s2 (px; gaussian, zero outside). In a detail
+    (k = px_scale > 1) it is blurred on a grid k times coarser (block means, sigma / k, then linear back up on pixel
+    centres): the haze's narrowest part is 0.5 mm (2.5 px on a graphite sheet, 10 px at 4x), so the coarse grid
+    changes it by at most 1.5% of its peak with the same mass, and the 4x detail's 150 px kernels cost what the
+    canvas's do."""
+    if k <= 1.5:
+        return DUST_W * gaussian_filter(shed, s1, mode="constant") + (1 - DUST_W) * gaussian_filter(shed, s2, mode="constant")
+    k = int(round(k))
+    h, w = shed.shape
+    H2, W2 = -(-h // k), -(-w // k)
+    b = np.zeros((H2 * k, W2 * k), np.float32)
+    b[:h, :w] = shed
+    c = b.reshape(H2, k, W2, k).mean((1, 3))
+    c = DUST_W * gaussian_filter(c, s1 / k, mode="constant") + (1 - DUST_W) * gaussian_filter(c, s2 / k, mode="constant")
+    return (_lin_up(h, k) @ c @ _lin_up(w, k).T).astype(np.float32)
+
+
 def _cov(d):
     return 1 - np.exp(-KC * np.maximum(d, 0))
 
@@ -143,9 +174,13 @@ class DryTool:
     def __init__(self, medium, spec, size, color, rng, it):
         self.m, self.spec, self.rng = medium, dict(spec), rng
         self.kind = spec["kind"]
-        self.size = min(size * spec.get("sizef", 1.0), spec.get("maxsize", 1e9))   # a stick is only so big
+        # px per canvas px (a detail pass at N x: ps = N; detail.py). Every physical size of the tool (its largest
+        # width, the lead, the edge rise, the dust haze, the blur of a blender) is kept in canvas units times ps, so a
+        # mark drawn N x larger in a detail is the same mark, resolved
+        self.ps = ps = float(it.get("_px_scale", 1.0))
+        self.size = min(size * spec.get("sizef", 1.0), spec.get("maxsize", 1e9) * ps)   # a stick is only so big
         if spec.get("lead_px"):          # a mechanical pencil: the lead's diameter, whatever size is asked
-            self.size = float(spec["lead_px"])
+            self.size = float(spec["lead_px"]) * ps
         self.color = np.asarray(color, np.float32).copy()
         self.step, self.speedfx = 1.0, 0.0
         self.tilt = float(rng.uniform(-0.35, 0.35))          # side of the stick presses harder at one end
@@ -154,7 +189,10 @@ class DryTool:
         self.first = True
         self.wear = 0.0
         self.q = []
-        self.edge_px = max(1.0, spec.get("edge_mm", medium.EDGE_MM) * medium.PPM / 0.8)
+        self.edge_px = max(1.0, spec.get("edge_mm", medium.EDGE_MM) * medium.PPM * ps / 0.8)
+        # the window around a contact: its radius plus 2 canvas px, which holds the edge ramp (r + edge_px / 2) of
+        # every medium's tip on the canvas (graphite 1.9, charcoal 2.3, pastel 3.1 px)
+        self.pad = int(math.ceil(2 * ps))
         # the broken face of the stick: a fixed relief along its length, so a side stroke is streaked
         # along its direction (tuned by eye: real side strokes show such striations)
         self.face = gaussian_filter1d(rng.standard_normal(64), 2.0).astype(np.float32)
@@ -172,7 +210,7 @@ class DryTool:
             wd = self.edge_px
             return np.clip((r - d) / wd + 0.5, 0, 1)
         if sh == "side":                 # stick laid on its side, across the stroke
-            along = np.clip(1 - np.abs(u) / max(2.5, r * 0.22), 0, 1)
+            along = np.clip(1 - np.abs(u) / max(2.5 * self.ps, r * 0.22), 0, 1)
             # light pressure: only the end the hand tilts onto touches (wedge-shaped starts and ends).
             # The ends of the contact drift smoothly along the stroke (j0, j1: a broken stick's ends),
             # and the pressure falls off toward them (a stick is not flat): soft, wobbly band edges
@@ -180,7 +218,7 @@ class DryTool:
             sgn = 1.0 if self.tilt >= 0 else -1.0
             lo, hi = (-r, -r + 2 * r * c) if sgn > 0 else (r - 2 * r * c, r)
             lo += j0 * r; hi += j1 * r
-            e = max(1.5, 0.3 * r, self.edge_px)
+            e = max(1.5 * self.ps, 0.3 * r, self.edge_px)
             across = np.clip(np.minimum(v - lo, hi - v) / e, 0, 1)
             across = across * across * (3 - 2 * across)
             prof = np.clip(1 + self.tilt * (v / max(r, 1)) * sgn * -1, 0.3, 1.3)
@@ -188,7 +226,7 @@ class DryTool:
             streak = 1 + 0.35 * self.face[k]
             return along * across * prof * streak
         if sh == "blade":
-            along = np.clip(0.9 - np.abs(u) + 0.5, 0, 1)
+            along = np.clip(0.9 - np.abs(u) / self.ps + 0.5, 0, 1)
             return along * np.clip(r - np.abs(v) + 0.5, 0, 1)
         if sh == "hard":                 # eraser corner: crisp disc
             return np.clip(r - np.sqrt(u * u + v * v) + 0.5, 0, 1)
@@ -214,14 +252,14 @@ class DryTool:
 
     def _ext(self, r):
         sh = self.spec["shape"]
-        return max(2.5, r * 0.22) if sh == "side" else (1.4 if sh == "blade" else r)
+        return max(2.5 * self.ps, r * 0.22) if sh == "side" else (1.4 * self.ps if sh == "blade" else r)
 
     def dab(self, cv, x, y, ang, press, rscale=1.0):
         if self.first:
             self._first(cv)
         # a mechanical pencil's lead has one diameter: the line keeps its width whatever the speed or
         # pressure (pressure still sets its darkness)
-        r = max(0.6, self.size / 2 * (1.0 if self.spec.get("fixed") else rscale))
+        r = max(0.6 * self.ps, self.size / 2 * (1.0 if self.spec.get("fixed") else rscale))
         if self.kind == "stick":         # recorded; laid at the end of the stroke
             self.q.append((float(x), float(y), float(ang), float(press), r, float(getattr(self, "step", 1.0)),
                            float(getattr(self, "speedfx", 0.0))))
@@ -240,7 +278,7 @@ class DryTool:
                     return
                 self.step = tr
             self._trav = 0.0
-        R = int(math.ceil(r)) + 2
+        R = int(math.ceil(r)) + self.pad      # the contact and its edge ramp
         x0, x1 = max(0, int(x) - R), min(cv.W, int(x) + R + 1)
         y0, y1 = max(0, int(y) - R), min(cv.H, int(y) + R + 1)
         if x0 >= x1 or y0 >= y1:
@@ -257,7 +295,7 @@ class DryTool:
             return
         sl = (slice(y0, y1), slice(x0, x1))
         pe = float(press) * (1 - 0.55 * min(1.0, getattr(self, "speedfx", 0.0)))
-        ds = min(1.0, getattr(self, "step", 1.0) / max(self._ext(r), 1.0))
+        ds = min(1.0, getattr(self, "step", 1.0) / max(self._ext(r), self.ps))
         getattr(self, "_" + self.kind)(cv, sl, m, pe, ds, r)
 
     def end(self, cv):
@@ -270,11 +308,11 @@ class DryTool:
         `_stroke` (rubbing A, reach RE, pressure P2, burnish BU, slide SL), computed in chunks of contacts."""
         wd = self.edge_px
         n = len(xs)
-        Rm = int(math.ceil(float(rs.max()))) + 2
+        Rm = int(math.ceil(float(rs.max()))) + self.pad
         off = np.arange(-Rm, Rm + 1, dtype=np.int32)
-        Ri = np.ceil(rs).astype(np.int32) + 2
+        Ri = np.ceil(rs).astype(np.int32) + self.pad
         pe = (press * (1 - 0.55 * np.minimum(1.0, sfx)) * pmul).astype(np.float32)
-        ds = np.minimum(1.0, steps / np.maximum(rs, 1.0)).astype(np.float32)
+        ds = np.minimum(1.0, steps / np.maximum(rs, self.ps)).astype(np.float32)
         reach = np.minimum(1.3, (0.1 + 1.25 * pe) * rkg).astype(np.float32)
         wA = ds * (0.25 + 0.75 * pe)
         wB = np.where(pe > 0.82, (pe - 0.82) * ds * 2.5, 0.0).astype(np.float32)
@@ -320,8 +358,9 @@ class DryTool:
         Q = np.asarray(q, np.float32)
         xs, ys, angs, press, rs, steps, sfx = Q.T
         dust = 0.0 if sp.get("oily") else float(sp.get("dust", M.DUST_K * sp.get("loose", 0.0)))
-        dpad = int(math.ceil(3 * DUST_MM[1] * M.PPM)) if dust > 0 else 0
-        Rmax = int(math.ceil(float(rs.max()))) + 2 + dpad
+        ps = self.ps
+        dpad = int(math.ceil(3 * DUST_MM[1] * M.PPM * ps)) if dust > 0 else 0
+        Rmax = int(math.ceil(float(rs.max()))) + self.pad + dpad
         x0, x1 = max(0, int(xs.min()) - Rmax), min(cv.W, int(xs.max()) + Rmax + 1)
         y0, y1 = max(0, int(ys.min()) - Rmax), min(cv.H, int(ys.max()) + Rmax + 1)
         if x0 >= x1 or y0 >= y1:
@@ -355,7 +394,7 @@ class DryTool:
             # read as hard-edged blocks otherwise); while it lands and lifts only the end the hand tilts onto
             # touches, so the band's ends are wedges, not square cuts. Fade length 1.0 r: tuned by eye.
             arc = np.concatenate([[0.0], np.cumsum(np.hypot(np.diff(xs), np.diff(ys)))])
-            Lf = max(2.0, 1.0 * float(np.median(rs)))
+            Lf = max(2.0 * ps, 1.0 * float(np.median(rs)))
             sm = lambda z: z * z * (3 - 2 * z)
             fade = sm(np.clip(arc / Lf, 0, 1)) * sm(np.clip((arc[-1] - arc) / Lf, 0, 1))
             fade = np.maximum(fade, 0.15)
@@ -367,7 +406,7 @@ class DryTool:
             self._tip_contacts(cv, xs, ys, angs, press, rs, steps, sfx, pmul, rk * grab, x0, y0, h, w, clip, A, RE, P2, BU, SL)
         for i in (range(n) if sp["shape"] != "tip" else ()):
             x, y, ang, pr, r = float(xs[i]), float(ys[i]), float(angs[i]), float(press[i]), float(rs[i])
-            R = int(math.ceil(r)) + 2
+            R = int(math.ceil(r)) + self.pad
             a0, a1 = max(x0, int(x) - R), min(x1, int(x) + R + 1)
             b0, b1 = max(y0, int(y) - R), min(y1, int(y) + R + 1)
             if a0 >= a1 or b0 >= b1:
@@ -380,7 +419,7 @@ class DryTool:
             if clip is not None:
                 m = m * clip[b0 - y0:b1 - y0, a0 - x0:a1 - x0]
             pe = pr * (1 - 0.55 * min(1.0, float(sfx[i]))) * pmul
-            ds = min(1.0, float(steps[i]) / max(self._ext(r), 1.0))
+            ds = min(1.0, float(steps[i]) / max(self._ext(r), ps))
             s = (slice(b0 - y0, b1 - y0), slice(a0 - x0, a1 - x0))
             m = m * float(fade[i])
             A[s] += m * (ds * (0.25 + 0.75 * pe))
@@ -391,7 +430,7 @@ class DryTool:
                 BU[s] += m * ((pe - 0.82) * ds * 2.5)
             if SL is not None:
                 SL[s] += m * (ds * pe * 0.12)
-        self.wear += 0.002 * float(np.minimum(1.0, steps / 2.0).sum())
+        self.wear += 0.002 * float(np.minimum(1.0, steps / (2.0 * ps)).sum())
         live = A > 1e-4
         if not live.any():
             return
@@ -431,7 +470,7 @@ class DryTool:
             f0 = f
             f = np.minimum(f, fmax)
             w8 = (A > 0.02).astype(np.float32)
-            sg2 = max(1.0, float(np.median(rs)))
+            sg2 = max(ps, float(np.median(rs)))
             gw = gaussian_filter(w8, sg2) + 1e-6
             Lm = gaussian_filter(L * w8, sg2) / gw
             dl = gaussian_filter(f * d * w8, sg2) / gw
@@ -445,8 +484,8 @@ class DryTool:
             shed = a * dust
             a = a - shed
             f = 1 - np.power(np.clip(1 - f, 1e-6, 1), 1 - dust)      # the line keeps 1 - dust of its mass: 1 - exp(-KC a (1 - dust))
-            s1, s2 = DUST_MM[0] * M.PPM, DUST_MM[1] * M.PPM
-            halo = DUST_W * gaussian_filter(shed, s1, mode="constant") + (1 - DUST_W) * gaussian_filter(shed, s2, mode="constant")
+            s1, s2 = DUST_MM[0] * M.PPM * ps, DUST_MM[1] * M.PPM * ps
+            halo = _haze(shed, s1, s2, ps)
             halo = halo * (0.6 + 0.8 * (1 - cv.tex[sl]))
             if ind is not None:
                 halo = halo * (1 - np.clip(ind[sl] * 1.5, 0, 1))
@@ -478,9 +517,9 @@ class DryTool:
                 wl = wl * (1 - np.clip(ind[sl] * 1.5, 0, 1))
             if wl.max() > 0.01:
                 c2 = cv.col[sl]
-                bc = np.stack([gaussian_filter(c2[..., i], 0.8, mode="nearest") for i in range(3)], -1)
+                bc = np.stack([gaussian_filter(c2[..., i], 0.8 * ps, mode="nearest") for i in range(3)], -1)
                 cv.col[sl] = c2 + (bc - c2) * wl[..., None]
-                cv.dep[sl] = d2 + (gaussian_filter(d2, 0.8, mode="nearest") - d2) * wl
+                cv.dep[sl] = d2 + (gaussian_filter(d2, 0.8 * ps, mode="nearest") - d2) * wl
         if SL is not None:                          # pastel on a full tooth slides and smears
             s = np.clip(SL * (1 - left), 0, 0.6)
             if s.max() > 0.01:
@@ -499,7 +538,7 @@ class DryTool:
         ind = getattr(cv, "indent", None)
         guard = 1 - np.clip(ind[sl], 0, 1) if ind is not None else 1.0
         amt = np.clip(m * pe * sp["blur"] * min(1.0, ds * 3.0), 0, 0.9) * guard
-        sig = max(0.8, r * sp.get("sig", 0.33))
+        sig = max(0.8 * self.ps, r * sp.get("sig", 0.33))
         # one separable blur of colour, deposit, loose dust and coverage together (same as six calls)
         sh0 = cv.sheen[sl] if hasattr(cv, "sheen") else None
         extra = [dep, loose, _cov(dep)] + ([sh0] if sh0 is not None else [])
@@ -635,6 +674,21 @@ class DryMedium(Medium):
         s = self.SUP.get(support, next(iter(self.SUP.values())))
         return paper_texture(h, w, s["tex"], self.PPM)
 
+    # the detail pass (detail.py; docs/MANUAL.md "Detail pass"): every tool and the render keep their physical size at
+    # cv.px_scale (DryTool.ps above), and the paper's tooth keeps its size and its statistics (detail_texture)
+    detail_scale_aware = True
+
+    def detail_texture(self, up, src):
+        """The paper's tooth in a detail: `up` is the canvas's height field resampled up (cubic, so each grain keeps
+        its physical size), `src` the canvas's own values under the region. Interpolation narrows the spread of
+        heights (a cubic between independent pixel-scale grains averages them), and the catch reads the height as a
+        share of the surface (`tex > 1 - reach` is that share: the field is histogram-equalised), so a stick pressed
+        the same way would touch fewer peaks in the detail. Each height is mapped onto the canvas's distribution in
+        the region by its rank: the same grains in the same places, with the canvas's share of peaks at every depth."""
+        q = np.quantile(src, np.linspace(0, 1, 1025)).astype(np.float64)
+        r = np.argsort(np.argsort(up, axis=None, kind="stable"), kind="stable").astype(np.float64) / max(up.size - 1, 1)
+        return np.interp(r, np.linspace(0, 1, 1025), q).reshape(up.shape).astype(np.float32)
+
     def init_state(self, cv, ground):
         s = self.sup(cv)
         g = hx(ground) if isinstance(ground, str) and ground.startswith("#") else cv.col[0, 0]
@@ -699,7 +753,7 @@ class DryMedium(Medium):
         left = np.clip((cap - cv.dep) / cap, 0, 1)
         base = mask * op * left
         soft = np.clip((tex - (1 - reach)) / 0.6 + 0.3, 0, 1)
-        a = base * (0.25 * catch + 0.75 * gaussian_filter(soft, 0.8)) * 0.85
+        a = base * (0.25 * catch + 0.75 * gaussian_filter(soft, 0.8 * getattr(cv, "px_scale", 1.0))) * 0.85
         if hasattr(cv, "indent"):
             a = a * (1 - np.clip(cv.indent * 1.5, 0, 1))      # rubbed powder does not reach into an indented groove
         col = np.asarray(col, np.float32)
@@ -834,7 +888,7 @@ class DryMedium(Medium):
                     flags.append(f"graphite: the guide lines still show along {vis:.0%} of their length: erase them in the "
                                  "light passages (kneaded or precision eraser with seek) or cover them")
             if drawn.any():
-                sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6) * _cov(cv.dep)
+                sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6 * getattr(cv, "px_scale", 1.0)) * _cov(cv.dep)
                 k = np.clip(sh * 0.32, 0, 0.42)
                 over = float((k[drawn] > self.SHINE_K).mean())
                 lines.append(f"graphite sheen: {over:.0%} of the drawn area shines strongly")
@@ -856,11 +910,12 @@ class DryMedium(Medium):
         """Share of the guide-line pixels where the line still reads: darker by more than 3 L* (eye) than the
         tone just around it."""
         import eyes
+        ps = float(getattr(cv, "px_scale", 1.0))
         g = cv.guide > 0.5
         L = eyes._srgb_to_lab(np.clip(cv.col, 0, 1))[0]
-        ring = (gaussian_filter(g.astype(np.float32), 2.5) > 0.02) & ~(gaussian_filter(g.astype(np.float32), 1.0) > 0.05)
-        w = gaussian_filter(ring.astype(np.float32), 3.0)
-        around = gaussian_filter(L * ring, 3.0) / np.maximum(w, 1e-4)
+        ring = (gaussian_filter(g.astype(np.float32), 2.5 * ps) > 0.02) & ~(gaussian_filter(g.astype(np.float32), 1.0 * ps) > 0.05)
+        w = gaussian_filter(ring.astype(np.float32), 3.0 * ps)
+        around = gaussian_filter(L * ring, 3.0 * ps) / np.maximum(w, 1e-4)
         d = (around - L)[g & (w > 0.02)]
         return float((d > 3.0).mean()) if d.size else 0.0
 
@@ -872,9 +927,12 @@ class DryMedium(Medium):
 
     # -- seeing: the paper's grain under a light from the upper left; matte
     def _grain(self, cv):
+        ps = float(getattr(cv, "px_scale", 1.0))
         h = cv.tex * 0.6 - 1.2 * getattr(cv, "indent", 0)
-        h = gaussian_filter(h, 0.7)
+        h = gaussian_filter(h, 0.7 * ps)
         gy, gx = np.gradient(h)
+        if ps != 1.0:                  # slopes per canvas px, so the grain lights the same at any scale
+            gy, gx = gy * ps, gx * ps
         return -(gx * 0.6 + gy * 0.8)
 
     def render(self, cv):
@@ -1191,13 +1249,14 @@ class Graphite(DryMedium):
         from scipy.ndimage import sobel, label, maximum_filter
         if cv.ref is None:
             raise SystemExit("transfer needs a schema (ref) first.")
-        lum = gaussian_filter(cv.ref.mean(-1), 1.5)
+        lum = gaussian_filter(cv.ref.mean(-1), 1.5 * getattr(cv, "px_scale", 1.0))
         e = np.hypot(sobel(lum, 0), sobel(lum, 1))
         e = e / (np.percentile(e, 99) + 1e-6)
         thin = (e > 0.35) & (e >= maximum_filter(e, 3))
         lab, n = label(thin, structure=np.ones((3, 3)))
         val = hx(color) if color else np.full(3, 1 - 0.4 * float(np.clip(strength, 0.05, 1)), np.float32)
         rng = np.random.default_rng(13)
+        ps = float(getattr(cv, "px_scale", 1.0))
         ys, xs = np.nonzero(lab)
         comp = lab[ys, xs]
         order = np.argsort(comp, kind="stable")
@@ -1206,7 +1265,7 @@ class Graphite(DryMedium):
         for py, px in zip(np.split(ys, cuts), np.split(xs, cuts)):
             if len(px) < 6:
                 continue
-            t = self.make_tool({"brush": "pencil", "grade": "2H"}, 2.0, val, rng)
+            t = self.make_tool({"brush": "pencil", "grade": "2H", "_px_scale": ps}, 2.0 * ps, val, rng)
             t.step = 1.0
             for x, y in zip(px[::2], py[::2]):
                 t.dab(cv, float(x), float(y), 0.0, 0.45)
@@ -1216,7 +1275,7 @@ class Graphite(DryMedium):
     def optics(self, cv, img, light, fill):
         # graphite's metallic shine under a raking light: the flattened flakes catch it, strongest on
         # dense soft darks and burnished passages; silvery, cool
-        sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6) * _cov(cv.dep)
+        sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6 * getattr(cv, "px_scale", 1.0)) * _cov(cv.dep)
         # the paper's relief modulates the shine (smooth bristol: hardly; relief 1 on drawing paper)
         rk = np.clip(0.55 + light * 7 * self.sup(cv).get("relief", 1.0), 0.15, 1.3)
         k = np.clip(sh * rk * 0.32, 0, 0.42)[..., None]
