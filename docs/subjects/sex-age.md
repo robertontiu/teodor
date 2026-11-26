@@ -155,7 +155,16 @@ The `scene` people (`studio/v8/figure.py`) were rebuilt on this page after the r
 
 **Still short:** the bob and the old man's horseshoe have hard-cut edges; long hair at the face is a thick curtain rather than strands; the lips read as two bands at close range; at a face 40 px wide the eye-contrast difference narrows (women 0.04-0.14 against men 0.03-0.04); the women's eye line (0.486 of the head above the chin) sits a little below the Met photographs' 0.51-0.54; seen from below with a high-contrast light, the jaw's under-planes still group into dark shapes, which the skin's light wrap only softens; a head with long hair costs about 33 s at 200 x 260 against about 10 s.
 
-## Sources
+## Studio note: the mesh rig (2026-11-26)
+
+People in `scene` are now a sculpted mesh (MakeHuman's base mesh and targets, CC0; `studio/v8/human.py`), not the primitive rig of section 2: the women's and men's bodies, the bust, the neck, the trapezius, the muscle masses and old age's changes are the mesh's own, made by MakeHuman's targets for sex, age, muscle and weight. Measured on the mesh standing (`human.body_stats`, slices of the mesh as a tape takes them, arms left out), primitive rig / mesh:
+
+- waist-to-hip ratio, woman 30 0.723 / 0.702 (target 0.72), man 30 0.885 / 0.815 (target 0.89); sturdy 0.707 / 0.841, heavy 0.708 / 0.878 (women / men), at 75 0.663 / 0.822. The mesh's average man has more waist than the norm, and its women's builds keep their ratio as they grow heavier (the weight targets scale waist and hips together);
+- biacromial breadth (shoulder joints plus 2 cm a side, as the primitive rig placed them) 0.341 / 0.401 m, against 0.367 / 0.411;
+- frontal waist over hip breadth 0.66 (woman) and 0.75 (man), against the primitive rig's 0.58-0.65 and 0.84-0.92: the mesh's silhouettes differ by sex less than the old rig's exaggerated ones, about as much as bodies do;
+- heads tall 7.46 (woman), 7.33 (man), 6.36 at eight, 7.22 / 6.98 at 75 (the canon: 7.5, 6.0, 7.3).
+
+**Read at thumbnail size** (`docs/gallery/figures_sheet.jpg`, the variant rows): the women read as women by the body's line and the face; the children as children; the old by stoop, face and hair. A beige fitted shirt over a woman's bust can read as bare skin: give clothes a colour that parts from the skin. **Still short:** shirts and bodices cling (no folds; the bust's underside shows); the man's waist is a little narrow for the norm.
 
 - [Johnson, Iida and Tassinary 2012, Person (mis)perception: functionally biased sex categorization of bodies, *Proc. R. Soc. B* (PubMed)](https://www.pubmed.gov/23075835/); [Live Science summary with WHR values](https://www.livescience.com/24038-brain-bias-male-bodies.html)
 - [Johnson and Tassinary 2005, Perceiving sex directly and indirectly: meaning in motion and morphology, *Psychological Science*](https://www.psychologicalscience.org/journals/psychological-science/j.1467-9280.2005.01633.x/)

@@ -11,6 +11,9 @@ studio/
                             opaque: gouache/tempera, woodblock), base.py (interface, kmix, KM films), spectral.py
     eyes.py                 measures (value, colour, edges, texture, structure) and comparison with targets
     scene.py                3D blockouts (figures, camera, light) for schemas
+    human.py, raster.py     people from MakeHuman's CC0 mesh (shape, expressions, skeleton), a numpy z-buffer
+    figure.py               the primitive rig, hair and cloth simulation
+    detail.py               the detail pass (paint a region at higher resolution)
     gallery.py, test_v8.py  mark sheets; tests including the v7 regression
   v0-by-hand … v7/          earlier studios, kept as records
   styles.json               researched currents (merged from styles.parts/); styles.local/ is gitignored
@@ -19,6 +22,7 @@ studio/
   pigments.json             pigment library with provenance
   calibration_refs.json     public-domain museum works used to calibrate media
   media.json                the media research as data
+  assets/LICENSES.md        licences and provenance of mesh assets
   signature.py              Teodor's signature, for any image
   contact_sheet.py          contact sheet of past work
 docs/

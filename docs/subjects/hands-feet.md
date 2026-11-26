@@ -61,7 +61,9 @@ The palm block takes one light and one shadow plane; each finger is a small cyli
 - **The thumb sits in the hand.** Its base is low on the wrist (Tuts+, section 1); a thenar pad wraps its metacarpal and a web joins its first joint to the index finger's knuckle, so the free thumb starts at about a third of the hand's length and doesn't hang from the wrist like a stick (**judgement** for the sizes).
 - **Contact.** A hand on something rests on it (section 6, "hands that don't touch"): a palm inside a surface is pushed out, a reaching hand with a resting or holding grip settles onto the surface under it, and each finger joint bends just enough to lie on the surface; with those grips the fingers curl down onto it. Fingers don't squash flesh or fur, and a grip doesn't wrap an object exactly (**judgement**, a geometric approximation).
 
-## Sources
+## 9. Studio note: the mesh hands (2026-11-26)
+
+Hands are now the MakeHuman mesh's hands (CC0; `studio/v8/human.py`): a sculpted palm with its pads and creases, knuckles, nails and the thumb's web, posed on the skeleton's finger bones (three per finger and the thumb's metacarpal, proximal and distal). The presets (`figure.HANDS`) keep their meaning: flexion of each joint toward the palm, spread in the palm's plane (on top of each finger's own slight fan, 70% of it kept; judgement), and the thumb out from the fingers' line, toward the palm and turned about its own axis so it flexes across the palm, as the primitive rig set it. A finger joint touching a surface bends just enough to rest on it, and a resting or holding grip curls down onto it. See `docs/gallery/figures_sheet.jpg`, the last three rows. **Still short:** in `grip` and `fist` the thumb folds over the fingers a little stiffly; fingers don't squash against what they touch; feet are the mesh's feet in shoes (no toe poses).
 
 - [Body proportions, Wikipedia](https://en.wikipedia.org/wiki/Body_proportions)
 - [Tuts+, human anatomy fundamentals: how to draw hands](https://design.tutsplus.com/tutorials/human-anatomy-fundamentals-how-to-draw-hands--cms-21440)

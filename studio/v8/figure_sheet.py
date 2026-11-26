@@ -1,4 +1,5 @@
-"""Study sheets from the people builder (figure.py), for checking by eye and as painter's references.
+"""Study sheets from the people builder (human.py, the mesh rig; figure.py with "rig": "primitive"), for checking
+by eye and as painter's references.
 
   python3 figure_sheet.py expressions out.jpg [sex] [age] [planes]   one head per expression preset
   python3 figure_sheet.py hands out.jpg                              every hand preset: back, thumb side, fingertips first
@@ -82,7 +83,7 @@ def figure_spec(sex, age, build, hair, clothes, yaw=20):
             "ground": {"color": "#6a6258"}, "masks": False, "objects": [o]}
 
 
-def expressions(sex="female", age=30, planes=0.45, w=200, h=260):
+def expressions(sex="female", age=30, planes=None, w=200, h=260):
     return sheet([head_spec(e, sex=sex, age=age, planes=planes) for e in EXPR_ORDER],
                  [f"{e}  (AU {'+'.join(sorted(figure.EXPRESSIONS[e], key=lambda k: int(k))) or '-'})" for e in EXPR_ORDER], 5, w, h)
 
@@ -105,7 +106,7 @@ if __name__ == "__main__":
     what, out = sys.argv[1], sys.argv[2]
     a = sys.argv[3:]
     if what == "expressions":
-        im = expressions(a[0] if a else "female", float(a[1]) if len(a) > 1 else 30, float(a[2]) if len(a) > 2 else 0.45)
+        im = expressions(a[0] if a else "female", float(a[1]) if len(a) > 1 else 30, float(a[2]) if len(a) > 2 else None)
     elif what == "hands":
         im = hands()
     elif what == "variants":

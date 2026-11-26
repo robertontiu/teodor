@@ -8,7 +8,7 @@ Moved from AGENTS.md. Back to the router: [AGENTS.md](../../AGENTS.md). Where ea
 - **Every number rests on research or measurement** (calibration reports in `docs/calibration/`, data in `docs/media-data.md`, `studio/pigments.json`, `studio/calibration_refs.json`). Mark values tuned by eye as such, in the code and in the medium's calibration report.
 - **Keep the painter's interface in sync:** `docs/MANUAL.md` (commands, intentions, views, report, finishing) and `docs/manual/<medium>.md`. They are all a painter sees.
 - **Engine edits while a painting runs** must be additive and atomic (temp file plus rename). Painters work on copies in their work dirs, which `tools/make_brief.py` makes.
-- **Dependencies:** `numpy scipy pillow`, plus `rsvg-convert` (librsvg) for SVG schemas and `ffmpeg` for time-lapses.
+- **Dependencies:** `numpy scipy pillow`, plus `rsvg-convert` (librsvg) for SVG schemas and `ffmpeg` for time-lapses. People in scenes use MakeHuman's CC0 mesh: run `python3 tools/fetch_human.py` once per machine (it caches about 6 MB in `~/.cache/teodor/human/`); without it, `person` falls back to the primitive rig. Licences: `studio/assets/LICENSES.md`.
 - **Canvas state** lives next to the studio as `{CANVAS}_*.npy` plus `{CANVAS}_meta.json`; the `CANVAS` env var picks a named canvas (default `main`). Every command saves a frame to `{CANVAS}_frames/` for the time-lapse.
 
 ## Adding a medium (an instrument)

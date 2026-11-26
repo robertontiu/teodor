@@ -148,7 +148,17 @@ Re-measured on frontal renders under a soft front light (200 x 260 px, Russell's
 
 The hair is no longer a cap (MANUAL, `hair`): see `sex-age`, studio note.
 
-## Sources
+## 10. Studio note: the mesh head (2026-11-26)
+
+The `scene` head is no longer the plane head of section 9: people are now the MakeHuman base mesh (CC0, sculpted on anatomical references), shaped by its targets for sex, age and ancestry, with its own eyeballs, teeth and tongue (`studio/v8/human.py`; licence in `studio/assets/LICENSES.md`). The plane head stays available as `"rig": "primitive"`; `planes` now groups the light over the mesh's smoothed form instead of literal planes (default 0).
+
+**Expressions** are FACS action units mapped onto MakeHuman's 32 expression unit targets (each target looked at on its own, then paired by its anatomy): AU 1 and 2 the inner and outer brow raisers, AU 4 the brow lowerer (with a little nose compression), AU 5 the lids opened up, AU 6 and 7 the lid slit (AU 6 with the cheek's upward pull at the mouth), AU 9 nose elevation and compression, AU 10 the upper lip's elevation, AU 12 the corner puller, AU 15 the depressor, AU 17 the lower lip's eversion, AU 20 the lip retraction with the platysma, AU 23 compression, AU 25 the lips' parting, AU 26 and 27 the jaw (27 adds the lateral stretch), AU 41, 43 and 45 lid closure. The mouth targets overlap, so an open jaw takes over from parting and stretching (otherwise the lips tear). Weights are judgement, checked on the sheet (`docs/gallery/figures_sheet.jpg`).
+
+**Per-pixel detail** in the base mesh's own coordinates: the iris (11.7 mm) and pupil (3.5 mm) at their anatomical sizes on the eyeball with a darker limbal ring, the lash line (a band at the lid margins, darker and wider in women), the brows (a thinner, higher arch in women), the beard zone. Lips, nails and the inside of the mouth come from MPFB2's UV masks.
+
+**Measured, primitive rig / mesh** (frontal heads 200 x 260 px under a soft front light, sun from the camera 22 degrees up; Russell's contrast on CIELAB L*, the eye against the cheek below it; the lips by their visible vertices): eye contrast, woman 30 0.202 / 0.177, man 35 0.150 / 0.146, woman 75 0.193 / 0.189, man 75 0.145 / 0.184 (the women stay above the men of their age, by less; at 75 they are level); the lips' redness over the skin (a*) woman 30 +9.3 / +7.3, man 35 +0.9 / +3.4; skin L* women 67.7 / 74.8, men 66.7 / 71.4; skin a* women 8.7 / 4.6, men 10.1 / 5.9 (women lighter and less red in both). On the mesh's own profile: eye line over the chin 0.482 of the head (woman 30), 0.496 (man 35), 0.444 (children of 8), 0.46-0.48 (75); the lower third (subnasale to menton) 0.26 (women) and 0.25 (men) of the head, against Farkas's 0.295 / 0.313: **the mesh's lower face is short and not longer in men**, a difference from the measured norm that the targets used here can't correct (MakeHuman's chin and mouth targets were not fetched). Head heights 206 mm (woman) and 221 mm (man).
+
+**Still failing:** a scream tears the corners of the mouth a little; the neutral mouth is slightly parted; the skin has no texture; one face per sex, age and ancestry (vary expression, light and `ancestry` between people).
 
 - [Facial Action Coding System, Wikipedia](https://en.wikipedia.org/wiki/Facial_Action_Coding_System): action units, muscles, emotion prototypes.
 - [iMotions, the Duchenne smile](https://imotions.com/blog/learning/research-fundamentals/duchenne-smile/)

@@ -2,7 +2,7 @@
 
 Back to the router: [AGENTS.md](../../AGENTS.md). The full protocol is [docs/orchestration.md](../orchestration.md).
 
-1. Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing.
+1. Install `numpy scipy pillow`, `ffmpeg` and `librsvg` (`rsvg-convert`) if they're missing, and run `python3 tools/fetch_human.py` once (the CC0 human mesh).
 2. If the commission names a current that isn't in `studio/styles.json`, or a medium the studio doesn't have, research or build it first. A request to paint like a specific artist gets a temporary, gitignored configuration in `studio/styles.local/`.
 3. Set up the work dir and the brief, outside the repo:
    `python3 tools/make_brief.py ../teodor-work/NN --commission "a public exhibition on a theme. The theme is: ..." --theme [--style ID|free] [--medium M] [--support S]`

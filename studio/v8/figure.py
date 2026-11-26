@@ -1085,7 +1085,7 @@ def head_part(o, body, O, M, skin, eye_col="#e8e0d6", iris_col="#3a2a22", lip_co
 HAIR_STYLES = ("short", "crop", "bob", "long", "bun", "ponytail", "slick", "receding", "bald")
 
 
-def hair_part(o, body, O, M, wind, collide, skull=None):
+def hair_part(o, body, O, M, wind, collide, skull=None, ye=None, cranium=True):
     """Hair as masses with volume, not a skull cap (sex-age.md sections 1 and 3: the hair silhouette is
     the cue that survives the smallest sizes):
     - over the skull a solid mass whose thickness depends on the style, thicker on the crown and, for
@@ -1110,7 +1110,7 @@ def hair_part(o, body, O, M, wind, collide, skull=None):
     H = body.u
     M = np.asarray(M, np.float32)
     S = face_shape(body)
-    ye = S["ye"]
+    ye = S["ye"] if ye is None else ye        # the mesh rig (human.py) passes its own eye line
     th = hd.get("thickness", {"short": 0.035 + 0.015 * fs, "crop": 0.045, "bob": 0.05, "long": 0.055, "bun": 0.03, "ponytail": 0.032,
                               "slick": 0.012, "receding": 0.035, "bald": 0.02}.get(style, 0.03))
     vol = hd.get("volume", 1.0)
@@ -1152,12 +1152,15 @@ def hair_part(o, body, O, M, wind, collide, skull=None):
         else:
             th_ = th
         r_ = np.clip((y - hl) / 0.2, 0, 1)
+        if style == "receding" and not cranium:    # on a sculpted skull the horseshoe thins out toward its top edge
+            top_ = 0.23 + 0.12 * np.clip(-(z + 0.1) / 0.3, 0, 1)
+            r_ = r_ * np.clip((top_ - y) / 0.1, 0, 1)
         t = th_ * r_ * r_ * (3 - 2 * r_) - 0.01 * (1 - r_)     # the mass thins to nothing at the hairline: no ledge
         t = t * (1 + 0.25 * np.clip((y - 0.2) / 0.25, 0, 1) * np.clip((0.15 - z) / 0.2, 0, 1)
                  * (style not in ("slick", "bun", "ponytail")))   # a fuller crown, behind the hairline
         ellc = lambda qq: (np.linalg.norm((qq - cr_c) / (cr_r * 0.98), axis=1) - 1) * 0.37
         # the hair rests on the skull's planes but rounds over their corners (a mass, not a plane cast)
-        base = (lambda qq: smin(skull(qq), ellc(qq), 0.06)) if skull is not None else ellc
+        base = (lambda qq: smin(skull(qq), ellc(qq), 0.06)) if skull is not None and cranium else (skull if skull is not None else ellc)
         if falls:          # hair that falls widens downward (an A-shaped mass) and hangs below the skull: the skull's
             # cross-section a little above the ears, carried straight down
             t = t * (1 + 0.35 * np.clip((0.05 - y) / 0.4, 0, 1))

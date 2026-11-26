@@ -6,7 +6,10 @@ soft shadows, ambient occlusion and atmospheric perspective, as a schema to pain
 
 Units are meters. y is up. The camera looks along -z by default (put it at +z looking toward
 the origin). Object rotation "rot" is degrees around y. The camera can roll and look straight down
-or up. People ("person"), hands, animals and water come from figure.py. Every render also records
+or up. People ("person") and lone hands are meshes from human.py (the MakeHuman base mesh), drawn by the
+z-buffer in raster.py and composited with the marched SDF world by depth, with its shadows (a shadow map)
+and ambient occlusion (a proxy distance field); `"rig": "primitive"` builds the older SDF people of
+figure.py. Animals and water come from figure.py. Every render also records
 which part of which object each pixel shows; render_file saves these as element masks
 (<canvas>_elements.npz + <canvas>_elements.json; see docs/MANUAL.md, "The schema").
 """
@@ -104,11 +107,62 @@ def from_part(d):
     n.plane = d.get("plane", False)
     n.subf, n.sub, n.glossf = d.get("subf"), d.get("sub"), d.get("glossf")
     n.nsmooth = d.get("nsmooth", 0.0)
+    if d.get("proxy"):
+        n.kind = "proxy"       # a stand-in field for a mesh: ambient occlusion and contact only, never seen
     return n
+
+
+class MeshNode:
+    """A triangle mesh (a person from human.py), drawn by the rasteriser (raster.py), not marched."""
+    kind = "mesh"
+
+    def __init__(self, mesh):
+        self.mesh = mesh
+        self.f = None
+        self.owner, self.otype, self.element = None, None, "mesh"
+        self.sub = mesh["sub"]
+        v = mesh["verts"]
+        c = (v.min(0) + v.max(0)) / 2
+        self.bound = (list(c), float(np.linalg.norm(v.max(0) - v.min(0)) / 2))
+        self.plane = False
+        self.colorf = None
+        self._nc = None
+
+    def coarse_normals(self, n, iters=10):
+        """Vertex normals smoothed over the mesh: the big planes for `planes`/`body_planes`."""
+        if self._nc is None:
+            m = self.mesh
+            nc = n.copy()
+            for _ in range(iters):
+                nc = m["adj"] @ nc
+                nc = nc / (np.linalg.norm(nc, axis=1, keepdims=True) + 1e-9)
+            self._nc = nc
+        return self._nc
+
+
+_WARNED = []
+
+
+def _mesh_rig(o):
+    """True when this person or hand is built from the human mesh (the default), False for the
+    primitive rig (`"rig": "primitive"`, or the mesh assets are missing: tools/fetch_human.py)."""
+    if o.get("rig", "mesh") == "primitive":
+        return False
+    import human
+    if human.available():
+        return True
+    if not _WARNED:
+        _WARNED.append(1)
+        print("scene: human mesh assets missing (python3 tools/fetch_human.py); using the primitive rig", file=sys.stderr)
+    return False
 
 
 def node_person(o):
     import figure
+    if _mesh_rig(o):
+        import human
+        mesh, parts, J = human.person(o)
+        return [MeshNode(mesh)] + [MeshNode(m) for m in J.get("_meshes", [])] + [from_part(d) for d in parts]
     parts, _ = figure.person(o)
     return [from_part(d) for d in parts]
 
@@ -127,6 +181,9 @@ def node_hand(o):
     """A lone hand for studies: pos = wrist, fingers = direction the fingers point, palm = the
     direction the palm faces, preset (see figure.HANDS), side l|r, length in meters."""
     import figure
+    if _mesh_rig(o):
+        import human
+        return [MeshNode(human.hand(o))]
     fdir = figure.nrm(o.get("fingers", [0, -1, 0]))
     palm = figure.nrm(o.get("palm", [0, 0, 1]))
     palm = figure.nrm(palm - (palm @ fdir) * fdir)
@@ -385,6 +442,7 @@ class Scene:
     def __init__(self, spec):
         self.spec = spec
         self.nodes = []
+        self.meshes = []
         g = spec.get("ground", {})
         counts = {}
         objs = spec.get("objects", [])
@@ -398,7 +456,7 @@ class Scene:
             t = o["type"]
             oo = dict(o, _ground_y=g.get("y", 0.0) if g.get("enabled", True) else -1e9, _wind=spec.get("wind", [0, 0, 0]))
             if t in ("person", "hand"):
-                others = [nd for b in built if b for nd in b if not getattr(nd, "plane", False)]
+                others = [nd for b in built if b for nd in b if not getattr(nd, "plane", False) and getattr(nd, "f", None) is not None]
                 if others:
                     oo["_collide"] = self._collider(others)
             built[i] = BUILDERS[t](oo)
@@ -411,7 +469,8 @@ class Scene:
                 nd.owner, nd.otype = owner, t
                 if t in LEGACY_ELEMENTS:
                     nd.element = LEGACY_ELEMENTS[t][min(j, 1)]
-            self.nodes += new
+            self.nodes += [nd for nd in new if getattr(nd, "kind", "") != "mesh"]
+            self.meshes += [nd for nd in new if getattr(nd, "kind", "") == "mesh"]
         self.pix = 0.0
         self.ground_y = g.get("y", 0.0)
         self.gc1, self.gc2 = hx(g.get("color", "#6a6048")), hx(g.get("color2", g.get("color", "#6a6048")))
@@ -433,9 +492,10 @@ class Scene:
             return d
         return f
 
-    def sdf(self, p, with_mat=False):
+    def sdf(self, p, with_mat=False, proxy=False):
         """Distance to the scene. Each node is evaluated only on points near its bounding sphere;
-        elsewhere the distance to the sphere stands in (a safe lower bound)."""
+        elsewhere the distance to the sphere stands in (a safe lower bound). Proxy fields (a mesh's
+        stand-in) count only when `proxy` is set (ambient occlusion)."""
         N = p.shape[0]
         if self.has_ground:
             D = p[:, 1] - self.ground_y
@@ -445,6 +505,8 @@ class Scene:
             M = np.full(N, -1, np.int32)
         off = 1 if self.has_ground else 0
         for i, n in enumerate(self.nodes):
+            if n.kind == "proxy" and not proxy:
+                continue
             if getattr(n, "plane", False):
                 d = n.f(p)
             else:
@@ -472,7 +534,8 @@ class Scene:
         n = sum(k[i][None, :] * self.sdf(p + k[i] * e)[:, None] for i in range(4))
         return norm(n)
 
-    def march(self, ro, rd, tmax=400, steps=180):
+    def march(self, ro, rd, tmax=400, steps=180, tlim=None):
+        """Sphere tracing; `tlim` (per ray) stops a ray early where a mesh is already nearer."""
         N = rd.shape[0]
         t = np.full(N, 0.05, np.float32)
         hit = np.zeros(N, bool)
@@ -488,7 +551,11 @@ class Scene:
             hit[idx[h]] = True
             active[idx[h]] = False
             active[idx[t[idx] > tmax]] = False
+            if tlim is not None:
+                active[idx[t[idx] > tlim[idx]]] = False
             last = (idx, d)
+        if tlim is not None:
+            active &= ~(t > tlim)
         if self.pix and active.any():   # rays that ran out of steps grazing a surface count as hits
             idx = np.nonzero(active)[0]
             d = self.sdf(ro[idx] + rd[idx] * t[idx, None])
@@ -519,7 +586,7 @@ class Scene:
         sca = 1.0
         for i in range(5):
             h = 0.03 + 0.12 * i
-            d = self.sdf(p + n * h)
+            d = self.sdf(p + n * h, proxy=True)
             occ += (h - d) * sca
             sca *= 0.75
         return np.clip(1 - 1.8 * occ, 0.15, 1)
@@ -545,6 +612,7 @@ class Scene:
         v = -(ys + 0.5 - H / 2) / (H / 2)
         f = 1 / math.tan(fov / 2)
         rd = norm(u.reshape(-1, 1) * rt + v.reshape(-1, 1) * up + f * fw).astype(np.float32)
+        self.cam = (ro, rt, up, fw, f)
         RO = np.broadcast_to(ro, rd.shape).astype(np.float32)
         return RO, rd, fov
 
@@ -572,12 +640,26 @@ class Scene:
             c = c + (scol / max(scol.max(), 1e-6)) * (glow * sd ** 8 + 0.9 * (sd > math.cos(R(sun.get("disc", 1.6)))))[:, None]
             return c
 
-        t, hit = self.march(RO, rd, steps=240 if fine else 180)
+        # meshes first (z-buffer): their depth bounds the march, and they win where they are nearer
+        ms = self.raster_meshes(W, H, rd) if self.meshes else None
+        tlim = ms["t"] if ms else None
+        if ms:
+            fine = True
+            self.pix = fov / H
+        t, hit = self.march(RO, rd, steps=240 if fine else 180, tlim=tlim)
         img = skycol(rd)
-        idx = np.nonzero(hit)[0]
-        p = RO[idx] + rd[idx] * t[idx, None]
-        _, mat = self.sdf(p, with_mat=True)
-        n = self.normal(p) if not fine else self.normal(p, np.maximum(0.0006, 0.5 * self.pix * t[idx]))
+        if ms:
+            mwin = np.isfinite(ms["t"]) & ~(hit & (t < ms["t"]))
+            hit = hit & ~mwin
+        idx_s = np.nonzero(hit)[0]
+        idx_m = np.nonzero(mwin)[0] if ms else np.zeros(0, np.int64)
+        ns = len(idx_s)
+        idx = np.concatenate([idx_s, idx_m])
+        tt = np.concatenate([t[idx_s], ms["t"][idx_m] if ms else np.zeros(0, np.float32)]).astype(np.float32)
+        p = RO[idx] + rd[idx] * tt[:, None]
+        _, mat = self.sdf(p[:ns], with_mat=True)
+        n = np.zeros((len(idx), 3), np.float32)
+        n[:ns] = self.normal(p[:ns]) if not fine else self.normal(p[:ns], np.maximum(0.0006, 0.5 * self.pix * tt[:ns]))
         base = np.zeros((len(idx), 3), np.float32)
         emit = np.zeros(len(idx), np.float32)
         gloss = np.zeros(len(idx), np.float32)
@@ -587,11 +669,12 @@ class Scene:
         off = 1 if self.has_ground else 0
         if self.has_ground:
             g = mat == 0
-            gx, gz = p[g, 0], p[g, 2]
+            gx, gz = p[:ns][g, 0], p[:ns][g, 2]
             nz = 0.5 + 0.25 * np.sin(gx * 0.7 + np.sin(gz * 0.5) * 2) * np.sin(gz * 0.9) + 0.25 * np.sin(gx * 2.3 + gz * 1.7)
-            base[g] = self.gc1 * (1 - nz[:, None]) + self.gc2 * nz[:, None]
+            base[:ns][g] = self.gc1 * (1 - nz[:, None]) + self.gc2 * nz[:, None]
         for i, nd in enumerate(self.nodes):
-            m = mat == i + off
+            m = np.zeros(len(idx), bool)
+            m[:ns] = mat == i + off
             if not m.any():
                 continue
             base[m] = nd.colorf(p[m]) if nd.colorf is not None else nd.color
@@ -609,7 +692,12 @@ class Scene:
                 nc = self.normal(pm, 0.025 * nd.scale)
                 n[m] = norm(n[m] * (1 - nd.planes) + nc * nd.planes)
                 pl[m] = nd.planes
-        pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * t[idx])[:, None]
+        if ms:
+            sl = slice(ns, None)
+            a = self.shade_meshes(ms, idx_m)
+            p[sl] = a["p"]; n[sl] = a["n"]; base[sl] = a["base"]; gloss[sl] = a["gloss"]; wr[sl] = a["wrap"]
+            pl[sl] = a["planes"]; sublab[sl] = a["elem"]
+        pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * tt)[:, None]
         # skin scatters light under its surface, so the light wraps a little past the terminator
         # ("wrap" diffuse; 0 for everything but skin parts that ask for it)
         dif = np.clip((n @ ld + wr) / (1 + wr), 0, 1)
@@ -617,6 +705,15 @@ class Scene:
         lit = dif > 0
         if lit.any():
             sh[lit] = self.shadow(pe[lit], ld, k=sun.get("softness", 10))
+            if ms and ld[1] > -0.2:
+                # what the meshes shade, on themselves and on everything else: a shadow map from the sun
+                import raster
+                smap = raster.ShadowMap(np.concatenate([m.mesh["verts"] for m in self.meshes]),
+                                        np.concatenate([m.mesh["tris"] + o_ for m, o_ in zip(self.meshes, np.cumsum([0] + [len(m.mesh["verts"]) for m in self.meshes])[:-1])]),
+                                        ld, softness=sun.get("softness", 10))
+                li = np.nonzero(lit & (sh > 0))[0]
+                if len(li):
+                    sh[li] *= smap.visibility(p[li], n[li])
         ao = self.ao(pe, n)
         hemi = (0.5 + 0.5 * n[:, 1])[:, None]
         ambient = (asky * hemi + agr * (1 - hemi)) * ai
@@ -641,7 +738,7 @@ class Scene:
             att = L.get("intensity", 2.0) / (1 + (dist / L.get("radius", 3.0)) ** 2)
             col += base * hx(L.get("color", "#ffc070")) * (np.clip((n * lvn).sum(1), 0, 1) * att * ao)[:, None]
         col += base * emit[:, None]
-        fogf = 1 - np.exp(-t[idx] * fden)
+        fogf = 1 - np.exp(-tt * fden)
         sdir = np.clip(rd[idx] @ ld, 0, 1) ** 6 * 0.5
         col = col * (1 - fogf[:, None]) + (fcol[None, :] + (scol[None, :] * sdir[:, None] * 0.25)) * fogf[:, None]
         img[idx] = col
@@ -650,14 +747,100 @@ class Scene:
         img = img ** (1 / 1.08)
         # what each pixel shows: node index (-1 sky, -2 ground), and depth
         lab = np.full(W * H, -1, np.int32)
-        lab[idx] = mat - off
+        lab[idx_s] = mat - off
+        if ms:
+            lab[idx_m] = len(self.nodes) + ms["mesh"][idx_m]
         sl = np.zeros(W * H, np.int32)
         sl[idx] = sublab
         self.sublabels = sl.reshape(H, W)
         dep = np.full(W * H, np.inf, np.float32)
-        dep[idx] = t[idx]
+        dep[idx] = tt
         self.labels, self.depth, self.size = lab.reshape(H, W), dep.reshape(H, W), (W, H)
         return (np.clip(img, 0, 1).reshape(H, W, 3) * 255).astype(np.uint8)
+
+    def raster_meshes(self, W, H, rd):
+        """Every mesh into one z-buffer from the camera: per pixel the distance along the ray `t`
+        (inf where no mesh), which mesh, which triangle and the perspective-correct barycentrics."""
+        import raster
+        ro, rt, up, fw, f = self.cam
+        zb = np.full((H, W), np.inf)
+        tb = np.full((H, W), -1, np.int64)
+        bb = np.zeros((H, W, 3), np.float32)
+        mb = np.full((H, W), -1, np.int64)
+        for k, m in enumerate(self.meshes):
+            v = m.mesh["verts"].astype(np.float64)
+            D = v - ro
+            xc, yc, zc = D @ rt, D @ up, D @ fw
+            zs = np.where(zc > 1e-3, zc, 1e-3)
+            sx = f * xc / zs * (H / 2) + W / 2 - 0.5
+            sy = -f * yc / zs * (H / 2) + H / 2 - 0.5
+            z, tr, b = raster.raster(sx, sy, np.where(zc > 1e-3, zc, -1.0), m.mesh["tris"], W, H)
+            win = z < zb
+            zb[win], tb[win], bb[win], mb[win] = z[win], tr[win], b[win], k
+        cosr = (rd @ fw).reshape(-1)
+        t = (zb.reshape(-1) / cosr).astype(np.float32)
+        return dict(t=t, tri=tb.reshape(-1), bary=bb.reshape(-1, 3), mesh=mb.reshape(-1))
+
+    def shade_meshes(self, ms, idx):
+        """Surface attributes of the mesh pixels: position, normal (vertex normals; the eyes as true
+        spheres; blended toward smoothed normals by `planes`), colour with per-pixel detail, gloss,
+        light wrap, the element per pixel."""
+        import human
+        N = len(idx)
+        out = dict(p=np.zeros((N, 3), np.float32), n=np.zeros((N, 3), np.float32), base=np.zeros((N, 3), np.float32),
+                   gloss=np.zeros(N, np.float32), wrap=np.zeros(N, np.float32), planes=np.zeros(N, np.float32),
+                   elem=np.zeros(N, np.int32))
+        mk = ms["mesh"][idx]
+        for k, m in enumerate(self.meshes):
+            sel = np.nonzero(mk == k)[0]
+            if not len(sel):
+                continue
+            M = m.mesh
+            T = M["tris"][ms["tri"][idx[sel]]]
+            b = ms["bary"][idx[sel]].astype(np.float32)
+            interp = lambda a: (a[T[:, 0]] * b[:, 0:1] + a[T[:, 1]] * b[:, 1:2] + a[T[:, 2]] * b[:, 2:3])
+            v = M["verts"]
+            if "_vn" not in M:
+                M["_vn"] = human.vertex_normals(v.astype(np.float64), M["tris"]).astype(np.float32)
+            vn = M["_vn"]
+            P_ = interp(v)
+            nn = norm(interp(vn))
+            if M.get("two_sided"):          # cloth: the side facing the camera
+                rdp = norm(P_ - np.asarray(self.cam[0], np.float32)[None])
+                nn = np.where(((nn * rdp).sum(1) > 0)[:, None], -nn, nn)
+            top = T[np.arange(len(T)), np.argmax(b, 1)]          # the vertex nearest the pixel: discrete attributes
+            el = M["elem"][top]
+            col = interp(M["color"])
+            look = M.get("look")
+            if look is not None:
+                prest = interp(M["rest"])
+                eid = M["eye_id"][top]
+                eye = eid >= 0
+                if eye.any():
+                    col[eye] = look.eye(prest[eye].astype(np.float64), eid[eye] == 0)
+                    for e in (0, 1):
+                        se = eid == e
+                        if se.any():
+                            c, r = M["eye"][e]
+                            nn[se] = norm(P_[se] - c[None].astype(np.float32))
+                hd = ((el == human.EL["face"]) | (el == human.EL["head"])) & ~eye
+                if hd.any():
+                    ph = prest[hd].astype(np.float64)
+                    c2 = look.lash_line(ph, look.brows(ph, col[hd].astype(np.float64)))
+                    col[hd] = look.beard_zone(ph, c2)
+            pl = interp(M["planes"][:, None])[:, 0]
+            if (pl > 0).any():
+                nc = m.coarse_normals(vn)
+                ncp = norm(interp(nc))
+                nn = norm(nn * (1 - pl[:, None]) + ncp * pl[:, None])
+            out["p"][sel] = P_
+            out["n"][sel] = nn
+            out["base"][sel] = np.clip(col, 0, 1)
+            out["gloss"][sel] = interp(M["gloss"][:, None])[:, 0]
+            out["wrap"][sel] = interp(M["wrap"][:, None])[:, 0]
+            out["planes"][sel] = pl
+            out["elem"][sel] = el
+        return out
 
     def element_masks(self, full):
         """Masks per object and element at the canvas size: {key: bool (H,W)}, plus an index."""
@@ -666,11 +849,19 @@ class Scene:
         lab = self.labels
         groups = {}
         for i, nd in enumerate(self.nodes):
+            if nd.kind == "proxy":
+                continue
             if nd.sub:
                 for j, el in enumerate(nd.sub):
                     groups.setdefault((nd.owner, nd.otype, el), []).append((i, j))
             else:
                 groups.setdefault((nd.owner, nd.otype, nd.element), []).append((i, None))
+        for k, nd in enumerate(self.meshes):
+            i = len(self.nodes) + k
+            for j, el in enumerate(nd.sub):
+                groups.setdefault((nd.owner, nd.otype, el), []).append((i, j))
+                if el == "face":          # the face is part of the head
+                    groups.setdefault((nd.owner, nd.otype, "head"), []).append((i, j))
         masks, index = {}, []
         owners = {}
         sub = self.sublabels
@@ -682,9 +873,9 @@ class Scene:
             return m
         for (owner, otype, el), ids in groups.items():
             m = mask_of(ids)
-            if not m.any() and el not in ("head", "hands", "torso", "drapery"):
+            if not m.any() and el not in ("head", "face", "hands", "torso", "drapery"):
                 continue
-            owners.setdefault((owner, otype), []).extend(ids)
+            owners.setdefault((owner, otype), []).extend(i_ for i_ in ids if i_ not in owners.get((owner, otype), []))
             key = f"{owner}.{el}"
             masks[key] = m
             index.append({"key": key, "object": owner, "type": otype, "element": el})
