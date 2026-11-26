@@ -65,7 +65,7 @@ draft takes about 25 s, final about 60 s. It renders to {WORKDIR}/main_look.png.
    {"type":"capsule","a","b","r","color"}, {"type":"cylinder","pos","r","h","color"}, {"type":"fence","a","b","h","color"}, {"type":"tree","pos","h","bare":true,"color","trunk"}
  ]
 }
-The 3D camera can't roll and the mannequin can't lie down; for overhead or tilted views, or flat styles (icons, prints, cubist facets, abstraction), design the schema as an SVG composition instead (viewBox 0 0 1200 1600; set it with `studio.py ref file.svg`). An SVG overlay (transparent background) can be composited over a render.
+The 3D scene's camera can roll and look straight down or up, and its people can lie, sit, lean, reach and throw, with plane heads, expressions, hands, cloth and hair (MANUAL, "Scene blockouts"). For flat styles (icons, prints, cubist facets, abstraction), design the schema as an SVG composition instead (viewBox 0 0 1200 1600; set it with `studio.py ref file.svg`). An SVG overlay (transparent background) can be composited over a render.
 
 === PAINTING (full reference: docs/MANUAL.md and {MANUAL}) ===
 - python3 {WORKDIR}/studio.py new "#RRGGBB" --medium {MEDIUM} --support {SUPPORT} --style {STYLE_ID}   (do this BEFORE rendering the schema, because new clears it)
