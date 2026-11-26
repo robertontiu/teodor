@@ -1,0 +1,285 @@
+{
+ "format": "teodor-elements/1",
+ "image": "b11.png",
+ "scene": "b11.json",
+ "size": [
+  1200,
+  1600
+ ],
+ "elements": [
+  {
+   "key": "stall.object",
+   "object": "stall",
+   "type": "box",
+   "element": "object",
+   "pixels": 552430,
+   "share": 0.28772,
+   "bbox": [
+    0,
+    0,
+    1200,
+    1426
+   ],
+   "centroid": [
+    562.8,
+    634.2
+   ],
+   "depth_m": 4.065
+  },
+  {
+   "key": "crateA.object",
+   "object": "crateA",
+   "type": "box",
+   "element": "object",
+   "pixels": 109352,
+   "share": 0.05695,
+   "bbox": [
+    0,
+    331,
+    364,
+    805
+   ],
+   "centroid": [
+    148.5,
+    554.3
+   ],
+   "depth_m": 3.525
+  },
+  {
+   "key": "crateB.object",
+   "object": "crateB",
+   "type": "box",
+   "element": "object",
+   "pixels": 100765,
+   "share": 0.05248,
+   "bbox": [
+    188,
+    114,
+    693,
+    544
+   ],
+   "centroid": [
+    461.5,
+    294.9
+   ],
+   "depth_m": 3.723
+  },
+  {
+   "key": "crateC.object",
+   "object": "crateC",
+   "type": "box",
+   "element": "object",
+   "pixels": 93534,
+   "share": 0.04872,
+   "bbox": [
+    512,
+    0,
+    990,
+    320
+   ],
+   "centroid": [
+    763.4,
+    121.7
+   ],
+   "depth_m": 3.928
+  },
+  {
+   "key": "seat.object",
+   "object": "seat",
+   "type": "box",
+   "element": "object",
+   "pixels": 40122,
+   "share": 0.0209,
+   "bbox": [
+    468,
+    745,
+    923,
+    1186
+   ],
+   "centroid": [
+    639.0,
+    1007.9
+   ],
+   "depth_m": 3.869
+  },
+  {
+   "key": "man.torso",
+   "object": "man",
+   "type": "person",
+   "element": "torso",
+   "pixels": 0,
+   "share": 0.0
+  },
+  {
+   "key": "man.neck",
+   "object": "man",
+   "type": "person",
+   "element": "neck",
+   "pixels": 189,
+   "share": 0.0001,
+   "bbox": [
+    473,
+    436,
+    487,
+    460
+   ],
+   "centroid": [
+    480.4,
+    446.7
+   ],
+   "depth_m": 3.508
+  },
+  {
+   "key": "man.arms",
+   "object": "man",
+   "type": "person",
+   "element": "arms",
+   "pixels": 22111,
+   "share": 0.01152,
+   "bbox": [
+    459,
+    594,
+    814,
+    869
+   ],
+   "centroid": [
+    654.3,
+    755.9
+   ],
+   "depth_m": 3.532
+  },
+  {
+   "key": "man.legs",
+   "object": "man",
+   "type": "person",
+   "element": "legs",
+   "pixels": 155,
+   "share": 8e-05,
+   "bbox": [
+    1031,
+    1273,
+    1068,
+    1294
+   ],
+   "centroid": [
+    1048.0,
+    1285.1
+   ],
+   "depth_m": 3.64
+  },
+  {
+   "key": "man.feet",
+   "object": "man",
+   "type": "person",
+   "element": "feet",
+   "pixels": 9538,
+   "share": 0.00497,
+   "bbox": [
+    718,
+    1172,
+    1159,
+    1332
+   ],
+   "centroid": [
+    964.9,
+    1283.0
+   ],
+   "depth_m": 3.641
+  },
+  {
+   "key": "man.hands",
+   "object": "man",
+   "type": "person",
+   "element": "hands",
+   "pixels": 11725,
+   "share": 0.00611,
+   "bbox": [
+    565,
+    763,
+    828,
+    898
+   ],
+   "centroid": [
+    694.4,
+    825.8
+   ],
+   "depth_m": 3.52
+  },
+  {
+   "key": "man.head",
+   "object": "man",
+   "type": "person",
+   "element": "head",
+   "pixels": 14256,
+   "share": 0.00743,
+   "bbox": [
+    338,
+    370,
+    484,
+    505
+   ],
+   "centroid": [
+    408.3,
+    443.1
+   ],
+   "depth_m": 3.461
+  },
+  {
+   "key": "man.hair",
+   "object": "man",
+   "type": "person",
+   "element": "hair",
+   "pixels": 4755,
+   "share": 0.00248,
+   "bbox": [
+    311,
+    348,
+    434,
+    492
+   ],
+   "centroid": [
+    346.8,
+    405.1
+   ],
+   "depth_m": 3.495
+  },
+  {
+   "key": "man.drapery",
+   "object": "man",
+   "type": "person",
+   "element": "drapery",
+   "pixels": 217335,
+   "share": 0.1132,
+   "bbox": [
+    347,
+    411,
+    1079,
+    1294
+   ],
+   "centroid": [
+    675.2,
+    799.6
+   ],
+   "depth_m": 3.534
+  },
+  {
+   "key": "man.all",
+   "object": "man",
+   "type": "person",
+   "element": "all",
+   "pixels": 280085,
+   "share": 0.14588,
+   "bbox": [
+    311,
+    348,
+    1159,
+    1332
+   ],
+   "centroid": [
+    665.1,
+    788.9
+   ],
+   "depth_m": 3.529
+  }
+ ]
+}

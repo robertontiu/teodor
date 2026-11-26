@@ -1,0 +1,285 @@
+{
+ "format": "teodor-elements/1",
+ "image": "b8.png",
+ "scene": "b8.json",
+ "size": [
+  1200,
+  1600
+ ],
+ "elements": [
+  {
+   "key": "stall.object",
+   "object": "stall",
+   "type": "box",
+   "element": "object",
+   "pixels": 477389,
+   "share": 0.24864,
+   "bbox": [
+    0,
+    0,
+    1200,
+    1301
+   ],
+   "centroid": [
+    573.7,
+    464.8
+   ],
+   "depth_m": 4.18
+  },
+  {
+   "key": "crateA.object",
+   "object": "crateA",
+   "type": "box",
+   "element": "object",
+   "pixels": 17806,
+   "share": 0.00927,
+   "bbox": [
+    0,
+    382,
+    114,
+    645
+   ],
+   "centroid": [
+    40.6,
+    514.9
+   ],
+   "depth_m": 3.554
+  },
+  {
+   "key": "crateB.object",
+   "object": "crateB",
+   "type": "box",
+   "element": "object",
+   "pixels": 107874,
+   "share": 0.05618,
+   "bbox": [
+    0,
+    48,
+    450,
+    519
+   ],
+   "centroid": [
+    217.5,
+    240.5
+   ],
+   "depth_m": 3.716
+  },
+  {
+   "key": "crateC.object",
+   "object": "crateC",
+   "type": "box",
+   "element": "object",
+   "pixels": 70837,
+   "share": 0.03689,
+   "bbox": [
+    237,
+    0,
+    748,
+    256
+   ],
+   "centroid": [
+    492.6,
+    85.0
+   ],
+   "depth_m": 3.884
+  },
+  {
+   "key": "seat.object",
+   "object": "seat",
+   "type": "box",
+   "element": "object",
+   "pixels": 46058,
+   "share": 0.02399,
+   "bbox": [
+    254,
+    706,
+    708,
+    1180
+   ],
+   "centroid": [
+    438.8,
+    1004.4
+   ],
+   "depth_m": 3.869
+  },
+  {
+   "key": "man.torso",
+   "object": "man",
+   "type": "person",
+   "element": "torso",
+   "pixels": 0,
+   "share": 0.0
+  },
+  {
+   "key": "man.neck",
+   "object": "man",
+   "type": "person",
+   "element": "neck",
+   "pixels": 229,
+   "share": 0.00012,
+   "bbox": [
+    222,
+    396,
+    238,
+    423
+   ],
+   "centroid": [
+    229.8,
+    407.1
+   ],
+   "depth_m": 3.507
+  },
+  {
+   "key": "man.arms",
+   "object": "man",
+   "type": "person",
+   "element": "arms",
+   "pixels": 25229,
+   "share": 0.01314,
+   "bbox": [
+    231,
+    546,
+    604,
+    857
+   ],
+   "centroid": [
+    439.4,
+    726.3
+   ],
+   "depth_m": 3.532
+  },
+  {
+   "key": "man.legs",
+   "object": "man",
+   "type": "person",
+   "element": "legs",
+   "pixels": 197,
+   "share": 0.0001,
+   "bbox": [
+    949,
+    1173,
+    981,
+    1204
+   ],
+   "centroid": [
+    965.6,
+    1188.0
+   ],
+   "depth_m": 3.663
+  },
+  {
+   "key": "man.feet",
+   "object": "man",
+   "type": "person",
+   "element": "feet",
+   "pixels": 10225,
+   "share": 0.00533,
+   "bbox": [
+    542,
+    1161,
+    1077,
+    1278
+   ],
+   "centroid": [
+    843.1,
+    1217.9
+   ],
+   "depth_m": 3.662
+  },
+  {
+   "key": "man.hands",
+   "object": "man",
+   "type": "person",
+   "element": "hands",
+   "pixels": 13260,
+   "share": 0.00691,
+   "bbox": [
+    356,
+    722,
+    626,
+    882
+   ],
+   "centroid": [
+    487.9,
+    797.3
+   ],
+   "depth_m": 3.519
+  },
+  {
+   "key": "man.head",
+   "object": "man",
+   "type": "person",
+   "element": "head",
+   "pixels": 16707,
+   "share": 0.0087,
+   "bbox": [
+    75,
+    329,
+    235,
+    476
+   ],
+   "centroid": [
+    151.3,
+    407.9
+   ],
+   "depth_m": 3.461
+  },
+  {
+   "key": "man.hair",
+   "object": "man",
+   "type": "person",
+   "element": "hair",
+   "pixels": 5561,
+   "share": 0.0029,
+   "bbox": [
+    43,
+    308,
+    174,
+    466
+   ],
+   "centroid": [
+    81.8,
+    371.2
+   ],
+   "depth_m": 3.495
+  },
+  {
+   "key": "man.drapery",
+   "object": "man",
+   "type": "person",
+   "element": "drapery",
+   "pixels": 248469,
+   "share": 0.12941,
+   "bbox": [
+    98,
+    359,
+    988,
+    1216
+   ],
+   "centroid": [
+    469.7,
+    759.3
+   ],
+   "depth_m": 3.533
+  },
+  {
+   "key": "man.all",
+   "object": "man",
+   "type": "person",
+   "element": "all",
+   "pixels": 319891,
+   "share": 0.16661,
+   "bbox": [
+    43,
+    308,
+    1077,
+    1278
+   ],
+   "centroid": [
+    456.8,
+    747.9
+   ],
+   "depth_m": 3.528
+  }
+ ]
+}

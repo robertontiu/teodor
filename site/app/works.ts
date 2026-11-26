@@ -24,6 +24,7 @@ const inOrderMade: (Omit<Work, "model"> & { model?: string })[] = [
   { id: "r14b", title: "The Shadow Kept Both Legs", model: "Fable 5.2" },
   { id: "r15", title: "One More Night" },
   { id: "r16", title: "Cold Water at the Landing Stage" },
+  { id: "r18", title: "The Plum Crate at Noon" },
 ];
 
 export const works: Work[] = inOrderMade.map((w) => ({ ...w, model: w.model ?? DEFAULT_MODEL })).reverse();

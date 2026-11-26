@@ -1,0 +1,228 @@
+{
+ "camera": {
+  "pos": [
+   -0.8,
+   3.2,
+   2.6
+  ],
+  "look_at": [
+   0.35,
+   0.5,
+   0.4
+  ],
+  "fov": 40,
+  "roll": -20
+ },
+ "sun": {
+  "azimuth": 30,
+  "elevation": 70,
+  "color": "#fff4e0",
+  "intensity": 1.3,
+  "softness": 10
+ },
+ "sky": {
+  "zenith": "#9fb0c0",
+  "horizon": "#e0d8c8"
+ },
+ "ambient": {
+  "sky": "#b0b8c8",
+  "ground": "#a89880",
+  "intensity": 0.6
+ },
+ "ground": {
+  "color": "#d8ccb4",
+  "color2": "#cfc2a8"
+ },
+ "fog": {
+  "density": 0.0
+ },
+ "objects": [
+  {
+   "type": "box",
+   "id": "stall",
+   "pos": [
+    0.5,
+    0.45,
+    -0.5
+   ],
+   "size": [
+    3.4,
+    0.9,
+    1.0
+   ],
+   "color": "#6a4a3a"
+  },
+  {
+   "type": "box",
+   "id": "crateA",
+   "pos": [
+    -0.1,
+    1.02,
+    -0.25
+   ],
+   "size": [
+    0.55,
+    0.24,
+    0.4
+   ],
+   "color": "#e3cf9f"
+  },
+  {
+   "type": "box",
+   "id": "crateB",
+   "pos": [
+    0.5,
+    1.02,
+    -0.25
+   ],
+   "size": [
+    0.55,
+    0.24,
+    0.4
+   ],
+   "color": "#e3cf9f"
+  },
+  {
+   "type": "box",
+   "id": "crateC",
+   "pos": [
+    1.1,
+    1.02,
+    -0.25
+   ],
+   "size": [
+    0.55,
+    0.24,
+    0.4
+   ],
+   "color": "#e3cf9f"
+  },
+  {
+   "type": "box",
+   "id": "seat",
+   "pos": [
+    0.32,
+    0.17,
+    0.26
+   ],
+   "size": [
+    0.52,
+    0.34,
+    0.36
+   ],
+   "color": "#c9a2a0"
+  },
+  {
+   "type": "person",
+   "id": "man",
+   "pos": [
+    0.32,
+    0.45,
+    0.28
+   ],
+   "anchor": "pelvis",
+   "facing": -8,
+   "sex": "male",
+   "age": 50,
+   "build": "average",
+   "pose": "sit",
+   "expression": {
+    "preset": "sleep",
+    "au": {
+     "12": 0.3,
+     "43": 1.0
+    }
+   },
+   "joints": {
+    "pelvis": [
+     -10,
+     0,
+     0
+    ],
+    "spine": [
+     -12,
+     0,
+     0
+    ],
+    "neck": [
+     -18,
+     -22,
+     -12
+    ],
+    "head": [
+     -6,
+     -6,
+     0
+    ],
+    "leg_r": [
+     75,
+     8,
+     0,
+     100
+    ],
+    "leg_l": [
+     60,
+     18,
+     30,
+     15
+    ],
+    "ankle_l": [
+     -20
+    ],
+    "shoulder_l": [
+     -0.3,
+     0.2
+    ],
+    "shoulder_r": [
+     -0.3,
+     0.2
+    ],
+    "arm_r": [
+     18,
+     6,
+     -75,
+     75
+    ],
+    "arm_l": [
+     22,
+     6,
+     -80,
+     80
+    ]
+   },
+   "skin": "#e8c8a8",
+   "color": "#9fbfd6",
+   "shoes": "#262321",
+   "hair": {
+    "style": "short",
+    "color": "#1e1c1d"
+   },
+   "clothes": [
+    {
+     "kind": "shirt",
+     "color": "#9fbfd6",
+     "sleeves": "short",
+     "ease": 0.03
+    },
+    {
+     "kind": "trousers",
+     "color": "#6b7448"
+    }
+   ],
+   "hand_r": "cup",
+   "hand_l": "relaxed"
+  },
+  {
+   "type": "sphere",
+   "id": "orange",
+   "pos": [
+    0.31,
+    0.64,
+    0.5
+   ],
+   "r": 0.04,
+   "color": "#d86a3a"
+  }
+ ],
+ "render_scale": 1.0
+}

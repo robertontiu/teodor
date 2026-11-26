@@ -1,0 +1,304 @@
+{
+ "format": "teodor-elements/1",
+ "image": "b6.png",
+ "scene": "b6.json",
+ "size": [
+  1200,
+  1600
+ ],
+ "elements": [
+  {
+   "key": "stall.object",
+   "object": "stall",
+   "type": "box",
+   "element": "object",
+   "pixels": 564291,
+   "share": 0.2939,
+   "bbox": [
+    0,
+    0,
+    1200,
+    1440
+   ],
+   "centroid": [
+    565.3,
+    616.3
+   ],
+   "depth_m": 4.074
+  },
+  {
+   "key": "crateA.object",
+   "object": "crateA",
+   "type": "box",
+   "element": "object",
+   "pixels": 88540,
+   "share": 0.04611,
+   "bbox": [
+    0,
+    304,
+    297,
+    788
+   ],
+   "centroid": [
+    112.8,
+    528.3
+   ],
+   "depth_m": 3.533
+  },
+  {
+   "key": "crateB.object",
+   "object": "crateB",
+   "type": "box",
+   "element": "object",
+   "pixels": 122482,
+   "share": 0.06379,
+   "bbox": [
+    96,
+    60,
+    654,
+    537
+   ],
+   "centroid": [
+    398.6,
+    260.4
+   ],
+   "depth_m": 3.723
+  },
+  {
+   "key": "crateC.object",
+   "object": "crateC",
+   "type": "box",
+   "element": "object",
+   "pixels": 85655,
+   "share": 0.04461,
+   "bbox": [
+    452,
+    0,
+    976,
+    284
+   ],
+   "centroid": [
+    718.0,
+    97.3
+   ],
+   "depth_m": 3.895
+  },
+  {
+   "key": "seat.object",
+   "object": "seat",
+   "type": "box",
+   "element": "object",
+   "pixels": 49213,
+   "share": 0.02563,
+   "bbox": [
+    416,
+    752,
+    889,
+    1237
+   ],
+   "centroid": [
+    602.1,
+    1052.7
+   ],
+   "depth_m": 3.869
+  },
+  {
+   "key": "man.torso",
+   "object": "man",
+   "type": "person",
+   "element": "torso",
+   "pixels": 0,
+   "share": 0.0
+  },
+  {
+   "key": "man.neck",
+   "object": "man",
+   "type": "person",
+   "element": "neck",
+   "pixels": 234,
+   "share": 0.00012,
+   "bbox": [
+    414,
+    416,
+    430,
+    444
+   ],
+   "centroid": [
+    422.4,
+    427.1
+   ],
+   "depth_m": 3.507
+  },
+  {
+   "key": "man.arms",
+   "object": "man",
+   "type": "person",
+   "element": "arms",
+   "pixels": 26785,
+   "share": 0.01395,
+   "bbox": [
+    404,
+    585,
+    793,
+    892
+   ],
+   "centroid": [
+    618.7,
+    765.2
+   ],
+   "depth_m": 3.532
+  },
+  {
+   "key": "man.legs",
+   "object": "man",
+   "type": "person",
+   "element": "legs",
+   "pixels": 209,
+   "share": 0.00011,
+   "bbox": [
+    1124,
+    1262,
+    1157,
+    1292
+   ],
+   "centroid": [
+    1140.8,
+    1277.2
+   ],
+   "depth_m": 3.664
+  },
+  {
+   "key": "man.feet",
+   "object": "man",
+   "type": "person",
+   "element": "feet",
+   "pixels": 8831,
+   "share": 0.0046,
+   "bbox": [
+    697,
+    1222,
+    1200,
+    1349
+   ],
+   "centroid": [
+    955.9,
+    1302.6
+   ],
+   "depth_m": 3.816
+  },
+  {
+   "key": "man.hands",
+   "object": "man",
+   "type": "person",
+   "element": "hands",
+   "pixels": 14109,
+   "share": 0.00735,
+   "bbox": [
+    523,
+    770,
+    811,
+    921
+   ],
+   "centroid": [
+    663.9,
+    841.4
+   ],
+   "depth_m": 3.519
+  },
+  {
+   "key": "man.head",
+   "object": "man",
+   "type": "person",
+   "element": "head",
+   "pixels": 17292,
+   "share": 0.00901,
+   "bbox": [
+    265,
+    343,
+    425,
+    492
+   ],
+   "centroid": [
+    342.6,
+    424.1
+   ],
+   "depth_m": 3.461
+  },
+  {
+   "key": "man.hair",
+   "object": "man",
+   "type": "person",
+   "element": "hair",
+   "pixels": 5756,
+   "share": 0.003,
+   "bbox": [
+    235,
+    320,
+    369,
+    480
+   ],
+   "centroid": [
+    274.3,
+    383.1
+   ],
+   "depth_m": 3.495
+  },
+  {
+   "key": "man.drapery",
+   "object": "man",
+   "type": "person",
+   "element": "drapery",
+   "pixels": 261169,
+   "share": 0.13603,
+   "bbox": [
+    277,
+    386,
+    1164,
+    1303
+   ],
+   "centroid": [
+    650.3,
+    804.8
+   ],
+   "depth_m": 3.533
+  },
+  {
+   "key": "orange.object",
+   "object": "orange",
+   "type": "sphere",
+   "element": "object",
+   "pixels": 3619,
+   "share": 0.00188,
+   "bbox": [
+    684,
+    843,
+    754,
+    910
+   ],
+   "centroid": [
+    718.3,
+    876.2
+   ],
+   "depth_m": 3.479
+  },
+  {
+   "key": "man.all",
+   "object": "man",
+   "type": "person",
+   "element": "all",
+   "pixels": 334411,
+   "share": 0.17417,
+   "bbox": [
+    235,
+    320,
+    1200,
+    1349
+   ],
+   "centroid": [
+    634.2,
+    789.4
+   ],
+   "depth_m": 3.527
+  }
+ ]
+}

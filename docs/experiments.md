@@ -128,3 +128,28 @@ In rounds 1–6 the orchestrator assigned the feeling at random: basic emotions 
   - Some of their notes repeat every round (faces drawn rather than painted, one repeated stroke, the cause of an action not shown). Those belong in a pre-checkpoint self-check in the brief, so the critic can spend its reading on the feeling.
   - The "digital filter" texture is named by every critic in every round. It is an engine limit (stroke vocabulary), not something the painter can fix, so it goes to the studio plan.
 - **Learned:** the v8 pipeline works end to end. The style entry steered the choices: complementaries side by side, impasto at the spray and face, outlines restated last. Two critics in a row naming the same wrong feeling is a strong signal, and it should have changed the schema, not only the surface. Here the shock had no form of its own in the composition (no plunge, no body seized), so it could only arrive as an ambiguity in the face. Teodor said so honestly before the visitor did.
+
+## Round 18: *The Plum Crate at Noon* (Teodor, v8, Opus 5.5; theme: At peace; style: ukiyo-e, woodblock on washi)
+- **Setup:** Robert's second parallel commission, alongside round 17. A first attempt was cancelled after phase 1 so the engine could be finished first. That covered layers with roles, the stronger hand, revision tools, element clarity, the finishing check, carved key lines, and the figure rig with plane heads. It also built the subject library: layer 1 is how a subject really is, layer 2 how a style changes it, researched on demand before drawing. The cancelled first state read as "a friendly editorial illustration or greeting card", which is the vector look.
+- **Run:** phase 1 planned (9 thumbnails, 3 palettes) and listed 12 subjects. Ukiyo-e had no layer-2 rules, so two researchers wrote all 12 from public-domain prints at the Met and Cleveland. Then the studio was refreshed and printing began. 55 episodes, 3 states (the blocks recut twice), 11 schema versions, 20 colour blocks, a key line measured against Met figure prints, blind embossing, and a TEO/DOR seal.
+- **Feeling:** "let go in the middle of everything: a full, warm surrender, safe inside the noise". The nearest wrong feelings were exhaustion, loneliness in a crowd and collapse; the nearest wrong looks were the ukiyo-e postcard, pastiche and vector clip-art.
+- **Image:** seen from a high angle, a market vendor dozes on an upturned crate, his head fallen against a box of plums, a half-peeled orange under his hand, while pigeons pick at the peel and a passer-by with leeks is cut by the frame.
+- **The layer-2 research changed the plan:**
+  - no ukiyo-e print looks straight down, so the view became a high oblique, recorded as an extension;
+  - the face became three-quarter, with arc eyes and a tick of a smile, and no raised cheeks;
+  - no cast shadows, and bokashi only in bands.
+  
+  Teodor also refused to fake layers for the one-role report flag, because a woodblock area is one flat impression. The engine now exempts woodblock.
+- **Critics:**
+  - **Critic 1** read "gentle comic" with a sense of sliding: the body had no weight and the crates were louder than the face. This was a new miss, not one of the predicted wrong feelings. Teodor posed the figure in the 3D rig and recut the blocks (state 2).
+  - **Critic 2** read "a stolen nap in the middle of a busy day, a small private calm", close to the feeling. Its remaining notes: the vermilion stripes were the loudest thing, the pigeons looked like frying pans, and the collar outline was doubled. Teodor recut again (state 3) with bengara stripes and the pigeons redrawn from the animal pages.
+  - **The visitor** read "warm and a bit funny… I smiled before I thought about it", and found the passer-by's contrast to be "the joke, and the peace". Its weaknesses: the stripes are still the loudest area; the seat is unreadable without a ground line; the hands are generic; the bottom bokashi band looks like a digital gradient; and it asked for a cast shadow, which ukiyo-e doesn't use.
+  - **On the contact sheet:** "a clear new departure in medium and mood", and the first everyday genre scene with gentle humour. It repeats the tilted top-down view with the figure rotated across the frame (13, 14, 14b), a mask-like face with closed eyes and a fixed smile (15, 16), one warm accent as the emotional key, and weak hands.
+- **Report:** key 68 (target 68), loudest colour 32 (from 45), murky middle 0.19, all elements clear. Hard edges are spread over the carved setts (z +2.6), kept on purpose as the busy world.
+- **Learned:**
+  - Researching subjects before drawing worked: every flag was weighed in the journal, and the print reads as ukiyo-e grammar applied to the present day, not as a postcard or clip-art.
+  - Recutting and printing a new state is the honest woodblock revision, and the engine supports it.
+  - Two engine lessons follow:
+    - `clip` on `strokes` is an on/off switch while the region goes under `region`, so a "clipped" bokashi band tinted the whole sheet in phase 1. The API should refuse a region given as `clip`.
+    - The final bokashi printed at full strength because a failed cleanup command stopped an edit. A dry run would have caught it.
+  - The pose still reads as propped. The figure rig helped with weight, but the seat needs a ground line, and in ukiyo-e that has to be a line or a flat tone, not a shadow.
