@@ -274,6 +274,254 @@
     "even white fog for distance",
     "decorative rim light without a source"
    ]
+  },
+  "space": {
+   "doc": "docs/subjects/space.md",
+   "summary": "Central projection from one eye: horizon = eye level, parallels share a vanishing point, size ~ 1/distance; depth read from overlap, size, height on the ground plane and, far away, aerial perspective.",
+   "key_numbers": {
+    "eye_height_m": {
+     "standing": "1.5-1.6 (handprint; scene.py default 1.6)",
+     "seated": "1.1-1.2 (judgement)"
+    },
+    "image_size": "z = Z * x / X (object size Z at distance X, viewing distance x) (handprint)",
+    "cone_of_vision_deg": {
+     "undistorted": 60,
+     "comfortable_picture": 25,
+     "source": "BYU-Idaho; handprint"
+    },
+    "two_point_vp": "VPs 90 deg apart; each at tan(angle) * viewing distance from centre of vision; 45/45 -> VPs two viewing distances apart; 30/60 -> 0.58 and 1.73 (handprint)",
+    "three_point_vp": "distance of VP3 from horizon >= distance between VPL and VPR (OUP)",
+    "ground_interval_compression": "image height of a ground step ~ f*h*dD/D^2 (geometry, computed)",
+    "lens_35mm_horizontal_deg": {
+     "24mm": 73.7,
+     "35mm": 54.4,
+     "50mm": 39.6,
+     "85mm": 23.9,
+     "200mm": 10.3
+    },
+    "scene_fov_to_35mm_focal": "f = 12 / tan(fov/2), fov vertical: 53~24mm, 40~33mm (default), 27~50mm, 16~85mm, 7~200mm (computed)",
+    "aerial": "C = C0*exp(-sigma*d); visual range = 3.912/sigma; fog <1 km, mist 1-2 km, haze 2-5 km; scene.py fog density 0.008 ~ 490 m range (fog), 0.0013 ~ 3 km haze, 0.0002 ~ 20 km clear (computed)",
+    "depth_cue_ranges_m": {
+     "personal": "<2: occlusion, size",
+     "action": "2-30: occlusion, height in field, size",
+     "vista": ">30: occlusion, height in field, size, aerial perspective",
+     "source": "Cutting & Vishton 1995"
+    },
+    "sun_shadow_penumbra": "about 1% of distance from casting edge (sun 0.5 deg)"
+   },
+   "rules": [
+    "One horizon; all horizontal parallels vanish on it; standing figures of equal height on flat ground are cut by it at the same place (geometry, handprint)",
+    "Keep VPs far apart; too close makes boxes bulge (handprint)",
+    "Verticals all vertical (level gaze) or all converge on one third VP (handprint, OUP)",
+    "Inclined planes vanish on auxiliary VPs on the vertical through the VP of their horizontal direction (OUP)",
+    "Ellipse minor axis on the cylinder axis; rounder away from eye level; no pointed ends (NMA, BYU)",
+    "Perspective comes from viewer position, not lens: close = extension, far = compression (Wikipedia, Perspective distortion)",
+    "Aerial perspective: contrast falls first, darks lighten and lights dim toward the horizon-sky value and hue; weather sets the rate (Koschmieder)",
+    "Sun shadows converge on one point on the horizon (perspective notes)"
+   ],
+   "checks": [
+    "one horizon; figures' eyes keyed to it by camera eye height",
+    "fov chosen on purpose; key forms inside central 60 deg",
+    "equal ground intervals shrink ~1/D^2",
+    "clear overlap (no tangents) at each depth step",
+    "darks lift and contrast shrinks step by step toward the horizon, at a rate fitting the stated weather",
+    "all sun shadows converge; penumbrae widen with distance",
+    "ellipses: minor axis on cylinder axis, rounder farther from eye level"
+   ],
+   "sources": [
+    "https://www.handprint.com/HP/WCL/perspect2.html",
+    "https://www.handprint.com/HP/WCL/perspect3.html",
+    "https://learninglink.oup.com/protected/files/content/file/1573546337378-Advanced-Perspective-Techniques.pdf",
+    "https://courses.byui.edu/art110_new/art110/week02/cone_of_vision.html",
+    "https://s3.amazonaws.com/uploads.nma.art/uploads/2021/03/Ellipse-Guide_Drawing-Foudations-Handout.pdf",
+    "https://bertverhees.github.io/perspect6.html",
+    "https://en.wikipedia.org/wiki/Angle_of_view_(photography)",
+    "https://en.wikipedia.org/wiki/Perspective_distortion",
+    "https://en.wikipedia.org/wiki/Aerial_perspective",
+    "https://en.wikipedia.org/wiki/Visibility",
+    "https://glossary.ametsoc.org/wiki/Airlight_formula",
+    "https://scispace.com/pdf/perceiving-layout-and-knowing-distances-the-integration-1i3ri93gex.pdf",
+    "https://smarthistory.org/linear-perspective",
+    "https://essentialvermeer.com/technique/perspective/vermeer-and-perspective.html"
+   ]
+  },
+  "architecture": {
+   "doc": "docs/subjects/architecture.md",
+   "summary": "Floors stacked on walls, openings over openings, every dimension keyed to the body; perspective from a constructed grid; daylight falls off fast with room depth.",
+   "key_numbers": {
+    "door_mm": {
+     "interior_metric": "2040 x 826 (526-926)",
+     "interior_uk": "1981 x 762",
+     "front_door": "~2100 x 970",
+     "source": "Howarth Timber"
+    },
+    "ceiling_m": {
+     "minimum_uk_dwelling": 2.3,
+     "typical_residential": "2.4-2.7 (judgement)",
+     "floor_to_floor": "2.8-3.2 residential, 3.5-5 older/public (judgement)"
+    },
+    "stairs_cm": {
+     "blondel": "2R+T = 63-65",
+     "comfortable": "R18 T28",
+     "headroom": "200-215",
+     "source": "ArchDaily/Neufert"
+    },
+    "window": "sill 0.8-0.9 m, head aligned with door head ~2.0-2.1 m (judgement)",
+    "brick_mm": {
+     "uk": "215x102.5x65, 75 mm course",
+     "denmark": "228x108x54",
+     "germany": "240x115x71",
+     "us": "194x92x57",
+     "source": "Wikipedia, Brick"
+    },
+    "column_height_in_diameters": {
+     "tuscan": 7,
+     "doric": "7-8",
+     "ionic": "8-9",
+     "corinthian": "9-10",
+     "composite": 10,
+     "source": "Wikipedia, Classical order"
+    },
+    "wall_thickness_m": "old masonry 0.4-0.8, modern 0.3-0.5, timber frame 0.15-0.25 (judgement)",
+    "daylit_depth": "1.5-2 x window head height (2.5 without blinds) (MIT 4.401, Reinhart)",
+    "illuminance_lux": {
+     "direct_sun": "32000-100000",
+     "daylight": "10000-25000",
+     "office": "320-500",
+     "living_room_lamp": 50,
+     "source": "Wikipedia, Lux"
+    },
+    "daylight_factor": "<2% inadequately lit, >5% well lit (CIBSE via Wikipedia)",
+    "sun_patch_penumbra": "~1% of distance from window edge"
+   },
+   "rules": [
+    "Mass as boxes on the ground plane, then openings on a facade grid, then thickness, then texture (judgement)",
+    "Openings stack and align; window heads align with door heads (judgement)",
+    "Level gaze keeps verticals vertical; tilt gives one third VP (handprint, OUP)",
+    "Each building plane holds one value per light; shadow planes cooler from sky, warmer low from ground bounce (judgement)",
+    "Windows seen from outside in daylight are darker than the wall unless reflecting sky at grazing angles (Fresnel; judgement)",
+    "Sun through a window projects a skewed copy of the window, all patches one direction (geometry)",
+    "Room light falls off with depth; window wall darkest from inside (MIT; judgement)",
+    "Texture gradient: single bricks only near, courses as tone farther (judgement)"
+   ],
+   "checks": [
+    "door / standing figure ~1.15-1.2; storey ~1.6-1.8 figures",
+    "window heads and sills align and meet the cornice's VPs",
+    "verticals all vertical or all converging on one VP3",
+    "every opening has a reveal and a sill shadow",
+    "interior falloff with distance from window; sun patches consistent",
+    "windows from outside darker than wall in daylight, lit at night",
+    "bricks only in foreground"
+   ],
+   "sources": [
+    "https://www.howarth-timber.co.uk/help-advice/uk-door-sizes",
+    "https://www.gov.uk/government/publications/technical-housing-standards-nationally-described-space-standard/technical-housing-standards-nationally-described-space-standard",
+    "https://www.archdaily.com/892647/how-to-make-calculations-for-staircase-designs",
+    "https://en.wikipedia.org/wiki/Brick",
+    "https://en.wikipedia.org/wiki/Classical_order",
+    "https://www.ocw.mit.edu/courses/4-401-environmental-technologies-in-buildings-fall-2018/be2f4e041e1683f5615ec47f6208d8d9_MIT4_401F18_lec8.pdf",
+    "https://en.wikipedia.org/wiki/Lux",
+    "https://en.wikipedia.org/wiki/Daylight_factor",
+    "https://www.handprint.com/HP/WCL/perspect2.html",
+    "https://www.handprint.com/HP/WCL/perspect3.html",
+    "https://learninglink.oup.com/protected/files/content/file/1573546337378-Advanced-Perspective-Techniques.pdf",
+    "https://bertverhees.github.io/perspect6.html",
+    "https://essentialvermeer.com/technique/perspective/vermeer-and-perspective.html",
+    "https://www.nationalgallery.org.uk/paintings/samuel-van-hoogstraten-a-peepshow-with-views-of-the-interior-of-a-dutch-house"
+   ]
+  },
+  "objects": {
+   "doc": "docs/subjects/objects.md",
+   "summary": "Simple solids resting on a table; each material read by how it splits light into specular, diffuse, transmitted and subsurface parts, and by the contrast, sharpness and placement of its highlights.",
+   "key_numbers": {
+    "F0_specular": {
+     "water": 0.02,
+     "glass_plastic": "0.03-0.05",
+     "diamond": 0.17,
+     "iron": [
+      0.56,
+      0.57,
+      0.58
+     ],
+     "aluminium": [
+      0.91,
+      0.92,
+      0.92
+     ],
+     "silver": [
+      0.95,
+      0.93,
+      0.88
+     ],
+     "copper": [
+      0.95,
+      0.64,
+      0.54
+     ],
+     "gold": [
+      1.0,
+      0.71,
+      0.29
+     ],
+     "source": "LearnOpenGL"
+    },
+    "glass": "R0 ~4% per face (8% pane), Brewster ~56 deg, total internal reflection beyond ~42 deg (Wikipedia, Fresnel equations)",
+    "albedo": {
+     "fresh_asphalt": 0.04,
+     "grass": 0.25,
+     "sand": 0.4,
+     "new_concrete": 0.55,
+     "fresh_snow": 0.8,
+     "white_paper": "0.7-0.85 (judgement)",
+     "black_velvet_charcoal": "0.02-0.05 (judgement)",
+     "source": "Wikipedia, Albedo"
+    },
+    "gloss_perception": "highlight contrast + blurriness explain 69% of perceived gloss in painted grapes; coverage no effect (Di Cicco 2019); satin shininess rises with mean luminance and highlight coverage (Di Cicco 2021)",
+    "beurs_grapes": "body + shading -> edge reflections -> bloom scumble (dry) -> highlight where no bloom -> glazes -> seeds; highlights~gloss r=0.94, bloom layer~bloom r=0.92 (Di Cicco 2020)",
+    "object_sizes_cm": "wine glass 15-22, tumbler 9-12, bottle 30, plate 26-28, apple 7-8, grape 1.5-2.5 (judgement)"
+   },
+   "rules": [
+    "Non-metals: white (light-coloured) highlight over coloured diffuse body; metals: no diffuse, reflections tinted only for gold/copper/brass (LearnOpenGL)",
+    "Everything grows more reflective toward grazing angles (Fresnel)",
+    "Rougher = wider, dimmer highlight; smoother = smaller, sharper, brighter (LearnOpenGL)",
+    "Highlights must agree with shading and stretch along least curvature, or they read as paint spots (Beck & Prazdny via Todd 2004)",
+    "Dark surfaces look glossier; light gloss next to dark looks less glossy (Hansmann-Roth 2017; Motoyoshi 2007)",
+    "Glass = refracted background + few reflections + edge lines + caustics; coloured glass darker where thick (Fleming 2011; Beer-Lambert)",
+    "Translucent materials (marble, wax, milk, fruit, skin, leaves): soft, colour-bled shadow edges (Jensen 2001)",
+    "Velvet: bright silhouette and shadow-edge rims (Koenderink & Pont 2003); satin: many bright highlights (Di Cicco 2021)",
+    "Finished wood: shifting subsurface fibre highlight under the finish highlight (Marschner 2005)",
+    "scene.py gloss has no Fresnel, transmission or SSS: paint glass, metal and translucency over the blockout"
+   ],
+   "checks": [
+    "every highlight placed by light and eye, with the light's shape and colour",
+    "sharp high-contrast highlights only on glossy things",
+    "glass: shifted background, dark+light edge lines, 2-5 reflections, caustic, contact",
+    "metal: reflections not local-colour shading",
+    "translucent things: warm soft shadow edges and glow",
+    "fabric type: satin / velvet / matte read correctly",
+    "contact and cast shadows consistent; ellipses from one eye level"
+   ],
+   "sources": [
+    "https://learnopengl.com/PBR/Theory",
+    "https://en.wikipedia.org/wiki/Fresnel_equations",
+    "https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law",
+    "https://en.wikipedia.org/wiki/Subsurface_scattering",
+    "https://en.wikipedia.org/wiki/Caustic_(optics)",
+    "https://en.wikipedia.org/wiki/Albedo",
+    "https://www.cs.cornell.edu/~srm/publications/SG01-subsurf-abstract.html",
+    "https://www.cs.cornell.edu/~srm/publications/SG05-wood.html",
+    "https://unpaywall.org/10.1007%2Fs00138-002-0089-7",
+    "https://www.asc.ohio-state.edu/todd.44/date/Todd,%20Norman%20&%20Mingolla%202004.pdf",
+    "https://www.nature.com/articles/nature05724",
+    "https://pure.tudelft.nl/ws/portalfiles/portal/12907234/i1534_7362_17_2_17.pdf",
+    "https://repository.tudelft.nl/record/uuid:550c3a32-0e7e-4b0c-a9ed-367a98335cc5",
+    "https://repository.tudelft.nl/record/uuid:4854c5e2-cc70-44fc-a6c4-deb24ba50d15",
+    "https://repository.tudelft.nl/record/uuid:ed8025d9-0fdf-4ec1-815c-fef09dee61b8",
+    "https://www.psychologicalscience.org/journals/psychological-science/0956797611408734/",
+    "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2022.766056/pdf",
+    "https://atoptics.co.uk/fza35.htm",
+    "https://www.metmuseum.org/essays/still-life-painting-in-northern-europe-1600-1800"
+   ]
   }
  },
  "styles": {}
