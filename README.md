@@ -75,7 +75,7 @@ A painting takes an hour or two of agent time. The agent installs what it needs 
 ## Want to know more?
 
 - [`docs/experiments.md`](docs/experiments.md): how the studio evolved from the first stroke to now, and what each painting taught
-- [`AGENTS.md`](AGENTS.md): the technical handbook (the paint engine, the 3D drawings, how a painting session is run)
+- [`AGENTS.md`](AGENTS.md): the starting point for AI agents (the rules, and which handbook pages to read for each role)
 - [`site/`](site): the showcase website
 
 ## Credits

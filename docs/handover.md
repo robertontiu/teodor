@@ -46,5 +46,5 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 
 ## Session notes
 
-- In the chat sandbox the site build needed a Google Fonts mock (see `AGENTS.md`); on a normal machine `npm run build` in `site/` works as is.
+- In the chat sandbox the site build needed a Google Fonts mock (see `docs/agents/site.md`); on a normal machine `npm run build` in `site/` works as is.
 - Subagents in the chat could be interrupted by server restarts. The fix is always a fresh session for the same phase, continuing from the journal's last episode number.
