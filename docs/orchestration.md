@@ -25,7 +25,14 @@ Set by Robert; they apply until he changes them.
    python3 tools/make_brief.py ../teodor-work/NN --commission "a public exhibition on a THEME. The theme is: ..." (--theme | --feeling "...") [--style ID|free] [--medium M] [--support S]
    ```
    It copies the studio (v8, with its media), habits, a fresh contact sheet of past work, the styles and the targets, and fills in the brief.
-4. Run the phases (below).
+4. Run the phases (below). Phase 1 stops after planning so the subjects can be researched before Teodor draws ("Subjects before drawing").
+
+## Subjects before drawing
+Teodor's subject library is layered (`docs/subjects/README.md`): layer 1 is how a subject really is (a face, water, a cat), and layer 2 is how a style changes it. The library starts thin and grows with every painting:
+1. Phase 1 ends its planning (feeling, research, thumbnails, colour studies, the chosen composition) by writing `subjects.json` in the work dir: every subject in the picture, with a note on how it appears. The painter replies `PLAN DONE`.
+2. The orchestrator runs `python3 tools/subject_gaps.py <WORKDIR>`. For each gap it runs the prompts in `docs/prompts/subject-research.md`: layer 1 first, then layer 2 for the commission's style. Gaps that write different files run in parallel. Then it merges `studio/subjects.parts/` into `studio/subjects.json` (`python3 tools/merge_subjects.py`) and commits the new pages.
+3. Phase 1 continues in a fresh session ("PHASE 1, continued after planning"). Teodor reads layer 1 and layer 2 for every subject in his list, then draws: schema, tone, transfer, block-in.
+A subject added later (in phase 2 or 3, say a dog walks into the picture) goes through the same check before it is painted.
 
 ## Files in the round's studio directory
 | File | Written by | Purpose |

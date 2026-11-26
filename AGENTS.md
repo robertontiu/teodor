@@ -121,3 +121,6 @@ Teodor drifts into one look: a lone figure from behind, a lit doorway in a dark 
 - Separate K and S pigments (true two-constant Kubelka–Munk, or Mixbox).
 - More viewers than one person and one critic, to see how widely a painting's feeling is shared.
 - A painter that keeps memory across paintings (style development).
+
+## Subject library
+What things look like (`docs/subjects/<id>.md`, layer 1) and how each style changes them (layer 2, in each style doc and `studio/subjects.json`). It starts thin and grows on demand: before Teodor draws, `tools/subject_gaps.py` lists the subjects in his plan that aren't researched yet, and the prompts in `docs/prompts/subject-research.md` fill them. See "Subjects before drawing" in `docs/orchestration.md`.
