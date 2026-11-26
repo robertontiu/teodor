@@ -1,0 +1,278 @@
+{
+ "subjects": {
+  "hair": {
+   "doc": "docs/subjects/hair.md",
+   "summary": "A mass of fibres on the skull, grouped into locks; shines in a band across the strands that follows the skull.",
+   "key": {
+    "density_terminal_hairs_per_cm2": {
+     "value": "223 (175-300)",
+     "source": "BioNumbers 116431 (Robbins 2002)"
+    },
+    "growth": {
+     "value": "0.35 mm/day, 1 cm/month, 15 cm/year",
+     "source": "StatPearls NBK499948"
+    },
+    "silhouette": {
+     "value": "always wider than the skull",
+     "source": "Skyrye Design"
+    },
+    "mass_thickness_over_crown_cm": {
+     "value": "cropped 0.5-1, short-medium 1.5-3, curly/coily much more",
+     "source": "judgement"
+    },
+    "big_groups_at_portrait_distance": {
+     "value": "3-7",
+     "source": "judgement"
+    },
+    "primary_highlight": {
+     "value": "colour of the light, shifted 5-10 deg toward the root",
+     "source": "Marschner et al. 2003"
+    },
+    "secondary_highlight": {
+     "value": "hair-coloured, shifted toward the tip; absent in black hair",
+     "source": "Marschner et al. 2003"
+    },
+    "backlight": {
+     "value": "light hair glows strongly when lit from behind",
+     "source": "Marschner et al. 2003"
+    },
+    "curl_types": {
+     "value": "8, by curve diameter, curl index, number of waves",
+     "source": "Loussouarn et al. 2007"
+    },
+    "wet": {
+     "value": "darker (wetting roughly halves albedo of rough matte surfaces, e.g. sand 0.18 -> 0.09); clumped, flat to skull",
+     "source": "Lekner & Dorf 1988; clumping is judgement"
+    },
+    "stray_strands_per_area": {
+     "value": "5-8 at most",
+     "source": "Skyrye Design"
+    }
+   },
+   "checks": [
+    "Squint: one mass, 3-7 big light/shadow shapes, silhouette wider than the skull",
+    "Highlight runs across the strands and curves with the skull; light-coloured, with a narrower hair-coloured band on the tip side",
+    "No strands or texture inside shadow shapes; strands only in light and at the silhouette",
+    "Hairline graded into skin, never outlined; hair casts shadow on forehead/neck",
+    "Gravity and wind agree with cloth, smoke and trees",
+    "Each person's hair differs in type, colour, length and mass"
+   ],
+   "avoid": [
+    "spaghetti strands before form",
+    "wig/helmet: outlined hairline, uniform shell",
+    "straight stripe highlight",
+    "repetitive even strokes",
+    "corona of strays"
+   ]
+  },
+  "drapery": {
+   "doc": "docs/subjects/drapery.md",
+   "summary": "Cloth hangs from support points, folds where pushed or pulled, wraps the body; material sets fold size; wind and water change it.",
+   "key": {
+    "support_points": {
+     "value": "shoulders, collarbones, chest, hips, elbows, knees, buttocks, seams, waistbands, garment edges",
+     "source": "Proko, Intro to Drapery"
+    },
+    "gravity": {
+     "value": "free cloth falls straight down between support points; widest part of a two-point fold at its midpoint",
+     "source": "Proko; Leonardo Notebooks 390"
+    },
+    "fold_types": {
+     "value": [
+      "pipe",
+      "diaper",
+      "zigzag/compression",
+      "spiral",
+      "half-lock",
+      "drop",
+      "flag",
+      "inert"
+     ],
+     "source": "Bridgman, Drawing the Draped Figure; Proko; Pluralsight"
+    },
+    "material": {
+     "value": "thick/stiff: few large straight-edged folds; silk/satin: many narrow clinging folds; wool/fur: large gentle contours; velvet: single soft folds",
+     "source": "Hagan; Leonardo Notebooks 392"
+    },
+    "body_reveal": {
+     "value": "body shows at tension points and where wind presses thin cloth; hidden between",
+     "source": "Leonardo Notebooks 391; Met (wet drapery); tension-point reading is judgement"
+    },
+    "wind": {
+     "value": "windward side clings, leeward billows as flag folds, free edges flutter in smaller waves; heavy cloth barely lifts",
+     "source": "Leonardo 391 for clinging; rest judgement"
+    },
+    "wet": {
+     "value": "darker, heavier, clings, fewer deeper folds, thin cloth translucent",
+     "source": "Lekner & Dorf 1988 for darkening; rest judgement"
+    },
+    "hierarchy": {
+     "value": "1-2 dominant fold systems per garment section; small wrinkles only at compressions",
+     "source": "judgement, after Leonardo 392"
+    }
+   },
+   "checks": [
+    "Every main fold starts at a support point, compression or pull; free cloth falls plumb unless wind redirects it",
+    "Fold size matches the material",
+    "Hems, cuffs, seams and stripes wrap the body as ellipses/cross-contours",
+    "Folds painted as forms with light and shadow planes, not lines; creases hard, rolls soft",
+    "Body shows at tension points, hidden between",
+    "Small wrinkles only at compressions; large quiet areas elsewhere",
+    "Wind, hair and cloth agree in direction and strength"
+   ],
+   "avoid": [
+    "wrinkles everywhere",
+    "folds without a cause",
+    "straight lines across round forms",
+    "dark lines drawn over flat colour",
+    "one fabric behaviour for all materials",
+    "clothes that ignore the pose"
+   ]
+  },
+  "crowd": {
+   "doc": "docs/subjects/crowd.md",
+   "summary": "Mostly small groups spaced by relationship and density, heads on the viewer's eye level, read as a whole first, individuals by a few characters.",
+   "key": {
+    "share_in_groups": {
+     "value": "55-70% of pedestrians",
+     "source": "Moussaid et al. 2010"
+    },
+    "group_size": {
+     "value": "2-4 most frequent, larger rare",
+     "source": "Moussaid et al. 2010"
+    },
+    "walking_shapes": {
+     "value": "abreast at low density; V (3) and U (4) bent forward at higher density",
+     "source": "Moussaid et al. 2010"
+    },
+    "standing_groups": {
+     "value": "F-formations around an empty shared space: vis-a-vis, L, side-by-side, circle",
+     "source": "Kendon via Setti et al."
+    },
+    "spacing_m": {
+     "value": "intimate 0-0.46, personal 0.46-1.22, social 1.2-3.7, public >3.7",
+     "source": "Hall's proxemics (Wikipedia)"
+    },
+    "density_per_m2": {
+     "value": "~1 loose; 2 event safety assessment; 4 moving queue; 4.7 Green Guide standing; 5 upper limit; 6-10 crush",
+     "source": "G. K. Still"
+    },
+    "eye_level": {
+     "value": "on flat ground, standing viewer: all adult heads on the horizon; seated viewer: near heads well above it",
+     "source": "Bower; Sketchaway; Outdoor Painter"
+    },
+    "detail_gradient": {
+     "value": "faces/hands near; heads, posture, colour middle; silhouettes far",
+     "source": "Sketchaway; split is judgement"
+    },
+    "perception": {
+     "value": "viewers extract mean emotion, gaze, identity of a crowd at a glance",
+     "source": "Whitney Lab, ensemble perception"
+    }
+   },
+   "checks": [
+    "Eye level fixed; standing adult heads on the same ground sit on it; exceptions explained",
+    "Built of groups (mostly 2-4) spaced by relationship, facing each other or a shared focus; no grid, not all frontal",
+    "Figure size falls consistently with distance (check against a door)",
+    "Detail falls off with depth",
+    "A few characters differ clearly from the average; no two neighbours share a pose",
+    "Contact and cast shadows tie every figure down; edges between figures partly lost",
+    "Squint: one designed value mass with a broken top edge"
+   ],
+   "avoid": [
+    "clones",
+    "grid or row spacing",
+    "everyone facing the viewer",
+    "floating heads off the eye level",
+    "pasted hard-edged figures",
+    "detail everywhere or an empty block",
+    "one shared mask expression"
+   ]
+  },
+  "light-shadow": {
+   "doc": "docs/subjects/light-shadow.md",
+   "summary": "Two families split at the terminator; shadows coloured by what lights them; cast-shadow edges set by source size; contrast decays with distance through air.",
+   "key": {
+    "values_0_10": {
+     "value": {
+      "highlight": 10,
+      "light_halftone": "8-9",
+      "medium_halftone": "6-7",
+      "dark_halftone": "4-5",
+      "core_shadow": "1-2",
+      "reflected_light": 4,
+      "occlusion": 0,
+      "cast_shadow": "2-3",
+      "shadow_block_in": 3
+     },
+     "source": "Proko, Elements of Light and Shadow"
+    },
+    "family_rule": {
+     "value": "darkest light-side value lighter than lightest shadow-side value; reflected light below darkest halftone",
+     "source": "Sessions College"
+    },
+    "core_shadow": {
+     "value": "exists because the key is stronger than the bounce; two equal opposite lights remove it",
+     "source": "Sessions College"
+    },
+    "sun_angular_size_deg": {
+     "value": 0.5,
+     "source": "Atmospheric Optics"
+    },
+    "penumbra": {
+     "value": "about 1/110 of casting distance in sunlight (1 cm at 1 m)",
+     "source": "judgement: arithmetic from 0.5 deg"
+    },
+    "light_from_above_prior": {
+     "value": "above, slightly left: ~3 deg (O'Shea 2010 fit) to ~20 deg left in other studies",
+     "source": "O'Shea, Agrawala & Banks 2010; Ramachandran 1988"
+    },
+    "colour_temperature_K": {
+     "value": {
+      "incandescent_100W": 2800,
+      "noon_sun": 4870,
+      "daylight_D65": 6500,
+      "overcast_sky": 6770,
+      "candle": "~1900 (judgement)"
+     },
+     "source": "HyperPhysics"
+    },
+    "shadow_colour": {
+     "value": "colour of what lights the shadow: blue skylight outdoors in sun, warm if warm reflectors and blocked sky",
+     "source": "Gurney 2014; Leonardo Notebooks 281"
+    },
+    "lighting_ratio": {
+     "value": "(key+fill):fill; 4:1 = 2 stops, 8:1 = 3 stops; higher = more contrast",
+     "source": "Wikipedia, Lighting ratio"
+    },
+    "aerial_contrast": {
+     "value": "contrast ~ 0.02^(d/V) for visibility V: 38% at V/4, 14% at V/2; haze V 2-5 km, fog <1 km",
+     "source": "Wikipedia, Visibility (Koschmieder); fractions are arithmetic"
+    },
+    "aerial_colour": {
+     "value": "distant darks turn bluest; five times as far, five times bluer",
+     "source": "Leonardo Notebooks 295, 461"
+    }
+   },
+   "checks": [
+    "Key light named (direction, size, colour) and the fill named; all terminators and cast shadows agree",
+    "Squint/notan: two clear families, no overlap",
+    "Each form has core shadow, reflected light inside the shadow, occlusion at contacts",
+    "Cast shadows sharp at contact, softer with distance and with bigger sources",
+    "Shadow colour from the fill and nearby reflectors, not a fixed complement",
+    "With distance, contrast and saturation fall toward the air's colour, darks first",
+    "Highlights only on glossy or wet surfaces, in the light's colour, few"
+   ],
+   "avoid": [
+    "reflected light as bright as halftones",
+    "black/grey shadows",
+    "warm-light/violet-shadow by reflex",
+    "pillow shading",
+    "no contact shadows",
+    "inconsistent light directions",
+    "even white fog for distance",
+    "decorative rim light without a source"
+   ]
+  }
+ }
+}
