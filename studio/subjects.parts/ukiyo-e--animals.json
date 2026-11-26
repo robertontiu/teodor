@@ -1,0 +1,49 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "animals": {
+    "doc": "docs/styles/subjects/ukiyo-e--animals.md",
+    "rules": [
+     "Keep true anatomy and species markings; birds are not stylised like figures (Met 36718, 54517, 55733; CMA 1930.192).",
+     "Enlarge the birds to fill the sheet; two or three birds can be the whole picture (Met 54517, 36718, 55733).",
+     "Each bird is a closed silhouette in fine sumi line; plumage is 2 to 4 flat tones by feather tract (Met 54517, 36718).",
+     "Feather detail only as short dark tips or scalloped edges along coverts and primaries; the hawk's back becomes a scale pattern (Met 55733, 54517).",
+     "Countershading stays as local colour (pale belly, dark back), never as light (judgement, from the works).",
+     "Bokashi may grade a wing or tail fan toward the tips; no other modelling (Met 55733; CMA 1985.314 text on ink tones in plumage).",
+     "Eye is a dark dot, optionally ringed; no specular highlight (all works).",
+     "Ground is blank paper or one flat tone; no cast shadow (Met 56178, 54517; CMA 1930.192).",
+     "Pecking: head below the back line, tail raised, back and folded wings one oval seen slightly from above (Met 56178; CMA 1985.362; general rule judgement).",
+     "Group birds as a rhythm of different head turns with space between (Met 54517, 56178; CMA 1985.314 pairs).",
+     "Pigeon: no ukiyo-e pigeon print found; transfer the sparrow rules, keep small head, flat iridescent neck patch, two wing bars, pink legs (judgement)."
+    ],
+    "keep": [
+     "species markings",
+     "leg and wing anatomy (ankle, folded wing ends at tail)",
+     "relative size of birds",
+     "feeding posture"
+    ],
+    "avoid": [
+     "cast shadows",
+     "eye highlights",
+     "modelled belly or form shadow",
+     "feather-by-feather rendering",
+     "motion blur in a print (only in sketches, Met 56178)",
+     "imitation calligraphy in the empty space"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/36718",
+     "https://www.metmuseum.org/art/collection/search/54517",
+     "https://www.metmuseum.org/art/collection/search/54171",
+     "https://www.metmuseum.org/art/collection/search/56178",
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://clevelandart.org/art/1930.192",
+     "https://clevelandart.org/art/1985.362",
+     "https://clevelandart.org/art/1985.314",
+     "https://risdmuseum.org/node/1621026",
+     "https://projects.mcah.columbia.edu/jaanus/record/kachōga",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/"
+    ]
+   }
+  }
+ }
+}

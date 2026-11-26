@@ -1,0 +1,46 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "architecture": {
+    "doc": "docs/styles/subjects/ukiyo-e--architecture.md",
+    "rules": [
+     "Oblique parallel view from above, from the fukinuki yatai tradition (JAANUS; Met Yamato-e essay); one-point perspective only as the uki-e genre (Met 36669; CMA 1916.1154) or a deliberate borrowing (Met 37321).",
+     "Ground is bare paper or one flat tone (Met 54670 paper; Met 36922 measured #908375).",
+     "When described, the ground is a line pattern: flagstone grid with faint stipple, parallel planks, tile grid or scallops (Met 54377, 55053, 55222, 55287).",
+     "The pattern keeps one scale across the ground; no texture gradient (judgement).",
+     "Steps and kerbs as a band of darker flat tone, not shadow (Met 54377).",
+     "Roofs seen from above as flat planes of tile pattern, cut by the frame (Met 55287, 55222).",
+     "Awning or eave edge as one clean key line with an identical repeated motif, cut by the frame (Met 54670; CMA 1930.211).",
+     "Straight-down pavement (judgement; no print looks straight down): flat ground colour, cobbles as a repeated cell in thin line, same size everywhere, no shadow in joints."
+    ],
+    "keep": [
+     "construction and repetition (planks, tiles, posts)",
+     "kerbs and steps where they belong",
+     "how curtains hang from eaves"
+    ],
+    "avoid": [
+     "cast shadows in joints or under awnings",
+     "texture shrinking with distance",
+     "sunlit and shadow faces on buildings",
+     "accidental mix of parallel and converging recession"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54377",
+     "https://www.metmuseum.org/art/collection/search/37321",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55053",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1985.304",
+     "https://clevelandart.org/art/1916.1154",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai",
+     "https://projects.mcah.columbia.edu/jaanus/node/4330",
+     "https://www.metmuseum.org/en/essays/yamato-e-painting",
+     "https://en.wikipedia.org/wiki/Uki-e"
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "space": {
+    "doc": "docs/styles/subjects/ukiyo-e--space.md",
+    "rules": [
+     "High oblique viewpoint, 'far beyond that of human scale' (Portland on Met 55733); ground fills most of the picture, horizon high or a sky band at the top (Met 55222, 56508, 36922).",
+     "Receding edges parallel on one dominant slant; one-point perspective only as deliberate uki-e borrowing (Met 55222, 54377, 55053 vs 36669, 37321; JAANUS).",
+     "Verticals stay vertical; no three-point convergence (judgement).",
+     "Depth by two or three flat bands, overlap and a jump in scale (Met 55733; CMA 1992.73, 1985.315; Met Yamato-e essay on cloud bands).",
+     "Distance by paler, simpler flat tones, never by haze or softer edges (CMA 1948.306; judgement on edges).",
+     "One strong diagonal (bridge, deck, road, row of stalls) carries the composition (Met 55433; CMA 1985.318; Met 55222).",
+     "Hard crops of near objects at the frame: gates, curtains, roofs, a wing, an oar (Met 36922, 54670, 55287, 55733; CMA 1992.73); far things seldom cut (judgement).",
+     "Asymmetry: a large near shape on one side, open space on the other (Met Japonisme essay).",
+     "Straight-down view (judgement; no print looks vertically down): the ground becomes the picture plane, pattern undistorted, objects as silhouettes seen from their tops; log it as an extension."
+    ],
+    "keep": [
+     "overlap order",
+     "relative size of like things at one depth",
+     "gravity (verticals vertical)"
+    ],
+    "avoid": [
+     "aerial perspective haze",
+     "texture gradient",
+     "accidental mix of parallel and converging lines",
+     "centred symmetrical composition",
+     "everything kept inside the frame"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://www.metmuseum.org/art/collection/search/55433",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/56508",
+     "https://www.metmuseum.org/art/collection/search/37321",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1916.1154",
+     "https://clevelandart.org/art/1985.315",
+     "https://clevelandart.org/art/1948.306",
+     "https://clevelandart.org/art/1992.73",
+     "https://clevelandart.org/art/1985.318",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai",
+     "https://projects.mcah.columbia.edu/jaanus/node/4330",
+     "https://www.metmuseum.org/en/essays/yamato-e-painting",
+     "https://www.metmuseum.org/essays/japonisme",
+     "https://en.wikipedia.org/wiki/Uki-e"
+    ]
+   }
+  }
+ }
+}

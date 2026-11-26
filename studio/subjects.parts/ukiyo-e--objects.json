@@ -1,0 +1,44 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "objects": {
+    "doc": "docs/styles/subjects/ukiyo-e--objects.md",
+    "rules": [
+     "Boxes, counters and stalls in oblique parallel projection; receding edges stay parallel (Met 51136, 36922, 54973).",
+     "Material is told by flat colour plus a line pattern: weave grid, wood grain, tile scales, textile stripes (Met 36922, 54670, 55222; CMA 1949.153).",
+     "No highlights or cast shadows, even on metal and lacquer (all works; metal judgement).",
+     "Sumi key line, straight and even, round every made object (all works).",
+     "Shop curtains and awnings enter from the frame edge and are cut by it (Met 54670, 55287).",
+     "Stripes and checks run straight within each face of the cloth and change direction at folds (Met 36922, 54670; style doc; judgement).",
+     "Repeated goods (boxes, tubs, lanterns) become pattern (Met 36669, 51136, 36922).",
+     "Carried goods as flat silhouettes with pattern (Met 36922; CMA 1985.315).",
+     "Market translation (judgement): crates as oblique pale-wood boxes with ruled slat lines; striped awning in two flat colours with an identical repeated scallop on its hem, cut on two sides; shopping bag as a flat silhouette with key-line handles."
+    ],
+    "keep": [
+     "construction (slats, hoops, handles, seams)",
+     "count of repeated parts",
+     "how a stack rests",
+     "how cloth hangs from a rail"
+    ],
+    "avoid": [
+     "highlights and reflections",
+     "converging perspective mixed with parallel boxes",
+     "stripes shaded round folds",
+     "soft edges"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/51136",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1949.153",
+     "https://clevelandart.org/art/1985.315",
+     "https://clevelandart.org/art/1930.211",
+     "https://clevelandart.org/art/1992.73"
+    ]
+   }
+  }
+ }
+}

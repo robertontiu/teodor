@@ -1,0 +1,49 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "light-shadow": {
+    "doc": "docs/styles/subjects/ukiyo-e--light-shadow.md",
+    "rules": [
+     "No form shadow, core shadow, reflected light or highlight; every surface is its local colour (AAM via style doc; all works).",
+     "No cast shadows; Western-style shadows are a noted exception (CMA 1930.202), so any use is a deliberate flat hard-edged departure (judgement).",
+     "Paper is the lightest value; snow and white light are unprinted paper (Portland; CMA 1985.317).",
+     "Distance by flat value steps, e.g. three greys from three blocks (CMA 1948.306), never haze.",
+     "Bokashi only as bands at edges: sky top, horizon, ground edge, at most inside a fruit or wing (Met 36922, 55733; Portland).",
+     "Dawn: dark blue top band to warm peach horizon (Met 36922 measured #2f4f68 to #edc7a6); figures stay flat.",
+     "Winter day: grey top band, grey-green sky, deep blue water, paper snow (Met 55733 measured #595453, #809a9a, #374e6e, #f3e6c7).",
+     "Night: dark flat sky, flat moon, figures still in local colour (Met 36669; CMA 1930.202, 1992.73).",
+     "Rain as ruled straight lines over the scene (CMA 1942.145).",
+     "Flat daylight (judgement): pale warm ground or paper, one bokashi band at most, high warm key; warmth told by band and key, not tinted light."
+    ],
+    "keep": [
+     "local darkness and lightness of things",
+     "sky colour order at dawn and dusk",
+     "weather"
+    ],
+    "avoid": [
+     "chiaroscuro",
+     "modelled volume",
+     "cast shadows",
+     "atmospheric haze",
+     "bokashi as airbrush everywhere",
+     "coloured light falling on figures"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://www.metmuseum.org/art/collection/search/54973",
+     "https://clevelandart.org/art/1916.1133",
+     "https://clevelandart.org/art/1948.306",
+     "https://clevelandart.org/art/1985.317",
+     "https://clevelandart.org/art/1942.145",
+     "https://clevelandart.org/art/1930.202",
+     "https://clevelandart.org/art/1992.73",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/",
+     "https://education.asianart.org/resources/the-ukiyo-e-woodblock-printing-process/"
+    ]
+   }
+  }
+ }
+}

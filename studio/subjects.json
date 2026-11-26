@@ -2093,6 +2093,260 @@
      "Cleveland Museum of Art open-access API (openaccess-api.clevelandart.org), CC0 works and labels listed in 'works'"
     ]
    }
+  },
+  "ukiyo-e": {
+   "animals": {
+    "doc": "docs/styles/subjects/ukiyo-e--animals.md",
+    "rules": [
+     "Keep true anatomy and species markings; birds are not stylised like figures (Met 36718, 54517, 55733; CMA 1930.192).",
+     "Enlarge the birds to fill the sheet; two or three birds can be the whole picture (Met 54517, 36718, 55733).",
+     "Each bird is a closed silhouette in fine sumi line; plumage is 2 to 4 flat tones by feather tract (Met 54517, 36718).",
+     "Feather detail only as short dark tips or scalloped edges along coverts and primaries; the hawk's back becomes a scale pattern (Met 55733, 54517).",
+     "Countershading stays as local colour (pale belly, dark back), never as light (judgement, from the works).",
+     "Bokashi may grade a wing or tail fan toward the tips; no other modelling (Met 55733; CMA 1985.314 text on ink tones in plumage).",
+     "Eye is a dark dot, optionally ringed; no specular highlight (all works).",
+     "Ground is blank paper or one flat tone; no cast shadow (Met 56178, 54517; CMA 1930.192).",
+     "Pecking: head below the back line, tail raised, back and folded wings one oval seen slightly from above (Met 56178; CMA 1985.362; general rule judgement).",
+     "Group birds as a rhythm of different head turns with space between (Met 54517, 56178; CMA 1985.314 pairs).",
+     "Pigeon: no ukiyo-e pigeon print found; transfer the sparrow rules, keep small head, flat iridescent neck patch, two wing bars, pink legs (judgement)."
+    ],
+    "keep": [
+     "species markings",
+     "leg and wing anatomy (ankle, folded wing ends at tail)",
+     "relative size of birds",
+     "feeding posture"
+    ],
+    "avoid": [
+     "cast shadows",
+     "eye highlights",
+     "modelled belly or form shadow",
+     "feather-by-feather rendering",
+     "motion blur in a print (only in sketches, Met 56178)",
+     "imitation calligraphy in the empty space"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/36718",
+     "https://www.metmuseum.org/art/collection/search/54517",
+     "https://www.metmuseum.org/art/collection/search/54171",
+     "https://www.metmuseum.org/art/collection/search/56178",
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://clevelandart.org/art/1930.192",
+     "https://clevelandart.org/art/1985.362",
+     "https://clevelandart.org/art/1985.314",
+     "https://risdmuseum.org/node/1621026",
+     "https://projects.mcah.columbia.edu/jaanus/record/kachōga",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/"
+    ]
+   },
+   "architecture": {
+    "doc": "docs/styles/subjects/ukiyo-e--architecture.md",
+    "rules": [
+     "Oblique parallel view from above, from the fukinuki yatai tradition (JAANUS; Met Yamato-e essay); one-point perspective only as the uki-e genre (Met 36669; CMA 1916.1154) or a deliberate borrowing (Met 37321).",
+     "Ground is bare paper or one flat tone (Met 54670 paper; Met 36922 measured #908375).",
+     "When described, the ground is a line pattern: flagstone grid with faint stipple, parallel planks, tile grid or scallops (Met 54377, 55053, 55222, 55287).",
+     "The pattern keeps one scale across the ground; no texture gradient (judgement).",
+     "Steps and kerbs as a band of darker flat tone, not shadow (Met 54377).",
+     "Roofs seen from above as flat planes of tile pattern, cut by the frame (Met 55287, 55222).",
+     "Awning or eave edge as one clean key line with an identical repeated motif, cut by the frame (Met 54670; CMA 1930.211).",
+     "Straight-down pavement (judgement; no print looks straight down): flat ground colour, cobbles as a repeated cell in thin line, same size everywhere, no shadow in joints."
+    ],
+    "keep": [
+     "construction and repetition (planks, tiles, posts)",
+     "kerbs and steps where they belong",
+     "how curtains hang from eaves"
+    ],
+    "avoid": [
+     "cast shadows in joints or under awnings",
+     "texture shrinking with distance",
+     "sunlit and shadow faces on buildings",
+     "accidental mix of parallel and converging recession"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54377",
+     "https://www.metmuseum.org/art/collection/search/37321",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/55053",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1985.304",
+     "https://clevelandart.org/art/1916.1154",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai",
+     "https://projects.mcah.columbia.edu/jaanus/node/4330",
+     "https://www.metmuseum.org/en/essays/yamato-e-painting",
+     "https://en.wikipedia.org/wiki/Uki-e"
+    ]
+   },
+   "flowers": {
+    "doc": "docs/styles/subjects/ukiyo-e--flowers.md",
+    "rules": [
+     "Still life is the surimono subject: food and small objects made 'large and elegant' (RISD Small Pleasures; Harvard).",
+     "Fruit is a flat shape of local colour; roundness only as one soft bokashi grade darker toward the rim (Met 54973 measured #f3d6a9 centre to #e3ad74 edge; Met 54971).",
+     "No highlights, reflected light, cast or contact shadows (Met 54727, 54971, 54973).",
+     "Fruit edges by the colour itself or a thin line in a darker fruit tone; sumi for hard objects such as knife, dish, basket (judgement from Met 54727, 54971, 54973).",
+     "Ground is bare paper or a flat band fading upward (Met 54973 green band #dbd2b1 into paper).",
+     "Peel is one continuous ribbon spiralling off the fruit, outside and inside in two flat tones; cut flesh a paler flat area (Met 54973).",
+     "Cut citrus as a flat disc with segment lines and pips as marks; peeled segments as flat lobes (Met 54727).",
+     "Containers carry flat pattern: blue-and-white dish rim, woven basket as a fine grid (Met 54973; CMA 1949.153, 1943.5).",
+     "High oblique view; dishes and boxes with parallel edges (Met 54973, 54832; CMA 1949.153).",
+     "Fruit in a crate: repeated rounds with the same grade in overlapping rows as pattern; gaps a flat darker tone (judgement; no ukiyo-e crate found)."
+    ],
+    "keep": [
+     "fruit shape and colour by species",
+     "stem, calyx, segment count",
+     "overlap order",
+     "peel logic"
+    ],
+    "avoid": [
+     "specular highlights",
+     "billiard-ball modelling",
+     "cast shadows on a tabletop",
+     "Western receding table",
+     "heavy black outline round fruit"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54973",
+     "https://www.metmuseum.org/art/collection/search/54727",
+     "https://www.metmuseum.org/art/collection/search/54971",
+     "https://www.metmuseum.org/art/collection/search/54832",
+     "https://www.metmuseum.org/art/collection/search/54811",
+     "https://www.metmuseum.org/art/collection/search/55897",
+     "https://clevelandart.org/art/1949.153",
+     "https://clevelandart.org/art/1943.5",
+     "https://www.harvardartmuseums.org/article/a-printed-jewel",
+     "https://risdmuseum.org/node/1624776"
+    ]
+   },
+   "light-shadow": {
+    "doc": "docs/styles/subjects/ukiyo-e--light-shadow.md",
+    "rules": [
+     "No form shadow, core shadow, reflected light or highlight; every surface is its local colour (AAM via style doc; all works).",
+     "No cast shadows; Western-style shadows are a noted exception (CMA 1930.202), so any use is a deliberate flat hard-edged departure (judgement).",
+     "Paper is the lightest value; snow and white light are unprinted paper (Portland; CMA 1985.317).",
+     "Distance by flat value steps, e.g. three greys from three blocks (CMA 1948.306), never haze.",
+     "Bokashi only as bands at edges: sky top, horizon, ground edge, at most inside a fruit or wing (Met 36922, 55733; Portland).",
+     "Dawn: dark blue top band to warm peach horizon (Met 36922 measured #2f4f68 to #edc7a6); figures stay flat.",
+     "Winter day: grey top band, grey-green sky, deep blue water, paper snow (Met 55733 measured #595453, #809a9a, #374e6e, #f3e6c7).",
+     "Night: dark flat sky, flat moon, figures still in local colour (Met 36669; CMA 1930.202, 1992.73).",
+     "Rain as ruled straight lines over the scene (CMA 1942.145).",
+     "Flat daylight (judgement): pale warm ground or paper, one bokashi band at most, high warm key; warmth told by band and key, not tinted light."
+    ],
+    "keep": [
+     "local darkness and lightness of things",
+     "sky colour order at dawn and dusk",
+     "weather"
+    ],
+    "avoid": [
+     "chiaroscuro",
+     "modelled volume",
+     "cast shadows",
+     "atmospheric haze",
+     "bokashi as airbrush everywhere",
+     "coloured light falling on figures"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://www.metmuseum.org/art/collection/search/54973",
+     "https://clevelandart.org/art/1916.1133",
+     "https://clevelandart.org/art/1948.306",
+     "https://clevelandart.org/art/1985.317",
+     "https://clevelandart.org/art/1942.145",
+     "https://clevelandart.org/art/1930.202",
+     "https://clevelandart.org/art/1992.73",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/",
+     "https://education.asianart.org/resources/the-ukiyo-e-woodblock-printing-process/"
+    ]
+   },
+   "objects": {
+    "doc": "docs/styles/subjects/ukiyo-e--objects.md",
+    "rules": [
+     "Boxes, counters and stalls in oblique parallel projection; receding edges stay parallel (Met 51136, 36922, 54973).",
+     "Material is told by flat colour plus a line pattern: weave grid, wood grain, tile scales, textile stripes (Met 36922, 54670, 55222; CMA 1949.153).",
+     "No highlights or cast shadows, even on metal and lacquer (all works; metal judgement).",
+     "Sumi key line, straight and even, round every made object (all works).",
+     "Shop curtains and awnings enter from the frame edge and are cut by it (Met 54670, 55287).",
+     "Stripes and checks run straight within each face of the cloth and change direction at folds (Met 36922, 54670; style doc; judgement).",
+     "Repeated goods (boxes, tubs, lanterns) become pattern (Met 36669, 51136, 36922).",
+     "Carried goods as flat silhouettes with pattern (Met 36922; CMA 1985.315).",
+     "Market translation (judgement): crates as oblique pale-wood boxes with ruled slat lines; striped awning in two flat colours with an identical repeated scallop on its hem, cut on two sides; shopping bag as a flat silhouette with key-line handles."
+    ],
+    "keep": [
+     "construction (slats, hoops, handles, seams)",
+     "count of repeated parts",
+     "how a stack rests",
+     "how cloth hangs from a rail"
+    ],
+    "avoid": [
+     "highlights and reflections",
+     "converging perspective mixed with parallel boxes",
+     "stripes shaded round folds",
+     "soft edges"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/51136",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1949.153",
+     "https://clevelandart.org/art/1985.315",
+     "https://clevelandart.org/art/1930.211",
+     "https://clevelandart.org/art/1992.73"
+    ]
+   },
+   "space": {
+    "doc": "docs/styles/subjects/ukiyo-e--space.md",
+    "rules": [
+     "High oblique viewpoint, 'far beyond that of human scale' (Portland on Met 55733); ground fills most of the picture, horizon high or a sky band at the top (Met 55222, 56508, 36922).",
+     "Receding edges parallel on one dominant slant; one-point perspective only as deliberate uki-e borrowing (Met 55222, 54377, 55053 vs 36669, 37321; JAANUS).",
+     "Verticals stay vertical; no three-point convergence (judgement).",
+     "Depth by two or three flat bands, overlap and a jump in scale (Met 55733; CMA 1992.73, 1985.315; Met Yamato-e essay on cloud bands).",
+     "Distance by paler, simpler flat tones, never by haze or softer edges (CMA 1948.306; judgement on edges).",
+     "One strong diagonal (bridge, deck, road, row of stalls) carries the composition (Met 55433; CMA 1985.318; Met 55222).",
+     "Hard crops of near objects at the frame: gates, curtains, roofs, a wing, an oar (Met 36922, 54670, 55287, 55733; CMA 1992.73); far things seldom cut (judgement).",
+     "Asymmetry: a large near shape on one side, open space on the other (Met Japonisme essay).",
+     "Straight-down view (judgement; no print looks vertically down): the ground becomes the picture plane, pattern undistorted, objects as silhouettes seen from their tops; log it as an extension."
+    ],
+    "keep": [
+     "overlap order",
+     "relative size of like things at one depth",
+     "gravity (verticals vertical)"
+    ],
+    "avoid": [
+     "aerial perspective haze",
+     "texture gradient",
+     "accidental mix of parallel and converging lines",
+     "centred symmetrical composition",
+     "everything kept inside the frame"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/55733",
+     "https://www.metmuseum.org/art/collection/search/55433",
+     "https://www.metmuseum.org/art/collection/search/55222",
+     "https://www.metmuseum.org/art/collection/search/56508",
+     "https://www.metmuseum.org/art/collection/search/37321",
+     "https://www.metmuseum.org/art/collection/search/55287",
+     "https://www.metmuseum.org/art/collection/search/54670",
+     "https://www.metmuseum.org/art/collection/search/36922",
+     "https://www.metmuseum.org/art/collection/search/36669",
+     "https://clevelandart.org/art/1916.1154",
+     "https://clevelandart.org/art/1985.315",
+     "https://clevelandart.org/art/1948.306",
+     "https://clevelandart.org/art/1992.73",
+     "https://clevelandart.org/art/1985.318",
+     "https://portlandartmuseum.org/the-poster-project/fukagawa-susaki-and-jumantsubo/",
+     "https://projects.mcah.columbia.edu/jaanus/record/fukinukiyatai",
+     "https://projects.mcah.columbia.edu/jaanus/node/4330",
+     "https://www.metmuseum.org/en/essays/yamato-e-painting",
+     "https://www.metmuseum.org/essays/japonisme",
+     "https://en.wikipedia.org/wiki/Uki-e"
+    ]
+   }
   }
  }
 }

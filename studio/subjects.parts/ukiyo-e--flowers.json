@@ -1,0 +1,46 @@
+{
+ "styles": {
+  "ukiyo-e": {
+   "flowers": {
+    "doc": "docs/styles/subjects/ukiyo-e--flowers.md",
+    "rules": [
+     "Still life is the surimono subject: food and small objects made 'large and elegant' (RISD Small Pleasures; Harvard).",
+     "Fruit is a flat shape of local colour; roundness only as one soft bokashi grade darker toward the rim (Met 54973 measured #f3d6a9 centre to #e3ad74 edge; Met 54971).",
+     "No highlights, reflected light, cast or contact shadows (Met 54727, 54971, 54973).",
+     "Fruit edges by the colour itself or a thin line in a darker fruit tone; sumi for hard objects such as knife, dish, basket (judgement from Met 54727, 54971, 54973).",
+     "Ground is bare paper or a flat band fading upward (Met 54973 green band #dbd2b1 into paper).",
+     "Peel is one continuous ribbon spiralling off the fruit, outside and inside in two flat tones; cut flesh a paler flat area (Met 54973).",
+     "Cut citrus as a flat disc with segment lines and pips as marks; peeled segments as flat lobes (Met 54727).",
+     "Containers carry flat pattern: blue-and-white dish rim, woven basket as a fine grid (Met 54973; CMA 1949.153, 1943.5).",
+     "High oblique view; dishes and boxes with parallel edges (Met 54973, 54832; CMA 1949.153).",
+     "Fruit in a crate: repeated rounds with the same grade in overlapping rows as pattern; gaps a flat darker tone (judgement; no ukiyo-e crate found)."
+    ],
+    "keep": [
+     "fruit shape and colour by species",
+     "stem, calyx, segment count",
+     "overlap order",
+     "peel logic"
+    ],
+    "avoid": [
+     "specular highlights",
+     "billiard-ball modelling",
+     "cast shadows on a tabletop",
+     "Western receding table",
+     "heavy black outline round fruit"
+    ],
+    "sources": [
+     "https://www.metmuseum.org/art/collection/search/54973",
+     "https://www.metmuseum.org/art/collection/search/54727",
+     "https://www.metmuseum.org/art/collection/search/54971",
+     "https://www.metmuseum.org/art/collection/search/54832",
+     "https://www.metmuseum.org/art/collection/search/54811",
+     "https://www.metmuseum.org/art/collection/search/55897",
+     "https://clevelandart.org/art/1949.153",
+     "https://clevelandart.org/art/1943.5",
+     "https://www.harvardartmuseums.org/article/a-printed-jewel",
+     "https://risdmuseum.org/node/1624776"
+    ]
+   }
+  }
+ }
+}
