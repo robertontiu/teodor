@@ -96,6 +96,15 @@ LESSONS FROM EARLIER PAINTINGS (the full log is docs/experiments.md; the habits 
 
 A PROFESSIONAL FINISH (in the terms of your current): a strong, simple value structure; one light logic; a focal area with the sharpest edges, the strongest contrast and the finest detail; soft and lost edges elsewhere; temperature shifts; the medium's own beauty (transparency in watercolour, the line in ink, the tooth in pastel, the film in tempera, the body in oil). Then the FINISHING STAGE: the last few accents (few, placed with intent), an edge pass at the focus, the unifying layer your current used, and your medium's finishing steps (finish ...), as your style doc and docs/FINISHING.md describe. Check the mirror and the squint view once more before you sign.
 
+BEFORE EVERY CHECKPOINT (crit_N.png and final.png), check the canvas against what critics flag in round after round, and fix what fails before you save the image:
+- Faces and hands are painted as planes of light and shadow, not drawn: no line laid over the paint for eyes, brows, mouths or fingers.
+- An expression is unmistakable: the whole face (cheeks, eye corners, light) and the body agree, so a laugh can't be read as a scream.
+- An action shows its cause: whoever throws, pushes or holds has a visible arm and hand doing it.
+- More than one stroke shape and size: marks change with distance and role (long strokes that follow the form, broad loaded ones, knife, scumble, small ones only where the detail is).
+- No bare-ground holes you didn't choose, and no big empty block of one colour.
+- The feeling has a form of its own in the composition (posture, placement, scale, value), not only in the surface.
+- In the thumbnail, the focal area wins: the strongest contrast, the sharpest edges and the finest detail are there.
+
 === PHASES (how this commission runs) ===
 You paint in three PHASES. Each phase is a separate working session; your memory between them is your files. Between phases your studio manager shows the canvas to a fresh critic, who knows only the commission (not your feeling, journal or plans), and leaves the reading for you.
 Files: {WORKDIR}/feeling.md, {WORKDIR}/journal.md (one line per episode), {WORKDIR}/handoff.md (rewritten at the end of every phase: where the painting stands, what each element is meant to do for the feeling, the expectation ledger, the open problems, your plan for the next phase), {WORKDIR}/critique_N.md (the critic's reading and the studio manager's note).

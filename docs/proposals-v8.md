@@ -45,6 +45,6 @@ From Spectre and from `docs/research/process.md` part 3:
 If a research file is missing, rerun that research with the prompt shape in this plan; the other parts don't depend on each other until the engine media step (needs `docs/MEDIA.md`) and the process step (needs the research).
 
 ## After round 16 (the first v8 painting)
-- [ ] **A pre-checkpoint self-check in the brief:** before `crit_N.png`, the painter checks the canvas against the repeat offenders: features painted rather than drawn, more than one stroke shape and size, the cause of an action visible, no bare-ground holes, no empty block. That way the critic's reading goes to the feeling.
+- [x] **A pre-checkpoint self-check in the brief:** (in `docs/prompts/painter-brief.md` since round 17) before `crit_N.png`, the painter checks the canvas against the repeat offenders: features painted rather than drawn, more than one stroke shape and size, the cause of an action visible, no bare-ground holes, no empty block. That way the critic's reading goes to the feeling.
 - [ ] **A stroke vocabulary that doesn't read as a filter:** every critic in every round names the uniform dab. That calls for strokes that change width, pressure and loading along their length, broken-colour and scumble passes, and size tied to distance and role.
 - [ ] **A value-group measure that matches the eye:** `report` counted 2 groups all through round 16, while the gray and squint views showed three masses.
