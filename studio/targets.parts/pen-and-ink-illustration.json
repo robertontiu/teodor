@@ -1,0 +1,165 @@
+{
+ "pen-and-ink-illustration": {
+  "_n": 58,
+  "_pool": 58,
+  "_source": "The Met Open Access (CC0), public-domain works",
+  "_rule": "Drawings in pen and ink without wash, colour, chalk or charcoal, 1875-1920 (any department but Modern and Contemporary Art; trade designs titled 'Design for' or numbered '#' excluded): the illustrators' originals",
+  "_met_object_ids": [
+   363870,
+   365762,
+   365768,
+   365763,
+   365760,
+   335009,
+   753519,
+   753525,
+   423581,
+   365766,
+   363866,
+   386528,
+   373923,
+   753518,
+   365772,
+   335537,
+   385174,
+   385173,
+   334139,
+   365759,
+   337708,
+   336684,
+   334355,
+   343482,
+   753522,
+   348959,
+   389149,
+   753521,
+   364045,
+   365765,
+   376161,
+   420542,
+   368341,
+   406021,
+   335035,
+   365771,
+   888859,
+   336706,
+   343081,
+   341362,
+   428618,
+   393291,
+   343348,
+   365767,
+   771722,
+   384297,
+   459738,
+   365764,
+   373922,
+   365758,
+   363867,
+   635819,
+   768347,
+   365761,
+   365770,
+   385166,
+   385172,
+   365769
+  ],
+  "_measured": "2026-11-26",
+  "value_mean": {
+   "mean": 76.7721,
+   "sd": 7.9196
+  },
+  "value_spread": {
+   "mean": 15.5381,
+   "sd": 6.3615
+  },
+  "value_p5": {
+   "mean": 44.4546,
+   "sd": 18.7227
+  },
+  "value_p95": {
+   "mean": 91.7644,
+   "sd": 4.0328
+  },
+  "value_dark": {
+   "mean": 0.0585,
+   "sd": 0.096
+  },
+  "value_light": {
+   "mean": 0.8205,
+   "sd": 0.1505
+  },
+  "value_middle": {
+   "mean": 0.121,
+   "sd": 0.0944
+  },
+  "value_murky": {
+   "mean": 0.067,
+   "sd": 0.0501
+  },
+  "notan_dark_share": {
+   "mean": 0.1633,
+   "sd": 0.1288
+  },
+  "value_groups": {
+   "mean": 1.1379,
+   "sd": 0.3448
+  },
+  "chroma_mean": {
+   "mean": 10.9359,
+   "sd": 6.3781
+  },
+  "chroma_p90": {
+   "mean": 13.631,
+   "sd": 7.4863
+  },
+  "hue_spread": {
+   "mean": 0.1126,
+   "sd": 0.0932
+  },
+  "warm_share": {
+   "mean": 0.3886,
+   "sd": 0.3733
+  },
+  "cool_share": {
+   "mean": 0.0,
+   "sd": 0.0
+  },
+  "edge_density": {
+   "mean": 0.2996,
+   "sd": 0.1489
+  },
+  "hard_edge_share": {
+   "mean": 0.1912,
+   "sd": 0.1273
+  },
+  "detail_energy": {
+   "mean": 5.0274,
+   "sd": 2.7609
+  },
+  "texture_variation": {
+   "mean": 0.7056,
+   "sd": 0.2883
+  },
+  "spectral_slope": {
+   "mean": -0.727,
+   "sd": 0.1562
+  },
+  "focal_x": {
+   "mean": 0.4982,
+   "sd": 0.1227
+  },
+  "focal_y": {
+   "mean": 0.512,
+   "sd": 0.1436
+  },
+  "hard_edges_near_focus": {
+   "mean": 0.2527,
+   "sd": 0.1753
+  },
+  "contrast_concentration": {
+   "mean": 1.8758,
+   "sd": 0.8124
+  }
+ }
+}

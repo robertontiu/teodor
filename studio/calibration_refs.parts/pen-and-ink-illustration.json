@@ -1,0 +1,295 @@
+{
+ "about": "Public-domain (CC0) pen-and-ink illustration drawings, c. 1880-1911, at The Met, for calibrating the ink medium's pen (studio/v8/media/ink.py). Images are not versioned: download primaryImage, measure crop_xywh (full-resolution px). px_per_mm = image px / the catalogued size that best fits the photo's aspect; crops chosen automatically (local detail in mid values, away from margins) and checked by eye. Drawings for process reproduction were made 1.5-4x larger than printed (Harper 1894), so these are drawing-scale marks.",
+ "media": {
+  "pen_illustration": [
+   {
+    "objectID": 365759,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The jovial monarch caught Mrs. Russell's hand in his, and proceeded to dance, illustration to \"A Castle in Spain: A Novel\"",
+    "objectDate": "1880–83",
+    "medium": "Pen and ink",
+    "dimensions": "sheet: 14 x 14 1/2 in. (35.6 x 36.8 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365759",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30142-001.jpg",
+    "image_px": [
+     3127,
+     2977
+    ],
+    "size_mm_hw": [
+     356,
+     368
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.43,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1692,
+     1280,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365760,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The Sunday Walk, illustration to \"Sally in Our Alley\"",
+    "objectDate": "ca. 1886",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 3/8 x 12 3/8 in. (44.1 x 31.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365760",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30143-001.jpg",
+    "image_px": [
+     2367,
+     3320
+    ],
+    "size_mm_hw": [
+     441,
+     314
+    ],
+    "scale_from": "?",
+    "px_per_mm": 7.53,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1528,
+     712,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365761,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "And none knew why he fed them both with his own hands, illustration to \"Quince\"",
+    "objectDate": "1888",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 7/8 x 13 1/8 in. (45.4 x 33.3 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365761",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30144-001.jpg",
+    "image_px": [
+     2743,
+     3665
+    ],
+    "size_mm_hw": [
+     454,
+     333
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.15,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     508,
+     852,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365762,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "He went to Tonson, illustration to \"The Noble Patron\"",
+    "objectDate": "1888",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 17 3/4 x 11 1/4 in. (45.1 x 28.6 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365762",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30145-001.jpg",
+    "image_px": [
+     2373,
+     3585
+    ],
+    "size_mm_hw": [
+     451,
+     286
+    ],
+    "scale_from": "?",
+    "px_per_mm": 8.12,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1684,
+     2088,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 365764,
+    "artistDisplayName": "Edwin Austin Abbey",
+    "title": "The bird to others flew, illustration to \"A Love Song\"",
+    "objectDate": "1887",
+    "medium": "Pen and ink on cardboard",
+    "dimensions": "sheet: 19 3/8 x 15 in. (49.2 x 38.1 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/365764",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-30147-001.jpg",
+    "image_px": [
+     2812,
+     3465
+    ],
+    "size_mm_hw": [
+     492,
+     381
+    ],
+    "scale_from": "?",
+    "px_per_mm": 7.21,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1580,
+     1940,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 373923,
+    "artistDisplayName": "Howard Pyle",
+    "title": "The Blacksmith Chooses Ye Raven and Runs Away With It, for \"The Wonder Clock\"",
+    "objectDate": "1887",
+    "medium": "Pen and black ink",
+    "dimensions": "sheet: 6 5/8 x 6 3/8 in. (16.8 x 16.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/373923",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP883287.jpg",
+    "image_px": [
+     2521,
+     2361
+    ],
+    "size_mm_hw": [
+     168,
+     162
+    ],
+    "scale_from": "?",
+    "px_per_mm": 14.81,
+    "px_per_mm_note": "inconsistent (10% between height and width): photo may include margins beyond the '?' size",
+    "crop_xywh": [
+     280,
+     280,
+     516,
+     516
+    ]
+   },
+   {
+    "objectID": 753521,
+    "artistDisplayName": "Aubrey Vincent Beardsley",
+    "title": "The Fall of the House of Usher, for Edgar Allan Poe’s “Tales of Mystery and the Imagination,” Chicago, 1895–96",
+    "objectDate": "1894",
+    "medium": "Pen, brush and India ink over graphite",
+    "dimensions": "Sheet: 10 in. × 6 3/8 in. (25.4 × 16.2 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/753521",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP-21096-001.jpg",
+    "image_px": [
+     2314,
+     3645
+    ],
+    "size_mm_hw": [
+     254,
+     162
+    ],
+    "scale_from": "?",
+    "px_per_mm": 14.32,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1312,
+     1708,
+     500,
+     500
+    ]
+   },
+   {
+    "objectID": 363870,
+    "artistDisplayName": "Phil May",
+    "title": "The Hoffman House Saloon, New York",
+    "objectDate": "ca. 1895",
+    "medium": "Pen and black ink",
+    "dimensions": "sheet: 9 15/16 x 12 3/16 in. (25.2 x 31 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/363870",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP804731.jpg",
+    "image_px": [
+     3546,
+     2891
+    ],
+    "size_mm_hw": [
+     252,
+     310
+    ],
+    "scale_from": "?",
+    "px_per_mm": 11.46,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     592,
+     344,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 364045,
+    "artistDisplayName": "Sir (Edward) Linley Sambourne",
+    "title": "Father Thames and Henley Naiads (Cartoon published in Punch, February 26, 1898)",
+    "objectDate": "Febuary 18, 1898",
+    "medium": "Pen and black ink over graphite",
+    "dimensions": "sheet: 9 x 11 9/16 in. (22.9 x 29.4 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/364045",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP805058.jpg",
+    "image_px": [
+     3368,
+     2606
+    ],
+    "size_mm_hw": [
+     229,
+     294
+    ],
+    "scale_from": "?",
+    "px_per_mm": 11.42,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     1852,
+     1060,
+     400,
+     400
+    ]
+   },
+   {
+    "objectID": 771722,
+    "artistDisplayName": "George Du Maurier",
+    "title": "Our Drawing-room Pets–with 'Kangaroo Jim, the Champion Australian boomerang-thrower', for \"Punch\"",
+    "objectDate": "July 2, 1887",
+    "medium": "Pen and brown ink",
+    "dimensions": "Image: 8 3/8 in. × 9 in. (21.2 × 22.8 cm)\r\nSheet: 8 3/4 × 9 1/4 in. (22.2 × 23.5 cm)",
+    "objectURL": "https://www.metmuseum.org/art/collection/search/771722",
+    "primaryImage": "https://images.metmuseum.org/CRDImages/dp/original/DP878724.jpg",
+    "image_px": [
+     2833,
+     2662
+    ],
+    "size_mm_hw": [
+     222,
+     235
+    ],
+    "scale_from": "?",
+    "px_per_mm": 12.02,
+    "px_per_mm_note": "consistent",
+    "crop_xywh": [
+     928,
+     1216,
+     420,
+     420
+    ]
+   }
+  ]
+ },
+ "source": "The Met Collection API, https://collectionapi.metmuseum.org/public/collection/v1/objects/{id} (records and images CC0); candidates from MetObjects.csv (github.com/metmuseum/openaccess)",
+ "what_to_measure": {
+  "pen_illustration": "line width and its variation along a line, free-end taper, hatch spacing, crossing angle and cross-hatched share per value band, ink and paper colour (tools/calibrate_media.py refs pen_illustration --kind line --file this file)"
+ },
+ "excluded": [
+  {
+   "objectID": 368341,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution"
+  },
+  {
+   "objectID": 385166,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution"
+  },
+  {
+   "objectID": 385174,
+   "reason": "image only 615-700 px (3.7-4.0 px/mm): pen lines below the photograph's resolution"
+  }
+ ]
+}

@@ -1,0 +1,166 @@
+{
+ "pen-and-ink-illustration": {
+  "name": "Pen-and-ink illustration (drawing for process reproduction)",
+  "doc": "docs/styles/pen-and-ink-illustration.md",
+  "period": "Europe and the United States, c. 1880-1920 (book and magazine illustration for photomechanical line blocks)",
+  "media": [
+   "ink"
+  ],
+  "support": {
+   "ink": "illustration_board"
+  },
+  "ground": "#e7d9c5",
+  "size": [
+   1200,
+   1600
+  ],
+  "px_per_mm": 6.0,
+  "technique": [
+   "outline as the main convention, broken in the light",
+   "parallel hatching for tone, cross-hatching only for deep quiet shadows",
+   "several nibs in one drawing (fine for distance, broad for foreground)",
+   "few and positive values; work kept open for reduction",
+   "lots of white paper (economy of means)",
+   "corrections by scraping, never patched lines"
+  ],
+  "palette": {
+   "principle": "one black India ink on white board; tone only from line density (a line block prints black or nothing: Harper 1894). Board colour measured on the references as they look today; fresh board is whiter (judgement).",
+   "colors": [
+    "#000000"
+   ],
+   "ink": "india",
+   "paper": [
+    "#e7d9c5",
+    "#f7f4ec"
+   ],
+   "avoid": [
+    "grey or diluted ink",
+    "washes",
+    "colour",
+    "closely knit grey tones that close up in reduction"
+   ]
+  },
+  "light": "one clear light; shadows hatched; most of the sheet is paper (measured: lights 0.82 ± 0.15, key L* 77 ± 8, n = 58)",
+  "value_key": "high: brilliant blacks and large light areas, just enough half-tone (Maginnis 1898)",
+  "composition": "vignettes and full-page plates; white areas carry the light; a foreground black accent; story and figures first, backgrounds suggested (judgement; Maginnis on colour-schemes)",
+  "drawing": "outline first and most important; texture by line character; lines clear and distinct; sharp-angle cross-hatch (measured crossing angle 62°, 50-70)",
+  "edges": "all hard: pen lines, no soft edges; light eats into broken outlines",
+  "marks": {
+   "tools": [
+    "pen (nib crowquill)",
+    "pen (nib mapping)",
+    "pen (nib fine)",
+    "pen (nib stub)",
+    "stipple",
+    "pencil"
+   ],
+   "width_mm": {
+    "median": 0.39,
+    "iqr_between_works": [
+     0.36,
+     0.49
+    ],
+    "p90_over_median": 2.2,
+    "cv_along": 0.32,
+    "source": "measured, 10 Met drawings"
+   },
+   "spacing_mm": {
+    "dense": 0.62,
+    "source": "measured"
+   },
+   "lines_per_mm_by_value": {
+    "L>=80": 0.26,
+    "L60-80": 1.21,
+    "L40-60": 1.6,
+    "L<40": 1.98,
+    "source": "measured"
+   },
+   "cross_hatched_share_by_value": {
+    "L>=80": 0.19,
+    "L60-80": 0.42,
+    "L40-60": 0.36,
+    "L<40": 0.37,
+    "source": "measured"
+   },
+   "length": "short hatching flicks to long contours",
+   "direction": "hatching by plane, contours following the form",
+   "visible": true
+  },
+  "process": [
+   "pencil study on Bristol board (pencil tool or transfer)",
+   "outline and principal darks in pen, several nibs",
+   "tones by hatching, light to dark, few positive values, work kept open",
+   "deepest shadows cross-hatched at a sharp angle",
+   "scrape corrections; erase pencil",
+   "check at reduced size (look thumb), sign"
+  ],
+  "finishing": [
+   "finish erase-pencil",
+   "last blacks",
+   "finish scrape for a lost light",
+   "check the drawing reduced (the diminishing glass)",
+   "stop: finished means printable, not polished"
+  ],
+  "pitfalls": [
+   "grey mush: tones too dense or too close",
+   "mechanical machine-ruled hatching everywhere",
+   "pastiche of a famous illustrator's look (Art Nouveau black masses, costume romance)",
+   "nearest wrong feelings: quaint nostalgia, greeting-card charm, colouring-book outline"
+  ],
+  "felt_bias": {
+   "arousal": 0.05,
+   "tension": 0.0,
+   "care": 0.3
+  },
+  "engine": {
+   "new": "new \"#e7d9c5\" 1200 1600 --medium ink --support illustration_board",
+   "hatch": {
+    "brush": "pen",
+    "nib": "crowquill",
+    "ink": "india",
+    "colors": [
+     "#000000"
+    ],
+    "spacing": 5.5,
+    "cross": 62,
+    "layers": [
+     0.72,
+     0.52,
+     0.35,
+     0.2
+    ],
+    "length": 90,
+    "pressure": 0.7,
+    "max_strokes": 40000
+   },
+   "contours": {
+    "type": "strokes",
+    "brush": "pen",
+    "nib": "crowquill",
+    "pressure": 0.85
+   },
+   "match": {
+    "brush": "pen",
+    "nib": "crowquill",
+    "tone": "jiao",
+    "size": [
+     6,
+     12
+    ],
+    "threshold": 0.35,
+    "faithful": 0.3
+   }
+  },
+  "engine_gaps": [
+   "core hatch does not follow the form or vary spacing within one intention",
+   "no reduced-size print preview",
+   "no Chinese white (opaque correction)",
+   "no clay-board or scratchboard"
+  ],
+  "sources": [
+   "C. D. Maginnis, Pen Drawing: An Illustrated Treatise (1898): https://archive.org/details/pendrawingillust00magi ; https://www.gutenberg.org/ebooks/17502",
+   "C. G. Harper, A Practical Hand-book of Drawing for Modern Methods of Reproduction (1894): https://archive.org/stream/apracticalhandb00harpgoog/apracticalhandb00harpgoog_djvu.txt",
+   "The Met Open Access (CC0): studio/targets.parts/pen-and-ink-illustration.json, studio/calibration_refs.parts/pen-and-ink-illustration.json"
+  ]
+ }
+}

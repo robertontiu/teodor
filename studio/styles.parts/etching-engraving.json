@@ -1,0 +1,216 @@
+{
+ "etching-engraving": {
+  "name": "Etching and engraving (intaglio printmaking)",
+  "doc": "docs/styles/etching-engraving.md",
+  "period": "Europe, burin engraving c. 1470-1700 (reproductive engraving to the 19th century), etching from the 16th century, the etching revival c. 1850-1900",
+  "media": [
+   "ink"
+  ],
+  "support": {
+   "ink": "plate_laid"
+  },
+  "ground": "#e4d8c6",
+  "size": [
+   1200,
+   1600
+  ],
+  "px_per_mm": 10.0,
+  "technique": [
+   "burin engraving: swelling and tapering lines in systems of parallel and cross-hatching, dots in the lozenges",
+   "etching: an even, free needle line bitten in stages with stopping-out (deeper = wider and darker)",
+   "drypoint accents with velvety burr",
+   "printing: wiped plate, plate tone, retroussage, platemark"
+  ],
+  "palette": {
+   "principle": "one printing ink, black or warm brown, on cream laid or wove paper; tone = lines + bite + plate tone. Ink absorption measured on the references; paper measured as photographed today.",
+   "colors": [
+    "#000000"
+   ],
+   "ink": [
+    "intaglio_black",
+    "intaglio_brown"
+   ],
+   "paper": [
+    "#e4d8c6",
+    "#f2ecdf"
+   ],
+   "avoid": [
+    "colour",
+    "grey ink",
+    "wash tones without lines (aquatint and mezzotint are other techniques)"
+   ]
+  },
+  "light": "engraving: consistent light, hatching swelling into shadow and crossing in the deepest darks; etching: value from density, needle size and bite (Lalanne)",
+  "value_key": "middle-light (measured: key L* 67 ± 10, spread 18.5 ± 3.8, darks 0.09 ± 0.09, n = 60)",
+  "composition": "the plate rectangle and platemark frame the image with a paper margin; engraving fills the plate; etching vignettes toward the edges and leaves skies as paper (judgement); no lettering or fake inscriptions",
+  "drawing": "engraving: form by systems of curved parallels, crossing at ~55° (measured), dots and flecks; etching: free, even line, open outline, finer needles and shorter bites for distance",
+  "edges": "hard, fine lines; drypoint burr soft on one side; plate tone softens the ground between lines",
+  "marks": {
+   "tools": [
+    "burin",
+    "needle",
+    "drypoint"
+   ],
+   "engraving": {
+    "width_mm": 0.23,
+    "iqr_between_works": [
+     0.18,
+     0.29
+    ],
+    "p90_over_median": 2.2,
+    "cv_along": 0.35,
+    "spacing_mm": 0.3,
+    "cross_angle_deg": 55,
+    "lines_per_mm_by_value": {
+     "L60-80": 2.5,
+     "L40-60": 3.5,
+     "L<40": 4.4
+    },
+    "source": "measured, 8 Met engravings"
+   },
+   "etching": {
+    "width_mm": 0.36,
+    "iqr_between_works": [
+     0.3,
+     0.41
+    ],
+    "p90_over_median": 1.9,
+    "cv_along": 0.33,
+    "spacing_mm": 0.43,
+    "cross_angle_deg": 60,
+    "lines_per_mm_by_value": {
+     "L>=80": 0.34,
+     "L60-80": 1.45,
+     "L40-60": 2.3,
+     "L<40": 2.3
+    },
+    "source": "measured, 11 Met etchings"
+   },
+   "length": "long steady lines (burin); free lines of any length (needle)",
+   "direction": "systems following the form (engraving); free hatching in several directions (etching)",
+   "visible": true
+  },
+  "modes": {
+   "engraving": {
+    "tools": [
+     "burin"
+    ],
+    "px_per_mm": 16,
+    "felt_bias": {
+     "arousal": -0.15,
+     "tension": 0.1,
+     "care": 0.45
+    },
+    "wipe": {
+     "tone": 0.02,
+     "clean_lights": 0.8
+    }
+   },
+   "etching": {
+    "tools": [
+     "needle",
+     "drypoint"
+    ],
+    "px_per_mm": 10,
+    "felt_bias": {
+     "arousal": 0.05,
+     "tension": 0.0,
+     "care": 0.15
+    },
+    "wipe": {
+     "tone": 0.05,
+     "retroussage": 0.25
+    }
+   }
+  },
+  "process": [
+   "engraving: outlines with the burin, hatching systems light to dark, dots in the lozenges, clean wipe",
+   "etching: needle drawing bitten 3-4 min, stop out the lights, bite again (6, then 8 min more in the darks), drypoint accents",
+   "platemark, wipe (plate tone, retroussage), sign"
+  ],
+  "finishing": [
+   "finish platemark",
+   "finish wipe (engraving clean: tone 0.02; etching: tone 0.04-0.06, retroussage 0.2-0.4)",
+   "a few drypoint accents",
+   "sign"
+  ],
+  "pitfalls": [
+   "digital line-art look: even lines with no swell, bite or plate tone",
+   "over-biting into black mud",
+   "pastiche of famous plates",
+   "nearest wrong feelings: antiquarian quaintness, banknote stiffness, the souvenir view"
+  ],
+  "felt_bias": {
+   "arousal": -0.05,
+   "tension": 0.05,
+   "care": 0.3
+  },
+  "engine": {
+   "new": "new \"#e4d8c6\" 1200 1600 --medium ink --support plate_laid",
+   "hatch_engraving": {
+    "brush": "burin",
+    "ink": "intaglio_black",
+    "colors": [
+     "#000000"
+    ],
+    "spacing_mm": 0.3,
+    "cross": 55,
+    "layers": [
+     0.75,
+     0.5,
+     0.3
+    ],
+    "length": 260,
+    "pressure": 0.8,
+    "max_strokes": 60000
+   },
+   "hatch_etching": {
+    "brush": "needle",
+    "ink": "intaglio_black",
+    "colors": [
+     "#000000"
+    ],
+    "spacing_mm": 0.5,
+    "cross": 60,
+    "layers": [
+     0.72,
+     0.5,
+     0.3
+    ],
+    "length": 120,
+    "pressure": 0.7,
+    "bite": 4,
+    "max_strokes": 40000
+   },
+   "bite_stages": [
+    {
+     "minutes": 6,
+     "where_darker": 0.55
+    },
+    {
+     "minutes": 8,
+     "where_darker": 0.33
+    }
+   ],
+   "lozenge": {
+    "level": 0.5
+   }
+  },
+  "engine_gaps": [
+   "core hatch is a draughtsman's (±15% spacing, short pieces): an engraver's regular systems and form-following curves need strokes or a regular hatch",
+   "no aquatint, mezzotint or soft-ground",
+   "no reversal of the image by the press",
+   "plate tone and platemark depth by eye"
+  ],
+  "sources": [
+   "Met, The Printed Image in the West: Engraving / Etching / Drypoint (W. Thompson 2003): https://www.metmuseum.org/en/essays/the-printed-image-in-the-west-engraving",
+   "Met, Materials and Techniques: Printmaking: Engraving / Etching: https://www.metmuseum.org/en/perspectives/materials-and-techniques-printmaking-etching",
+   "Getty, Artists' Things: Burin: https://www.getty.edu/publications/artists-things/things/burin/",
+   "M. Lalanne, A Treatise on Etching, trans. Koehler (1880): https://archive.org/details/treatiseonetchin00lalauoft",
+   "G. J. Brown, Dotted Lozenge: Goltzius, Prints and Principles (2012): https://www.printsandprinciples.com/2012/11/goltzius-dotted-lozenge.html",
+   "A. Béguin, printmaking dictionary, Engraving: https://polymetaal.nl/beguin/mape/engraving.htm",
+   "Princeton Graphic Arts, Laid or Wove: https://www.princeton.edu/~graphicarts/2008/03/laid_or_wove.html",
+   "The Met Open Access (CC0): studio/targets.parts/etching-engraving.json, studio/calibration_refs.parts/etching-engraving.json, MetObjects.csv record counts"
+  ]
+ }
+}
