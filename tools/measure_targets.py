@@ -13,7 +13,15 @@ How it works:
      Only statistics are versioned, never images.
 
   python3 tools/measure_targets.py index [--limit 4000]
-  python3 tools/measure_targets.py measure [style ...] [--n 60]
+  python3 tools/measure_targets.py index-csv [--per-rule 250]   # Drawings and Prints candidates via MetObjects.csv
+  python3 tools/measure_targets.py measure [style ...] [--n 60] [--parts]
+
+Department 9 (Drawings and Prints, ~186,000 objects) is too large to sample at random for rare groups such as
+pen-and-ink illustration drawings, so `index-csv` reads The Met's Open Access CSV (MetObjects.csv from
+github.com/metmuseum/openaccess, CC0; downloaded once to ~/.cache/teodor/met/openaccess/), applies a coarse
+pre-filter (CSV_PREFILTERS) and fetches the API records of up to --per-rule matches each into
+~/.cache/teodor/met/records_dp_cands.jsonl. The RULES below then select from all cached records as before.
+`--parts` writes each result to studio/targets.parts/<style>.json instead of studio/targets.json (for merging).
 
 A rule is a proxy for a movement, not a curator's label: "Dutch paintings 1600-1690" is mostly but
 not only the Dutch Golden Age. Currents still in copyright (surrealism, abstract-expressionism)
@@ -73,8 +81,58 @@ def index(limit):
 
 
 def records():
-    path = os.path.join(CACHE, "records.jsonl")
-    return [json.loads(l) for l in open(path)] if os.path.exists(path) else []
+    out, seen = [], set()
+    for fn in ["records.jsonl"] + sorted(f for f in os.listdir(CACHE) if f.startswith("records_dp") and f.endswith(".jsonl")) if os.path.isdir(CACHE) else []:
+        for l in open(os.path.join(CACHE, fn)):
+            o = json.loads(l)
+            if o.get("objectID") in seen:
+                continue
+            seen.add(o.get("objectID")); out.append(o)
+    return out
+
+
+import re  # noqa: E402
+
+# coarse pre-filters on MetObjects.csv rows (index-csv); the RULES decide
+CSV_PREFILTERS = {
+    "pen-and-ink-illustration": lambda o, m, b: o["Classification"] == "Drawings" and 1875 <= b <= 1920 and "pen" in m and "ink" in m,
+    "etching-engraving-engraving": lambda o, m, b: o["Department"] == "Drawings and Prints" and o["Classification"] == "Prints" and 1480 <= b <= 1900 and m.startswith("engraving"),
+    "etching-engraving-etching": lambda o, m, b: o["Department"] == "Drawings and Prints" and o["Classification"] == "Prints" and 1500 <= b <= 1925 and m.startswith("etching"),
+}
+
+
+def index_csv(per_rule):
+    import csv
+    csv.field_size_limit(10 ** 8)
+    path = os.path.join(CACHE, "openaccess", "MetObjects.csv")
+    if not os.path.exists(path):
+        sys.exit(f"Download https://media.githubusercontent.com/media/metmuseum/openaccess/master/MetObjects.csv to {path} first.")
+    pools = {k: [] for k in CSV_PREFILTERS}
+    for o in csv.DictReader(open(path, encoding="utf-8-sig")):
+        if o["Is Public Domain"] != "True":
+            continue
+        try:
+            b = int(o["Object Begin Date"])
+        except ValueError:
+            continue
+        m = o["Medium"].lower()
+        for k, f in CSV_PREFILTERS.items():
+            if f(o, m, b):
+                pools[k].append(o["Object ID"])
+    have = {str(o["objectID"]) for o in records()}
+    out = open(os.path.join(CACHE, "records_dp_cands.jsonl"), "a")
+    for k, ids in pools.items():
+        random.Random(k).shuffle(ids)
+        ids = [i for i in ids[:per_rule] if i not in have]
+        print(f"{k}: {len(pools[k])} in the CSV, fetching {len(ids)}", flush=True)
+        for i in ids:
+            try:
+                o = json.loads(get(API + f"objects/{i}"))
+            except Exception:
+                continue
+            if o.get("isPublicDomain") and o.get("primaryImageSmall"):
+                out.write(json.dumps({k2: o.get(k2) for k2 in FIELDS + ("primaryImage", "artistDisplayName", "dimensions", "title", "objectDate")}) + "\n")
+            time.sleep(0.03)
 
 
 def has(text, *words):
@@ -118,6 +176,17 @@ RULES = {
                       lambda o: painting(o) and date_in(o, 1905, 1925) and has(o.get("artistNationality"), "german", "austrian")),
     "ukiyo-e": ("Asian Art: Japanese woodblock prints, 1700-1868",
                 lambda o: o.get("department") == "Asian Art" and has(o.get("culture"), "japan") and has(o.get("classification"), "print") and date_in(o, 1700, 1868)),
+    "pen-and-ink-illustration": ("Drawings in pen and ink without wash, colour, chalk or charcoal, 1875-1920 (any department but Modern and "
+                                 "Contemporary Art; trade designs titled 'Design for' or numbered '#' excluded): the illustrators' originals",
+                                 lambda o: has(o.get("classification"), "drawing") and date_in(o, 1875, 1920) and has(o.get("medium"), "pen")
+                                 and has(o.get("medium"), "ink") and not has(o.get("medium"), "watercolo", "gouache", "wash", "chalk", "pastel", "crayon", "charcoal", "oil")
+                                 and o.get("department") != "Modern and Contemporary Art" and not re.search(r"^design for|#\s?\d", (o.get("title") or "").lower())),
+    "etching-engraving": ("Drawings and Prints: intaglio prints whose medium begins 'Engraving' (1480-1900) or 'Etching' (1500-1925), "
+                          "black and white (no wood engraving, stipple, mezzotint, aquatint, crayon manner, roulette, soft-ground, colour or hand colouring)",
+                          lambda o: has(o.get("classification"), "print") and o.get("department") == "Drawings and Prints"
+                          and ((o.get("medium") or "").lower().startswith("engraving") and date_in(o, 1480, 1900)
+                               or (o.get("medium") or "").lower().startswith("etching") and date_in(o, 1500, 1925))
+                          and not has(o.get("medium"), "wood", "stipple", "mezzotint", "aquatint", "crayon", "roulette", "soft", "color", "colour", "hand", "letterpress", "photo")),
     "east-asian-ink": ("Asian Art: Chinese and Japanese paintings in ink, 1300-1900",
                        lambda o: o.get("department") == "Asian Art" and has(o.get("culture"), "china", "japan") and has(o.get("classification"), "painting")
                        and has(o.get("medium"), "ink") and date_in(o, 1300, 1900)),
@@ -159,10 +228,15 @@ if __name__ == "__main__":
         if name in argv:
             i = argv.index(name); v = argv[i + 1]; del argv[i:i + 2]; return int(v)
         return default
-    if not argv or argv[0] not in ("index", "measure"):
+    if not argv or argv[0] not in ("index", "index-csv", "measure"):
         sys.exit(__doc__)
     if argv[0] == "index":
         index(opt("--limit", 4000)); sys.exit()
+    if argv[0] == "index-csv":
+        index_csv(opt("--per-rule", 250)); sys.exit()
+    parts = "--parts" in argv
+    if parts:
+        argv.remove("--parts")
     n = opt("--n", 60)
     recs = records()
     if not recs:
@@ -176,10 +250,19 @@ if __name__ == "__main__":
         if t is None:
             print(f"  only {pool} matching works: left unmeasured")
             continue
+        if parts:
+            pd = os.path.join(ROOT, "studio", "targets.parts")
+            os.makedirs(pd, exist_ok=True)
+            pp = os.path.join(pd, f"{sid}.json")
+            json.dump({sid: t}, open(pp + ".tmp", "w"), indent=1)
+            os.replace(pp + ".tmp", pp)
+            print(f"  {t['_n']} of {pool} -> {pp}", flush=True)
+            continue
         targets[sid] = t
         print(f"  {t['_n']} of {pool}: key {t['value_mean']['mean']:.0f}, spread {t['value_spread']['mean']:.0f}, chroma {t['chroma_mean']['mean']:.0f}, "
               f"edges {t['edge_density']['mean']:.2f}, hard {t['hard_edge_share']['mean']:.2f}, slope {t['spectral_slope']['mean']:.2f}", flush=True)
         tmp = out + ".tmp"
         json.dump(targets, open(tmp, "w"), indent=1)
         os.replace(tmp, out)
-    print(out)
+    if not parts:
+        print(out)

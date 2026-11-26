@@ -35,18 +35,30 @@ TONES = {"jiao": (3.6, 0.32), "nong": (2.5, 0.52), "zhong": (1.3, 0.72), "dan": 
 # ink kinds: relative absorption per channel (mean 1). Pine soot dilutes to a cool grey, oil soot is
 # neutral, iron gall / sepia / bistre are the brown Western drawing inks.
 INKS = {"pine": [1.02, 1.0, 0.95], "oil": [0.99, 1.0, 1.01], "carbon": [1.0, 1.0, 1.0],
-        "iron_gall": [0.86, 1.0, 1.14], "sepia": [0.8, 0.98, 1.22], "bistre": [0.72, 0.97, 1.31]}
+        "iron_gall": [0.86, 1.0, 1.14], "sepia": [0.8, 0.98, 1.22], "bistre": [0.72, 0.97, 1.31],
+        # measured: -ln(line core / paper) per linear RGB channel on the Met references (docs/calibration/
+        # pen-and-ink-illustration.md, etching-engraving.md): India ink in the pen drawings (n = 10), intaglio black
+        # (17 engravings and etchings) and the one "printed in dark brown ink" etching (n = 1)
+        "india": [0.954, 1.0, 1.037], "intaglio_black": [0.973, 1.003, 1.015], "intaglio_brown": [0.826, 0.961, 1.213]}
 # support -> tone, bleed (how far liquid ink spreads, 0..1), how fast water sinks in between episodes
 SUP = {"xuan_raw": dict(tone="#f3eee2", bleed=1.0, keep=0.3),
        "xuan_sized": dict(tone="#efe8d6", bleed=0.22, keep=0.55),
        "silk": dict(tone="#e6d9bb", bleed=0.15, keep=0.55),
        "bristol": dict(tone="#fbfaf6", bleed=0.06, keep=0.45),
-       "laid_paper": dict(tone="#efe6d2", bleed=0.3, keep=0.5)}
+       "laid_paper": dict(tone="#efe6d2", bleed=0.3, keep=0.5),
+       # pen-and-ink illustration and intaglio prints: tone = the median paper colour measured on the references
+       # (as they look today); ppm = the support's default scale (a drawing for process at about 6 px/mm, a plate at 10)
+       "illustration_board": dict(tone="#e7d9c5", bleed=0.04, keep=0.45, ppm=6.0),
+       "plate_wove": dict(tone="#e4d8c6", bleed=0.0, keep=0.4, ppm=10.0),
+       "plate_laid": dict(tone="#e4d8c6", bleed=0.0, keep=0.4, ppm=10.0)}
 ALIAS = {"brush_chinese": "brush", "round": "brush", "filbert": "brush", "liner": "brush",
          "flat": "brush_side", "fan": "brush_side", "knife": "brush_side",
          "pen_nib": "pen", "pen_tech": "pen", "pen_reed": "pen", "wash_brush": "wash",
-         "blend": "water", "smudge": "water", "dots": "brush"}
-NIB = {"pen_tech": "tech", "pen_reed": "reed"}
+         "blend": "water", "smudge": "water", "dots": "brush",
+         "crowquill": "nib", "mapping_pen": "nib", "pen_fine": "nib", "pen_stub": "nib", "graver": "burin",
+         "etching_needle": "needle", "dry_point": "drypoint"}
+NIB = {"pen_tech": "tech", "pen_reed": "reed", "crowquill": "crowquill", "mapping_pen": "mapping", "pen_fine": "fine", "pen_stub": "stub"}
+LINE_KINDS = ("nib", "burin", "needle", "drypoint", "stipple")
 STUDIO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # ---- physical scale and liquid units (docs/calibration/ink.md)
@@ -75,6 +87,27 @@ EVEN = 5         # free liquid evens out inside saturated paper over this many c
 WICK_MM = 0.3    # fibre wicking fringe at every edge on raw xuan (bamboo); set by the hard-edge share
 DAMP_FILL = 0.5  # share of the paper's capacity that damp from earlier strokes still fills (the rest has gone into
                  # the felt underlay or evaporated); by eye
+# ---- pen-and-ink illustration and intaglio line tools (docs/calibration/pen-and-ink-illustration.md and
+# etching-engraving.md). Widths in mm at the drawing's or plate's scale; "data" = set by a statistic measured on the
+# Met references with tools/calibrate_media.py --kind line; "eye" = tuned by eye.
+# Steel nibs: finest line, widest swell (mm), pressure exponent. The ranking (mapping pen widest range, crowquill
+# fine but responsive, 303 "average" and more uniform, stub broad) is Maginnis 1898; the mm are set by the measured
+# line width (median 0.39 mm, p90 / median 2.2) on the crowquill, the others scaled from it by eye.
+NIBS = {"crowquill": (0.12, 0.62, 1.5), "mapping": (0.08, 0.72, 1.8), "fine": (0.24, 0.5, 1.2), "stub": (0.5, 0.85, 1.0)}
+PEN_SMOOTH_MM = 0.35  # a practised pen line is fluent: the hand's jitter below this scale is smoothed out; eye
+NIB_BLOTS = 0.03    # chance of a blot where a slow pen line starts (the core's default 0.12 is for the flexible pen); eye
+NIB_DOWN = 0.6      # share of the swell an up- or side-stroke still gets (tines spread on the pull toward you); eye
+PEN_RHYTHM = 0.18   # slow swell and thinning of the hand's pressure along a pen line; data (width CV along lines)
+PEN_FLICK_MM = 1.2  # a fast pen line lifts off over this length (hatching flicks); data (free-end width ratio)
+BURIN_W = 0.30      # widest burin line at full pressure, mm; data (engraving width median 0.23 mm, p90 / median 2.2)
+BURIN_IN_MM, BURIN_OUT_MM = 1.6, 2.4   # the burin enters at a low angle and is lifted out: entry and exit tapers; data (ends, CV)
+BURIN_SMOOTH_MM = 0.9   # the plate is turned against a steady push: no hand tremor below this scale; eye
+NEEDLES = {"fine": 0.10, "medium": 0.16, "coarse": 0.24}   # needle diameters: sewing to embroidery needle (Lalanne); mm by eye
+BITE_LAT = 0.0045   # lateral bite, mm per minute on each side (deeper lines are wider); data (etching width median and p90/median)
+BITE_TAU = 8.0      # minutes for a line to hold 63% of the darkest ink (deeper holds more ink); eye, from Lalanne's 3-30 min test plate
+BITE_DEFAULT = 10.0 # minutes a needle line is bitten when no stage is given; eye
+TREMOR_MM = 0.035   # an etching needle's slight tremble across the line; eye
+DRY_BURR = 0.9      # density of the burr's velvety ink beside a drypoint furrow, relative to a deep line; eye
 SOOT_STEPS = 30  # soot filtered out of the liquid moving through wet paper: 1/e per SOOT_STEPS front steps; by eye
 
 
@@ -152,7 +185,7 @@ class InkTool:
     def __init__(self, med, kind, size, color, rng, it, nib=None):
         self.med, self.kind, self.size, self.rng, self.it = med, kind, float(size), rng, it
         self.color = np.clip(np.asarray(color, np.float32), 0, 1)
-        self.nib = it.get("nib", nib or "flex")
+        self.nib = it.get("nib", nib or ("crowquill" if kind == "nib" else "flex"))
         self.load = float(it.get("load", 1.0)) * rng.uniform(0.88, 1.08)
         self.cv = None
         self.bb = None
@@ -224,8 +257,10 @@ class InkTool:
             self.water = float(it.get("water", min(1.25, self.water + (0.25 if k == "splash" else 0.12))))
         if k == "brush_side":
             self.water = float(it.get("water", self.water * 0.72))
-        if k in ("pen", "hatch"):
+        if k in ("pen", "hatch", "nib", "stipple"):
             self.water = float(it.get("water", 0.32))
+        if k in ("burin", "needle", "drypoint"):
+            self.water = 0.0      # printing ink pressed from a plate: no liquid on the paper
         # each hair's reservoir (1 = fully loaded); the belly holds more than the edges of the tuft
         res = (1 - 0.25 * self.bpos ** 2) if k == "brush" else np.ones(self.K, np.float32)
         self.wb = (res * self.load * np.clip(self.rng.normal(1, 0.08, self.K), 0.75, 1.25)).astype(np.float32)
@@ -272,6 +307,11 @@ class InkTool:
         k = self.kind
         if k == "hatch":
             self.pts.append((x, y, ang, press))
+            self.ndab += 1
+            return
+        if k in LINE_KINDS:
+            # line tools are laid whole when the stroke ends, so the width can follow the full stroke (entry, swell, exit)
+            self.pts.append((x, y, ang, press, float(getattr(self, "speedfx", 0.0))))
             self.ndab += 1
             return
         if k in ("brush", "brush_side") and RHYTHM > 0:
@@ -449,12 +489,15 @@ class InkTool:
 
 class Ink(Medium):
     name = "ink"
-    arrays = ("col", "water", "ink", "pencil")
+    arrays = ("col", "water", "ink", "pencil", "etch", "bite")
     supports = {"xuan_raw": "raw (unsized) xuan rice paper: absorbent, wet ink bleeds and feathers along the fibres; no correcting",
                 "xuan_sized": "sized ('cooked') xuan: ink sits where it lands, crisp lines (gongbi)",
                 "silk": "sized silk, warm tone, fine weave, very little bleed",
                 "bristol": "smooth hard drawing board for pen and ink; no bleed",
-                "laid_paper": "laid paper with laid and chain lines; slight bleed, a little grit for pen"}
+                "laid_paper": "laid paper with laid and chain lines; slight bleed, a little grit for pen",
+                "illustration_board": "Bristol board for pen drawing for process reproduction: smooth, hard, no bleed (6 px/mm by default)",
+                "plate_wove": "dampened wove printing paper under an intaglio plate: soft, even (10 px/mm by default)",
+                "plate_laid": "dampened laid printing paper under an intaglio plate: laid and chain lines (10 px/mm by default)"}
     tools = {"brush": "Chinese brush, upright (centre tip): dark tip, wet pale belly; width swells with pressure; flying white when dry or fast",
              "brush_side": "side brush (oblique): broad stroke, sharp dark edge on the tip side, ragged pale edge on the belly side, much flying white",
              "splash": "splashed ink (pomo): wet irregular pools of varying tone that fuse and bleed, a few droplets",
@@ -462,12 +505,21 @@ class Ink(Medium):
              "pen": "dip pen: flexible steel nib, line swells with pressure and on down-strokes; occasional blot at a slow start (nib: flex|tech|reed)",
              "hatch": "pen hatching: each stroke lays a band of parallel pen lines across its path (cross-hatched when pressed hard or cross: true)",
              "water": "clean wet brush: fuses and softens ink that is still damp (also used for 'blend')",
-             "pencil": "light graphite construction line, removed later by finish erase-pencil"}
+             "pencil": "light graphite construction line, removed later by finish erase-pencil",
+             "nib": "steel drawing nib for pen-and-ink illustration (nib: crowquill|mapping|fine|stub): hairline to swell with pressure and on down-strokes, fast lines lift off to a point",
+             "stipple": "pen stippling: dots along the stroke (dot_spacing_mm), for tone",
+             "burin": "engraver's burin: a steady, smooth cut that enters as a point, swells with the push and tapers out; tapers print greyer",
+             "needle": "etching needle through the ground: even width, round ends, a slight tremble; bitten for `bite` minutes (deeper = wider and darker)",
+             "drypoint": "drypoint needle on the bare plate: a fine furrow with a velvety, ragged burr to one side (burr_side left|right)"}
     finishes = {"dots": "the last dark accents: dots in scorched ink with a small upright brush (pts or region+count, at most 40)",
                 "seal": "stamp the red cinnabar seal (text, at br|bl|tr|tl|[x,y], size, style baiwen|zhuwen)",
                 "erase-pencil": "erase the graphite construction lines wherever ink does not cover them",
                 "scrape": "scrape ink off for a highlight (region, amount 0..1); leaves the paper slightly roughened",
-                "mount": "presentation: show the work mounted (style scroll|album|mat, color) in renders; the paint is unchanged"}
+                "mount": "presentation: show the work mounted (style scroll|album|mat, color) in renders; the paint is unchanged",
+                "bite": "etching: another biting stage for the needle lines inside region (the rest is stopped out): minutes (default 10)",
+                "lozenge": "dot-and-lozenge: a burin dot in each paper lozenge between crossed lines (region, level, size)",
+                "wipe": "printing: plate tone left by wiping (tone, clean_lights, retroussage 0..1, angle), inside the platemark",
+                "platemark": "printing: the plate's edge pressed into the paper (margin 0..0.3 of the short side, margin_mm, or rect); the margin takes no ink"}
 
     _pending = None
 
@@ -492,7 +544,15 @@ class Ink(Medium):
             chain = 0.5 * np.exp(-((x % 96) - 48) ** 2 / 6.0)
             fib = fibres(h, w, 13, a / 400, 6, 25)
             return _norm(0.3 * laid + 0.15 * chain + 0.25 * _norm(fib) + 0.2 * noise_field(h, w, 0.8, 5) + 0.1 * noise_field(h, w, 12, 3))
-        # bristol: smooth
+        if support == "plate_laid":
+            # laid lines about 1 mm apart, chain lines 24 mm (as laid_paper), at the plate's 10 px/mm; dampened and pressed: soft
+            y, x = np.mgrid[0:h, 0:w].astype(np.float32)
+            laid = 0.5 + 0.5 * np.sin(y * 2 * math.pi / 10.5)
+            chain = 0.5 * np.exp(-((x % 240) - 120) ** 2 / 30.0)
+            return _norm(0.25 * laid + 0.12 * chain + 0.33 * noise_field(h, w, 1.2, 5) + 0.3 * noise_field(h, w, 14, 3))
+        if support == "plate_wove":
+            return _norm(0.5 * noise_field(h, w, 1.0, 5) + 0.3 * noise_field(h, w, 4, 9) + 0.2 * noise_field(h, w, 16, 3))
+        # bristol, illustration board: smooth
         return (0.55 + 0.3 * (noise_field(h, w, 0.7, 7) - 0.5) + 0.15 * (noise_field(h, w, 10, 3) - 0.5)).astype(np.float32)
 
     _fcache = {}
@@ -528,6 +588,8 @@ class Ink(Medium):
         self.flush()
         raw = it.get("brush", "brush")
         kind = ALIAS.get(raw, raw)
+        if kind == "pen" and it.get("nib") in NIBS:
+            kind = "nib"
         if kind not in self.tools:
             kind = "brush"
         t = InkTool(self, kind, size, color, rng, it, nib=NIB.get(raw))
@@ -543,13 +605,25 @@ class Ink(Medium):
         cv = t.cv
         if t.kind == "hatch":
             self._hatch(t)
+        if t.kind in LINE_KINDS:
+            if t.pts:
+                self._line(t)
+            if t.kind not in ("nib", "stipple") and t.bb is not None:
+                # printed from a plate: the ink sits where the plate held it, no liquid spreads
+                x0, y0, x1, y1 = t.bb
+                sl = (slice(y0, y1), slice(x0, x1))
+                total = t.X[sl]
+                if t.kind == "needle":
+                    total = self._etch_stroke(cv, sl, total, t)
+                self._composite(cv, sl, total, t.D, t.kink, t.tint)
+                return
         if t.bb is None:
             return
         sp = self.sup(cv)
         bleed = sp["bleed"]
         x0, y0, x1, y1 = t.bb
         wl = min(1.4, t.wmax)
-        if t.kind in ("brush", "brush_side", "wash", "splash", "pen", "hatch"):
+        if t.kind in ("brush", "brush_side", "wash", "splash", "pen", "hatch", "nib", "stipple"):
             if bleed >= 0.5:
                 # the halo can reach at most as far as the excess liquid would cover as a disc
                 b0 = (slice(y0, y1), slice(x0, x1))
@@ -589,7 +663,7 @@ class Ink(Medium):
         return XUAN.get(cv.meta.get("xuan", XUAN_DEFAULT), XUAN[XUAN_DEFAULT])
 
     def ppm(self, cv):
-        return float(cv.meta.get("px_per_mm", PX_PER_MM))
+        return float(cv.meta.get("px_per_mm", self.sup(cv).get("ppm", PX_PER_MM)))
 
     def capacity(self, cv):
         """Raw xuan's capacity, in units of the laid liquid Wl: 10/area um of ink per mm2 (Wu et al. 2016)."""
@@ -809,6 +883,294 @@ class Ink(Medium):
                 t.wmax = max(t.wmax, t.water)
                 s += sp0 * (1.45 - 0.55 * min(p, 1.2)) * rng.uniform(0.85, 1.15)
 
+
+    # ------------------------------------------------------------------ line tools: nib, burin, needle, drypoint, stipple
+    def _line(self, t):
+        """Lay a whole pen or plate line from the recorded path: resampled at 0.5 px, smoothed at the tool's scale (a
+        burin cannot tremble, a needle trembles a little), then filled as a strip of quads whose width and ink follow
+        the tool's profile along the stroke. Supersampled 4x for clean anti-aliased edges."""
+        from scipy.ndimage import gaussian_filter1d
+        cv, k, it, rng = t.cv, t.kind, t.it, t.rng
+        ppm = self.ppm(cv)
+        P = np.asarray(t.pts, np.float64)
+        if len(P) == 1:
+            P = np.vstack([P, P + [0.6, 0, 0, 0, 0]])
+        xy = P[:, :2]
+        d = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(xy, axis=0), axis=1))])
+        S = float(d[-1])
+        if S < 0.5:
+            xy = xy[[0, -1]] + np.array([[0, 0], [0.6, 0]]); d = np.array([0, 0.6]); S = 0.6; P = P[[0, -1]]
+        n = max(3, int(S / 0.5) + 1)
+        sa = np.linspace(0, S, n)
+        x, y = np.interp(sa, d, xy[:, 0]), np.interp(sa, d, xy[:, 1])
+        pr, spd = np.interp(sa, d, P[:, 3]), np.interp(sa, d, P[:, 4])
+        sm = {"burin": BURIN_SMOOTH_MM, "needle": 0.2, "drypoint": 0.15}.get(k, PEN_SMOOTH_MM) * ppm / 0.5
+        sm = min(sm, n / 6)
+        if sm > 0.3:
+            x0, y0, x1, y1 = x[0], y[0], x[-1], y[-1]
+            x, y = gaussian_filter1d(x, sm, mode="nearest"), gaussian_filter1d(y, sm, mode="nearest")
+            # keep the ends where the hand put them (smoothing pulls them in)
+            ramp = np.clip(1 - sa / max(3 * sm * 0.5, 1e-6), 0, 1); x += (x0 - x[0]) * ramp; y += (y0 - y[0]) * ramp
+            ramp = np.clip(1 - (S - sa) / max(3 * sm * 0.5, 1e-6), 0, 1); x += (x1 - x[-1]) * ramp; y += (y1 - y[-1]) * ramp
+        tx, ty = np.gradient(x), np.gradient(y)
+        tn = np.hypot(tx, ty) + 1e-9
+        tx, ty = tx / tn, ty / tn
+        nx, ny = -ty, tx
+        smm = sa / ppm                      # arc length in mm
+        Smm = S / ppm
+        scale = float(np.clip(t.size / 8.0, 0.5, 2.0)) ** 0.5 * float(it.get("width_scale", 1.0))
+
+        def noise1(corr_mm, seed):
+            m = max(4, int(Smm / max(corr_mm, 1e-3) * 4) + 4)
+            v = gaussian_filter1d(rng.normal(0, 1, m), 2.0)
+            v = v / (v.std() + 1e-9)
+            return np.interp(smm / max(Smm, 1e-6) * (m - 1), np.arange(m), v)
+        conc = np.ones(n)
+        caps = False
+        if k == "nib" or k == "stipple":
+            wmin, wmax, g = NIBS.get(t.nib, NIBS["crowquill"])
+            down = np.clip(ty, 0, 1)                          # moving toward the drawer spreads the tines
+            w = wmin + (wmax - wmin) * np.clip(pr, 0, 1.2) ** g * (NIB_DOWN + (1 - NIB_DOWN) * down)
+            w = w * scale * np.clip(1 + PEN_RHYTHM * noise1(3.0, 1), 0.4, 1.8)
+            # a fast stroke lifts off: the line thins to a point over the last PEN_FLICK_MM (more with speed)
+            fl = PEN_FLICK_MM * (0.4 + 2.5 * float(np.clip(spd[-max(1, n // 5):].mean(), 0, 0.4)))
+            w = w * np.clip((Smm - smm) / max(fl, 1e-3), 0.15, 1) ** 0.8
+            w = w * np.clip(smm / 0.15 + 0.6, 0, 1)          # the nib lands: a short rounding in
+            caps = True
+            if k == "stipple":
+                return self._stipple(t, x, y, smm, w * ppm, ppm)
+        elif k == "burin":
+            wmax = BURIN_W * float(it.get("pressure_width", 1.0)) * scale
+            ein, eout = min(BURIN_IN_MM, 0.3 * Smm), min(BURIN_OUT_MM, 0.4 * Smm)
+            a = np.clip(smm / max(ein, 1e-3), 0, 1); b = np.clip((Smm - smm) / max(eout, 1e-3), 0, 1)
+            env = (a * a * (3 - 2 * a)) * (b * b * (3 - 2 * b))
+            pn = np.clip(pr / max(float(np.percentile(pr, 90)), 1e-3), 0, 1.2)
+            w = wmax * (0.04 + 0.96 * env) * pn ** 0.5 * np.clip(1 + 0.06 * noise1(4.0, 2), 0.8, 1.2)
+            conc = 0.5 + 0.5 * np.clip(w / wmax, 0, 1)         # a shallow cut holds less ink: greyer at the tapers
+        elif k == "needle":
+            wn = NEEDLES.get(it.get("needle", "medium"), NEEDLES["medium"]) * scale
+            w = np.full(n, wn) * np.clip(1 + 0.05 * noise1(2.0, 3), 0.85, 1.15)
+            trem = TREMOR_MM * (1 + 2.0 * float(np.clip(spd.mean(), 0, 0.5))) * noise1(0.8, 4) * ppm
+            x, y = x + nx * trem, y + ny * trem
+            caps = True
+        elif k == "drypoint":
+            w = 0.07 * (0.6 + 0.8 * np.clip(pr, 0, 1.2)) * scale * np.ones(n)
+            conc = 0.7 * np.ones(n)
+            caps = True
+        wpx = np.maximum(w * ppm, 0.35)
+        self._strip(t, x, y, nx, ny, wpx, conc, caps)
+        if k == "drypoint":
+            # the burr: metal thrown up beside the furrow (to one side, as the needle leans) holds a velvety film
+            side = 1.0 if it.get("burr_side", "right") == "right" else -1.0
+            bw = (0.12 + 0.18 * np.clip(pr, 0, 1.2)) * scale * ppm
+            rag = np.clip(1 + 0.45 * noise1(0.5, 5), 0.2, 1.6)
+            off = side * (wpx / 2 + bw * 0.45)
+            Xs = np.zeros_like(t.X)
+            t2 = _Buf(Xs, t.clip)
+            self._strip(t2, x + nx * off, y + ny * off, nx, ny, bw * rag, DRY_BURR * np.clip(pr, 0.3, 1.0), True)
+            if t2.bb:
+                bx0, by0, bx1, by1 = t2.bb
+                pad = int(2 + 0.08 * ppm * 3)
+                sl = (slice(max(0, by0 - pad), by1 + pad), slice(max(0, bx0 - pad), bx1 + pad))
+                soft = gaussian_filter(Xs[sl], max(0.5, 0.06 * ppm)) * (0.7 + 0.6 * cv.tex[sl])
+                np.maximum(t.X[sl], soft, out=t.X[sl])
+                t._bbx(sl[1].start, sl[0].start, min(cv.W, sl[1].stop), min(cv.H, sl[0].stop))
+        if k == "nib" and t.rng.random() < float(it.get("blots", NIB_BLOTS)) * float(np.clip(1 - 3 * spd[:3].mean(), 0, 1)):
+            r = wpx[:4].max() * t.rng.uniform(0.6, 1.0)
+            self._strip(t, x[:2] + np.array([0, 0.3]), y[:2], nx[:2], ny[:2], np.array([2 * r, 2 * r]), np.ones(2), True)
+
+    def _strip(self, t, x, y, nx, ny, wpx, conc, caps):
+        """Fill a strip of quads (width wpx along the centre line) with conc into t.X (and liquid into t.Wl)."""
+        cv = getattr(t, "cv", None)
+        H, W = t.X.shape
+        R = float(wpx.max()) / 2 + 2
+        bx0, bx1 = max(0, int(x.min() - R)), min(W, int(x.max() + R) + 2)
+        by0, by1 = max(0, int(y.min() - R)), min(H, int(y.max() + R) + 2)
+        if bx0 >= bx1 or by0 >= by1:
+            return
+        SS = 4
+        im = Image.new("L", ((bx1 - bx0) * SS, (by1 - by0) * SS), 0)
+        dr = ImageDraw.Draw(im)
+        hw = wpx / 2
+        lx, ly = (x + nx * hw - bx0) * SS, (y + ny * hw - by0) * SS
+        rx, ry = (x - nx * hw - bx0) * SS, (y - ny * hw - by0) * SS
+        cv8 = np.clip(conc * 255, 0, 255).astype(int)
+        step = 2 if len(x) > 6 else 1
+        idx = list(range(0, len(x) - 1, step)) + [len(x) - 1]
+        for a, b in zip(idx[:-1], idx[1:]):
+            dr.polygon([(lx[a], ly[a]), (lx[b], ly[b]), (rx[b], ry[b]), (rx[a], ry[a])], fill=int(max(cv8[a], cv8[b])))
+        if caps:
+            for j in (0, len(x) - 1):
+                r = hw[j] * SS
+                cx, cy = (x[j] - bx0) * SS, (y[j] - by0) * SS
+                dr.ellipse([cx - r, cy - r, cx + r, cy + r], fill=int(cv8[j]))
+        m = np.asarray(im, np.float32).reshape(by1 - by0, SS, bx1 - bx0, SS).mean((1, 3)) / 255
+        sl = (slice(by0, by1), slice(bx0, bx1))
+        if t.clip is not None:
+            m = m * t.clip[sl]
+        np.maximum(t.X[sl], m, out=t.X[sl])
+        if getattr(t, "Wl", None) is not None and getattr(t, "water", 0) > 0:
+            np.maximum(t.Wl[sl], (m > 0.02) * t.water, out=t.Wl[sl])
+            t.wmax = max(t.wmax, t.water)
+        t._bbx(bx0, by0, bx1, by1)
+
+    def _stipple(self, t, x, y, smm, wpx, ppm):
+        """Pen stippling: dots along the path, spaced about two and a half dot widths, a little scattered."""
+        rng = t.rng
+        sp = float(t.it.get("dot_spacing_mm", 2.5 * np.median(wpx) / ppm))
+        s = rng.uniform(0, sp)
+        while s < smm[-1] + 1e-6:
+            j = int(np.clip(np.searchsorted(smm, s), 0, len(x) - 1))
+            r = max(0.45, wpx[j] / 2 * rng.uniform(0.8, 1.25))
+            cx, cy = x[j] + rng.normal(0, r * 0.8), y[j] + rng.normal(0, r * 0.8)
+            self._strip(t, np.array([cx, cx + 0.3]), np.array([cy, cy]), np.zeros(2), np.ones(2), np.array([2 * r, 2 * r]), np.ones(2), True)
+            s += sp * rng.uniform(0.8, 1.2)
+
+    # ------------------------------------------------------------------ etching: biting in stages
+    def _bite_profile(self, cv, etch, bite):
+        """Printed density of etched lines (0..1 of the ink's full density) from the needle's opening (etch) and the
+        minutes each line was bitten (bite): deeper lines hold more ink (1 - exp(-minutes / BITE_TAU)) and are wider,
+        BITE_LAT mm per minute on each side (Met, Etching: "longer exposure will cause deeper and wider recesses",
+        which "hold more ink and will thus print darker lines")."""
+        ppm = self.ppm(cv)
+        out = np.zeros_like(etch)
+        q_ = np.round(bite * 2) / 2
+        for tv in np.unique(q_[(etch > 0.05) & (q_ > 0)]):
+            m = etch * (q_ == tv)
+            if m.max() <= 0.05:
+                continue
+            r = BITE_LAT * tv * ppm
+            if r > 0.05:
+                dist = distance_transform_edt(m < 0.5)
+                m = np.maximum(m, np.clip(r + 0.5 - dist, 0, 1) * (dist < r + 1.5))
+            np.maximum(out, m * (1 - math.exp(-tv / BITE_TAU)), out=out)
+        return out
+
+    def _etch_stroke(self, cv, sl, X, t):
+        """A needle line through the ground, bitten for its `bite` minutes (default BITE_DEFAULT): store the opening
+        and the bite so later `finish bite` stages can deepen it, and return what this line prints."""
+        mins = float(t.it.get("bite", BITE_DEFAULT))
+        H, W = X.shape
+        pad = int(BITE_LAT * 60 * self.ppm(cv)) + 3
+        y0, x0 = max(0, sl[0].start - pad), max(0, sl[1].start - pad)
+        y1, x1 = min(cv.H, sl[0].stop + pad), min(cv.W, sl[1].stop + pad)
+        big = (slice(y0, y1), slice(x0, x1))
+        Xb = np.zeros((y1 - y0, x1 - x0), np.float32)
+        Xb[sl[0].start - y0:sl[0].start - y0 + H, sl[1].start - x0:sl[1].start - x0 + W] = X
+        old = self._bite_profile(cv, cv.etch[big], cv.bite[big])
+        cv.etch[big] = np.maximum(cv.etch[big], Xb)
+        cv.bite[big] = np.where(Xb > 0.5, np.maximum(cv.bite[big], mins), cv.bite[big])
+        new = self._bite_profile(cv, cv.etch[big], cv.bite[big])
+        cv.meta["etch_D"], cv.meta["etch_ink"] = float(t.D), t.it.get("ink", "intaglio_black")
+        out = np.clip(new - old, 0, None)
+        self._composite(cv, big, out, t.D, t.kink, t.tint)
+        return np.zeros_like(X)       # already composited (on the padded window)
+
+    def _bite(self, cv, params):
+        """A further biting stage: every needle line inside `region` (the parts not stopped out) bites `minutes` more."""
+        if not (cv.etch > 0.05).any():
+            print("bite: no needle lines on the plate yet")
+            return
+        mins = float(params.get("minutes", 10))
+        reg = region(params.get("region"), cv.W, cv.H, 1.0) if params.get("region") else np.ones((cv.H, cv.W), np.float32)
+        ys, xs = np.nonzero(cv.etch > 0.05)
+        pad = int(BITE_LAT * (cv.bite.max() + mins + 5) * self.ppm(cv)) + 3
+        sl = (slice(max(0, ys.min() - pad), min(cv.H, ys.max() + pad + 1)), slice(max(0, xs.min() - pad), min(cv.W, xs.max() + pad + 1)))
+        old = self._bite_profile(cv, cv.etch[sl], cv.bite[sl])
+        cv.bite[sl] = cv.bite[sl] + mins * (reg[sl] > 0.5) * (cv.etch[sl] > 0.05)
+        new = self._bite_profile(cv, cv.etch[sl], cv.bite[sl])
+        kink = np.asarray(INKS.get(cv.meta.get("etch_ink", "intaglio_black"), INKS["intaglio_black"]), np.float32)
+        self._composite(cv, sl, np.clip(new - old, 0, None), float(cv.meta.get("etch_D", 3.6)), kink / kink.mean(), None)
+
+    # ------------------------------------------------------------------ printing: plate tone, platemark, lozenge dots
+    def plate_rect(self, cv):
+        r = cv.meta.get("platemark")
+        return (0, 0, cv.W, cv.H) if not r else tuple(int(v) for v in r)
+
+    def _wipe(self, cv, params):
+        """Plate tone: the thin film of ink the printer leaves on the plate's surface when wiping (Met: "leave a thin
+        layer of ink on the plate to create tone"), streaked by the hand and wiped cleaner in the lights; retroussage
+        draws ink out of the lines with a soft rag and spreads it along their edges (Lalanne, §89)."""
+        x0, y0, x1, y1 = self.plate_rect(cv)
+        sl = (slice(y0, y1), slice(x0, x1))
+        h, w = y1 - y0, x1 - x0
+        tone = float(params.get("tone", 0.05))
+        rng = np.random.default_rng(int(params.get("seed", 3)))
+        a = math.radians(params.get("angle", rng.uniform(0, 180)))
+        yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
+        u = (xx * math.cos(a) + yy * math.sin(a))
+        streak = 0.5 + 0.5 * np.sin(u / max(6.0, 0.0015 * (h + w) * 8) + 3 * noise_field(h, w, 25, 7))
+        film = 0.55 + 0.25 * noise_field(h, w, max(8, (h + w) / 30), 5) + 0.2 * streak
+        lines = gaussian_filter(np.clip(cv.ink[sl] / 2.0, 0, 1), max(2.0, (h + w) / 120))
+        clean = float(params.get("clean_lights", 0.6))
+        film = film * (1 - clean + clean * np.clip(lines * 3, 0, 1))
+        total = tone * film
+        rt = float(params.get("retroussage", 0.0))
+        if rt > 0:
+            total = total + rt * 0.5 * gaussian_filter(np.clip(cv.ink[sl] / 3.0, 0, 1), max(0.8, 0.15 * self.ppm(cv)))
+        kink = np.asarray(INKS.get(cv.meta.get("etch_ink", params.get("ink", "intaglio_black")), INKS["intaglio_black"]), np.float32)
+        self._composite(cv, sl, total, float(cv.meta.get("etch_D", 3.6)), kink / kink.mean(), None)
+
+    def _platemark(self, cv, params):
+        """The plate's outline pressed into the dampened paper (Met: "an outline of the outer edges of the metal plate
+        in the paper"). The margin outside it takes no ink: it is wiped back to paper here."""
+        ppm = self.ppm(cv)
+        if params.get("rect"):
+            x0, y0, w, h = (int(v) for v in params["rect"])
+        else:
+            mg = int(params.get("margin_mm", 0) * ppm) or int(min(cv.W, cv.H) * float(params.get("margin", 0.08)))
+            x0, y0, w, h = mg, mg, cv.W - 2 * mg, cv.H - 2 * mg
+        x1, y1 = x0 + w, y0 + h
+        out = np.ones((cv.H, cv.W), bool); out[y0:y1, x0:x1] = False
+        paper = self.paper(cv)
+        n = (cv.tex - 0.5) * 0.012
+        cv.col[out] = np.clip(paper[None, :] * (1 + n[out][:, None]), 0, 1)
+        cv.ink[out] = 0
+        cv.meta["platemark"] = [x0, y0, x1, y1]
+        cv.meta["platemark_bevel"] = float(params.get("bevel_mm", 0.5))
+
+    def _lozenge(self, cv, params):
+        """Dot-and-lozenge: a dot cut into the paper-white lozenges left between crossed burin lines, to carry the tone
+        through them (Prints and Principles, "Dotted Lozenge"). Lozenges are found in the canvas itself: enclosed
+        paper cells of lozenge size inside the region (and, with a schema, darker there than `level`)."""
+        from scipy.ndimage import label, find_objects
+        ppm = self.ppm(cv)
+        reg = region(params.get("region"), cv.W, cv.H, 1.0) if params.get("region") else np.ones((cv.H, cv.W), np.float32)
+        ink = cv.ink > float(params.get("line_density", 0.8))
+        cells, n = label(~ink & (reg > 0.5))
+        amin, amax = (0.12 * ppm) ** 2, (1.3 * ppm) ** 2
+        level = float(params.get("level", 0.65))
+        val = gaussian_filter(cv.ref.mean(-1), 2) if getattr(cv, "ref", None) is not None else None
+        rng = np.random.default_rng(int(params.get("seed", 11)))
+        X = np.zeros((cv.H, cv.W), np.float32)
+        cnt = 0
+        for i, ob in enumerate(find_objects(cells)):
+            if ob is None:
+                continue
+            m = cells[ob] == i + 1
+            A = int(m.sum())
+            if not (amin <= A <= amax) or ob[0].start == 0 or ob[1].start == 0 or ob[0].stop == cv.H or ob[1].stop == cv.W:
+                continue
+            if A / m.size < 0.3:
+                continue
+            yy, xx = np.nonzero(m)
+            cy, cx = ob[0].start + yy.mean(), ob[1].start + xx.mean()
+            if val is not None and val[int(cy), int(cx)] > level:
+                continue
+            r = float(np.clip(0.2 * math.sqrt(A), 0.5, 0.18 * ppm)) * float(params.get("size", 1.0))
+            ang = rng.uniform(0, math.pi)
+            # a short burin flick: a dot drawn out to a point
+            pts = np.array([[cx - math.cos(ang) * r * 0.9, cy - math.sin(ang) * r * 0.9], [cx + math.cos(ang) * r * 0.9, cy + math.sin(ang) * r * 0.9]])
+            b = _Buf(X, None)
+            self._strip(b, pts[:, 0], pts[:, 1], np.full(2, -math.sin(ang)), np.full(2, math.cos(ang)), np.array([2 * r, 1.2 * r]), np.ones(2), True)
+            cnt += 1
+            if cnt >= int(params.get("max", 20000)):
+                break
+        kink = np.asarray(INKS.get(cv.meta.get("etch_ink", params.get("ink", "intaglio_black")), INKS["intaglio_black"]), np.float32)
+        sl = (slice(0, cv.H), slice(0, cv.W))
+        self._composite(cv, sl, X, float(cv.meta.get("etch_D", 3.6)), kink / kink.mean(), None)
+        print(f"lozenge: {cnt} dots")
+
     # ------------------------------------------------------------------ washes
     def glaze(self, cv, mask, col, op):
         """An ink wash (or a light colour wash) laid flat over the masked area. On raw xuan its edge
@@ -842,9 +1204,21 @@ class Ink(Medium):
     def render(self, cv):
         self.flush()
         sup = cv.meta.get("support", "xuan_raw")
-        k = {"silk": 0.06, "laid_paper": 0.05, "bristol": 0.015}.get(sup, 0.045)
+        k = {"silk": 0.06, "laid_paper": 0.05, "bristol": 0.015, "illustration_board": 0.012, "plate_wove": 0.03, "plate_laid": 0.035}.get(sup, 0.045)
         ink = np.clip(cv.ink, 0, 4)
         shade = 1 + k * (cv.tex - 0.5) * (1 - np.clip(ink / 3, 0, 0.8))
+        pm = cv.meta.get("platemark")
+        if pm:
+            # inside the plate the paper was pressed flat against polished metal: less tooth; the bevel throws a
+            # shadow on the top and left edge and catches the light on the bottom and right (light from the top left)
+            x0, y0, x1, y1 = (int(v) for v in pm)
+            shade[y0:y1, x0:x1] = 1 + (shade[y0:y1, x0:x1] - 1) * 0.45
+            b = max(1, int(round(cv.meta.get("platemark_bevel", 0.5) * self.ppm(cv))))
+            e = np.ones_like(shade)
+            e[y0:y1, max(0, x0 - b):x0] *= 0.93; e[max(0, y0 - b):y0, x0:x1] *= 0.93
+            e[y0:y1, x1:x1 + b] *= 1.025; e[y1:y1 + b, x0:x1] *= 1.025
+            e[y0:y1, x0:x0 + 1] *= 0.97; e[y0:y0 + 1, x0:x1] *= 0.97
+            shade = shade * gaussian_filter(e, 0.6)
         img = np.clip(cv.col * shade[..., None], 0, 1)
         im = Image.fromarray((img * 255).astype(np.uint8))
         mt = cv.meta.get("mount")
@@ -913,6 +1287,14 @@ class Ink(Medium):
             cv.col = cv.col + (paper[None, None, :] - cv.col) * (a * 0.85)[..., None]
             cv.ink = cv.ink * (1 - a * 0.85)
             return
+        if op == "bite":
+            return self._bite(cv, params)
+        if op == "wipe":
+            return self._wipe(cv, params)
+        if op == "platemark":
+            return self._platemark(cv, params)
+        if op == "lozenge":
+            return self._lozenge(cv, params)
         if op == "mount":
             self._set_meta(cv, "mount", {"style": params.get("style", "scroll"), "color": params.get("color", "#d8ccb0")})
             return
@@ -1015,6 +1397,16 @@ class _Analyse:
         t._begin(_Shim(cv))
         t.med._pending = None
         self.D, self.kink, self.tint = t.D, t.kink, t.tint
+
+
+class _Buf:
+    """A bare stroke buffer for _strip (burr, lozenge dots)."""
+
+    def __init__(self, X, clip):
+        self.X, self.clip, self.bb, self.Wl, self.water, self.wmax = X, clip, None, None, 0, 0.0
+
+    def _bbx(self, x0, y0, x1, y1):
+        self.bb = [x0, y0, x1, y1] if self.bb is None else [min(self.bb[0], x0), min(self.bb[1], y0), max(self.bb[2], x1), max(self.bb[3], y1)]
 
 
 class _Shim:
