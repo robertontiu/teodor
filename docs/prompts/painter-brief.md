@@ -104,6 +104,7 @@ A PROFESSIONAL FINISH (in the terms of your current): a strong, simple value str
 
 BEFORE EVERY CHECKPOINT (crit_N.png and final.png), check the canvas against what critics flag in round after round, and fix what fails before you save the image:
 - Faces and hands are painted as planes of light and shadow, not drawn: no line laid over the paint for eyes, brows, mouths or fingers.
+- A person reads as who they are meant to be at thumbnail size: sex, age and build (a woman must not read as a man; use the sex and age cues in docs/subjects/face.md and figure.md: jaw, brow, cheeks, lips, hair mass, waist and bust, hands).
 - An expression is unmistakable: the whole face (cheeks, eye corners, light) and the body agree, so a laugh can't be read as a scream.
 - An action shows its cause: whoever throws, pushes or holds has a visible arm and hand doing it.
 - More than one stroke shape and size: marks change with distance and role (long strokes that follow the form, broad loaded ones, knife, scumble, small ones only where the detail is). `look layers` shows no big passage built from one role.

@@ -68,3 +68,4 @@ If a research file is missing, rerun that research with the prompt shape in this
 ## After round 18
 - [ ] `strokes` with a region given as `clip` silently tints the whole canvas (`clip` is an on/off switch; the region goes under `region`). Refuse or translate a region-shaped `clip`.
 - [ ] A dry-run / preview mode for an act (render the effect on a copy and show it) so a stopped edit can't print at the wrong strength.
+- [ ] The figure rig's female heads and bodies still read masculine (gaunt face, hard jaw, flat hair cap, no waist); round 17's woman read as a man to the owner. Strengthen the sex cues in figure.py from face.md and figure.md, and measure them on public-domain portraits at thumbnail size.
