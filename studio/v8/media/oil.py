@@ -117,15 +117,18 @@ EDGE = {"hard": 0.12, "soft": 0.7, "lost": 1.6}
 
 class Brush:
     def __init__(self, kind, size, color, rng, load=1.0, cover=0.95, pickup=0.35, thick=0.5,
-                 wetmix=0.5, edge="soft", fat=None, streak=0.5, scrape=None):
+                 wetmix=0.5, edge="soft", fat=None, streak=0.5, scrape=None, ps=1.0):
         self.kind, self.size, self.rng = kind, float(size), rng
+        # px per canvas px (a detail pass at N x: ps = N). Clumps, hairs and edge widths keep their physical size, so
+        # a 16 px brush in a 4x detail has the clumps of a 4 px brush on the canvas, each 4 px wide.
+        self.ps = ps = float(ps)
         sp = SPEC[kind]
         self.sp = sp
         self.color = np.asarray(color, np.float32).copy()
         self.cover, self.pickup, self.thick, self.wetmix, self.edge = cover, pickup, thick, wetmix, edge
         self.fat = float(sp["fat"] if fat is None else fat)
         self.load0 = max(float(load), 0.05)
-        k = max(5, int(size * sp["k"]) + 1)
+        k = max(5, int(size / ps * sp["k"]) + 1)
         self.k = k
         spread = 0.03 if kind in ("knife", "liner") else 0.3
         self.bload = (load * rng.uniform(1 - spread, 1 + spread, k)).astype(np.float32)
@@ -145,7 +148,7 @@ class Brush:
         self.bcol = np.clip(self.color[None, :] * (1 + st * z[:, None]) + 0.25 * st * z[:, None] * tint[None, :],
                             0, 1).astype(np.float32)
         # the finest scale: single hairs, about 1.5 px apart, leave their own fine grooves
-        self.kf = max(6, int(size / 1.5))
+        self.kf = max(6, int(size / ps / 1.5))
         self.fine = (1 - 0.3 * fv * rng.random(self.kf)).astype(np.float32)
         self.pdrift = np.zeros(k, np.float32)   # furrows wander along the stroke: hairs splay, merge, part
         self.lat = 0.0
@@ -167,20 +170,20 @@ class Brush:
             w = r * (0.2 + 0.8 * p ** 1.25)
             return w * (1.15 + 0.9 * min(p, 1.0)), w
         if kind in ("flat", "bright", "knife"):
-            return r * {"flat": 0.3, "bright": 0.42, "knife": 0.7}[kind] + 0.6, r
+            return r * {"flat": 0.3, "bright": 0.42, "knife": 0.7}[kind] + 0.6 * self.ps, r
         if kind == "filbert":
             w = r * (0.55 + 0.45 * min(p, 1.1))
-            return w * 0.5 + 0.5, w
+            return w * 0.5 + 0.5 * self.ps, w
         if kind == "fan":
-            return r * 0.18 + 0.7, r * 1.35
+            return r * 0.18 + 0.7 * self.ps, r * 1.35
         if kind == "scraper":
-            w = max(0.9, r * 0.22)
-            return w + 1, w + 1
+            w = max(0.9 * self.ps, r * 0.22)
+            return w + self.ps, w + self.ps
         return r, r
 
     def footprint(self, r, u, v, press):
         """Footprint F (0..1), across-coordinate s (-1..1 for the bristle lookup), half width, front length."""
-        kind = self.kind
+        kind, ps = self.kind, self.ps
         ex = EDGE.get(self.edge, 0.7)
         if kind == "round":
             w = r * (0.2 + 0.8 * min(press, 1.2) ** 1.25)               # the tip spreads with pressure
@@ -190,30 +193,30 @@ class Brush:
             return F, v / w, w, lf
         if kind in ("flat", "bright", "knife"):
             across = r * (0.85 if kind == "bright" else 1.0)
-            la = r * {"flat": 0.3, "bright": 0.42, "knife": 0.7}[kind] + 0.6
+            la = r * {"flat": 0.3, "bright": 0.42, "knife": 0.7}[kind] + 0.6 * ps
             ef = 0.0 if kind == "knife" else {"hard": 0.03, "soft": 0.14, "lost": 0.45}.get(self.edge, 0.14)
-            A = np.clip((across - np.abs(v)) / max(0.7, across * ef), 0, 1)
+            A = np.clip((across - np.abs(v)) / max(0.7 * ps, across * ef), 0, 1)
             if kind == "knife":
-                L = np.clip((la - np.abs(u)) / 0.8, 0, 1)
+                L = np.clip((la - np.abs(u)) / (0.8 * ps), 0, 1)
             else:
                 L = np.clip(1 - np.abs(u) / la, 0, 1) ** 0.3
             return A * L, v / across, across, la
         if kind == "filbert":
             w = r * (0.55 + 0.45 * min(press, 1.1))
-            la = w * 0.5 + 0.5
+            la = w * 0.5 + 0.5 * ps
             d = (np.abs(u) / la) ** 2 + (np.abs(v) / w) ** 2.4
             return np.clip(1 - d, 0, 1) ** max(0.35, ex * 0.9), v / w, w, la
         if kind == "fan":
-            across, la = r * 1.35, r * 0.18 + 0.7
-            F = np.clip(1 - np.abs(u) / la, 0, 1) ** 0.5 * np.clip((across - np.abs(v)) / 1.2, 0, 1)
+            across, la = r * 1.35, r * 0.18 + 0.7 * ps
+            F = np.clip(1 - np.abs(u) / la, 0, 1) ** 0.5 * np.clip((across - np.abs(v)) / (1.2 * ps), 0, 1)
             return F, v / across, across, la
         if kind == "liner":
-            d = (u * u + v * v) / max(r * r, 0.3)
-            return np.clip(1 - d, 0, 1) ** 0.35, v / max(r, 0.5), r, r
+            d = (u * u + v * v) / max(r * r, 0.3 * ps * ps)
+            return np.clip(1 - d, 0, 1) ** 0.35, v / max(r, 0.5 * ps), r, r
         if kind == "scraper":
-            w = max(0.9, r * 0.22)
+            w = max(0.9 * ps, r * 0.22)
             d = np.sqrt(u * u + v * v)
-            return np.clip((w - d) / 0.6 + 0.5, 0, 1), v / w, w, w
+            return np.clip((w - d) / (0.6 * ps) + 0.5, 0, 1), v / w, w, w
         if kind == "rag":
             d = (u / (r * 0.8)) ** 2 + (v / r) ** 2
             return np.clip(1 - d, 0, 1) ** 0.7, v / r, r, r * 0.8
@@ -223,7 +226,8 @@ class Brush:
     # ------------------------------------------------------------ one stamp
     def dab(self, cv, x, y, ang, press, rscale=1.0):
         _ensure(cv)
-        r = max(0.7, self.size / 2 * rscale)
+        ps = self.ps
+        r = max(0.7 * ps, self.size / 2 * rscale)
         la_, ac_ = self.extent(r, press)                          # a tight box around the rotated footprint
         ca, sa = math.cos(ang), math.sin(ang)
         hx_ = int(la_ * abs(ca) + ac_ * abs(sa)) + 2
@@ -232,7 +236,7 @@ class Brush:
         y0, y1 = max(0, int(y) - hy_), min(cv.H, int(y) + hy_ + 1)
         if x0 >= x1 or y0 >= y1:
             return
-        stp = self.step if self.step else max(0.5, self.size * 0.055)
+        stp = self.step if self.step else max(0.5 * ps, self.size * 0.055)
         yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float32)
         dx, dy = xx - x, yy - y
         u, v = dx * ca + dy * sa, -dx * sa + dy * ca
@@ -244,7 +248,7 @@ class Brush:
             return
         sl = (slice(y0, y1), slice(x0, x1))
         k = self.k
-        dd = min(1.0, stp / max(self.size, 2))
+        dd = min(1.0, stp / max(self.size, 2 * ps))
         self.pdrift = (self.pdrift * (1 - 0.6 * dd) + self.rng.normal(0, 0.16 * math.sqrt(dd), k)).astype(np.float32)
         self.lat = self.lat * (1 - 0.3 * dd) + self.rng.normal(0, 0.5 * math.sqrt(dd))
         fb = np.clip((s + 1) * 0.5 * (k - 1) + self.lat, 0, k - 1)
@@ -252,7 +256,7 @@ class Brush:
         i1 = np.minimum(i0 + 1, k - 1)
         fr = fb - i0
         inear = np.where(fr < 0.5, i0, i1)
-        f = min(1.5, stp / max(wid * 0.5, 0.5))                  # deposit per unit of travel, not per dab
+        f = min(1.5, stp / max(wid * 0.5, 0.5 * ps))                  # deposit per unit of travel, not per dab
         kind = self.kind
         if kind in ("smudge", "blend", "rag", "scraper") or (kind == "knife" and self._scraping()):
             self._remove(cv, sl, F, s, u, la, press, f, inear)
@@ -280,7 +284,7 @@ class Brush:
         if sw.max() > 1e-4:
             loc = np.stack([np.bincount(ir, (wa * c[..., ch]).ravel(), k) for ch in range(3)], 1) / (sw[:, None] + 1e-6)
             lw = sw / (np.bincount(ir, a.ravel(), k) + 1e-6)
-            pk = np.clip(self.pickup * lw * 0.3 * stp / max(self.size * 0.5, 1.0), 0, 0.5)[:, None] * (sw[:, None] > 1e-4)
+            pk = np.clip(self.pickup * lw * 0.3 * stp / max(self.size * 0.5, ps), 0, 0.5)[:, None] * (sw[:, None] > 1e-4)
             self.bcol = (self.bcol * (1 - pk) + loc * pk).astype(np.float32)
         # colour: each clump's paint, partly lost into the wet paint beneath (wet-in-wet)
         cover = self.cover * (1.2 if kind in ("knife", "bright") else 1.0)
@@ -303,7 +307,7 @@ class Brush:
             T = T + 0.5 * (m - hw) * (F > 0.5)
         if self.pprev is not None and press < self.pprev:          # the brush is lifting: leave the bow wave
             drop = (self.pprev - press) / max(self.pprev, 1e-3)
-            front = F * np.clip(u / max(la, 0.5) + 0.3, 0, 1)
+            front = F * np.clip(u / max(la, 0.5 * ps) + 0.3, 0, 1)
             ridge = front * self.bow * drop * 3.0 * tk * np.clip(lb * 2, 0, 1)
             self.bow *= (1 - min(0.9, drop * 1.5))
         else:
@@ -327,12 +331,12 @@ class Brush:
         cv.fat[sl] = fw + ab * (self.fat - fw)
         cv.varn[sl] = cv.varn[sl] * (1 - ab)
         cv.wet[sl] = np.clip(w + a * 2.0, 0, 1)
-        self.bow = min(self.bow + stp / max(self.size, 2) * 0.15 * self.paint * min(press, 1), 0.8 * self.paint + 0.05)
+        self.bow = min(self.bow + stp / max(self.size, 2 * ps) * 0.15 * self.paint * min(press, 1), 0.8 * self.paint + 0.05)
         self._deplete(stp, press, 1.0)
         self.pprev = press
 
     def _deplete(self, stp, press, frac):
-        use = stp * (0.35 + 0.65 * min(press, 1.2)) * frac / (max(self.size, 2) * self.sp["cap"]) * getattr(self, "deplete_mul", 1.0)
+        use = stp * (0.35 + 0.65 * min(press, 1.2)) * frac / (max(self.size, 2 * self.ps) * self.sp["cap"]) * getattr(self, "deplete_mul", 1.0)
         self.bload = np.maximum(0, self.bload - use * self.brate).astype(np.float32)
 
     def _scraping(self):
@@ -349,8 +353,8 @@ class Brush:
         hd = cv.hdry[sl]
         hw = np.maximum(cv.ht[sl] - hd, 0)
         if kind == "blend":
-            r = max(1.0, self.size / 2)
-            sig = max(0.8, r / 2.5)
+            r = max(self.ps, self.size / 2)
+            sig = max(0.8 * self.ps, r / 2.5)
             bl = np.stack([gaussian_filter(c[..., i], sig) for i in range(3)], -1)
             amt = np.clip(m * (0.25 + 0.75 * w) * 0.85 * min(1, f * 1.5), 0, 1)
             cv.col[sl] = c * (1 - amt[..., None]) + bl * amt[..., None]
@@ -364,7 +368,7 @@ class Brush:
                 self.carry = local.copy()
             amt = np.clip(m * (0.2 + 0.65 * w) * 0.75 * min(1, f * 1.5), 0, 1)
             spectral.mix_window(cv, sl, amt, self.carry, thr=MIX_MIN)
-            ck = min(0.5, 0.3 * (self.step or 1.0) / max(self.size * 0.3, 1.0))
+            ck = min(0.5, 0.3 * (self.step or self.ps) / max(self.size * 0.3, self.ps))
             self.carry = self.carry * (1 - ck) + local * ck
             cv.ht[sl] = hd + hw * (1 - amt * 0.35 * w)
             return
@@ -375,7 +379,7 @@ class Brush:
         if kind == "rag":
             mot = getattr(cv, "_oil_mottle", None)
             if mot is None:
-                mot = cv._oil_mottle = noise_field(cv.H, cv.W, 3.5, 11)
+                mot = cv._oil_mottle = noise_field(cv.H, cv.W, 3.5 * self.ps, 11)
             # folds of the cloth (streaks along the wipe), its crumpled contact (mottling) and the weave
             cloth = self.dens[inear] * np.clip(0.2 + 1.3 * mot[sl], 0, 1.2) * (0.75 + 0.5 * tooth)
             amt = np.clip(m * cloth * 0.9 * min(1, f * 1.2), 0, 1) * np.clip(w * 1.4, 0, 1) ** 0.8
@@ -393,7 +397,7 @@ class Brush:
             amt = np.clip(m * 1.2 * min(1, f * 2.0), 0, 1) * np.clip(w * 1.5, 0, 1) ** 0.5
             spectral.mix_window(cv, sl, amt, under, thr=MIX_MIN)
             pushed = float((hw * amt).sum())
-            rim = np.exp(-((np.abs(s) - 1.3) / 0.35) ** 2) * (np.abs(u) < 2 * max(la, 1)) * (w > 0.2)
+            rim = np.exp(-((np.abs(s) - 1.3) / 0.35) ** 2) * (np.abs(u) < 2 * max(la, self.ps)) * (w > 0.2)
             h2 = hd + hw * (1 - amt * 0.95) + rim * pushed / (rim.sum() + 1e-6) * 0.8
             h2 = h2 - m * (1 - w) * 0.04 * min(1, f * 2) * hw          # on dry paint: a faint burnished line
             cv.ht[sl] = np.maximum(h2, 0)
@@ -416,6 +420,7 @@ class Brush:
 
 class Oil(Medium):
     name = "oil"
+    detail_scale_aware = True    # tools and render keep their physical size in a detail pass (cv.px_scale)
     arrays = ("col", "wet", "ht", "hdry", "fat", "sheen", "under", "varn")
     supports = {"canvas": "linen or cotton canvas, primed; the weave shows through thin paint and catches dry-brush",
                 "panel": "gessoed wooden panel: smooth, hard, no weave; every stroke edge shows"}
@@ -460,7 +465,7 @@ class Oil(Medium):
         if kind == "liner":
             b = Brush("liner", size, color, rng, load=it.get("load", 1.0), cover=it.get("cover", 0.97),
                       pickup=0.1, thick=it.get("impasto", 0.3), wetmix=it.get("wetmix", 0.2), edge="hard",
-                      fat=it.get("fat"), streak=it.get("streak", 0.2))
+                      fat=it.get("fat"), streak=it.get("streak", 0.2), ps=it.get("_px_scale", 1.0))
             b.liner = True
             return b
         # the core's v8 hand passes a load that drifts across the passage (_load_mul) instead of a random one per stroke
@@ -468,7 +473,7 @@ class Oil(Medium):
         return Brush(kind, size, color, rng, load=it.get("load", 1.0) * lm,
                      cover=it.get("cover", 0.95), pickup=it.get("pickup", 0.35), thick=it.get("impasto", 0.5),
                      wetmix=it.get("wetmix", 0.5), edge=it.get("edge", "soft"), fat=it.get("fat"),
-                     streak=it.get("streak", 0.5), scrape=it.get("scrape"))
+                     streak=it.get("streak", 0.5), scrape=it.get("scrape"), ps=it.get("_px_scale", 1.0))
 
     # ---------------------------------------------------------------- glaze: a transparent film
     def glaze(self, cv, mask, col, op):
@@ -478,7 +483,7 @@ class Oil(Medium):
         # opaque paints (vermilion, chrome yellow, bone black) and white (a veil, scumble) cover more; the
         # film is laid over the colour beneath band by band (spectral Kubelka-Munk, media/spectral.py)
         hs = self._surface(cv)
-        hollow = np.clip((gaussian_filter(hs, 2.5) - hs) * 6, -0.5, 1)   # a glaze pools in the hollows
+        hollow = np.clip((gaussian_filter(hs, 2.5 * getattr(cv, "px_scale", 1.0)) - hs) * 6, -0.5, 1)   # a glaze pools in the hollows
         x = mask * op * GLAZE_FILM * (1 + 0.5 * hollow)
         before = cv.col
         film = spectral.glaze(before, col, x, ref=GLAZE_FILM)
@@ -533,8 +538,11 @@ class Oil(Medium):
     def render(self, cv):
         _ensure(cv)
         hs = self._surface(cv)
-        hs = gaussian_filter(hs, 0.75) * (1 - 0.3 * cv.varn) + gaussian_filter(hs, 1.6) * 0.3 * cv.varn
+        ps = float(getattr(cv, "px_scale", 1.0))
+        hs = gaussian_filter(hs, 0.75 * ps) * (1 - 0.3 * cv.varn) + gaussian_filter(hs, 1.6 * ps) * 0.3 * cv.varn
         gy, gx = np.gradient(hs * 2.6)
+        if ps != 1.0:                  # slopes per canvas px, so the relief lights the same at any scale
+            gy, gx = gy * ps, gx * ps
         lightdot = -gx * 0.55 - gy * 0.8                        # raking light from the upper left
         g = np.clip(cv.sheen + (0.92 - cv.sheen) * cv.wet, 0, 1)   # wet paint is glossy; dry paint shows its sheen
         col = cv.col

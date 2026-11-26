@@ -24,6 +24,8 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   finish <op> ['<json>']        a finishing operation of the medium (varnish, fixative...)
   sign [auto|br|bl]             sign the finished painting ("Teodor"), the very last brush act
   timelapse                     build the time-lapse video from recorded frames
+  detail open X Y W H [--scale N] [--margin M] | close [--resample area|sample] | cancel   a detail pass (detail.py): the region at N x;
+                                work in it with --detail on any command (or CANVAS=<name>_detail); look detail
 """
 import numpy as np, json, sys, math, os, subprocess
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -34,6 +36,11 @@ from media.base import hx, kmix
 
 D = os.path.dirname(os.path.abspath(__file__))
 NAME = os.environ.get("CANVAS", "main")
+if "--detail" in sys.argv:            # run the command on this canvas's open detail (detail.py: <name>_detail)
+    sys.argv.remove("--detail")
+    if not NAME.endswith("_detail"):
+        NAME = NAME + "_detail"
+_PXS = 1.0      # px per canvas px of the loaded canvas: 1 on a canvas, N in an N x detail (physical sizes in the hand)
 P = lambda s: os.path.join(D, f"{NAME}_{s}")
 FRAMES = os.path.join(D, f"{NAME}_frames")
 
@@ -56,6 +63,8 @@ class Canvas:
         mp = P("meta.json")
         self.meta = json.load(open(mp)) if os.path.exists(mp) else {"medium": "oil", "support": "canvas"}
         self.medium = get_medium(self.meta["medium"])
+        global _PXS
+        self.px_scale = _PXS = float(self.meta.get("px_scale", 1.0))
         self.col = np.load(P("col.npy")).astype(np.float32)
         self.H, self.W = self.col.shape[:2]
         for a in self.medium.arrays:
@@ -141,7 +150,7 @@ def gesture_path(ctrl, felt, rng, size):
             dvec = b - a
             ln = np.linalg.norm(dvec) + 1e-6
             nrm = np.array([-dvec[1], dvec[0]]) / ln
-            k = int(1 + jag * ln / max(size * 2.5, 8))
+            k = int(1 + jag * ln / max(size * 2.5, 8 * _PXS))
             for j in range(1, k + 1):
                 p = a + dvec * j / (k + 1) + nrm * rng.normal(0, 1) * jag * size * 1.2
                 new.append(list(p))
@@ -168,7 +177,7 @@ def gesture_path(ctrl, felt, rng, size):
         pts.append(np.array(ctrl[-1]))
     pts = np.array(pts, np.float32)
     if len(pts) > 3:
-        trem = felt.tension * (1 - felt.care * 0.6) * size * 0.22 + felt.arousal * 0.6
+        trem = felt.tension * (1 - felt.care * 0.6) * size * 0.22 + felt.arousal * 0.6 * _PXS
         if trem > 0.05:
             d = np.gradient(pts, axis=0)
             nrm = np.stack([-d[:, 1], d[:, 0]], 1)
@@ -189,7 +198,7 @@ def play(cv, brush, path, felt, base_press, rng):
     arc = np.concatenate([[0], np.cumsum(seg)])
     L = arc[-1] + 1e-6
     speed_scale = 0.4 + 0.9 * felt.arousal - 0.3 * felt.care
-    steps = max(5, int(L / max(0.5, brush.size * 0.055) * (1.25 - 0.35 * speed_scale)))
+    steps = max(5, int(L / max(0.5 * _PXS, brush.size * 0.055) * (1.25 - 0.35 * speed_scale)))
     hes = 0.08 * (felt.care + felt.tension) / 2
     prev_xy = None
     for i in range(steps + 1):
@@ -347,6 +356,8 @@ def direction(spec, x, y, rng, felt):
 
 
 def make_brush(it, size, color, rng, cv=None):
+    if cv is not None and getattr(cv, "px_scale", 1.0) != 1.0:     # a detail: the tool keeps its physical features
+        it = dict(it, _px_scale=cv.px_scale)
     return (cv.medium if cv is not None else get_medium("oil")).make_tool(it, size, color, rng)
 
 
@@ -634,7 +645,7 @@ def infer_role(cv, it, kind):
         return "wash"
     if kind == "strokes" and len(it.get("strokes", [])) <= 12 and ground < 0.5:
         sizes = [float(st.get("size", np.mean(it.get("size", [6, 10])))) for st in it["strokes"]]
-        if np.mean(sizes) <= 0.012 * math.hypot(cv.W, cv.H):
+        if np.mean(sizes) <= 0.012 * canvas_diag(cv):
             lens = [sum(math.dist(a[:2], b[:2]) for a, b in zip(st["pts"], st["pts"][1:])) for st in it["strokes"]]
             dark = bool(cols) and float(np.mean([c.mean() for c in cols])) < 0.35
             return "contour" if dark and np.mean(lens) > 15 * np.mean(sizes) else "accent"
@@ -748,6 +759,11 @@ def drift_colour(col, dr, x, y, amt):
     return np.clip(c + dr.rng.normal(0, amt * 0.3, 3), 0, 1)
 
 
+def canvas_diag(cv):
+    """The canvas's diagonal in this canvas's px (in a detail: the whole canvas's, at the detail's scale)."""
+    return float(cv.meta.get("diag") or math.hypot(cv.W, cv.H))
+
+
 def focus_of(cv, it):
     f = it.get("focus") or cv.meta.get("focus")
     return (float(f[0]), float(f[1])) if f else None
@@ -759,7 +775,7 @@ def size_mul(cv, it, x, y, role):
     m = ROLE_SIZE.get(role, 1.0) if it.get("role_scale", True) else 1.0
     f = focus_of(cv, it)
     if f is not None and it.get("focus_scale", True):
-        d = math.hypot(x - f[0], y - f[1]) / math.hypot(cv.W, cv.H)
+        d = math.hypot(x - f[0], y - f[1]) / canvas_diag(cv)
         m *= FOCUS_NEAR + (FOCUS_FAR - FOCUS_NEAR) * min(1.0, d / FOCUS_REACH)
     return m
 
@@ -815,7 +831,7 @@ def shape_path(path, art, size, rng):
     nrm = np.stack([-d[:, 1], d[:, 0]], 1)
     nrm /= (np.linalg.norm(nrm, axis=1, keepdims=True) + 1e-6)
     arc = np.concatenate([[0], np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))])
-    per = max(4.0, size * 1.2)
+    per = max(4.0 * _PXS, size * 1.2)
     off = np.sin(2 * np.pi * arc / per + rng.uniform(0, 6.28)) * size * 0.7
     return (path + nrm * off[:, None]).astype(np.float32)
 
@@ -837,7 +853,7 @@ def play_v8(cv, brush, path, felt, base_press, rng, art="plain", wave=WAVE):
     hes = 0.08 * (felt.care + felt.tension) / 2
     if art == "flick":
         speed_scale, hes = max(speed_scale, 1.15), 0.0
-    steps = max(5, int(L / max(0.5, brush.size * 0.055) * (1.25 - 0.35 * speed_scale)))
+    steps = max(5, int(L / max(0.5 * _PXS, brush.size * 0.055) * (1.25 - 0.35 * speed_scale)))
     if art == "drag":
         try:
             brush.deplete_mul = DRAG_DEPLETE
@@ -955,8 +971,8 @@ def do_free(cv, it, felt, rng):
     cv.clip = region_mask(reg, cv.W, cv.H) if it.get("clip") else None
     mask = region_mask(reg, cv.W, cv.H)
     cols, w = palette(it)
-    smin, smax = rng2(it.get("size"), [8, 14])
-    lmin, lmax = rng2(it.get("length"), [20, 60])
+    smin, smax = rng2(it.get("size"), [8 * _PXS, 14 * _PXS])
+    lmin, lmax = rng2(it.get("length"), [20 * _PXS, 60 * _PXS])
     jit = it.get("color_jitter", 0.035) * (1.2 - 0.6 * felt.care)
     role = it.get("_role", "body")
     dr = new_drift(rng, it, cv, (smin + smax) / 2)
@@ -993,7 +1009,7 @@ def do_strokes(cv, it, felt, rng):
     role = it.get("_role", "body")
     dr = new_drift(rng, it, cv, 20)
     for s in it["strokes"]:
-        size = s.get("size", np.mean(it.get("size", [6, 10])))
+        size = s.get("size", np.mean(it.get("size", [6 * _PXS, 10 * _PXS])))
         col = hx(s["color"]) if s.get("color") else cols[rng.choice(len(cols), p=w)]
         x, y = s["pts"][0][:2]
         art = pick_art(s.get("articulation", it.get("articulation", "auto")), role, dr, x, y, rng)
@@ -1014,7 +1030,7 @@ def do_match(cv, it, felt, rng):
     reg = it.get("region", {"type": "canvas"})
     mask = region_mask(reg, cv.W, cv.H)
     cv.clip = mask if it.get("clip") else None
-    smin, smax = rng2(it.get("size"), [20, 40])
+    smin, smax = rng2(it.get("size"), [20 * _PXS, 40 * _PXS])
     size = (smin + smax) / 2
     sig = max(1.0, size / 3)
     refb = np.stack([gaussian_filter(cv.ref[..., i], sig) for i in range(3)], -1)
@@ -1064,7 +1080,7 @@ def do_match(cv, it, felt, rng):
         sz *= (1 + 0.12 * dr("size", x, y)) * size_mul(cv, it, x, y, role)
         L = rng.uniform(lmin, lmax) * (0.8 + 0.5 * felt.arousal) * Lsc
         ctrl, px, py, prev = [[x, y]], float(x), float(y), None
-        step = max(2.0, sz * 0.8)
+        step = max(2.0 * _PXS, sz * 0.8)
         dev = DEVIATE * dr("angle", x, y) + rng.normal(0, 0.12)
         cd, sd = math.cos(dev), math.sin(dev)
         for k in range(int(L / step)):
@@ -1143,7 +1159,7 @@ def do_model(cv, it, felt, rng):
             return colsrc[int(y), int(x)].copy()
         return np.array([v, v, v], np.float32)
 
-    smin, smax = rng2(it.get("size"), [10, 24])
+    smin, smax = rng2(it.get("size"), [10 * _PXS, 24 * _PXS])
     size = (smin + smax) / 2
     ff = FormField(V, size, it.get("follow", "form"), it.get("direction"), seed=int(rng.integers(1 << 30)))
     role = it.get("_role", "body")
@@ -1164,11 +1180,11 @@ def do_model(cv, it, felt, rng):
         idx = rng.choice(np.nonzero(band)[0], size=n, replace=nb < n)
         tol = (a1 - a0) * 0.6 + 0.02
         for q in idx:
-            x, y = float(xs[q]) + rng.normal(0, 2), float(ys[q]) + rng.normal(0, 2)
+            x, y = float(xs[q]) + rng.normal(0, 2 * _PXS), float(ys[q]) + rng.normal(0, 2 * _PXS)
             x, y = float(np.clip(x, 0, cv.W - 1)), float(np.clip(y, 0, cv.H - 1))
             sz = (smin + (smax - smin) * float(np.clip(0.5 + 0.5 * math.tanh(0.9 * dr("size", x, y)), 0, 1))) * size_mul(cv, it, x, y, role)
             L = rng.uniform(lmin, lmax) * (0.8 + 0.5 * felt.arousal)
-            step = max(2.0, sz * 0.7)
+            step = max(2.0 * _PXS, sz * 0.7)
             ctrl, px, py, prev = [[x, y]], x, y, None
             dev = DEVIATE * 0.6 * dr("angle", x, y) + rng.normal(0, 0.08)
             cd, sd = math.cos(dev), math.sin(dev)
@@ -1220,7 +1236,7 @@ def sweep(cv, mask, it, felt, rng, brush, extra=None, size=None, angle=None, pas
         return
     x0, x1, y0, y1 = xs.min(), xs.max(), ys.min(), ys.max()
     area = float((mask > 0.5).sum())
-    sz = size or it.get("size") or float(np.clip(math.sqrt(area) / 6, 10, 60))
+    sz = size or it.get("size") or float(np.clip(math.sqrt(area) / 6, 10 * _PXS, 60 * _PXS))
     sz = float(np.mean(sz)) if isinstance(sz, list) else float(sz)
     cv.clip = mask
     cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
@@ -1259,7 +1275,7 @@ def ragged(mask, rng, angle=None, streak=0.6):
     """A hand's region: the edge broken by a smooth noise (no ruler edge), and streaks along the stroke direction
     where the blade or rag dragged (amounts are eye)."""
     H, W = mask.shape
-    n = gaussian_filter(rng.random((H, W)).astype(np.float32), 6)
+    n = gaussian_filter(rng.random((H, W)).astype(np.float32), 6 * _PXS)
     n = (n - n.mean()) / (n.std() + 1e-6)
     m = np.clip((mask - 0.5 + 0.12 * n) * 3 + 0.5, 0, 1) * (mask > 0.02)
     if angle is not None and streak > 0:
@@ -1269,7 +1285,7 @@ def ragged(mask, rng, angle=None, streak=0.6):
         band = gaussian_filter(rng.random(k).astype(np.float32), 2.0)
         band = (band - band.min()) / (band.max() - band.min() + 1e-6)
         m = m * (1 - streak + streak * band[(proj - proj.min()).astype(int)])
-    return gaussian_filter(m, 1.0).astype(np.float32)
+    return gaussian_filter(m, 1.0 * _PXS).astype(np.float32)
 
 
 def fill_colour(cv, mask, sigma=None):
@@ -1293,7 +1309,7 @@ def surround_colour(cv, mask):
 def pull_back(cv, mask, strength, rng):
     """Default removal: the colour returns toward the ground, more on the tops of the support's tooth, unevenly."""
     g = hx(cv.meta.get("ground", "#d8cfc0"))
-    mot = gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 3)
+    mot = gaussian_filter(rng.random((cv.H, cv.W)).astype(np.float32), 3 * _PXS)
     mot = (mot - mot.min()) / (mot.max() - mot.min() + 1e-6)
     amt = np.clip(mask * strength * (0.55 + 0.3 * mot + 0.25 * (cv.tex - 0.5)), 0, 1)[..., None]
     cv.col = (cv.col * (1 - amt) + g[None, None, :] * amt).astype(np.float32)
@@ -1550,8 +1566,8 @@ def _hatch_free(cv, it, felt, rng):
                     run.append([x, y])
                 if (not ok or len(run) * 3 >= seg_here) and len(run) >= 3:
                     a, b = run[0], run[-1]
-                    a = [a[0] + rng.normal(0, 1.5), a[1] + rng.normal(0, 1.5)]
-                    ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8), (a[1] + b[1]) / 2 + rng.normal(0, 0.8)], b]
+                    a = [a[0] + rng.normal(0, 1.5 * _PXS), a[1] + rng.normal(0, 1.5 * _PXS)]
+                    ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8 * _PXS), (a[1] + b[1]) / 2 + rng.normal(0, 0.8 * _PXS)], b]
                     col = np.clip(cols[rng.choice(len(cols), p=w)] + rng.normal(0, 0.01, 3), 0, 1)
                     br = make_brush(it, size * rng.uniform(0.85, 1.15), col, rng, cv)
                     if fw > 0:
@@ -1704,7 +1720,7 @@ def _hatch_form(cv, it, felt, rng):
 
 def do_glaze(cv, it, felt, rng):
     reg = it.get("region", {"type": "canvas"})
-    mask = region_mask(reg, cv.W, cv.H, feather=it.get("feather", 30))
+    mask = region_mask(reg, cv.W, cv.H, feather=it.get("feather", 30 * _PXS))
     if mask is None:
         mask = np.ones((cv.H, cv.W), np.float32)
     try:
@@ -2049,6 +2065,38 @@ def look(cv, mode, args):
     print(P("look.png"))
 
 
+def look_refs(cv, args):
+    """`look refs [FEATURE]`: the reference sheet (refs/, tools/find_refs.py) beside the canvas, to compare structure
+    and light, never to copy (docs/research/references.md). With FEATURE, only the references studied for it."""
+    rdir = os.path.join(D, "refs")
+    feat = " ".join(args).strip().lower()
+    sheet = None
+    if feat and os.path.exists(os.path.join(rdir, "refs.json")):
+        refs = [r for r in json.load(open(os.path.join(rdir, "refs.json"))).get("refs", [])
+                if feat in (r.get("feature") or "").lower() and os.path.exists(os.path.join(rdir, r.get("file", "")))]
+        if refs:
+            T, cols = 360, 2 if len(refs) <= 4 else 3
+            sheet = Image.new("RGB", (cols * (T + 8) + 8, ((len(refs) + cols - 1) // cols) * (T + 8) + 8), (28, 27, 25))
+            for k, r in enumerate(refs):
+                im = Image.open(os.path.join(rdir, r["file"])).convert("RGB"); im.thumbnail((T, T))
+                sheet.paste(im, (8 + (k % cols) * (T + 8) + (T - im.width) // 2, 8 + (k // cols) * (T + 8) + (T - im.height) // 2))
+            print("\n".join(f"- {r.get('title', '')[:70]} ({r.get('artist', '')[:40]}, {r.get('date', '')}): {r.get('reason', '')}" for r in refs))
+    elif os.path.exists(os.path.join(rdir, "sheet.jpg")):
+        sheet = Image.open(os.path.join(rdir, "sheet.jpg")).convert("RGB")
+    if sheet is None:
+        print("no references" + (f" for '{feat}'" if feat else "") + ": gather them with tools/find_refs.py <workdir> ... --feature ...")
+        return
+    h = 800
+    a = cv.render().resize((max(1, cv.W * h // cv.H), h), Image.LANCZOS)
+    b = sheet.resize((max(1, sheet.width * h // sheet.height), h), Image.LANCZOS)
+    if b.width > 1400:
+        b = sheet.resize((1400, max(1, sheet.height * 1400 // sheet.width)), Image.LANCZOS)
+    s = Image.new("RGB", (a.width + 12 + b.width, max(h, b.height)), (20, 20, 20))
+    s.paste(a, (0, 0)); s.paste(b, (a.width + 12, 0))
+    s.save(P("look.png"))
+    print(P("look.png"))
+
+
 def record(cv, img=None):
     img = img or cv.render()
     os.makedirs(FRAMES, exist_ok=True)
@@ -2056,6 +2104,9 @@ def record(cv, img=None):
     img.resize((cv.W * 3 // 8 // 2 * 2, cv.H * 3 // 8 // 2 * 2), Image.LANCZOS).save(os.path.join(FRAMES, f"{n:05d}.jpg"), quality=88)
     img.save(P("full.png"))
     img.resize((cv.W // 2, cv.H // 2), Image.LANCZOS).save(P("view.png"))
+    if cv.meta.get("detail"):          # a detail's frames go into its canvas's time-lapse too (zoomed in)
+        import detail
+        detail.zoom_frame(sys.modules[__name__], cv, img)
 
 
 def timelapse():
@@ -2097,9 +2148,47 @@ if __name__ == "__main__":
         media_list(); sys.exit()
     if cmd == "timelapse":
         timelapse(); sys.exit()
+    if cmd == "detail":
+        import detail as dt
+        core = sys.modules[__name__]
+        a = sys.argv[2:]
+        sub = a[0] if a else "status"
+        if sub == "open":
+            if NAME.endswith("_detail"):
+                sys.exit("open a detail from its canvas (without --detail).")
+            opt = {}
+            for key in ("--scale", "--margin"):
+                if key in a:
+                    i = a.index(key); opt[key[2:]] = float(a[i + 1]); del a[i:i + 2]
+            if len(a) < 5:
+                sys.exit("detail open X Y W H [--scale N] [--margin M]   (canvas px)")
+            NAME = dt.parent_of(NAME)
+            dt.open_detail(core, *map(float, a[1:5]), scale=int(opt.get("scale", 4)), margin=opt.get("margin"))
+        elif sub in ("close", "cancel"):
+            NAME = dt.parent_of(NAME)
+            FRAMES = os.path.join(D, f"{NAME}_frames")
+            rs = a[a.index("--resample") + 1] if "--resample" in a else "area"
+            dt.close_detail(core, cancel=(sub == "cancel"), resample=rs)
+        else:
+            m = Canvas().meta
+            d = m.get("detail") or m.get("detail_open")
+            print(f"detail open: {d}" if d else "no detail open" + (f"; {len(m.get('details', []))} closed" if m.get("details") else ""))
+        sys.exit()
+    if cmd == "new" and NAME.endswith("_detail"):
+        sys.exit("a detail is opened from its canvas with `detail open`, not `new`.")
     cv = Canvas()
+    if cv.meta.get("detail") and cmd in ("finish", "sign", "timelapse"):
+        sys.exit(f"`{cmd}` is for the whole canvas: `detail close` first.")
+    if cv.meta.get("detail_open") and cmd in ("act", "dry", "transfer", "finish", "sign"):
+        print("[detail] note: a detail is open on this canvas; paint in its region now is overwritten where the detail "
+              "paints when it closes (work there with --detail).")
     if cmd == "ref":
         set_ref(cv, sys.argv[2]); look(cv, "ref", []); sys.exit()
+    if cmd == "scene" and cv.meta.get("detail"):      # the scene, rendered for the detail's region (detail.py)
+        import detail as dt
+        q = sys.argv[-1] if sys.argv[-1] in ("draft", "final") else "draft"
+        out = dt.scene_crop(sys.modules[__name__], cv, sys.argv[2], q)
+        set_ref(cv, out); look(cv, "ref", []); sys.exit()
     if cmd == "scene":
         import scene as sc
         ov = sys.argv[3] if len(sys.argv) > 3 and sys.argv[3].endswith(".svg") else None
@@ -2110,6 +2199,10 @@ if __name__ == "__main__":
         sc.render_file(sys.argv[2], out, rw, rh, ov, (cv.W, cv.H))
         import shutil; shutil.copy(sys.argv[2], P(f"scene_v{k}.json"))
         set_ref(cv, out); look(cv, "ref", []); sys.exit()
+    if cmd == "look" and sys.argv[2] == "detail":
+        import detail as dt
+        dt.look_detail(sys.modules[__name__], sys.argv[sys.argv.index("--resample") + 1] if "--resample" in sys.argv else "area"); sys.exit()
+    if cmd == "look" and sys.argv[2:3] == ["refs"]: look_refs(cv, sys.argv[3:]); sys.exit()
     if cmd == "look":
         look(cv, sys.argv[2], sys.argv[3:]); sys.exit()
     if cmd == "report":

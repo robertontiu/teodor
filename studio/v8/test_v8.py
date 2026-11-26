@@ -157,11 +157,80 @@ def v8_intentions(only=None):
     return ok
 
 
+def detail_pass(only=None):
+    """The detail pass (detail.py): open a region at 4x, check the detail's arrays, cancel (the canvas must be left
+    bit for bit), open again, paint in the detail, look, report, close (area), and once more with --resample sample;
+    outside the region nothing may change, inside it must, roles, log and frames must be recorded."""
+    sys.path.insert(0, HERE)
+    from media import MEDIA
+    ok = True
+    for name, m in MEDIA.items():
+        if name == "oil-v7" or (only and name not in only) or (not only and name not in ("oil", "watercolour", "graphite")):
+            continue
+        sup = list(m.supports)[0] if m.supports else None
+        try:
+            with tempfile.TemporaryDirectory() as w:
+                env = dict(os.environ, CANVAS="t")
+                run(HERE, w, name, sup, [], [])
+                py = ["python3", os.path.join(w, "studio.py")]
+                sh = lambda *c: subprocess.run(py + list(c), env=env, capture_output=True, text=True)
+                assert sh("ref", schema(w)).returncode == 0
+                tool = list(m.tools)[0]
+                r = sh("act", json.dumps({"do": [{"type": "strokes", "brush": tool, "colors": ["#5a4a3a"],
+                                                   "strokes": [{"pts": [[40, 200], [300, 260], [560, 220]], "size": 14}]}]}))
+                assert r.returncode == 0, r.stderr[-400:]
+                arrs = lambda: {a: np.load(os.path.join(w, f"t_{a}.npy")) for a in m.arrays}
+                before = arrs()
+                x, y, wd, ht = 200, 180, 120, 100
+                r = sh("detail", "open", str(x), str(y), str(wd), str(ht), "--scale", "4")
+                assert r.returncode == 0, r.stderr[-400:]
+                dm = json.load(open(os.path.join(w, "t_detail_meta.json")))
+                assert dm["px_scale"] == 4.0 and dm["detail"]["w"] == wd
+                assert np.load(os.path.join(w, "t_detail_col.npy")).shape[:2] == (ht * 4, wd * 4)
+                assert np.load(os.path.join(w, "t_detail_tex.npy")).shape == (ht * 4, wd * 4)
+                assert sh("detail", "open", "0", "0", "50", "50").returncode != 0, "a second detail must be refused"
+                assert sh("detail", "cancel").returncode == 0
+                after = arrs()
+                assert all(np.array_equal(before[a], after[a]) for a in m.arrays), "open + cancel changed the canvas"
+                for rs in ("area", "sample"):
+                    nfr = len(os.listdir(os.path.join(w, "t_frames")))
+                    assert sh("detail", "open", str(x), str(y), str(wd), str(ht)).returncode == 0
+                    r = sh("act", "--detail", json.dumps({"do": [{"type": "strokes", "brush": tool, "colors": ["#c03020"], "role": "accent",
+                                                                  "strokes": [{"pts": [[80, 80], [240, 200], [400, 300]], "size": 24}]}]}))
+                    assert r.returncode == 0, r.stderr[-400:]
+                    for c in (["look", "detail"], ["look", "--detail", "full"], ["report", "--detail"]):
+                        r = sh(*c)
+                        assert r.returncode == 0, (c, r.stderr[-400:])
+                    assert sh("finish", "--detail", "varnish").returncode != 0, "finish must be refused in a detail"
+                    r = sh("detail", "close", "--resample", rs)
+                    assert r.returncode == 0, r.stderr[-400:]
+                    new = arrs()
+                    out = np.ones(new["col"].shape[:2], bool); out[y:y + ht, x:x + wd] = False
+                    for a in m.arrays:
+                        assert np.array_equal(new[a][out], after[a][out]), f"{a} changed outside the region"
+                    assert np.abs(new["col"].astype(np.float32) - after["col"].astype(np.float32))[~out].max() > 0.1, "the detail's paint did not come back"
+                    bits = np.load(os.path.join(w, "t_roles.npy"))
+                    assert (bits[y:y + ht, x:x + wd] & (1 << 8)).any(), "the accent role was not recorded"
+                    assert len(os.listdir(os.path.join(w, "t_frames"))) >= nfr + 3, "frames missing"
+                    log = [json.loads(l) for l in open(os.path.join(w, "t_log.jsonl"))]
+                    assert any("in_detail" in e for e in log)
+                    meta = json.load(open(os.path.join(w, "t_meta.json")))
+                    assert "detail_open" not in meta and meta["details"][-1]["resample"] == rs
+                    assert not any(f.startswith("t_detail_") for f in os.listdir(w))
+                    after = new
+            print(f"{name}: detail pass ok")
+        except Exception as e:
+            ok = False
+            print(f"{name}: detail pass FAILED {e!r}")
+    return ok
+
+
 if __name__ == "__main__":
     # python3 test_v8.py [--only medium1,medium2]   (--only skips the v7 regression)
     only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
     r1 = oil_matches_v7() if not only else True
     r2 = every_medium_runs(only)
     r3 = v8_intentions(only)
-    print("PASS" if (r1 and r2 and r3) else "FAIL")
-    sys.exit(0 if (r1 and r2 and r3) else 1)
+    r4 = detail_pass(only)
+    print("PASS" if (r1 and r2 and r3 and r4) else "FAIL")
+    sys.exit(0 if (r1 and r2 and r3 and r4) else 1)

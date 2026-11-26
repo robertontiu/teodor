@@ -98,6 +98,13 @@ class Medium:
     # (the intention's own keys win), e.g. {"articulation": "plain", "role_scale": False} for tools calibrated on the
     # plain stroke (ink's line tools). A tool may also set `.wave = 0` to opt out of the core's slow pressure wave.
 
+    # --- the detail pass (detail.py; docs/MANUAL.md "Detail pass")
+    # In a detail opened at N x, cv.px_scale is N and the core passes `_px_scale` in the intention to make_tool. A
+    # medium whose tools and render keep their physical features at that scale (bristle clumps, hairs, grain, edge
+    # widths and blur radii in canvas px times px_scale) sets detail_scale_aware = True; the others still work in a
+    # detail (all arrays are resampled, the support's texture keeps its size) but their inner textures are finer.
+    detail_scale_aware = False
+
     # finish_check(cv) -> (lines, flags) may be defined by a medium for `report finish` (docs/FINISHING.md);
     # without it the core runs its own default checks.
 
