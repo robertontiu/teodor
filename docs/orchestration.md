@@ -97,7 +97,7 @@ Save each reading verbatim to `critique_N.md` with a header such as `# Critique 
    - `scenes/` (scene JSON and overlay SVGs) or `schemas/` (schema SVGs for abstract work)
 3. **`docs/experiments.md`:** a section "## Round NN: *Title* (Teodor, v7, <model>; theme: …)" with setup, run (episodes, scene/schema versions), feeling, the person's reaction, critics' readings and lessons.
 4. **Habits:** update `docs/habits.md`: add any new habit this painting showed, and note under "Broken so far" what it broke.
-5. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`, with `model` set if the painter was not Opus 5.5 (the site shows the model next to the title). That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
+5. **Site:** `site/public/paintings/rNN.jpg` (the same 900×1200 JPEG) and an entry in `site/app/works.ts`, with `model` set if the painter was not Opus 5.5 and `style` set to the style's display name for v8 paintings (the site shows them on a second line under the title, separated by a middle dot). That gives it a page at `/rNN/` with its share preview, and a sitemap entry.
 6. **Commit and push** everything above in one commit. A GitHub Action deploys the site (teodor.robertontiu.com) about 5 minutes after the last push that touched `site/`; there is nothing else to update. Keep site changes in as few pushes as you can.
 
 ## Comparing models
