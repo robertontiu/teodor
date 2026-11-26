@@ -522,6 +522,481 @@
     "https://atoptics.co.uk/fza35.htm",
     "https://www.metmuseum.org/essays/still-life-painting-in-northern-europe-1600-1800"
    ]
+  },
+  "animals": {
+   "doc": "docs/subjects/animals.md",
+   "summary": "Bodies built on one mammalian skeleton with joints lifted off the ground (digitigrade, unguligrade); measured in head lengths; covered by fur, feathers or scales read as masses; moving in real gaits and wingbeats.",
+   "key": {
+    "horse_withers_height_heads": {
+     "value": "2.5 (= body length, point of shoulder to buttock)",
+     "source": "Bourgelat canon in Cuyer, Artistic Anatomy of Animals"
+    },
+    "horse_full_height_heads": {
+     "value": "3 (forelock to ground)",
+     "source": "Bourgelat canon in Cuyer"
+    },
+    "horse_canon_caveat": {
+     "value": "only 14 of 50 horses surveyed matched 2.5 x 2.5",
+     "source": "Duhousset in Cuyer"
+    },
+    "horse_one_head_lengths": {
+     "value": "neck; girth depth; elbow-fetlock; shoulder-withers; ground-hock; hock-stifle",
+     "source": "Art Nerds (secondary)"
+    },
+    "horse_landmarks": {
+     "value": "hock level with the chestnuts; elbow and stifle level; point of buttock slightly above shoulder joint",
+     "source": "Art Nerds (secondary)"
+    },
+    "joint_names": {
+     "value": "stifle = knee; hock = ankle; horse 'knee' = wrist; fetlock = knuckle",
+     "source": "Lawson, Anatomy and Physiology of Animals"
+    },
+    "stances": {
+     "value": "plantigrade (human, bear), digitigrade (dog, cat, most birds), unguligrade (horse, cattle, deer, pig)",
+     "source": "UMN veterinary anatomy; Line of Action"
+    },
+    "dog_body_length_vs_withers": {
+     "value": "about equal for a medium dog; varies widely by breed",
+     "source": "judgement"
+    },
+    "cat": {
+     "value": "body longer than tall; tail about body length; shoulder blades rise when walking",
+     "source": "judgement"
+    },
+    "cattle": {
+     "value": "shorter legs and neck than a horse, hump over shoulder, wide chest, dewlap, cloven hooves, horizontal pupils",
+     "source": "Envato Tuts+ (secondary)"
+    },
+    "horse_gaits": {
+     "value": "walk 4-beat ~7 km/h never airborne; trot 2-beat diagonal ~13 km/h; canter 3-beat 16-27 km/h; gallop 4-beat 40-48 km/h, airborne with legs gathered under the body",
+     "source": "Wikipedia, Horse gait; Muybridge 1878"
+    },
+    "bird_feathers": {
+     "value": "primaries 9-11 (passerines 10) on the hand; secondaries 6-40 on the forearm; tail 12 (6 pairs); alula on the thumb",
+     "source": "Wikipedia, Flight feather"
+    },
+    "wingbeat": {
+     "value": "downstroke gives most thrust; upstroke wing partly folded, primaries open; hummingbird ~43 Hz",
+     "source": "Wikipedia, Bird flight"
+    },
+    "fish_fins": {
+     "value": "pectoral, pelvic, anal, dorsal, caudal, adipose (trout, salmon, catfish); lateral line along flank",
+     "source": "SC DNR fish anatomy"
+    },
+    "insects": {
+     "value": "head, thorax, abdomen; 3 leg pairs all on the thorax; usually 2 wing pairs on thorax segments 2-3",
+     "source": "Wikipedia, Insect morphology"
+    },
+    "countershading": {
+     "value": "darker back, lighter belly cancels top-light shading; model the form through it",
+     "source": "Wikipedia, Countershading (Thayer)"
+    },
+    "fur": {
+     "value": "masses of value and colour following growth direction; detail only where light meets dark",
+     "source": "Trekell (secondary)"
+    }
+   },
+   "checks": [
+    "Main animal measured in head lengths: horse withers height and body length ~2.5 heads (flag outside 2-3)",
+    "Each leg matches a real gait phase; a galloping horse in the air has its legs gathered under the body",
+    "Joints in place: the high 'backward' joint on dogs, cats and birds is the ankle; elbow and stifle level on a horse",
+    "Fur and feathers as value masses following growth; texture only at light-dark edges and silhouette",
+    "Form modelled through countershading: back and belly still read as lit and shadowed planes",
+    "Bird in flight: separated primaries and a believable stroke phase; at rest: wings folded into the body line",
+    "At a distance the animal reads from its silhouette alone"
+   ],
+   "avoid": [
+    "flying gallop (all legs extended in the air)",
+    "backward knees",
+    "tube legs without joints",
+    "toy proportions or puppy heads on adults",
+    "hair-by-hair fur everywhere",
+    "insect legs on the abdomen",
+    "all four legs vertical and symmetric"
+   ]
+  },
+  "trees-plants": {
+   "doc": "docs/subjects/trees-plants.md",
+   "summary": "Branching structures that conserve cross-section (Leonardo's rule), read as a few clumped masses with sky holes; the darkest upright plane in a sunlit landscape; colour set by species and season.",
+   "key": {
+    "leonardo_rule": {
+     "value": "sum of daughter branch cross-sections = parent (exponent ~2, measured 1.8-2.3)",
+     "source": "Eloy 2011"
+    },
+    "equal_fork_diameter": {
+     "value": "each daughter ~0.7 x parent diameter",
+     "source": "arithmetic from Leonardo's rule"
+    },
+    "branch_count_scaling": {
+     "value": "halving branch radius ~ four times as many branches",
+     "source": "Bentley et al. 2024"
+    },
+    "crown_types": {
+     "value": "excurrent: one leader, conical (most conifers); decurrent: no clear leader, spreading (most broadleaves)",
+     "source": "Iowa State Extension"
+    },
+    "foliage_fractal_dimension": {
+     "value": "2.2-2.8",
+     "source": "Eloy 2011"
+    },
+    "carlson_value_order": {
+     "value": "sky > flat ground > slopes > uprights (trees darkest) in sunlight; compressed in mist; snow may reverse",
+     "source": "Carlson via The Artist's Road"
+    },
+    "autumn_colour": {
+     "value": "yellow = carotenoids left; red = anthocyanins made before leaf fall; orange = both; brown = anthocyanin + chlorophyll",
+     "source": "Harvard Forest"
+    },
+    "foliage_masses": {
+     "value": "3-5 big value masses per crown",
+     "source": "judgement"
+    },
+    "distance": {
+     "value": "twigs become a mist; thin stalks and leaves vanish leaving a vague darkness",
+     "source": "Ruskin, Elements of Drawing"
+    },
+    "sky_holes": {
+     "value": "varied, slightly darker than open sky",
+     "source": "Ruskin (drawing them); value is judgement"
+    }
+   },
+   "checks": [
+    "At each fork the daughters together look as thick as the parent; branches taper outward",
+    "Crown in 3-5 value masses with lit and shadow sides; outline broken by clumps and sky holes",
+    "Sky holes exist, vary in size, slightly darker than open sky",
+    "In sun, trees are the darkest plane unless snow, backlight or mist explains otherwise",
+    "Species and season read: conical with a leader or spreading; leaf colour fits the season",
+    "Detail only at silhouettes and in the light; interiors and distant trees as masses",
+    "Tree casts a shadow that follows the ground"
+   ],
+   "avoid": [
+    "lollipop trees",
+    "branches thickening outward",
+    "repeated symmetric Y forks",
+    "every leaf painted at middle distance",
+    "uniform dab texture over the crown",
+    "one green for all trees",
+    "trees floating without root flare or shadow"
+   ]
+  },
+  "flowers": {
+   "doc": "docs/subjects/flowers.md",
+   "summary": "Whorls of modified leaves with species-specific part counts and symmetry, built on simple solids whose openings are ellipses in perspective; translucent petals; fruit as solids with distinct skins.",
+   "key": {
+    "whorls": {
+     "value": "sepals, petals, stamens, carpels from outside in",
+     "source": "LibreTexts botany lab manual"
+    },
+    "part_counts": {
+     "value": "threes (monocots: lily, tulip, iris); fours or fives (most eudicots)",
+     "source": "LibreTexts"
+    },
+    "symmetry": {
+     "value": "radial (daisy, rose) or bilateral (orchid, pea, snapdragon)",
+     "source": "LibreTexts"
+    },
+    "golden_angle_deg": {
+     "value": "137.5; ~92% of spiral plants show Fibonacci phyllotaxis",
+     "source": "Smith College phyllotaxis"
+    },
+    "sunflower_spirals": {
+     "value": "e.g. 34/55; 74% of 768 counted spiral families Fibonacci",
+     "source": "Plus Magazine, Turing's sunflowers"
+    },
+    "perspective": {
+     "value": "turned flowers are ellipses; flat flower centre stays mid-ellipse, cone flower centre drops as it turns",
+     "source": "CNPS drawing handout"
+    },
+    "solids": {
+     "value": "disc, cup, cone/trumpet, sphere, spike",
+     "source": "circle and cone: CNPS; rest judgement"
+    },
+    "fruit_bloom": {
+     "value": "wax on grape, plum, blueberry: whitish dull coating",
+     "source": "Trivedi et al. 2019"
+    },
+    "still_life_light": {
+     "value": "one directional light from the side models each bloom",
+     "source": "NGA, From Botany to Bouquets"
+    },
+    "dutch_bouquets": {
+     "value": "assembled from separate studies, mixing seasons; few painted from life",
+     "source": "NGA, From Botany to Bouquets"
+    }
+   },
+   "checks": [
+    "Petal count and symmetry fit the species",
+    "Every turned bloom sits on an ellipse whose minor axis follows the stem; stems enter the centre",
+    "Blooms face several directions; at least one in profile or from behind",
+    "Each bloom modelled as one form first; petals inside a cup in shadow",
+    "Skins differ: glossy sharp highlight, waxy soft bloom, velvet soft rim",
+    "Detail and hard edges concentrated at the focal bloom; some edges lost"
+   ],
+   "avoid": [
+    "clip-art five-petal flowers all facing front",
+    "circles instead of ellipses",
+    "flat cut-out petals",
+    "pure white flowers with grey shadows",
+    "billiard-ball fruit",
+    "identical tear-drop leaves"
+   ]
+  },
+  "landscape": {
+   "doc": "docs/subjects/landscape.md",
+   "summary": "Ground as planes by angle to the sky (Carlson), built by layered and fractured rock, receding by linear perspective, texture gradient and aerial perspective.",
+   "key": {
+    "carlson_value_order": {
+     "value": "sky > flat ground > slopes > uprights",
+     "source": "Carlson via The Artist's Road"
+    },
+    "rock": {
+     "value": "layered, constant layer thickness across an outcrop; fractures set block edges; weathering rounds edges; smooth vertical cliffs rare",
+     "source": "Outdoor Painter"
+    },
+    "rock_weathering_colour": {
+     "value": "dark rock lightens, light rock darkens with exposure",
+     "source": "Outdoor Painter"
+    },
+    "angle_of_repose_deg": {
+     "value": "dry sand 34, wet sand/crushed stone 45, sandy gravel 25-30, snow 38",
+     "source": "Wikipedia, Angle of repose"
+    },
+    "scree": {
+     "value": "usually below angle of repose, concave, largest blocks at the base",
+     "source": "Wikipedia, Scree"
+    },
+    "aerial_perspective": {
+     "value": "lighter (dark things), bluer, lower contrast, less detail with distance; Leonardo: five times as far, five times bluer",
+     "source": "Leonardo Notebooks 295; Wikipedia, Aerial perspective"
+    },
+    "texture_gradient": {
+     "value": "texture finer and smoother with distance",
+     "source": "Hanover College"
+    },
+    "cloud_shadows": {
+     "value": "overhead cover most ground; distant ones linear and horizontal",
+     "source": "John Muir Laws"
+    },
+    "converging_lines": {
+     "value": "rows, furrows, path edges on level ground meet on the horizon",
+     "source": "judgement (linear perspective)"
+    }
+   },
+   "checks": [
+    "Squint: sky lightest, flat ground, slopes, uprights darkest (unless snow, backlight or mist)",
+    "Each step back lighter, bluer, lower contrast, softer",
+    "Converging lines on level ground meet on the horizon",
+    "Rock shows layers and fracture planes with varied block sizes; loose slopes no steeper than ~35-40 deg, concave",
+    "Texture size decreases steadily with distance",
+    "Cast and cloud shadows follow the ground's undulations"
+   ],
+   "avoid": [
+    "equal detail everywhere",
+    "ground standing up like a wall",
+    "potato or brick rocks",
+    "symmetric cone mountains",
+    "paths as ribbons straight up hills",
+    "plane values out of order without reason"
+   ]
+  },
+  "water": {
+   "doc": "docs/subjects/water.md",
+   "summary": "A surface that mixes reflection (rising from ~2% looking down to ~100% at grazing), transparency and disturbance; reflections follow the inverted-world law and are stretched vertically by ripples.",
+   "key": {
+    "reflection_law": {
+     "value": "reflection = the world inverted below the water level, seen in true perspective from the eye: verticals straight down, lengths from water level, undersides visible",
+     "source": "Ruskin, Elements of Drawing"
+    },
+    "fresnel": {
+     "value": "~2% reflected looking straight down, ~100% at grazing",
+     "source": "scubageek (Fresnel)"
+    },
+    "look_down_vs_along": {
+     "value": "down: see into the water; along: see reflections",
+     "source": "Ruskin; Gurney"
+    },
+    "reflection_values": {
+     "value": "light things reflect a little darker; dark things a little lighter",
+     "source": "Gurney (light); dark is judgement"
+    },
+    "ripples": {
+     "value": "distant: images stretched vertically; near: broken horizontally; verticals stay decisive, horizontals diffuse",
+     "source": "Gurney after Pollock 1903; Ruskin"
+    },
+    "glitter_path": {
+     "value": "length 4 x max wave slope (high sun); width/length = sin(sun elevation); smooth water = one glint",
+     "source": "NOAA PSL"
+    },
+    "wave_breaking": {
+     "value": "crest no sharper than ~120 deg; breaks when front face passes vertical",
+     "source": "arXiv 2505.14230"
+    },
+    "beaufort": {
+     "value": "0 mirror; 1 scaly ripples; 3 crests begin to break; 4 white horses; 6 whitecaps and spray; 7 foam streaks; 8 spindrift; 10-12 sea white",
+     "source": "NWS Beaufort scale"
+    },
+    "water_colour": {
+     "value": "blue only through several metres; green = algae; brown = tannins; coloured water tints reflections of dark things",
+     "source": "WebExhibits; Wikipedia, Color of water; Ruskin"
+    },
+    "transmitted_light": {
+     "value": "thin wave crests glow green, most saturated colour",
+     "source": "Ruskin"
+    },
+    "rain": {
+     "value": "large drops ~10 m/s; read as streaks",
+     "source": "CIMSS; streak reading judgement"
+    }
+   },
+   "checks": [
+    "Verticals reflect straight down; lengths from water level under the object; set-back objects' reflections shorter or hidden",
+    "Light things reflect slightly darker, dark things slightly lighter; no pure black or white reflection",
+    "Near water shows body colour or bottom; far water mirrors the sky and matches its value at the horizon",
+    "Ripples stretch reflections vertically far away and break them horizontally near",
+    "Glitter path long and narrow for a low sun, on the sun-viewer line",
+    "Wave scale, whitecaps and spray agree with one Beaufort force and the picture's wind",
+    "Transmitted light at crests is the most saturated water colour; foam broken, never an outline"
+   ],
+   "avoid": [
+    "horizontal white dashes for water",
+    "reflection as flipped copy of the picture",
+    "black reflections",
+    "uniform water colour to the horizon",
+    "identical wave humps",
+    "rain as teardrops"
+   ]
+  },
+  "sky": {
+   "doc": "docs/subjects/sky.md",
+   "summary": "A light source gradating toward the horizon and away from the sun, carrying clouds at WMO levels in perspective, with fixed optical geometry (sun and moon 0.5 deg, rainbow 42 deg, halo 22 deg).",
+   "key": {
+    "clear_sky_gradient": {
+     "value": "lighter and whiter toward the horizon; darker, more saturated away from the sun; dull warm glare near the sun; darkest ~65 deg from the sun (zenith at sunrise/sunset); >=4 mixtures",
+     "source": "Gurney, Sky blue"
+    },
+    "cloud_levels_temperate_km": {
+     "value": "high 5-13 (Ci, Cc, Cs); middle 2-7 (Ac, As, Ns); low 0-2 (St, Sc, Cu, Cb)",
+     "source": "WMO International Cloud Atlas"
+    },
+    "patterned_cloud_element_width_deg": {
+     "value": "cirrocumulus <1; altocumulus 1-5; stratocumulus >5",
+     "source": "WMO"
+    },
+    "cumulus": {
+     "value": "sharp outlines, cauliflower tops, brilliant white sunlit parts, dark nearly horizontal base",
+     "source": "WMO"
+    },
+    "cumulonimbus": {
+     "value": "towering, flattened fibrous anvil top, very dark base, virga",
+     "source": "WMO"
+    },
+    "clouds_in_perspective": {
+     "value": "common base height; smaller, flatter, closer together toward horizon",
+     "source": "John Muir Laws"
+    },
+    "cloud_shading": {
+     "value": "keep shadow sides lighter than measured: cloud light is unattainable in paint",
+     "source": "Ruskin"
+    },
+    "sun_moon_diameter_deg": {
+     "value": "~0.5",
+     "source": "Wikipedia, Angular diameter; NASA"
+    },
+    "rainbow": {
+     "value": "radius 42 deg around antisolar point, red outside, darker sky outside",
+     "source": "WMO"
+    },
+    "halo": {
+     "value": "22 deg around the sun, red inner edge; sun dogs 22 deg each side",
+     "source": "RMetS"
+    },
+    "twilight_deg_below_horizon": {
+     "value": "civil 0-6, nautical 6-12, astronomical 12-18; Belt of Venus 10-20 deg above antisolar horizon over Earth's shadow",
+     "source": "Wikipedia, Twilight; Belt of Venus"
+    },
+    "colour_temperature_K": {
+     "value": "low sun ~1850-2000; overcast ~7000; blue sky 12000+",
+     "source": "Engineering ToolBox"
+    },
+    "coloured_clouds": {
+     "value": "sunset colours mostly on cirrus and altocumulus",
+     "source": "NOAA SPC, Corfidi"
+    }
+   },
+   "checks": [
+    "Clear sky darker and more saturated away from the sun, lighter toward the horizon; lighter, warmer, duller near the sun",
+    "Low clouds share a base and shrink, flatten and crowd toward the horizon; tops brightest, bases grey, shadow sides light",
+    "Cloud types at their WMO levels, one wind, one weather",
+    "Sun and moon ~0.5 deg of the field of view; moon's lit side faces the sun",
+    "Rainbow 42 deg around antisolar point red outside; halo 22 deg; rays converge on sun or antisolar point",
+    "Ground light colour, shadow colour and contrast match the sky's hour and weather"
+   ],
+   "avoid": [
+    "flat one-colour sky",
+    "cotton-ball clouds of one size",
+    "clouds too dark on a sunny day",
+    "rainbow with sun in front",
+    "giant sun or moon as observation",
+    "sky and ground lit differently"
+   ]
+  },
+  "fire-smoke": {
+   "doc": "docs/subjects/fire-smoke.md",
+   "summary": "Flames as soot glowing at 1,100-1,400 C, shaped by buoyancy into a steady base and flickering tongues; a light source with inverse-square fall-off; smoke whose colour depends on light direction and particle size; steam visible only after it condenses.",
+   "key": {
+    "candle_zones": {
+     "value": "dark vapour core at wick, yellow soot-incandescent middle, blue base; ~1100 C, hot spots 1300-1400 C",
+     "source": "Wikipedia, Flame"
+    },
+    "incandescence_colour_C": {
+     "value": "visible red ~525; dull red ~700; cherry 800-900; orange 1000-1200; yellow ~1100-1250; white 1300+",
+     "source": "Wikipedia, Red heat"
+    },
+    "fire_zones": {
+     "value": "continuous flame to 0.08 Q^0.4 m; intermittent to 0.20 Q^0.4 m; buoyant plume above (Q in kW; 33 kW: 0.3 m, 0.8 m)",
+     "source": "McCaffrey 1979, NIST"
+    },
+    "flicker_hz": {
+     "value": "f ~ 1.5/sqrt(d m): ~10 Hz at 2 cm, ~1.5 Hz at 1 m",
+     "source": "Xia & Zhang"
+    },
+    "plume": {
+     "value": "laminar near source, turbulent higher as it speeds up",
+     "source": "UIUC Physics Van"
+    },
+    "smoke_colour": {
+     "value": "blue with light behind viewer; yellow-brown against bright sky; white when moist; grey-black when sooty",
+     "source": "Irish Times; SDSU; WMO smoke"
+    },
+    "steam": {
+     "value": "clear gap at the spout is the steam; the white cloud is condensed droplets",
+     "source": "Indiana Public Media"
+    },
+    "colour_temperature_K": {
+     "value": "candle ~1800-2000",
+     "source": "Engineering ToolBox; MFA CAMEO"
+    },
+    "falloff": {
+     "value": "inverse square: twice the distance, a quarter of the light",
+     "source": "physics"
+    }
+   },
+   "checks": [
+    "Flame runs near-white core, yellow, orange, red tips; darker zone at a candle wick",
+    "Firelight pool is small and falls off by inverse square",
+    "Flames: continuous base with broken detached tongues above",
+    "Smoke smooth near source, turbulent higher; colour fits background and light direction",
+    "Steam has a clear gap at the spout and fades",
+    "Flame, smoke and steam lean with the picture's wind"
+   ],
+   "avoid": [
+    "icon teardrop flames with hard outline",
+    "dark red at the hottest centre",
+    "one candle lighting a whole room evenly",
+    "smoke as grey cotton or a solid tube",
+    "steam starting at the spout",
+    "uniform sprinkle of sparks"
+   ]
   }
  },
  "styles": {}
