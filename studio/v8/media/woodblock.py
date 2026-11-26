@@ -667,6 +667,7 @@ class Woodblock(Medium):
 
     # --- revision: a print can't be taken back
     glaze_role = "body"
+    flat_areas_ok = True         # each area is one flat impression by nature: report doesn't flag single-role passages
     first_role = "body"          # every colour block is body colour, printed once (ukiyo-e: drawing, body, contour)
 
     def revise(self, cv, op, mask, it, felt, rng, core):

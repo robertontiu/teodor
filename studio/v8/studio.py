@@ -1858,6 +1858,8 @@ def flatten_order(order):
 def roles_report(cv, style_entry, focus):
     bits, first = load_roles(cv)
     lines, flags = [], []
+    # media whose areas are flat single impressions by nature (woodblock) aren't flagged for single-role passages
+    flat_ok = bool(getattr(getattr(cv, "medium", None), "flat_areas_ok", False))
     painted = bits > 0
     if not painted.any():
         return ["layers: no roles recorded (a canvas painted before roles existed, or nothing painted yet)"], []
@@ -1873,7 +1875,7 @@ def roles_report(cv, style_entry, focus):
             one = float((n[fm] == 1).mean())
             lines.append(f"  focal area ({focus[0]:.0f}, {focus[1]:.0f}): one role {one:.0%}, roles there: "
                          + ", ".join(r for r in ROLES if ((bits[fm] & ROLE_BIT[r]) > 0).mean() > 0.05))
-            if one > ONE_ROLE_FLAG:
+            if one > ONE_ROLE_FLAG and not flat_ok:
                 flags.append("the focal area is built from one role only: add the layers your current builds it with")
     gy_, gx_ = 3, 3
     bad = []
@@ -1883,7 +1885,9 @@ def roles_report(cv, style_entry, focus):
             p = painted[sl]
             if p.mean() > 0.3 and float((n[sl][p] == 1).mean()) > ONE_ROLE_FLAG:
                 bad.append(f"{['top', 'middle', 'bottom'][r_]}-{['left', 'centre', 'right'][c_]}")
-    if bad:
+    if bad and flat_ok:
+        lines.append("  single-role passages not flagged: this medium builds areas as flat single impressions (" + ", ".join(bad) + ")")
+    elif bad:
         flags.append("passages built from one role only (reads as a filter): " + ", ".join(bad))
     order = (style_entry or {}).get("layer_order")
     if order:
