@@ -597,6 +597,168 @@ def format_fine(f, target=None, where="sheet"):
     return lines
 
 
+# ---------------------------------------------------------------- drawing against its reference (perceptual checks)
+# The fine measures above can be passed by an image that is visibly wrong: band energy is blind to WHERE the texture
+# is, and a speculars count to where the highlights sit (the 2x test head passed hair and highlight checks while it
+# looked wrong: docs/research/hyperrealism-gaps.md, part 2). These compare the drawing with its own reference, pixel
+# for pixel, inside a mask (the face), at the subject's scale. Thresholds are judgements fitted so that a viewer's
+# verdict and the number agree on the test heads (marked [H] where they are set, in COMPARE_BOUNDS).
+COMPARE_BOUNDS = {
+    # SSIM (Wang et al. 2004) of L* at each scale, mean inside the mask [H: a viewer called the old test head's face
+    # "blotchy, not the reference's form" at 0.5-2 mm]
+    "ssim": {"1.0": 0.55, "2.0": 0.70, "4.0": 0.80},
+    "patchiness": 0.20,          # residual blotches over the reference's own structure at 2-4 mm [H: the old test
+                                 # head 0.30 at gallery scale; the reference blurred plus grain noise 0.03]
+    "highlight_recall": 0.5,     # the reference's highlights that the drawing has within 1.5 mm [H]
+    "highlight_precision": 0.5,  # the drawing's highlights that the reference has within 1.5 mm [H]
+    "anisotropy_excess": 0.10,   # stroke direction energy on the skin over the reference's [H]
+}
+
+
+def _down(L, k):
+    """Block mean by an integer factor (k >= 1)."""
+    if k <= 1:
+        return L
+    h, w = L.shape[0] // k * k, L.shape[1] // k * k
+    return L[:h, :w].reshape(h // k, k, w // k, k).mean((1, 3))
+
+
+def ssim_scales(Ld, Lr, px_per_mm, mask=None, scales=(0.5, 1.0, 2.0, 4.0)):
+    """{s_mm: mean SSIM inside the mask} of two L* images of one size, each at a grain of s/2 mm per pixel (block
+    means), window Gaussian sigma 1.5 px, C1 = (0.01 * 100)^2, C2 = (0.03 * 100)^2: Wang et al.'s SSIM per scale
+    (the multi-scale SSIM's components, reported per scale instead of multiplied)."""
+    out = {}
+    C1, C2 = 1.0, 9.0
+    full = np.ones(Ld.shape, bool) if mask is None else np.asarray(mask, bool)
+    for s in scales:
+        k = max(1, int(round(s / 2 * px_per_mm)))
+        a, b = _down(Ld.astype(np.float64), k), _down(Lr.astype(np.float64), k)
+        m = _down(full.astype(np.float64), k) > 0.99
+        if m.sum() < 25:
+            out[str(s)] = None
+            continue
+        g = lambda x: gaussian_filter(x, 1.5)
+        ma, mb = g(a), g(b)
+        va, vb, cab = g(a * a) - ma * ma, g(b * b) - mb * mb, g(a * b) - ma * mb
+        S = ((2 * ma * mb + C1) * (2 * cab + C2)) / ((ma * ma + mb * mb + C1) * (va + vb + C2))
+        from scipy.ndimage import binary_erosion
+        mi = binary_erosion(m, iterations=3) if m.sum() > 200 else m
+        out[str(s)] = round(float(S[mi].mean()), 4)
+    return out
+
+
+def patchiness(Ld, Lr, px_per_mm, mask=None, scales=(2.0, 4.0)):
+    """Value islands the reference doesn't have: the drawing is mapped onto the reference's values by a smooth tone
+    curve (a cubic fit of drawing on reference inside the mask, both at 0.25 mm), and the residual's band energy at
+    `scales` (mm; G(s) - G(2s)) is divided by the reference's own band energy there. A faithful drawing in any tone
+    curve scores near 0; tone that breaks into flat light and mid-grey blotches (the 2x test head's face: the
+    reference's faint mottle thresholded into islands by value bands) scores high. Returns the mean ratio and the
+    ratio per scale."""
+    full = np.ones(Ld.shape, bool) if mask is None else np.asarray(mask, bool)
+    a = gaussian_filter(Ld.astype(np.float64), 0.25 * px_per_mm)
+    b = gaussian_filter(Lr.astype(np.float64), 0.25 * px_per_mm)
+    if full.sum() < 100:
+        return dict(patchiness=None)
+    bm = b[full]
+    z = (bm - bm.mean()) / (bm.std() + 1e-9)
+    c = np.polyfit(z, a[full], 3)
+    f = np.polyval(c, (b - bm.mean()) / (bm.std() + 1e-9))
+    r = a - f
+    per = {}
+    for s in scales:
+        inner = _inner(full, math.ceil(4 * s * px_per_mm))
+        if inner.sum() < 50:
+            continue
+        bp = lambda x: gaussian_filter(x, s * px_per_mm) - gaussian_filter(x, 2 * s * px_per_mm)
+        er, ef = np.sqrt((bp(r)[inner] ** 2).mean()), np.sqrt((bp(f)[inner] ** 2).mean())
+        per[str(s)] = round(float(er / max(ef, 0.3)), 4)
+    if not per:
+        return dict(patchiness=None)
+    return dict(patchiness=round(float(np.mean(list(per.values()))), 4), patch_by_scale=per)
+
+
+def _blob_centres(L, px_per_mm, mask, prominence=SPEC_PROM, max_mm=SPEC_MM):
+    from scipy.ndimage import label, maximum as nd_max, center_of_mass
+    d = L - gaussian_filter(L, 2 * px_per_mm)
+    hi = d > prominence / 2
+    if mask is not None:
+        hi &= mask
+    lab, n = label(hi)
+    if n == 0:
+        return np.zeros((0, 2))
+    idx = np.arange(1, n + 1)
+    peaks = np.asarray(nd_max(d, lab, idx))
+    sizes = np.bincount(lab.ravel())[1:]
+    ok = (peaks >= prominence) & (sizes >= 2) & (sizes <= max(2.0, (max_mm * px_per_mm) ** 2))
+    if not ok.any():
+        return np.zeros((0, 2))
+    c = np.array(center_of_mass(hi, lab, idx[ok]))
+    return c.reshape(-1, 2)
+
+
+def highlight_match(Ld, Lr, px_per_mm, mask=None, radius_mm=1.5):
+    """Are the highlights where the reference's are? Small bright blobs (as specular_blobs) of each image; recall =
+    the reference's with a drawing blob within radius_mm, precision = the drawing's with a reference blob near."""
+    m = None if mask is None else np.asarray(mask, bool)
+    a, b = _blob_centres(Ld.astype(np.float64), px_per_mm, m), _blob_centres(Lr.astype(np.float64), px_per_mm, m)
+    out = dict(highlights_drawing=int(len(a)), highlights_reference=int(len(b)))
+    if len(b) == 0 or len(a) == 0:
+        out.update(highlight_recall=0.0 if len(b) else None, highlight_precision=0.0 if len(a) else None)
+        return out
+    from scipy.spatial import cKDTree
+    r = radius_mm * px_per_mm
+    da, _ = cKDTree(a).query(b)
+    db, _ = cKDTree(b).query(a)
+    out.update(highlight_recall=round(float((da <= r).mean()), 3), highlight_precision=round(float((db <= r).mean()), 3))
+    return out
+
+
+def anisotropy(L, px_per_mm, mask=None, band_mm=0.25):
+    """Stroke direction energy: in the band-passed image (G(s) - G(2s) at band_mm), the energy-weighted resultant
+    length of the doubled gradient orientation over the mask (0: no shared direction, as skin; 1: every mark one
+    way, as a hatch). Hatching across a face reads as engraving; real skin has no stroke direction."""
+    sp = max(0.5, band_mm * px_per_mm)
+    b = gaussian_filter(L.astype(np.float64), sp) - gaussian_filter(L.astype(np.float64), 2 * sp)
+    gx, gy = sobel(b, 1), sobel(b, 0)
+    w = gx * gx + gy * gy
+    full = np.ones(L.shape, bool) if mask is None else np.asarray(mask, bool)
+    sel = _inner(full, math.ceil(4 * sp))
+    if sel.sum() < 50:
+        return None
+    z = ((gx + 1j * gy) ** 2)[sel]
+    return round(float(abs(z.sum()) / (w[sel].sum() + 1e-12)), 4)
+
+
+def compare_fine(Ld, Lr, px_per_mm, mask=None):
+    """Every drawing-against-reference check: SSIM by scale, patchiness, highlight positions, and the stroke
+    direction energy on the drawing and on the reference."""
+    out = dict(ssim=ssim_scales(Ld, Lr, px_per_mm, mask))
+    out.update(patchiness(Ld, Lr, px_per_mm, mask))
+    out.update(highlight_match(Ld, Lr, px_per_mm, mask))
+    out["anisotropy"] = anisotropy(Ld, px_per_mm, mask)
+    out["anisotropy_ref"] = anisotropy(Lr, px_per_mm, mask)
+    return out
+
+
+def compare_verdicts(c):
+    """Rows (name, value, bound, ok) against COMPARE_BOUNDS."""
+    B = COMPARE_BOUNDS
+    rows = []
+    for s, lo in B["ssim"].items():
+        v = c["ssim"].get(s)
+        if v is not None:
+            rows.append((f"structure (SSIM) at {s} mm", v, f">= {lo}", v >= lo))
+    if c.get("patchiness") is not None:
+        rows.append(("patchiness (value islands the reference lacks, 2-4 mm)", c["patchiness"], f"<= {B['patchiness']}", c["patchiness"] <= B["patchiness"]))
+    for k in ("highlight_recall", "highlight_precision"):
+        if c.get(k) is not None:
+            rows.append((k.replace("_", " "), c[k], f">= {B[k]}", c[k] >= B[k]))
+    if c.get("anisotropy") is not None and c.get("anisotropy_ref") is not None:
+        ex = c["anisotropy"] - c["anisotropy_ref"]
+        rows.append(("stroke direction energy over the reference's", round(ex, 4), f"<= {B['anisotropy_excess']}", ex <= B["anisotropy_excess"]))
+    return rows
+
+
 # ---------------------------------------------------------------- comparing with a target
 LABELS = {
     "value_mean": ("key (mean lightness, L* 0-100)", "lighter", "darker"),

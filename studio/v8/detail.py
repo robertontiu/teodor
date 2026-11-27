@@ -622,6 +622,19 @@ def scene_crop(core, cv, scene_json, quality="draft"):
     t0 = time.time()
     scn = sc.Scene(spec2)
     arr = scn.render(Wr, Hr)
+    if spec.get("renderer") == "cycles":
+        # the canvas's reference was path-traced (photoreal.py): the detail's must be too, at the canvas's exposure,
+        # or the detail is drawn from a different picture than its surroundings and sits apart from them
+        import photoreal
+        if photoreal.supported(spec2) and photoreal.available():
+            pst = core.P("structure.json").replace("_detail_structure", "_structure")
+            ref_lum = (json.load(open(pst)).get("cycles") or {}).get("ref_lum") if os.path.exists(pst) else None
+            cyc = dict(spec2.get("cycles", {}))
+            if ref_lum:
+                cyc["ref_lum"] = ref_lum
+            cyc.pop("region", None)
+            scn.spec = dict(scn.spec, cycles=cyc)
+            arr, _, _ = photoreal.render(scn, Wr, Hr)
     xs = f2 * tx * (Hr / 2) + Wr / 2 - 0.5
     ys = -f2 * ty * (Hr / 2) + Hr / 2 - 0.5
     img = np.stack([map_coordinates(arr[..., k].astype(np.float32), [ys, xs], order=1, mode="nearest") for k in range(3)], -1)

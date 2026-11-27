@@ -16,6 +16,7 @@ Commands (CANVAS env var selects a canvas name; default "main"):
   dry [0-1]                     let time pass
   look full|thumb|gray|crop X Y W H|ref|diff|compare|mirror|upside|squint|notan [2|3]|edges|temp|layers [ROLE]
   simplify FX FY [groups] [radius]   turn the schema into a painter's reference around a focal point
+  toneref [floor] [knee]        map the schema's darks into what the medium reaches (a print's toe; floor default the medium's)
   focus FX FY                   declare the focal point (stroke size, focal checks)
   elements [file.json]          declare the picture's elements for the clarity check (or list them)
   report [style] [finish]       the canvas measured in numbers (value, colour, edges, texture, structure, marks,
@@ -294,9 +295,32 @@ def segment_mask(reg, W, H):
 
 
 def region_mask(reg, W, H, feather=1.0):
+    """A region as a soft mask (None = the whole canvas). Any region may carry "within": {region} (kept only inside
+    it) and "minus": {region} (that part cut out), e.g. the face without its darks."""
+    m = _region_mask(reg, W, H, feather)
+    if reg.get("within") or reg.get("minus"):
+        m = np.ones((H, W), np.float32) if m is None else m
+        if reg.get("within"):
+            w_ = region_mask(reg["within"], W, H, feather)
+            if w_ is not None:
+                m = m * w_
+        if reg.get("minus"):
+            o_ = region_mask(reg["minus"], W, H, feather)
+            m = m * (1 - o_) if o_ is not None else m * 0
+    return m
+
+
+def _region_mask(reg, W, H, feather=1.0):
     t = reg.get("type", "canvas")
     if t == "canvas":
         return None
+    if t == "value":
+        # the schema's own values: {"type": "value", "below": 0.3, "above": 0.0, "blur": 2} (sRGB grey 0-1), so the
+        # darks can be worked first and the graphite kept off them (the hyperrealism recipe)
+        ref = _schema_for_segments(W, H).mean(-1)
+        v = gaussian_filter(ref, float(reg.get("blur", 2.0)))
+        m = (v < float(reg.get("below", 1.01))) & (v >= float(reg.get("above", -0.01)))
+        return gaussian_filter(m.astype(np.float32), feather)
     if t == "segment":
         return gaussian_filter(segment_mask(reg, W, H).astype(np.float32), feather)
     if t == "element":
@@ -1437,6 +1461,26 @@ def fine_report(cv, img, target, crop=None, where="sheet"):
             f["hair_band_rms"] = fe["band_rms"]
             f["hair_coherence"] = eyes.coherence(eyes.lightness(a)[0], ps, m)
             lines.append(f"  {k} at {ps:.1f} px per mm: texture {bs}; strand coherence {f['hair_coherence']:.2f}")
+        if el == "face" and cv.ref is not None and where == "sheet":
+            # the drawing against its own schema (eyes.compare_fine): what a viewer checks by looking from one to
+            # the other; the fine measures alone can be passed by a visibly wrong face
+            Ld = eyes.lightness(a)[0]
+            Lr = eyes.lightness(np.clip(cv.ref.astype(np.float32), 0, 1))[0]
+            c = eyes.compare_fine(Ld, Lr, ps, m)
+            f["compare_face"] = c
+            ss = ", ".join(f"{s_} mm {v:.2f}" for s_, v in c["ssim"].items() if v is not None)
+            lines.append(f"  {k} against the schema: structure (SSIM) {ss}; patchiness {c.get('patchiness')}; highlights "
+                         f"{c['highlights_drawing']} drawn / {c['highlights_reference']} in the schema, recall {c.get('highlight_recall')}, "
+                         f"precision {c.get('highlight_precision')}; stroke direction energy {c['anisotropy']} (schema {c['anisotropy_ref']})")
+            advice = {"structure": "the face's form departs from the schema's: compare them side by side (look compare)",
+                      "patchiness": "the tone breaks into islands the schema doesn't have: lay continuous tone (hatch \"target\": \"schema\") and blend by part",
+                      "highlight recall": "the schema's highlights are missing: indent or lift them where the schema has them",
+                      "highlight precision": "highlights where the schema has none: fill the stray light flecks",
+                      "stroke direction": "the strokes read as hatching, not tone: cross more angles and blend, or lay circles"}
+            for name, v, b, ok in eyes.compare_verdicts(c):
+                if not ok:
+                    adv = next((t for k_, t in advice.items() if name.startswith(k_)), "")
+                    flags.append(f"{adv} ({name} {v}, bound {b})")
     if target:
         rows = eyes.fine_verdicts(f, target)
         for k, label, v, b, kind, ok, advice in rows:
@@ -1614,6 +1658,21 @@ def _hatch_free(cv, it, felt, rng):
     layers = it.get("layers", [0.75, 0.55, 0.35, 0.18])
     fw = _hatch_feather(it, layers, True)
     cross = it.get("cross", 45)
+    tfield = None
+    if it.get("target") == "schema":
+        # continuous tone (G1/G2 of docs/research/hyperrealism-gaps.md, part 2): every line works toward the
+        # schema's own value under it, pressure easing where the schema is light, so a gradient comes out as a
+        # gradient instead of value bands (bands posterised the 2x test head's face into flat islands). One pass per
+        # entry of `angles` (default four, 45 degrees apart: crossing directions that a blend dissolves into tone);
+        # `target_shift` moves the value (sRGB 0-1; negative darker, e.g. to allow for a blend's lift)
+        tsrc = cv.ref.mean(-1) if cv.ref is not None else val
+        tfield = np.clip(gaussian_filter(tsrc.astype(np.float32), float(it.get("target_blur", 1.0)) * _PXS) + float(it.get("target_shift", 0.0)), 0, 1).astype(np.float32)
+        angs = it.get("angles", [it.get("angle", 50) + k * 45 for k in range(4)])
+        layers = [1.0] * len(angs)
+        fw = 0.0
+        pl_ = float(cv.paper[::16, ::16].mean())
+        val = np.where(tfield < pl_ - 0.012, 0.0, 2.0).astype(np.float32)
+        cross = 0
     spacing = it.get("spacing", 9 * _PXS)          # defaults and the walk along each line are in canvas px (x _PXS in a detail)
     size = float(np.mean(it.get("size", [3 * _PXS, 3 * _PXS]))) if isinstance(it.get("size", 3), list) else float(it.get("size", 3 * _PXS))
     seg_max = it.get("length", 140 * _PXS)
@@ -1630,7 +1689,8 @@ def _hatch_free(cv, it, felt, rng):
     n = 0
     for li, level in enumerate(layers):
         pf = _band_pressure(val, level, fw)
-        ang = math.radians(it.get("angle", 50) + li * cross + rng.normal(0, 2))
+        a_deg = angs[li] if tfield is not None else it.get("angle", 50) + li * cross
+        ang = math.radians(a_deg + rng.normal(0, 2))
         dx, dy = math.cos(ang), math.sin(ang)
         nx, ny = -dy, dx
         off = -R + rng.uniform(0, spacing)
@@ -1651,6 +1711,8 @@ def _hatch_free(cv, it, felt, rng):
                     ctrl = [a, [(a[0] + b[0]) / 2 + rng.normal(0, 0.8 * _PXS), (a[1] + b[1]) / 2 + rng.normal(0, 0.8 * _PXS)], b]
                     col = np.clip(cols[rng.choice(len(cols), p=w)] + rng.normal(0, 0.01, 3), 0, 1)
                     br = make_brush(it, size * rng.uniform(0.85, 1.15), col, rng, cv)
+                    if tfield is not None:
+                        br.target = tfield
                     if fw > 0:
                         br = _Pressed(br, pf)
                     play(cv, br, gesture_path(ctrl, felt, rng, size), felt, it.get("pressure", 0.8), rng)
@@ -1936,6 +1998,34 @@ def simplify(cv, fx, fy, groups=4, radius=0.25, keep=1.0):
     out = near * (1 - w) + far * w
     Image.fromarray((np.clip(out, 0, 1) * 255).astype(np.uint8)).save(P("simplified.png"))
     set_ref(cv, P("simplified.png"))
+
+
+def tone_ref(cv, floor=None, knee=None):
+    """Map the schema's values into what the medium can reach, as a photographic print maps a scene into its paper:
+    L* above `knee` unchanged (the lights and middle tones are drawn as seen), below it a toe that ends at `floor`
+    (the medium's deepest area value, cv.medium.FLOOR_L) with the slope matched at the knee, so the darks keep their
+    order and separation instead of all clipping at the floor (the 2x test head's schema went to L* 2-3, its charcoal
+    stopped at 19-24 and the shadow lost its form). Top: the paper's own white. Writes and returns a new schema PNG."""
+    import eyes
+    floor = float(floor if floor is not None else getattr(cv.medium, "FLOOR_L", 0.0))
+    knee = float(knee if knee is not None else 45.0)
+    ref = np.clip(cv.ref.astype(np.float32), 0, 1)
+    L, _ = eyes.lightness(ref)
+    paper = float(eyes.lightness(np.clip(cv.paper[::8, ::8], 0, 1))[0].mean()) if hasattr(cv, "paper") else 100.0
+    p_ = knee / max(knee - floor, 1e-3)
+    Lm = np.where(L >= knee, L, floor + (knee - floor) * np.clip(L / knee, 0, 1) ** p_)
+    Lm = np.minimum(Lm, paper)
+    Y = lambda l: np.where(l > 8, ((l + 16) / 116) ** 3, l / 903.3)
+    lin = np.where(ref <= 0.04045, ref / 12.92, ((ref + 0.055) / 1.055) ** 2.4)
+    k = (Y(Lm) / np.maximum(Y(L), 1e-6))[..., None]
+    lin2 = np.clip(lin * k, 0, 1)
+    srgb = np.where(lin2 <= 0.0031308, 12.92 * lin2, 1.055 * np.power(lin2, 1 / 2.4) - 0.055)
+    n = len([f for f in os.listdir(D) if f.startswith(f"{NAME}_toned_v")]) + 1
+    out = P(f"toned_v{n}.png")
+    Image.fromarray((np.clip(srgb, 0, 1) * 255 + 0.5).astype(np.uint8)).save(out)
+    print(f"toneref: L* below {knee:.0f} mapped onto {floor:.1f}-{knee:.0f} (toe exponent {p_:.2f}); schema p1 "
+          f"{np.percentile(L, 1):.1f} -> {np.percentile(Lm, 1):.1f}")
+    return out
 
 
 def transfer(cv, strength, color=None):
@@ -2360,6 +2450,9 @@ if __name__ == "__main__":
               "paints when it closes (work there with --detail).")
     if cmd == "ref":
         set_ref(cv, sys.argv[2]); look(cv, "ref", []); sys.exit()
+    if cmd == "toneref":
+        out = tone_ref(cv, *[float(a) for a in sys.argv[2:4]])
+        set_ref(cv, out); look(cv, "ref", []); sys.exit()
     if cmd == "scene" and cv.meta.get("detail"):      # the scene, rendered for the detail's region (detail.py)
         import detail as dt
         q = sys.argv[-1] if sys.argv[-1] in ("draft", "final") else "draft"

@@ -559,3 +559,73 @@ An invented man (MakeHuman CC0, 45), framed from 1.42 m (154 mm equivalent), one
 | G9 | time | 37 min whole drawing | | |
 
 **9 of 18 measured checks pass.** The first run (before this one) passed 8: its schema's white sky came out grey after the exposure and got hatched in a rectangle, and 40 px blends blurred the face; the engine now has a paper `background` for scenes and `element` regions, and the recipe smaller blends. **What still fails, and why:** (1) **the darks**: the schema reaches L* 2-3 in the face's shadow; charcoal's modelled floor is about L* 19-20 (pigment data), so the drawing can't follow it below that, and the blends and graphite layers over the charcoal lift it to 24. Lowering the floor needs a measured modern charcoal sheet, not a tuned number. (2) **fine texture of the face**: pores and lines are laid as marks, but the face's tone under them came out smoother than the schema at 0.25-1 mm (blending by part still evens it). (3) **edges**: no hard-lead pass along the face's crisp edges reached 0.3 mm (the edge family laid 300, mostly in the hair). (4) **the eye detail** carries twice the texture its surroundings do, which the new check flags: the next step is the relation fix itself, carrying the detail into the cheek and brow. The owner's target stands; these are the engine's next iterations.
+
+## Part 2 status (paused Nov 27)
+
+Work stopped part-way at the owner's request (budget). Nothing in this part has been accepted yet: no test head was redrawn and no check below has been run against the new pipeline end to end.
+
+**Reference approach chosen: Blender's Cycles via the `bpy` wheel**, rendering the studio's own posed MakeHuman mesh (CC0) with the same camera and light as `scene`. Why:
+- `bpy` 5.3 is on PyPI for this Python (cp313) and installs from the sandbox's pip allowlist. It runs in its own venv (`~/.cache/teodor/bpy-venv`), so the studio's numpy stays untouched and the oil-v7 regression is unaffected. Licence: GPL; the studio never imports it. `photoreal_bpy.py` runs as a separate process and outputs are not covered.
+- On CPU: a 600 × 800 frame at 24 samples takes about 55 s; 1200 × 1600 at 32 samples about 5 min. A full 2400 × 3200 frame at 48 samples is estimated at 25-30 min; it was stopped before it finished.
+- Cycles gives what the z-buffer can't: random-walk subsurface scattering with Jensen et al. 2001's measured skin (mean free path 3.67 / 1.37 / 0.68 mm), a dielectric skin of index 1.38, Chiang hair BSDF strands, a refracting cornea, and depth of field.
+- Rejected:
+  - Mitsuba 3: BSD and on pip, but it has no skin BSSRDF and no hair BSDF.
+  - Head scans: any CC0 scan of a real person is identifiable (rule 5).
+  - CC0 texture maps: none was found reachable for skin. The skin detail is procedural instead.
+
+**Done (code, committed as WIP):**
+- `studio/v8/photoreal.py`:
+  - exports the posed mesh with per-vertex attributes in rest coordinates (T-zone, lips, beard, blood, periorbital, wet lid margins);
+  - grows strands in numpy: about 80-90k scalp hairs inside `figure.hair_part`'s mass with a thinning hairline, plus brows, lashes on the lid margins, and stubble;
+  - sizes the eyeball to the lid margins (MakeHuman's helper is 15 mm and passes through the lids);
+  - tone-maps with an ACES fit at an auto exposure;
+  - caches renders (`~/.cache/teodor/cycles`);
+  - projects the pupils into `<canvas>_structure.json`.
+- `studio/v8/photoreal_bpy.py`:
+  - skin shader: pores as a 3D Voronoi cut by the surface, sized for 30-45 per cm², ridged-noise furrows, forehead lines, crow's feet and lip lines;
+  - mottling, moles and beard follicles;
+  - iris and sclera shader with a recessed iris under a glass cornea (Gullstrand geometry);
+  - a coverage pass for the hair mask.
+- `scene` takes `"renderer": "cycles"` and corrects the hair mask from the render's coverage. `detail.scene_crop` renders details with Cycles at the canvas's exposure. That is the suspected cause of gap 6: the detail was drawn from a different picture than its surroundings.
+- Test scene: `docs/gallery/test_head_2x.json`.
+- **Darks (gap 4).** Research found the floor is physical:
+  - matt papers rarely exceed density 1.6, which is about L* 18 (SWPP, "Which surface, matt or gloss");
+  - glossy media reach L* 3.1 (Epson's FAQ);
+  - the studio's charcoal cycle already reaches 19.4 median and 18.5 at its darkest.
+
+  So L* 3 can't be drawn on a matte sheet (rule 6 flag). What was built instead:
+  - `Graphite.FLOOR_L` = 19;
+  - a new `toneref [floor] [knee]` command that maps the schema into the floor-to-paper range with a print-like toe, so the darks keep their separation instead of clipping.
+- **Patchiness (gap 2), the probable cause.** Re-examining the old test head showed the cause wasn't a staircase in the transfer curve, which is smooth. The value bands thresholded the render's faint mottle into flat light and mid-grey islands. Built:
+  - a per-pixel target in dry media (`_stroke`), and `hatch` with `"target": "schema"` and `"angles"`: continuous tone at any number of crossing angles (gap 3);
+  - `value` regions and `within`/`minus` region combinators.
+- **Measures (gap 7)** in `eyes.py`:
+  - `ssim_scales`;
+  - `patchiness` (residual blotches over the reference's own structure at 2-4 mm): the old test head scores **0.30 and fails** the 0.2 bound, while a blurred, noisy copy of its reference scores 0.03;
+  - `highlight_match`: the old head's recall is 0.33 and precision 0.25, so it fails;
+  - `anisotropy` (stroke direction energy);
+  - `compare_fine` / `compare_verdicts`, now part of `report` for the face.
+
+  SSIM did not separate the old head at gallery scale, so its bounds are uncalibrated. `tools/analysis/reference_check.py` checks a reference against the close-up ruler, including the cheek patch.
+
+**Reference results so far** (1200 × 1600 half-size render, before the last skin changes): 8 of 14 ruler checks pass. Hair texture and coherence, face p1 and speculars pass. Face below L* 20 fails (1.8% against ≥ 3.9%; ambient light since lowered to 0.2). Face texture fails at 0.125-0.25 mm (too smooth) and 1-2 mm (too strong). The cheek patch wasn't measured: the pupils weren't yet in the structure file.
+
+Visual verdict: still clearly CG, though far closer to a photograph than the z-buffer render. What reads as CG:
+- the skin is too smooth, too uniform in colour and waxy;
+- the lips look rubbery;
+- the hair mass reads a little helmet-like at the hairline;
+- the shirt is a smooth blob.
+
+The eyes, the brows and the light read much better than in part 1.
+
+**In progress / half-built:**
+- `tools/analysis/test_head.py`: the 2× test head recipe (stages setup to finish), written but **never run**.
+- The full-resolution Cycles render was stopped.
+- The skin's micro-relief scales were just retuned. A debug render showed the earlier furrows were sub-pixel and averaged away, and the pores too sparse. The new values have not been rendered.
+
+**Next:**
+1. Render at full resolution and run `reference_check.py`. Tune the skin (colour variation, micro-relief, sheen) until the cheek patch passes at every scale.
+2. Run `test_head.py` and look at the drawing. Calibrate the SSIM and anisotropy bounds; for anisotropy, re-measure the skin boxes of the 12 NASA ruler photographs.
+3. Edges (gap 5): measure the drawing's edges against the reference's.
+4. Tile seams.
+5. Tests in `test_v8.py` for the target hatch, `toneref`, the value regions and the `compare_fine` measures; sync MANUAL and `manual/graphite.md`; experiments log.

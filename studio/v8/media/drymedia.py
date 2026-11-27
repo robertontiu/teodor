@@ -373,8 +373,16 @@ class DryTool:
         SL = np.zeros((h, w), np.float32) if sp.get("slide") else None
         P = self.color if sp.get("P") is None else np.asarray(sp["P"], np.float32)
         mono = bool(sp.get("mono"))
+        # a per-pixel value to work toward (`hatch` with "target": "schema"): the hand eases the pressure where the
+        # reference is light and stops each pixel at its own value, so a gradient is laid as a gradient, not in bands
+        tf = getattr(self, "target", None) if mono else None
+        if tf is not None:
+            Tm = tf[y0:y1, x0:x1]
+            yi = np.clip(ys.astype(np.int64), 0, tf.shape[0] - 1)
+            xi = np.clip(xs.astype(np.int64), 0, tf.shape[1] - 1)
+            t_s = float(np.median(tf[yi, xi]))
         if mono:
-            t, Pl = float(_lum(self.color)), float(_lum(P))
+            t, Pl = (t_s if tf is not None else float(_lum(self.color))), float(_lum(P))
             want = float(np.clip((t - self.pl) / (Pl - self.pl), 0, 1)) if abs(Pl - self.pl) > 1e-3 else 0.0
             pmul = 0.5 + 0.75 * want            # the hand presses as hard as the asked value needs
         else:
@@ -477,7 +485,12 @@ class DryTool:
             # peaks may go a little past the asked value; the area as a whole stops at it
             L = _lum(col); d = Pl - L
             sg = 1.0 if Pl < self.pl else -1.0
-            tp = t - sg * 0.12 * min(1.0, 4 * want)     # a value at the paper's own tone leaves (almost) nothing
+            if tf is not None:
+                t = Tm
+                want_px = np.clip((t - self.pl) / (Pl - self.pl), 0, 1) if abs(Pl - self.pl) > 1e-3 else 0.0 * t
+                tp = t - sg * 0.12 * np.minimum(1.0, 4 * want_px)
+            else:
+                tp = t - sg * 0.12 * min(1.0, 4 * want)     # a value at the paper's own tone leaves (almost) nothing
             ok = np.abs(d) > 1e-3
             fmax = np.clip(np.where(ok, (tp - L) / np.where(ok, d, 1), 0), 0, 1)
             f0 = f
@@ -1209,6 +1222,11 @@ class Graphite(DryMedium):
     # docs/styles/graphite-hyperrealism.md; graphite has little loose dust [S13], so wipe is the kneaded eraser alone
     glaze_role = "glaze"
     wipe_first = None
+    # the deepest value the sheet reaches as an area (L*): the darks-first charcoal cycle measured L* 19.4 median and
+    # 18.5 at its darkest 0.1% on vellum (docs/calibration/graphite-hyperrealism.md), at the physical limit of a matte
+    # surface (matt papers' maximum density "rarely gets above 1.6", SWPP; D 1.6 is L* 18). `toneref` maps a
+    # schema's values into [FLOOR_L, paper] so its darks keep their separation instead of clipping at the floor.
+    FLOOR_L = 19.0
     SUP = {"drawing": dict(desc="white drawing paper, medium tooth", tex="drawing", cap=0.9, grab=1.0, w=0.36),
            "toned": dict(desc="toned (grey-buff) drawing paper", tex="drawing", tone="#b9b2a4", cap=0.9, grab=1.0, w=0.36),
            "ingres": dict(desc="Ingres laid paper: laid lines show through the tone", tex="laid", cap=0.8, grab=0.95, w=0.22, relief=1.2),

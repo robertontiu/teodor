@@ -1243,6 +1243,35 @@ class Scene:
         return out, entries
 
 
+def _cycles_hair_masks(mk, entries, hair):
+    """The hair as Cycles drew it (strands, not the z-buffer's mass): the person's hair mask becomes the strands'
+    coverage, the other elements give those pixels up, and the scalp the z-buffer's mass covered but the strands
+    don't goes to the head."""
+    for e in entries:
+        if e.get("element") != "hair":
+            continue
+        owner = e["object"]
+        old = mk[e["key"]]
+        for e2 in entries:
+            if e2["object"] == owner and e2["element"] not in ("hair", "all"):
+                mk[e2["key"]] = mk[e2["key"]] & ~hair
+        hk = f"{owner}.head"
+        if hk in mk:
+            mk[hk] = mk[hk] | (old & ~hair)
+        mk[e["key"]] = hair.copy()
+        if f"{owner}.all" in mk:
+            mk[f"{owner}.all"] = mk[f"{owner}.all"] | hair
+        for e2 in entries:
+            if e2["object"] == owner and e2["key"] in mk:
+                m = mk[e2["key"]]
+                ys, xs = np.nonzero(m)
+                e2["pixels"] = int(m.sum())
+                e2["share"] = round(e2["pixels"] / m.size, 5)
+                if len(xs):
+                    e2["bbox"] = [int(xs.min()), int(ys.min()), int(xs.max()) + 1, int(ys.max()) + 1]
+                    e2["centroid"] = [round(float(xs.mean()), 1), round(float(ys.mean()), 1)]
+
+
 _PLANE_DIRS = None
 
 
@@ -1281,6 +1310,28 @@ def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 
         for w_ in ww:
             print("scene WARNING: " + w_)
     im = Image.fromarray(arr).resize(full, Image.LANCZOS if sc > 1 else Image.BICUBIC)
+    hair_cov = None
+    cyc_info = None
+    if spec.get("renderer") == "cycles":
+        # the photoreal reference (photoreal.py): the same meshes, camera and light, path-traced by Cycles at the
+        # canvas size; the z-buffer render above still gives the masks, the lens report and the droplets' structure
+        import photoreal
+        if not photoreal.supported(spec):
+            print("scene WARNING: the cycles renderer draws people and hands only; this scene has other objects, so the "
+                  "z-buffer render is kept", file=sys.stderr)
+        elif not photoreal.available():
+            print("scene WARNING: no Blender module for the cycles renderer (python3 tools/setup_photoreal.py); the "
+                  "z-buffer render is kept", file=sys.stderr)
+        else:
+            k_c = float(spec.get("cycles", {}).get("resolution", 1.0))
+            Wc, Hc = int(round(full[0] * k_c)), int(round(full[1] * k_c))
+            img_c, hair_cov, info = photoreal.render(scene, Wc, Hc, workdir=spec.get("cycles", {}).get("keep"))
+            cyc_info = {"ref_lum": info["ref_lum"]}
+            print(f"scene: cycles {Wc}x{Hc}, export {info['export_s']} s, render {info['render_s']} s")
+            im = Image.fromarray(img_c)
+            if (Wc, Hc) != tuple(full):
+                im = im.resize(full, Image.LANCZOS)
+                hair_cov = np.asarray(Image.fromarray((hair_cov * 255).astype(np.uint8)).resize(full, Image.BILINEAR)) / 255.0
     if overlay_svg:
         tmp = tempfile.mktemp(suffix=".png")
         subprocess.run(["rsvg-convert", "-w", str(full[0]), "-h", str(full[1]), "-o", tmp, overlay_svg], check=True)
@@ -1290,12 +1341,28 @@ def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 
     im.save(out_png)
     if spec.get("masks", True):
         mk, entries = scene.element_masks(full)
+        if hair_cov is not None:
+            _cycles_hair_masks(mk, entries, hair_cov > 0.5)
         m = re.match(r"(.*)_scene_v(\d+)\.png$", out_png)
         stem = m.group(1) if m else os.path.splitext(out_png)[0]
         np.savez_compressed(stem + "_elements.npz", **mk)
         k_ = full[0] / W
         drops = [dict(d, x=(d["x"] + 0.5) * k_ - 0.5, y=(d["y"] + 0.5) * k_ - 0.5, r=d["r"] * k_) for d in getattr(scene, "droplets2d", [])]
-        json.dump({"format": "teodor-structure/1", "size": list(full), "droplets": drops}, open(stem + "_structure.json", "w"), indent=1)
+        # the pupils on the canvas (people with eyes), for the reference check's cheek patch and the eye details
+        pups = []
+        try:
+            import photoreal
+            for nd in scene.meshes:
+                if "eye_id" in nd.mesh and "look" in nd.mesh:
+                    for P_, s_ in photoreal.pupils(nd.mesh):
+                        xy = photoreal.project(scene.cam, P_, full[0], full[1])[0]
+                        pups.append({"object": nd.owner, "side": s_, "x": round(float(xy[0]), 1), "y": round(float(xy[1]), 1)})
+        except Exception as e_:
+            print(f"scene: pupils not located ({e_})", file=sys.stderr)
+        stj = {"format": "teodor-structure/1", "size": list(full), "droplets": drops, "pupils": pups}
+        if cyc_info:
+            stj["cycles"] = cyc_info          # the exposure, so a detail's render matches the canvas's (detail.py)
+        json.dump(stj, open(stem + "_structure.json", "w"), indent=1)
         json.dump({"format": "teodor-elements/1", "image": os.path.basename(out_png), "scene": os.path.basename(path_json),
                    "size": list(full), "elements": entries}, open(stem + "_elements.json", "w"), indent=1)
     return out_png

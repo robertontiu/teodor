@@ -1,0 +1,88 @@
+{
+ "camera": {
+  "frame": {
+   "on": "person0.head",
+   "fill": 0.7,
+   "distance": 1.45,
+   "from": [
+    0.42,
+    0.06,
+    1.0
+   ]
+  }
+ },
+ "sun": {
+  "azimuth": 52,
+  "elevation": 32,
+  "color": "#fff4e6",
+  "intensity": 2.2,
+  "angle": 2.0
+ },
+ "sky": {
+  "zenith": "#c8ccd2",
+  "horizon": "#e4e0da"
+ },
+ "ambient": {
+  "sky": "#c4c8d0",
+  "ground": "#8a8078",
+  "intensity": 0.2
+ },
+ "ground": {
+  "enabled": false
+ },
+ "fog": {
+  "density": 0.0
+ },
+ "background": "#f7f6f2",
+ "renderer": "cycles",
+ "cycles": {
+  "samples": 48,
+  "fstop": 8
+ },
+ "objects": [
+  {
+   "type": "person",
+   "id": "person0",
+   "sex": "male",
+   "age": 45,
+   "build": "average",
+   "ancestry": {
+    "caucasian": 0.8,
+    "african": 0.1,
+    "asian": 0.1
+   },
+   "pos": [
+    0,
+    1.62,
+    0
+   ],
+   "anchor": "head",
+   "facing": 0,
+   "joints": {
+    "head": [
+     4,
+     0,
+     6
+    ]
+   },
+   "gaze": [
+    8,
+    2
+   ],
+   "skin": "#c89a80",
+   "beard": 0.45,
+   "hair": {
+    "style": "short",
+    "color": "#4a3a2c"
+   },
+   "expression": "neutral",
+   "clothes": [
+    {
+     "kind": "shirt",
+     "color": "#34363a",
+     "sleeves": "long"
+    }
+   ]
+  }
+ ]
+}
