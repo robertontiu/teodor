@@ -35,6 +35,11 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 
 0. **The technical push (from Nov 27, 2026).** The project's motto is *engineering creativity*: the creative side is judged acceptable, so the goal now is paintings as close as possible to what real painters produce.
    - **First:** fix the gaps in `docs/research/hyperrealism-gaps.md` against their acceptance tests, then redo round 19 ("Man and the Moon", graphite hyperrealism). The owner sets the target, the real style, and does not lower it; where a test fails, improve the engine.
+   - **Paused on Nov 27, 2026 (budget).**
+     - Part 1 of the fixes is done: measurement, charcoal darks, the portrait camera, the human render's micro-structure, `marks`, relate-back and tiles, and the 12-photo and hand rulers.
+     - The 2× test head, `docs/gallery/graphite_test_head_2x.jpg`, passed 9 of 18 checks but still looks far from the style. The owner saw it as patchy skin, and its reference render as game-like.
+     - Part 2 was under way when work paused: a photoreal reference of an invented person, patchiness, hatch texture, darks below L* 19, edges, seams, and perceptual checks.
+     - **To resume:** read "Fixes done" and "Part 2 status (paused Nov 27)" in `docs/research/hyperrealism-gaps.md`, continue part 2, and redraw the test head. Only when it passes, by look as well as by number, redo round 19.
    - **After the owner approves the redo:** take every recorded style in turn. Compare Teodor's output with public-domain or CC0 representative works, measure the technical gaps, and fix each. Compare against several works per style, not one, varied in subject, period and maker, so more gaps show up. Fix each with an acceptance test, the same way as the hyperrealism analysis.
 
 1. **Staging habits.** Round 14 broke palette, light and mood but kept one central figure in a field with a radial pull. The next brief should target those (several figures, no centre, an off-balance composition, landscape-like crops).
