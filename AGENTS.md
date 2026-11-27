@@ -7,7 +7,7 @@ This file holds only what every request needs. Read the rules, then the route fo
 ## Always-on rules (every agent, every request)
 
 1. **The artist is called Teodor, everywhere**, and every painting is signed "Teodor".
-2. **It must be a painting.** Every mark on the canvas goes through the studio's tools. Schemas and references can be built with any script, but nothing is pasted, composited, traced or flat-filled onto the canvas.
+2. **It must be a painting.** Every mark on the canvas goes through the studio's tools. Schemas and references can be built with any script, but nothing is pasted, composited, traced or flat-filled onto the canvas. A planner may propose mark paths from the painter's own invented reference; the painter chooses the families, the regions and the counts, and every mark is laid by a studio tool.
 3. **Styles and movements, never authors.** Only currents, schools and techniques are versioned. A request for a specific artist gets temporary research in `studio/styles.local/` (gitignored), used for that painting only.
 4. **No personal details in versioned files.** Anything personal the owner (Robert) shares is context for a brief, never content: not in briefs, journals, docs, commits, the site or handoff notes.
 5. **No likeness of real people, and no gore.** Shocking, satirical and dark themes are fine, painted from the inside.
