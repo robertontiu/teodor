@@ -1366,7 +1366,74 @@ def do_paintout(cv, it, felt, rng):
 # ---------------------------------------------------------------- elements (for the clarity measure)
 def load_elements(cv):
     ep = P("elements.json")
-    return json.load(open(ep)) if os.path.exists(ep) else []
+    d = json.load(open(ep)) if os.path.exists(ep) else []
+    # a scene render writes its own index to the same file ("format": "teodor-elements/1", masks in elements.npz);
+    # those are not declared regions (`fine_report` reads them)
+    return [] if isinstance(d, dict) else d
+
+
+def sheet_ppm(cv):
+    """Pixels per mm of the sheet: the canvas's stated scale, the medium's, times a detail's scale; None if unknown."""
+    import detail
+    p = detail.ppm_of(cv)
+    if p is None and getattr(cv.medium, "PPM", None):
+        p = float(cv.medium.PPM) * float(getattr(cv, "px_scale", 1.0))
+    return p
+
+
+def fine_report(cv, img, target, crop=None, where="sheet"):
+    """The fine measures (eyes.measure_fine) of the whole sheet at its real resolution, or of a crop, and of the
+    scene's face and hair at subject scale; misses against the style's close-up ruler (`<style>-closeup` in
+    targets.json) come back as flags (docs/MANUAL.md, "report")."""
+    import eyes
+    ppm = sheet_ppm(cv)
+    note = ""
+    if ppm is None:
+        ppm, note = 5.0, " (the canvas states no scale: 5 px/mm assumed; `new --px-per-mm` sets it)"
+    a = np.asarray(img.convert("RGB"), np.float32) / 255
+    if crop:
+        x, y, w, h = (int(round(v)) for v in crop)
+        a = a[max(0, y):y + h, max(0, x):x + w]
+        where = f"crop {x},{y} {w}x{h}"
+    f = eyes.measure_fine(a, ppm)
+    lines = eyes.format_fine(f, target, where + note)
+    flags = []
+    els = {}
+    ep, jp = P("elements.npz"), P("elements.json")
+    if not crop and os.path.exists(ep) and os.path.exists(jp):
+        idx = json.load(open(jp))
+        if isinstance(idx, dict):
+            npz = np.load(ep)
+            for e in idx.get("elements", []):
+                k, ps = e["key"], e.get("px_per_subject_mm")
+                if e["element"] in ("face", "hair") and ps and k in npz.files:
+                    m = np.asarray(Image.fromarray(npz[k].astype(np.uint8) * 255).resize((cv.W, cv.H), Image.NEAREST)) > 127
+                    if m.sum() > 400:
+                        els[k] = (e["element"], m, ps * cv.W / idx["size"][0])
+    for k, (el, m, ps) in els.items():
+        fe = eyes.measure_fine(a, ps, mask=m, edges=False)
+        bs = ", ".join(f"{s} {v:.2f}" for s, v in fe["band_rms"].items() if v is not None)
+        if el == "face":
+            f["face_band_rms"] = fe["band_rms"]
+            f["face_specular_count_30"] = fe["specular_count_30"]
+            f["face_value_p1"], f["face_value_below20"] = fe["value_p1"], fe["value_below20"]
+            lines.append(f"  {k} at {ps:.1f} px per face-mm: p1 {fe['value_p1']:.0f}, below L* 20 {fe['value_below20']:.0%}, "
+                         f"speculars >= 30 L*: {fe['specular_count_30']}; texture (face-mm) {bs}")
+        else:
+            f["hair_band_rms"] = fe["band_rms"]
+            f["hair_coherence"] = eyes.coherence(eyes.lightness(a)[0], ps, m)
+            lines.append(f"  {k} at {ps:.1f} px per mm: texture {bs}; strand coherence {f['hair_coherence']:.2f}")
+    if target:
+        rows = eyes.fine_verdicts(f, target)
+        for k, label, v, b, kind, ok, advice in rows:
+            if not ok:
+                bound = (f">= {b:.3g}" if kind == "min" else f"<= {b:.3g}") if kind != "range" else \
+                    " to ".join(f"{x:.3g}" for x in b if x is not None)
+                flags.append(f"{advice} ({label} {v:.3g}, close-up ruler {bound})")
+        n = target.get("_n", "?")
+        lines.append(f"  against the close-up ruler ({n} photograph{'s' if n != 1 else ''}{', PROVISIONAL' if target.get('_provisional') else ''}): "
+                     f"{sum(r[5] for r in rows)} of {len(rows)} within bounds")
+    return lines, flags, f
 
 
 def do_element(cv, it, felt, rng):
@@ -2207,7 +2274,10 @@ if __name__ == "__main__":
         look(cv, sys.argv[2], sys.argv[3:]); sys.exit()
     if cmd == "report":
         import eyes
-        rargs = [a for a in sys.argv[2:] if a != "finish"]
+        rargs = [a for a in sys.argv[2:] if a not in ("finish", "ref")]
+        crop = None
+        if "--crop" in rargs:
+            i = rargs.index("--crop"); crop = [float(v) for v in rargs[i + 1:i + 5]]; del rargs[i:i + 5]
         style = rargs[0] if rargs else cv.meta.get("style")
         tp = next((t for t in (os.path.join(D, "targets.json"), os.path.join(D, "..", "targets.json")) if os.path.exists(t)), "")
         targets = json.load(open(tp)) if os.path.exists(tp) else {}
@@ -2215,21 +2285,32 @@ if __name__ == "__main__":
         sp = next((t for t in (os.path.join(D, "styles.json"), os.path.join(D, "..", "styles.json")) if os.path.exists(t)), "")
         styles = json.load(open(sp)) if sp else {}
         img = cv.render()
+        on_ref = "ref" in sys.argv[2:]
+        if on_ref:                 # `report ref`: the same measures on the schema, before a mark is laid (G10)
+            if cv.ref is None:
+                sys.exit("report ref needs a schema (ref or scene) first.")
+            img = Image.fromarray((np.clip(cv.ref, 0, 1) * 255).astype(np.uint8))
         m = eyes.measure(img)
         m.update(eyes.mark_stats(img))
         txt = eyes.format_report(m, target, style if target else (f"{style} (no measured target yet)" if style else None))
+        if on_ref:
+            txt = txt.replace("REPORT", "REPORT on the SCHEMA", 1)
         n_, vs, vm = eyes.value_masses(eyes.load(img))
         extra = [f"value masses (squinted): {n_}: " + ", ".join(f"L* {a:.0f} {b:.0%}" for a, b in zip(vm, vs)),
                  f"marks: orientation coherence {m['orient_coherence']:.2f}, direction spread {m['orient_spread']:.2f}, "
                  f"mark scale {m['mark_scale']:.1f} px (spread {m['mark_scale_spread']:.2f}), edge variety {m['edge_variety']:.2f}"]
         flags = []
-        if m["orient_spread"] < 0.25:
+        if m["orient_spread"] < 0.25 and not on_ref:
             flags.append("strokes run at nearly one angle everywhere: let them follow the form (match follow, model)")
         foc = focus_of(cv, {}) or (m["focal_x"] * cv.W, m["focal_y"] * cv.H)
-        l2, f2 = roles_report(cv, styles.get(style) if style else None, foc)
-        extra += l2; flags += f2
+        if not on_ref:
+            l2, f2 = roles_report(cv, styles.get(style) if style else None, foc)
+            extra += l2; flags += f2
         l3, f3 = clarity_report(cv, img)
         extra += l3; flags += f3
+        l5, f5, fine = fine_report(cv, img, targets.get(f"{style}-closeup") if style else None, crop, "schema" if on_ref else "sheet")
+        extra += l5; flags += f5
+        m["fine"] = fine
         if "finish" in sys.argv[2:]:
             l4, f4 = finish_report(cv, m, target)
             extra += ["FINISHING CHECK:"] + ["  " + l for l in l4]
@@ -2246,7 +2327,7 @@ if __name__ == "__main__":
             else:
                 out[fi] += "; " + "; ".join(flags)
         print("\n".join(out))
-        json.dump(m, open(P("report.json"), "w"), indent=1)
+        json.dump(m, open(P("report_ref.json" if on_ref else "report.json"), "w"), indent=1)
         sys.exit()
     if cmd == "simplify":
         a = sys.argv[2:]

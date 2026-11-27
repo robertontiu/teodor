@@ -225,12 +225,85 @@ def detail_pass(only=None):
     return ok
 
 
+def fine_measures():
+    """G10 (docs/research/hyperrealism-gaps.md): eyes.measure_fine reads synthetic images right (value tails, a
+    known edge rise, counted glints, fog, scale-correct bands); `report` and `report ref` print the fine measures at
+    the sheet's resolution and flag missing darks against the close-up ruler; the ruler's bounds are rebuilt from
+    stored photographs."""
+    sys.path.insert(0, HERE)
+    import eyes
+    from scipy.ndimage import gaussian_filter
+    ok = True
+    try:
+        # value tails and fog: a flat L* 50 field is all fog, no darks
+        f = eyes.measure_fine(np.full((400, 400), 50.0, np.float32), 5.0)
+        assert f["flat_midtone_share"] > 0.99 and f["value_below20"] == 0 and abs(f["value_p50"] - 50) < 1e-3
+        # an edge blurred by sigma 1 mm: the 10-90% rise is 2.563 sigma
+        L = np.where(np.arange(600)[None, :] < 300, 20.0, 80.0).astype(np.float32).repeat(200, 0)
+        f = eyes.measure_fine(gaussian_filter(L, 5.0), 5.0)
+        assert abs(f["edge_median_mm"] - 2.563) < 0.15, f["edge_median_mm"]
+        # five glints 1 mm across, 40 L* over a mid grey; and a 6 mm bright disc that is not a glint
+        L = np.full((400, 400), 50.0, np.float32)
+        yy, xx = np.mgrid[0:400, 0:400]
+        for cx in (50, 120, 190, 260, 330):
+            L[(yy - 80) ** 2 + (xx - cx) ** 2 <= 2.5 ** 2] = 90
+        L[(yy - 300) ** 2 + (xx - 200) ** 2 <= 15 ** 2] = 90
+        f = eyes.measure_fine(L, 5.0)
+        assert f["specular_count"] == 5 and f["specular_count_30"] == 5, f
+        # the same texture at twice the pixels per mm measures the same in mm
+        rng = np.random.default_rng(1)
+        base = gaussian_filter(rng.standard_normal((300, 300)).astype(np.float32), 2.0) * 20 + 50
+        big = np.kron(base, np.ones((2, 2), np.float32))
+        b1, b2 = eyes.band_energy(base, 3.0), eyes.band_energy(big, 6.0)
+        assert all(abs(b1[s] - b2[s]) / b1[s] < 0.15 for s in (0.5, 1.0, 2.0)), (b1, b2)
+        assert b1[0.125] is None and b2[0.125] is not None      # finer than half a pixel: not measured
+        # the close-up ruler's bounds from stored photographs
+        sys.path.insert(0, os.path.join(HERE, "..", "..", "tools"))
+        import measure_targets as mt
+        t = mt.closeup_build([{"measures": {"value_below20": 0.2, "skin_band_rms": {"0.5": 1.0}}},
+                              {"measures": {"value_below20": 0.1, "skin_band_rms": {"0.5": 0.6}}}])
+        assert abs(t["value_below20"]["min"] - 0.09) < 1e-6 and t["value_below20"]["n"] == 2
+        assert abs(t["skin_band_rms"]["0.5"]["min"] - 0.52) < 1e-6 and abs(t["skin_band_rms"]["0.5"]["max"] - 1.08) < 1e-6
+        # report and report ref on a graphite sheet, with the style's close-up ruler beside the studio
+        with tempfile.TemporaryDirectory() as w:
+            env = dict(os.environ, CANVAS="t")
+            run(HERE, w, "graphite", "vellum", [], [])
+            shutil.copy(os.path.join(HERE, "..", "targets.json"), w)
+            py = ["python3", os.path.join(w, "studio.py")]
+            subprocess.run(py + ["new", "#f7f6f2", "600", "800", "--medium", "graphite", "--support", "vellum",
+                                 "--style", "graphite-hyperrealism"], check=True, env=env, capture_output=True)
+            subprocess.run(py + ["ref", schema(w)], check=True, env=env, capture_output=True)
+            r = subprocess.run(py + ["report"], env=env, capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr[-400:]
+            assert "fine (sheet, at 5.00 px/mm)" in r.stdout and "the darks are missing" in r.stdout, r.stdout[-800:]
+            assert "fine" in json.load(open(os.path.join(w, "t_report.json")))
+            r = subprocess.run(py + ["report", "ref"], env=env, capture_output=True, text=True)
+            assert r.returncode == 0 and "REPORT on the SCHEMA" in r.stdout and "fine (schema" in r.stdout, r.stderr[-400:]
+            r = subprocess.run(py + ["report", "--crop", "100", "100", "200", "200"], env=env, capture_output=True, text=True)
+            assert r.returncode == 0 and "fine (crop 100,100 200x200" in r.stdout, r.stderr[-400:]
+        print("fine measures (G10): ok")
+    except Exception as e:
+        ok = False
+        print(f"fine measures (G10): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures}
+
+
 if __name__ == "__main__":
-    # python3 test_v8.py [--only medium1,medium2]   (--only skips the v7 regression)
+    # python3 test_v8.py [--only medium1,medium2] [--tests fine,...]
+    #   --only skips the v7 regression; --tests runs only the named extra tests (and nothing else)
+    if "--tests" in sys.argv:
+        names = sys.argv[sys.argv.index("--tests") + 1].split(",")
+        res = [EXTRA[n]() for n in names]
+        print("PASS" if all(res) else "FAIL")
+        sys.exit(0 if all(res) else 1)
     only = sys.argv[sys.argv.index("--only") + 1].split(",") if "--only" in sys.argv else None
     r1 = oil_matches_v7() if not only else True
     r2 = every_medium_runs(only)
     r3 = v8_intentions(only)
     r4 = detail_pass(only)
-    print("PASS" if (r1 and r2 and r3 and r4) else "FAIL")
-    sys.exit(0 if (r1 and r2 and r3 and r4) else 1)
+    r5 = all(t() for t in EXTRA.values()) if not only else True
+    print("PASS" if (r1 and r2 and r3 and r4 and r5) else "FAIL")
+    sys.exit(0 if (r1 and r2 and r3 and r4 and r5) else 1)

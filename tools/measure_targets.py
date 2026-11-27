@@ -17,6 +17,8 @@ How it works:
   python3 tools/measure_targets.py index-csv [--per-rule 250]   # Drawings and Prints candidates via MetObjects.csv
   python3 tools/measure_targets.py index-cma [style ...]        # Cleveland Museum of Art candidates (CMA_QUERIES)
   python3 tools/measure_targets.py measure [style ...] [--n 60] [--parts]
+  python3 tools/measure_targets.py closeup add <photo> --id ... --source ... --licence ... (--px-per-mm | --ipd-px)
+                                                   [--face/--skin/--hair x,y,w,h]   # a close-up ruler (see "close-up rulers")
 
 Department 9 (Drawings and Prints, ~186,000 objects) is too large to sample at random for rare groups such as
 pen-and-ink illustration drawings, so `index-csv` reads The Met's Open Access CSV (MetObjects.csv from
@@ -375,8 +377,156 @@ def measure_style(sid, n, recs):
     return t, len(pool)
 
 
+# ---------------------------------------------------------------- close-up rulers (fine measures, subject-mm)
+# A hyperrealist draws from one high-resolution close-up, so a close-up style needs a second ruler measured at the
+# photograph's own resolution and in millimetres of the subject (docs/research/hyperrealism-gaps.md, G10):
+#   python3 tools/measure_targets.py closeup add <photo> --style graphite-hyperrealism --id <id> --source <url>
+#       --licence "<licence and its evidence>" (--px-per-mm P | --ipd-px D [--ipd-mm 64])
+#       [--face x,y,w,h] [--skin x,y,w,h] [--hair x,y,w,h] [--sheet-px-per-mm 5] [--note "..."]
+#   python3 tools/measure_targets.py closeup list|drop <id> [--style ...]
+# Only openly licensed photographs (public domain or CC0), and never a photograph's pixels: each `add` measures the
+# photograph (eyes.measure_fine), stores the statistics with its provenance in
+# studio/targets.parts/<style>-closeup.json, rebuilds the bounds from every photograph stored, and merges the entry
+# into studio/targets.json. Delete the photograph afterwards. A photograph of a real person is measured, never shown,
+# published or used as a reference (AGENTS.md rule 5).
+# Whole-frame keys are measured as if the photograph were printed at --sheet-px-per-mm (the studio's 5 px/mm sheet):
+# that is the drawing that copies it. Subject keys (face, skin, hair) use the subject's own px per mm: give it, or
+# the pupil distance in px (adult mean interpupillary distance about 64 mm: Dodgson 2004, "Variation and extrema of
+# human interpupillary distance", 61.7-64.0 mm means by sex).
+# Bounds from the photographs' mean (BOUND_RULES): judgements from the gaps doc's acceptance tests, the same rule
+# however many photographs there are; sd and n are stored beside them so the rule can be revisited at n >= 10.
+BOUND_RULES = {
+    "value_below20": ("min", lambda m: 0.6 * m),
+    "value_below30": ("min", lambda m: 0.6 * m),
+    "value_p1": ("max", lambda m: m + 10.0),
+    "value_p5": ("max", lambda m: m + 12.0),
+    "value_p95": ("min", lambda m: m - 10.0),
+    "flat_midtone_share": ("max", lambda m: max(0.05, 2.0 * m)),
+    "edge_p10_mm": ("max", lambda m: max(0.3, 1.5 * m)),
+    "face_specular_count_30": ("min", lambda m: max(1, math.ceil(0.75 * m))),
+    "face_value_p1": ("max", lambda m: m + 10.0),
+    "face_value_below20": ("min", lambda m: 0.3 * m),
+    "hair_coherence": ("min", lambda m: min(0.5, m - 0.05)),
+}
+BAND_RULES = {"face_band_rms": (0.65, 1.35), "skin_band_rms": (0.65, 1.35), "hair_band_rms": (0.7, None)}
+import math  # noqa: E402
+
+
+def _box(s):
+    return tuple(int(v) for v in s.split(",")) if s else None
+
+
+def closeup_measure(path, ppm_subject, sheet_ppm=5.0, face=None, skin=None, hair=None):
+    L, f = eyes.lightness(path)
+    if f != 1:
+        sys.exit("closeup: the photograph is larger than eyes.FINE_MAX_PX; crop it to the subject first")
+    m = {}
+    whole = eyes.measure_fine(L, sheet_ppm)
+    for k in ("value_below20", "value_below30", "value_p1", "value_p5", "value_p95", "flat_midtone_share", "edge_p10_mm"):
+        m[k] = whole.get(k)
+    m["sheet_band_rms"] = whole["band_rms"]
+
+    def crop(b):
+        x, y, w, h = b
+        return L[y:y + h, x:x + w]
+    if face:
+        fm = eyes.measure_fine(crop(face), ppm_subject)
+        m["face_band_rms"] = fm["band_rms"]
+        m["face_specular_count_30"] = fm["specular_count_30"]
+        m["face_specular_max"] = fm["specular_max_prominence"]
+        m["face_value_p1"] = fm["value_p1"]
+        m["face_value_below20"] = fm["value_below20"]
+    if skin:
+        m["skin_band_rms"] = eyes.band_energy(crop(skin), ppm_subject)
+        m["skin_band_rms"] = {str(k): (round(v, 3) if v is not None else None) for k, v in m["skin_band_rms"].items()}
+    if hair:
+        hb = eyes.band_energy(crop(hair), ppm_subject)
+        m["hair_band_rms"] = {str(k): (round(v, 3) if v is not None else None) for k, v in hb.items()}
+        m["hair_coherence"] = round(eyes.coherence(crop(hair), ppm_subject, sigma_mm=0.5), 4)
+    return m
+
+
+def closeup_build(photos):
+    """The ruler from every stored photograph: mean, sd, n and the bound per key."""
+    t = {}
+    for k, (kind, rule) in BOUND_RULES.items():
+        v = np.array([p["measures"][k] for p in photos if p["measures"].get(k) is not None], float)
+        if len(v):
+            t[k] = {"mean": round(float(v.mean()), 4), "sd": round(float(v.std()), 4), "n": int(len(v)), kind: round(float(rule(v.mean())), 4)}
+    for k, (lo, hi) in BAND_RULES.items():
+        rows = [p["measures"][k] for p in photos if p["measures"].get(k)]
+        if not rows:
+            continue
+        t[k] = {}
+        for s in rows[0]:
+            v = np.array([r[s] for r in rows if r.get(s) is not None], float)
+            if not len(v):
+                continue
+            mu = float(v.mean())
+            e = {"mean": round(mu, 4), "sd": round(float(v.std()), 4), "n": int(len(v)), "min": round(lo * mu, 4)}
+            if hi:
+                e["max"] = round(hi * mu, 4)
+            t[k][s] = e
+    return t
+
+
+def closeup(argv):
+    def opt(name, default=None):
+        if name in argv:
+            i = argv.index(name); v = argv[i + 1]; del argv[i:i + 2]; return v
+        return default
+    style = opt("--style", "graphite-hyperrealism")
+    key = f"{style}-closeup"
+    pp = os.path.join(ROOT, "studio", "targets.parts", f"{key}.json")
+    cur = json.load(open(pp))[key] if os.path.exists(pp) else {"_photos": []}
+    sub = argv[0] if argv else "list"
+    if sub == "list":
+        for p in cur["_photos"]:
+            print(p["id"], p["source"], p.get("px_per_subject_mm"))
+        return
+    if sub == "drop":
+        cur["_photos"] = [p for p in cur["_photos"] if p["id"] != argv[1]]
+    elif sub == "add":
+        path = argv[1]
+        pid, src, lic = opt("--id"), opt("--source"), opt("--licence")
+        if not (pid and src and lic):
+            sys.exit("closeup add needs --id, --source and --licence (public domain or CC0 only, with its evidence)")
+        ppm = opt("--px-per-mm")
+        ipd = opt("--ipd-px")
+        if ppm is None and ipd is None:
+            sys.exit("closeup add needs the subject's scale: --px-per-mm or --ipd-px")
+        ppm = float(ppm) if ppm else float(ipd) / float(opt("--ipd-mm", "64"))
+        boxes = {k: _box(opt("--" + k)) for k in ("face", "skin", "hair")}
+        meas = closeup_measure(path, ppm, float(opt("--sheet-px-per-mm", "5")), **boxes)
+        cur["_photos"] = [p for p in cur["_photos"] if p["id"] != pid]
+        cur["_photos"].append({"id": pid, "source": src, "licence": lic, "px_per_subject_mm": round(ppm, 3),
+                               "boxes": {k: v for k, v in boxes.items() if v}, "note": opt("--note", ""),
+                               "measured": time.strftime("%Y-%m-%d"), "measures": meas})
+    else:
+        sys.exit("closeup add|list|drop")
+    n = len(cur["_photos"])
+    entry = {"_n": n, "_provisional": n < 10,
+             "_about": (f"Close-up ruler for {style}: fine measures (eyes.measure_fine) of openly licensed close-up photographs at "
+                        "their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). "
+                        "PROVISIONAL until at least 10 photographs: bounds come from BOUND_RULES in tools/measure_targets.py "
+                        "(judgements from docs/research/hyperrealism-gaps.md), applied to the photographs' mean."),
+             "_measured": time.strftime("%Y-%m-%d"), "_photos": cur["_photos"]}
+    entry.update(closeup_build(cur["_photos"]))
+    os.makedirs(os.path.dirname(pp), exist_ok=True)
+    json.dump({key: entry}, open(pp + ".tmp", "w"), indent=1)
+    os.replace(pp + ".tmp", pp)
+    out = os.path.join(ROOT, "studio", "targets.json")
+    targets = json.load(open(out)) if os.path.exists(out) else {}
+    targets[key] = entry
+    json.dump(targets, open(out + ".tmp", "w"), indent=1)
+    os.replace(out + ".tmp", out)
+    print(json.dumps({k: v for k, v in entry.items() if k != "_photos"}, indent=1))
+
+
 if __name__ == "__main__":
     argv = sys.argv[1:]
+    if argv and argv[0] == "closeup":
+        closeup(argv[1:]); sys.exit()
 
     def opt(name, default):
         if name in argv:

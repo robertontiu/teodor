@@ -1,0 +1,276 @@
+{
+ "graphite-hyperrealism-closeup": {
+  "_n": 1,
+  "_provisional": true,
+  "_about": "Close-up ruler for graphite-hyperrealism: fine measures (eyes.measure_fine) of openly licensed close-up photographs at their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). PROVISIONAL until at least 10 photographs: bounds come from BOUND_RULES in tools/measure_targets.py (judgements from docs/research/hyperrealism-gaps.md), applied to the photographs' mean.",
+  "_measured": "2026-11-27",
+  "_photos": [
+   {
+    "id": "nasa-jsc2003e41874",
+    "source": "https://images.nasa.gov/details/jsc2003e41874",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines), photographer credited as NASA",
+    "px_per_subject_mm": 4.406,
+    "boxes": {
+     "face": [
+      700,
+      850,
+      700,
+      600
+     ],
+     "skin": [
+      1000,
+      1050,
+      110,
+      110
+     ],
+     "hair": [
+      1050,
+      450,
+      300,
+      110
+     ]
+    },
+    "note": "studio head-and-shoulders portrait under soft studio light, 2400 x 3000 px; a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "value_below20": 0.1666,
+     "value_below30": 0.3956,
+     "value_p1": 0.8412,
+     "value_p5": 5.4745,
+     "value_p95": 69.5526,
+     "flat_midtone_share": 0.0237,
+     "edge_p10_mm": 1.1,
+     "sheet_band_rms": {
+      "0.125": 0.516,
+      "0.25": 1.033,
+      "0.5": 1.717,
+      "1.0": 2.523,
+      "2.0": 3.048,
+      "4.0": 3.502
+     },
+     "face_band_rms": {
+      "0.125": 0.323,
+      "0.25": 0.67,
+      "0.5": 1.304,
+      "1.0": 2.148,
+      "2.0": 3.124,
+      "4.0": 3.781
+     },
+     "face_specular_count_30": 3,
+     "face_specular_max": 43.9956,
+     "face_value_p1": 1.2727,
+     "face_value_below20": 0.0744,
+     "skin_band_rms": {
+      "0.125": 0.221,
+      "0.25": 0.376,
+      "0.5": 0.616,
+      "1.0": 1.031,
+      "2.0": 1.753,
+      "4.0": 1.706
+     },
+     "hair_band_rms": {
+      "0.125": 0.545,
+      "0.25": 0.98,
+      "0.5": 1.24,
+      "1.0": 1.146,
+      "2.0": 1.091,
+      "4.0": 2.384
+     },
+     "hair_coherence": 0.6786
+    }
+   }
+  ],
+  "value_below20": {
+   "mean": 0.1666,
+   "sd": 0.0,
+   "n": 1,
+   "min": 0.1
+  },
+  "value_below30": {
+   "mean": 0.3956,
+   "sd": 0.0,
+   "n": 1,
+   "min": 0.2374
+  },
+  "value_p1": {
+   "mean": 0.8412,
+   "sd": 0.0,
+   "n": 1,
+   "max": 10.8412
+  },
+  "value_p5": {
+   "mean": 5.4745,
+   "sd": 0.0,
+   "n": 1,
+   "max": 17.4745
+  },
+  "value_p95": {
+   "mean": 69.5526,
+   "sd": 0.0,
+   "n": 1,
+   "min": 59.5526
+  },
+  "flat_midtone_share": {
+   "mean": 0.0237,
+   "sd": 0.0,
+   "n": 1,
+   "max": 0.05
+  },
+  "edge_p10_mm": {
+   "mean": 1.1,
+   "sd": 0.0,
+   "n": 1,
+   "max": 1.65
+  },
+  "face_specular_count_30": {
+   "mean": 3.0,
+   "sd": 0.0,
+   "n": 1,
+   "min": 3.0
+  },
+  "face_value_p1": {
+   "mean": 1.2727,
+   "sd": 0.0,
+   "n": 1,
+   "max": 11.2727
+  },
+  "face_value_below20": {
+   "mean": 0.0744,
+   "sd": 0.0,
+   "n": 1,
+   "min": 0.0223
+  },
+  "hair_coherence": {
+   "mean": 0.6786,
+   "sd": 0.0,
+   "n": 1,
+   "min": 0.5
+  },
+  "face_band_rms": {
+   "0.125": {
+    "mean": 0.323,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.21,
+    "max": 0.4361
+   },
+   "0.25": {
+    "mean": 0.67,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.4355,
+    "max": 0.9045
+   },
+   "0.5": {
+    "mean": 1.304,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.8476,
+    "max": 1.7604
+   },
+   "1.0": {
+    "mean": 2.148,
+    "sd": 0.0,
+    "n": 1,
+    "min": 1.3962,
+    "max": 2.8998
+   },
+   "2.0": {
+    "mean": 3.124,
+    "sd": 0.0,
+    "n": 1,
+    "min": 2.0306,
+    "max": 4.2174
+   },
+   "4.0": {
+    "mean": 3.781,
+    "sd": 0.0,
+    "n": 1,
+    "min": 2.4577,
+    "max": 5.1044
+   }
+  },
+  "skin_band_rms": {
+   "0.125": {
+    "mean": 0.221,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.1436,
+    "max": 0.2984
+   },
+   "0.25": {
+    "mean": 0.376,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.2444,
+    "max": 0.5076
+   },
+   "0.5": {
+    "mean": 0.616,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.4004,
+    "max": 0.8316
+   },
+   "1.0": {
+    "mean": 1.031,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.6702,
+    "max": 1.3919
+   },
+   "2.0": {
+    "mean": 1.753,
+    "sd": 0.0,
+    "n": 1,
+    "min": 1.1395,
+    "max": 2.3666
+   },
+   "4.0": {
+    "mean": 1.706,
+    "sd": 0.0,
+    "n": 1,
+    "min": 1.1089,
+    "max": 2.3031
+   }
+  },
+  "hair_band_rms": {
+   "0.125": {
+    "mean": 0.545,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.3815
+   },
+   "0.25": {
+    "mean": 0.98,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.686
+   },
+   "0.5": {
+    "mean": 1.24,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.868
+   },
+   "1.0": {
+    "mean": 1.146,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.8022
+   },
+   "2.0": {
+    "mean": 1.091,
+    "sd": 0.0,
+    "n": 1,
+    "min": 0.7637
+   },
+   "4.0": {
+    "mean": 2.384,
+    "sd": 0.0,
+    "n": 1,
+    "min": 1.6688
+   }
+  }
+ }
+}

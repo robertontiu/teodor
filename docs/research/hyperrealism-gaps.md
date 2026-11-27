@@ -444,3 +444,15 @@ Teodor chooses the feeling and the picture. These are the style's conventions th
 3. **Water and moonlight.** A face lifted from water at night, droplets with rims and glints, the moon as the single light source and repeated in every droplet's glint. This plays to the examples' strengths (droplets, darks, speculars) but is low-key, so it depends on G2's darks.
 
 Whichever he chooses, the schema has to pass G3's and G4's acceptance tests, and a fresh critic has to read the intended feeling from the schema's thumbnail, before the first mark.
+
+---
+
+## Fixes done (engine), with their acceptance results
+
+### G10, measurement (2026-11-27)
+
+- `eyes.measure_fine` reads an image at its own resolution (up to 16 MP; larger sheets are halved and say so) and measures in mm: p1/p5/p95, the shares below L* 20, 25, 30 and above 92, texture energy by scale (0.125-4 mm), speculars (count, count ≥ 30 L*, largest prominence), the 10-90% edge-rise distribution, flat mid-tone share, and structure-tensor coherence. The methods are `tools/analysis/hyperreal_gaps.py`'s.
+- `report` prints them for the whole sheet at its scale, for the scene's face and hair at subject scale (the scene's element index now carries `px_per_subject_mm`), and for `--crop X Y W H`; `report ref` runs everything on the schema. Misses against the close-up ruler are **flags**. A full 2400 × 3200 sheet adds about 8 s.
+- `studio/targets.json` → `graphite-hyperrealism-closeup`, **provisional** (n = 1: the NASA portrait of section 0, re-fetched, measured and deleted). `tools/measure_targets.py closeup add|list|drop` adds more openly licensed photographs and rebuilds the bounds (rules in `BOUND_RULES`, judgements from this doc's acceptance tests).
+- Fixed on the way: after a `scene`, `report` read the scene's element index as declared regions and failed.
+- **Check:** round 19's final (`../teodor-work/19/final.png`) against the ruler: 5 flags (below L* 20 0.0% against ≥ 10%; below 30 0.2% against ≥ 24%; p1 39 against ≤ 11; p5 41 against ≤ 17; flat mid-tone 73% against ≤ 5%). It passes p95 and the edge p10 (1.2 mm against ≤ 1.65 mm: the soft-lit portrait's own p10 is 1.1 mm, so this bound is weak until sharper photographs join the ruler). Tests: `test_v8.py --tests fine`.

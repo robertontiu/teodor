@@ -895,6 +895,10 @@ class Scene:
                 e["centroid"] = [round(float(xs.mean()), 1), round(float(ys.mean()), 1)]
                 d = self.depth[m]
                 e["depth_m"] = round(float(np.median(d[np.isfinite(d)])), 3) if np.isfinite(d).any() else None
+                if e["depth_m"]:
+                    # the subject's scale on the canvas at that depth (on the axis): canvas px per mm of the subject,
+                    # so `report` measures a face's texture in face-mm
+                    e["px_per_subject_mm"] = round(self.cam[4] * (Hf / 2) / (e["depth_m"] * 1000), 3)
             out[e["key"]] = big
             entries.append(e)
         return out, entries

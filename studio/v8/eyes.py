@@ -19,6 +19,8 @@ Measures (see docs/MANUAL.md "Report" for how to read them):
   structure  the slope of the radial amplitude spectrum (natural scenes and many artworks fall near
              -1 to -1.4 in amplitude; steeper = smoother, flatter = noisier) and the focal point (centre
              of the strongest local contrast) with how concentrated contrast is around it.
+  fine       (measure_fine) the same image at its own resolution, in mm: value tails, near-black and bare paper,
+             texture energy by scale, speculars, edge sharpness, flat mid-tone (see "fine measures" below).
 Research basis: statistical image properties of artworks (Graham & Field 2007; Redies, Hasenstein &
 Denzler 2007; Redies, Brachmann & Wagemans 2017), value grouping and notan in studio practice,
 edge hierarchy in painting (docs/research/process.md).
@@ -352,6 +354,247 @@ def element_clarity(img, masks, ref_img=None):
                          weakened=bool(sc is not None and sc >= CLARITY_MIN and con < 0.5 * sc),
                          schema_contrast=sc)
     return out
+
+
+# ---------------------------------------------------------------- fine measures, at the sheet's real resolution
+# `measure` reads every image at 512 px on its long side: on a 48 x 64 cm sheet one measured pixel is 1.25 mm, so
+# pores, strands, lashes, glints and the edges of the focus are invisible to it (docs/research/hyperrealism-gaps.md,
+# G10). These measures read the image at its own resolution (up to FINE_MAX_PX pixels; a larger image is reduced by
+# a whole factor and the scale says so) and work in MILLIMETRES: of the sheet when px_per_mm is the sheet's, of the
+# subject (face-mm, hand-mm) when it is the subject's, so a photograph and a drawing of different pixel sizes are
+# compared at equal scale. The methods are tools/analysis/hyperreal_gaps.py's (round 19's gap analysis):
+#   value tails   p1, p5, p95, p99 and the shares below L* 20, 25 and 30 and above 92 (bare paper)
+#   bands         texture energy by scale: the RMS (L*) of a difference of Gaussians G(s) - G(2s), s in mm
+#                 (BAND_MM); a band finer than half a pixel is None (the pixels can't hold it)
+#   speculars     small bright blobs: a peak at least SPEC_PROM L* above its 2 mm surround, from 2 px up to
+#                 (SPEC_MM)^2 in area; the count, the count at >= 30 L*, per 1000 mm^2, and the largest prominence
+#   edges         the 10-90% rise (mm) of strong edges (contrast > EDGE_MIN L*), sampled along the gradient:
+#                 p10, median, p90, and the shares under 0.3 mm and over 2 mm
+#   flat midtone  the share of the image in L* 35-65 whose local standard deviation over FLAT_MM is under 1 L*
+#                 (fog: 73% of round 19's sheet, 2.4% of a studio portrait)
+#   coherence     structure-tensor orientation coherence at a scale in mm (hair strands run one way: >= 0.5)
+# Every threshold is a judgement (the gaps doc, section 0).
+FINE_MAX_PX = 16_000_000
+BAND_MM = (0.125, 0.25, 0.5, 1.0, 2.0, 4.0)
+SPEC_PROM, SPEC_MM, EDGE_MIN, FLAT_MM = 20.0, 2.0, 10.0, 5.0
+
+
+def lightness(img, max_px=FINE_MAX_PX):
+    """CIE L* of an image (path, PIL image, sRGB array 0..1, or an L* array) at its own resolution, and the
+    factor it was reduced by (1 unless it held more than max_px pixels)."""
+    if isinstance(img, np.ndarray) and img.ndim == 2:
+        L, f = img.astype(np.float32), 1
+    else:
+        if isinstance(img, str):
+            img = Image.open(img)
+        if isinstance(img, Image.Image):
+            img = np.asarray(img.convert("RGB"), np.float32) / 255
+        rgb = np.clip(np.asarray(img, np.float32), 0, 1)
+        c = np.where(rgb <= 0.04045, rgb / 12.92, ((rgb + 0.055) / 1.055) ** 2.4)
+        Y = c @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+        L = np.where(Y > 0.008856, 116 * np.cbrt(Y) - 16, 903.3 * Y).astype(np.float32)
+        f = 1
+    while L.size > max_px:
+        h, w = L.shape[0] // 2 * 2, L.shape[1] // 2 * 2
+        L = L[:h, :w].reshape(h // 2, 2, w // 2, 2).mean((1, 3))
+        f *= 2
+    return L, f
+
+
+def _inner(mask, m):
+    """The mask without a margin of m px (and without the image's border), so a filter's halo isn't measured."""
+    from scipy.ndimage import binary_erosion
+    out = np.zeros(mask.shape, bool)
+    m = int(max(1, m))
+    if min(mask.shape) <= 2 * m + 4:
+        return mask
+    out[m:-m, m:-m] = mask[m:-m, m:-m]
+    if not mask.all():
+        out &= binary_erosion(mask, iterations=min(m, 40))
+    return out
+
+
+def value_tails(L, mask=None):
+    v = L[mask] if mask is not None else L.ravel()
+    if v.size == 0:
+        return {}
+    p = np.percentile(v, [0.1, 1, 5, 50, 95, 99])
+    return dict(value_p01=float(p[0]), value_p1=float(p[1]), value_p5=float(p[2]), value_p50=float(p[3]),
+                value_p95=float(p[4]), value_p99=float(p[5]), value_below20=float((v < 20).mean()),
+                value_below25=float((v < 25).mean()), value_below30=float((v < 30).mean()), bare_paper_share=float((v > 92).mean()))
+
+
+def band_energy(L, px_per_mm, mask=None, scales=BAND_MM):
+    """{s_mm: RMS of G(s) - G(2s) in L*} inside the mask (less a 4-sigma margin); None where s < 0.5 px."""
+    out = {}
+    full = np.ones(L.shape, bool) if mask is None else mask
+    for s in scales:
+        sp = s * px_per_mm
+        if sp < 0.5:
+            out[s] = None
+            continue
+        inner = _inner(full, math.ceil(4 * sp))
+        if inner.sum() < 16:
+            out[s] = None
+            continue
+        b = gaussian_filter(L, sp) - gaussian_filter(L, 2 * sp)
+        out[s] = float(np.sqrt((b[inner] ** 2).mean()))
+    return out
+
+
+def specular_blobs(L, px_per_mm, mask=None, prominence=SPEC_PROM, max_mm=SPEC_MM):
+    """Small bright blobs (glints, catchlights, droplet highlights): peak >= prominence L* above the 2 mm
+    surround, 2 px to (max_mm)^2 in area. {count, count_30 (>= 30 L*), per_1000mm2, max_prominence}."""
+    from scipy.ndimage import label, maximum as nd_max
+    d = L - gaussian_filter(L, 2 * px_per_mm)
+    hi = d > prominence / 2
+    if mask is not None:
+        hi &= mask
+    lab, n = label(hi)
+    area_mm2 = (mask.sum() if mask is not None else L.size) / px_per_mm ** 2
+    if n == 0:
+        return dict(specular_count=0, specular_count_30=0, specular_per_1000mm2=0.0,
+                    specular_max_prominence=float(d[mask].max()) if mask is not None and mask.any() else float(d.max()))
+    peaks = np.asarray(nd_max(d, lab, np.arange(1, n + 1)))
+    sizes = np.bincount(lab.ravel())[1:]
+    ok = (peaks >= prominence) & (sizes >= 2) & (sizes <= max(2.0, (max_mm * px_per_mm) ** 2))
+    return dict(specular_count=int(ok.sum()), specular_count_30=int((ok & (peaks >= 30)).sum()),
+                specular_per_1000mm2=float(1000 * ok.sum() / max(area_mm2, 1e-9)),
+                specular_max_prominence=float(peaks[ok].max()) if ok.any() else float(peaks.max()))
+
+
+def edge_widths(L, px_per_mm, mask=None, n=4000, min_contrast=EDGE_MIN, seed=0):
+    """The 10-90% rise (mm) of strong edges, sampled along the gradient over +-max(6 px, 3 mm)."""
+    from scipy.ndimage import map_coordinates, maximum_filter
+    Ls = gaussian_filter(L, 0.5)
+    gy, gx = sobel(Ls, 0) / 8, sobel(Ls, 1) / 8
+    g = np.hypot(gx, gy)
+    peak = (g == maximum_filter(g, 3)) & (g > 1.0)
+    if mask is not None:
+        peak &= mask
+    ys, xs = np.nonzero(peak)
+    if len(ys) == 0:
+        return dict(edge_n=0)
+    rng = np.random.default_rng(seed)
+    if len(ys) > 4 * n:
+        k = rng.choice(len(ys), 4 * n, replace=False)
+        ys, xs = ys[k], xs[k]
+    R = max(6.0, 3.0 * px_per_mm)
+    t = np.arange(-R, R + 0.01, 0.25, dtype=np.float32)
+    ux, uy = gx[ys, xs] / (g[ys, xs] + 1e-9), gy[ys, xs] / (g[ys, xs] + 1e-9)
+    X = xs[:, None] + ux[:, None] * t[None]
+    Y = ys[:, None] + uy[:, None] * t[None]
+    P = map_coordinates(Ls, [Y.ravel(), X.ravel()], order=1, mode="nearest").reshape(X.shape)
+    lo, hi = P[:, :8].mean(1), P[:, -8:].mean(1)
+    c = hi - lo
+    keep = c > min_contrast
+    P, lo, c = P[keep], lo[keep], c[keep]
+    if len(P) == 0:
+        return dict(edge_n=0)
+    Q = np.maximum.accumulate(np.clip((P - lo[:, None]) / c[:, None], 0, 1), axis=1)
+    w = ((Q < 0.9).sum(1) - (Q < 0.1).sum(1)) * 0.25 / px_per_mm
+    w = w[:n]
+    return dict(edge_n=int(len(w)), edge_p10_mm=float(np.percentile(w, 10)), edge_median_mm=float(np.median(w)),
+                edge_p90_mm=float(np.percentile(w, 90)), edge_under_0p3mm=float((w < 0.3).mean()),
+                edge_over_2mm=float((w > 2.0).mean()))
+
+
+def flat_midtone(L, px_per_mm, mask=None):
+    """The share of the image (or mask) that is fog: L* 35-65 with a local sd under 1 L* over FLAT_MM."""
+    k = max(3, int(round(FLAT_MM * px_per_mm)))
+    m = uniform_filter(L, k)
+    sd = np.sqrt(np.clip(uniform_filter(L * L, k) - m * m, 0, None))
+    flat = (L > 35) & (L < 65) & (sd < 1.0)
+    return float(flat[mask].mean()) if mask is not None else float(flat.mean())
+
+
+def coherence(L, px_per_mm, mask=None, sigma_mm=0.5):
+    """Energy-weighted structure-tensor orientation coherence (0 no direction, 1 parallel lines) at sigma_mm."""
+    s = max(0.7, sigma_mm * px_per_mm)
+    Ls = gaussian_filter(L, max(0.5, 0.25 * s))
+    gx, gy = sobel(Ls, 1) / 8, sobel(Ls, 0) / 8
+    Jxx, Jxy, Jyy = (gaussian_filter(a, s) for a in (gx * gx, gx * gy, gy * gy))
+    tr = Jxx + Jyy + 1e-9
+    coh = np.sqrt((Jxx - Jyy) ** 2 + 4 * Jxy ** 2) / tr
+    sel = mask if mask is not None else np.ones(L.shape, bool)
+    return float((coh * tr)[sel].sum() / tr[sel].sum()) if sel.any() else None
+
+
+def measure_fine(img, px_per_mm, mask=None, bands=True, edges=True):
+    """Every fine measure of an image (or the part of it under `mask`, full-size bool) at its own resolution.
+    px_per_mm: pixels per mm of the sheet or of the subject; bands, speculars and edges are in those mm."""
+    L, f = lightness(img)
+    ppm = px_per_mm / f
+    if mask is not None:
+        mask = np.asarray(mask) > 0.5
+        if f > 1:
+            h, w = L.shape
+            mask = mask[:h * f, :w * f].reshape(h, f, w, f).mean((1, 3)) > 0.5
+    out = dict(fine_px_per_mm=float(ppm), fine_reduced=int(f))
+    out.update(value_tails(L, mask))
+    out["flat_midtone_share"] = flat_midtone(L, ppm, mask)
+    if bands:
+        out["band_rms"] = {str(k): (round(v, 3) if v is not None else None) for k, v in band_energy(L, ppm, mask).items()}
+    out.update(specular_blobs(L, ppm, mask))
+    if edges:
+        out.update(edge_widths(L, ppm, mask))
+    return {k: (round(v, 4) if isinstance(v, float) else v) for k, v in out.items()}
+
+
+# The close-up ruler (studio/targets.json "<style>-closeup", tools/measure_targets.py closeup): each key gives a
+# bound, min or max, and the photographs' value. The flags below are the misses: they name what to change.
+FINE_LABELS = {
+    "value_below20": ("share of the sheet below L* 20", "min", "the darks are missing: lay carbon or charcoal darks first, before any blend (G2)"),
+    "value_below30": ("share below L* 30", "min", "too few deep darks: build them darks-first, workable fixative between layers"),
+    "value_p1": ("p1, L*", "max", "the darkest 1% is too light: no near-black anywhere"),
+    "value_p5": ("p5, L*", "max", "the dark end of the range is too light"),
+    "value_p95": ("p95, L*", "min", "the light end is too dark: reserve or lift the lights"),
+    "flat_midtone_share": ("flat mid-tone (fog) share", "max", "too much flat mid-tone: the sheet is spent on fog; give the subject the area"),
+    "bare_paper_share": ("bare paper share", "min", "no bare paper: the white-sheet convention needs untouched paper"),
+    "face_specular_count_30": ("speculars >= 30 L* in the face", "min", "no crisp highlights in the face: reserve or lift catchlights and glints"),
+    "edge_p10_mm": ("sharpest edges (p10 of the 10-90% rise), mm", "max", "no crisp edges: the focal plane needs edges under 0.3 mm"),
+}
+
+
+def fine_verdicts(f, target):
+    """Rows (key, label, value, bound, kind, ok, advice) for each key the close-up target bounds."""
+    rows = []
+    for k, (label, kind, advice) in FINE_LABELS.items():
+        t = (target or {}).get(k)
+        if not t or f.get(k) is None:
+            continue
+        b = t.get(kind)
+        if b is None:
+            continue
+        ok = f[k] >= b if kind == "min" else f[k] <= b
+        rows.append((k, label, f[k], b, kind, ok, advice))
+    for name, key in (("face", "face_band_rms"), ("hair", "hair_band_rms"), ("skin", "skin_band_rms")):
+        t = (target or {}).get(key)
+        v = f.get(key)
+        if not t or not v:
+            continue
+        for s, tb in t.items():
+            if not isinstance(tb, dict) or v.get(s) is None:
+                continue
+            lo, hi = tb.get("min"), tb.get("max")
+            ok = (lo is None or v[s] >= lo) and (hi is None or v[s] <= hi)
+            rows.append((f"{key}@{s}", f"{name} texture at {s} {name}-mm (RMS L*)", v[s], (lo, hi), "range", ok,
+                         f"{name} texture at {s} mm is {'too smooth' if lo is not None and v[s] < lo else 'too busy'}"))
+    return rows
+
+
+def format_fine(f, target=None, where="sheet"):
+    b = f.get("band_rms") or {}
+    bs = ", ".join(f"{k} {v:.2f}" for k, v in b.items() if v is not None)
+    lines = [f"fine ({where}, at {f['fine_px_per_mm']:.2f} px/mm{', reduced x' + str(f['fine_reduced']) if f['fine_reduced'] > 1 else ''}): "
+             f"p1 {f['value_p1']:.0f}, p5 {f['value_p5']:.0f}, p95 {f['value_p95']:.0f}; below L* 20 {f['value_below20']:.1%}, "
+             f"below 30 {f['value_below30']:.1%}; bare paper {f['bare_paper_share']:.1%}; flat mid-tone {f['flat_midtone_share']:.1%}",
+             f"  texture by scale (RMS L* at s mm): {bs or 'n/a'}",
+             f"  speculars: {f['specular_count']} (>= 30 L*: {f['specular_count_30']}), largest {f['specular_max_prominence']:.0f} L* above its surround"]
+    if f.get("edge_n"):
+        lines.append(f"  edges (10-90% rise of {f['edge_n']} strong edges): p10 {f['edge_p10_mm']:.2f} mm, median {f['edge_median_mm']:.2f} mm, "
+                     f"p90 {f['edge_p90_mm']:.2f} mm; under 0.3 mm {f['edge_under_0p3mm']:.0%}, over 2 mm {f['edge_over_2mm']:.0%}")
+    return lines
 
 
 # ---------------------------------------------------------------- comparing with a target
