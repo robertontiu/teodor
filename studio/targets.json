@@ -2667,9 +2667,9 @@
   }
  },
  "graphite-hyperrealism-closeup": {
-  "_n": 1,
-  "_provisional": true,
-  "_about": "Close-up ruler for graphite-hyperrealism: fine measures (eyes.measure_fine) of openly licensed close-up photographs at their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). PROVISIONAL until at least 10 photographs: bounds come from BOUND_RULES in tools/measure_targets.py (judgements from docs/research/hyperrealism-gaps.md), applied to the photographs' mean.",
+  "_n": 12,
+  "_provisional": false,
+  "_about": "Close-up ruler for graphite-hyperrealism: fine measures (eyes.measure_fine) of openly licensed close-up photographs at their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). PROVISIONAL until at least 10 photographs. Subject keys (face, skin, hair) are bounded by the photographs' p10-p90 once there are 5; whole-frame keys by BOUND_RULES (judgements from docs/research/hyperrealism-gaps.md) on the mean. Every key keeps mean, sd, range and p10/p90: the spread across the photographs.",
   "_measured": "2026-11-27",
   "_photos": [
    {
@@ -2745,198 +2745,1123 @@
      },
      "hair_coherence": 0.6786
     }
+   },
+   {
+    "id": "nasa-2010-3857",
+    "source": "https://images.nasa.gov/details/2010-3857",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 4.571,
+    "boxes": {
+     "face": [
+      579,
+      638,
+      731,
+      848
+     ],
+     "skin": [
+      1002,
+      1088,
+      114,
+      114
+     ],
+     "hair": [
+      945,
+      551,
+      270,
+      78
+     ]
+    },
+    "note": "studio portrait (man); IPD 293 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.4248,
+     "value_below30": 0.4785,
+     "value_p1": 3.206,
+     "value_p5": 6.1462,
+     "value_p95": 63.9029,
+     "flat_midtone_share": 0.2774,
+     "edge_p10_mm": 0.55,
+     "sheet_band_rms": {
+      "0.125": 0.721,
+      "0.25": 0.743,
+      "0.5": 0.933,
+      "1.0": 1.26,
+      "2.0": 1.708,
+      "4.0": 2.361
+     },
+     "face_band_rms": {
+      "0.125": 1.112,
+      "0.25": 1.264,
+      "0.5": 1.692,
+      "1.0": 2.329,
+      "2.0": 3.228,
+      "4.0": 4.315
+     },
+     "face_specular_count_30": 29,
+     "face_specular_max": 43.3762,
+     "face_value_p1": 8.5561,
+     "face_value_below20": 0.0943,
+     "skin_band_rms": {
+      "0.125": 0.98,
+      "0.25": 1.044,
+      "0.5": 1.244,
+      "1.0": 1.936,
+      "2.0": 2.923,
+      "4.0": 4.38
+     },
+     "hair_band_rms": {
+      "0.125": 1.809,
+      "0.25": 1.862,
+      "0.5": 1.7,
+      "1.0": 1.395,
+      "2.0": 1.169,
+      "4.0": 1.317
+     },
+     "hair_coherence": 0.387
+    }
+   },
+   {
+    "id": "nasa-201101060001HQ",
+    "source": "https://images.nasa.gov/details/201101060001HQ",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 9.013,
+    "boxes": {
+     "face": [
+      1163,
+      811,
+      1442,
+      1672
+     ],
+     "skin": [
+      1546,
+      1699,
+      225,
+      225
+     ]
+    },
+    "note": "studio portrait (man); IPD 577 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 2,
+     "value_below20": 0.8314,
+     "value_below30": 0.8703,
+     "value_p1": 0.0049,
+     "value_p5": 0.2056,
+     "value_p95": 63.5644,
+     "flat_midtone_share": 0.0,
+     "edge_p10_mm": 0.9,
+     "sheet_band_rms": {
+      "0.125": 0.52,
+      "0.25": 0.604,
+      "0.5": 0.857,
+      "1.0": 1.267,
+      "2.0": 1.81,
+      "4.0": 2.617
+     },
+     "face_band_rms": {
+      "0.125": 0.977,
+      "0.25": 0.928,
+      "0.5": 1.191,
+      "1.0": 1.714,
+      "2.0": 2.537,
+      "4.0": 3.783
+     },
+     "face_specular_count_30": 7,
+     "face_specular_max": 47.9922,
+     "face_value_p1": 1.2279,
+     "face_value_below20": 0.1913,
+     "skin_band_rms": {
+      "0.125": 0.976,
+      "0.25": 0.772,
+      "0.5": 0.824,
+      "1.0": 1.177,
+      "2.0": 1.288,
+      "4.0": 1.634
+     }
+    }
+   },
+   {
+    "id": "nasa-201101060002HQ",
+    "source": "https://images.nasa.gov/details/201101060002HQ",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 9.324,
+    "boxes": {
+     "face": [
+      1061,
+      692,
+      1491,
+      1730
+     ],
+     "skin": [
+      1457,
+      1602,
+      233,
+      233
+     ]
+    },
+    "note": "studio portrait (man); IPD 597 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.8011,
+     "value_below30": 0.873,
+     "value_p1": 0.2742,
+     "value_p5": 2.057,
+     "value_p95": 47.5603,
+     "flat_midtone_share": 0.0005,
+     "edge_p10_mm": 0.535,
+     "sheet_band_rms": {
+      "0.125": 0.594,
+      "0.25": 0.744,
+      "0.5": 0.928,
+      "1.0": 1.161,
+      "2.0": 1.518,
+      "4.0": 2.156
+     },
+     "face_band_rms": {
+      "0.125": 1.237,
+      "0.25": 1.206,
+      "0.5": 1.538,
+      "1.0": 2.126,
+      "2.0": 2.918,
+      "4.0": 3.508
+     },
+     "face_specular_count_30": 221,
+     "face_specular_max": 59.4287,
+     "face_value_p1": 0.8808,
+     "face_value_below20": 0.3616,
+     "skin_band_rms": {
+      "0.125": 2.276,
+      "0.25": 1.867,
+      "0.5": 1.66,
+      "1.0": 2.269,
+      "2.0": 2.871,
+      "4.0": 3.331
+     }
+    }
+   },
+   {
+    "id": "nasa-201101060003HQ",
+    "source": "https://images.nasa.gov/details/201101060003HQ",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 8.503,
+    "boxes": {
+     "face": [
+      1041,
+      742,
+      1311,
+      1521
+     ],
+     "skin": [
+      1388,
+      1562,
+      212,
+      212
+     ],
+     "hair": [
+      1504,
+      577,
+      489,
+      139
+     ]
+    },
+    "note": "studio portrait (woman); IPD 525 px against a mean of 61.7 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.5865,
+     "value_below30": 0.657,
+     "value_p1": 0.0,
+     "value_p5": 1.0197,
+     "value_p95": 60.5489,
+     "flat_midtone_share": 0.0468,
+     "edge_p10_mm": 0.85,
+     "sheet_band_rms": {
+      "0.125": 0.658,
+      "0.25": 0.781,
+      "0.5": 0.921,
+      "1.0": 1.197,
+      "2.0": 1.568,
+      "4.0": 2.076
+     },
+     "face_band_rms": {
+      "0.125": 1.04,
+      "0.25": 1.139,
+      "0.5": 1.427,
+      "1.0": 2.096,
+      "2.0": 3.394,
+      "4.0": 5.498
+     },
+     "face_specular_count_30": 16,
+     "face_specular_max": 52.79,
+     "face_value_p1": 0.0,
+     "face_value_below20": 0.3617,
+     "skin_band_rms": {
+      "0.125": 0.904,
+      "0.25": 1.343,
+      "0.5": 2.569,
+      "1.0": 4.204,
+      "2.0": 5.596,
+      "4.0": 4.293
+     },
+     "hair_band_rms": {
+      "0.125": 1.495,
+      "0.25": 1.567,
+      "0.5": 1.394,
+      "1.0": 1.055,
+      "2.0": 1.056,
+      "4.0": 1.133
+     },
+     "hair_coherence": 0.8508
+    }
+   },
+   {
+    "id": "nasa-201201110005HQ",
+    "source": "https://images.nasa.gov/details/201201110005HQ",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 7.822,
+    "boxes": {
+     "face": [
+      1055,
+      762,
+      1251,
+      1451
+     ],
+     "skin": [
+      1388,
+      1536,
+      195,
+      195
+     ],
+     "hair": [
+      1379,
+      519,
+      414,
+      103
+     ]
+    },
+    "note": "studio portrait (man); IPD 501 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.831,
+     "value_below30": 0.8715,
+     "value_p1": 0.0,
+     "value_p5": 0.0198,
+     "value_p95": 56.6693,
+     "flat_midtone_share": 0.0005,
+     "edge_p10_mm": 0.5,
+     "sheet_band_rms": {
+      "0.125": 0.903,
+      "0.25": 0.976,
+      "0.5": 1.035,
+      "1.0": 1.289,
+      "2.0": 1.651,
+      "4.0": 2.279
+     },
+     "face_band_rms": {
+      "0.125": 1.247,
+      "0.25": 1.148,
+      "0.5": 1.173,
+      "1.0": 1.498,
+      "2.0": 2.162,
+      "4.0": 3.178
+     },
+     "face_specular_count_30": 102,
+     "face_specular_max": 62.3406,
+     "face_value_p1": 3.9755,
+     "face_value_below20": 0.287,
+     "skin_band_rms": {
+      "0.125": 0.899,
+      "0.25": 0.806,
+      "0.5": 0.784,
+      "1.0": 1.254,
+      "2.0": 2.196,
+      "4.0": 1.604
+     },
+     "hair_band_rms": {
+      "0.125": 1.665,
+      "0.25": 1.503,
+      "0.5": 1.289,
+      "1.0": 1.007,
+      "2.0": 1.084,
+      "4.0": 1.026
+     },
+     "hair_coherence": 0.8691
+    }
+   },
+   {
+    "id": "nasa-2013-2243",
+    "source": "https://images.nasa.gov/details/2013-2243",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 5.607,
+    "boxes": {
+     "face": [
+      706,
+      596,
+      897,
+      1040
+     ],
+     "skin": [
+      1225,
+      1151,
+      140,
+      140
+     ],
+     "hair": [
+      1038,
+      384,
+      346,
+      99
+     ]
+    },
+    "note": "studio portrait (man); IPD 359 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.3565,
+     "value_below30": 0.4704,
+     "value_p1": 6.751,
+     "value_p5": 9.8418,
+     "value_p95": 76.9758,
+     "flat_midtone_share": 0.1372,
+     "edge_p10_mm": 0.3,
+     "sheet_band_rms": {
+      "0.125": 1.626,
+      "0.25": 1.386,
+      "0.5": 1.382,
+      "1.0": 1.943,
+      "2.0": 2.642,
+      "4.0": 3.085
+     },
+     "face_band_rms": {
+      "0.125": 1.659,
+      "0.25": 1.539,
+      "0.5": 1.467,
+      "1.0": 1.787,
+      "2.0": 2.457,
+      "4.0": 2.814
+     },
+     "face_specular_count_30": 23,
+     "face_specular_max": 72.0136,
+     "face_value_p1": 25.8792,
+     "face_value_below20": 0.0062,
+     "skin_band_rms": {
+      "0.125": 1.958,
+      "0.25": 1.549,
+      "0.5": 0.983,
+      "1.0": 0.8,
+      "2.0": 1.369,
+      "4.0": 1.603
+     },
+     "hair_band_rms": {
+      "0.125": 5.568,
+      "0.25": 4.568,
+      "0.5": 3.002,
+      "1.0": 2.204,
+      "2.0": 1.186,
+      "4.0": 1.803
+     },
+     "hair_coherence": 0.8149
+    }
+   },
+   {
+    "id": "nasa-KSC-20231219-PH-KLS01_0015",
+    "source": "https://images.nasa.gov/details/KSC-20231219-PH-KLS01_0015",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 10.901,
+    "boxes": {
+     "face": [
+      1438,
+      1546,
+      1744,
+      2023
+     ],
+     "skin": [
+      1901,
+      2628,
+      272,
+      272
+     ]
+    },
+    "note": "studio portrait (man); IPD 698 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 2,
+     "value_below20": 0.7345,
+     "value_below30": 0.7691,
+     "value_p1": 1.6451,
+     "value_p5": 3.0229,
+     "value_p95": 65.4574,
+     "flat_midtone_share": 0.0057,
+     "edge_p10_mm": 0.6,
+     "sheet_band_rms": {
+      "0.125": 0.962,
+      "0.25": 1.02,
+      "0.5": 1.114,
+      "1.0": 1.387,
+      "2.0": 1.849,
+      "4.0": 2.574
+     },
+     "face_band_rms": {
+      "0.125": 1.46,
+      "0.25": 1.285,
+      "0.5": 1.347,
+      "1.0": 1.582,
+      "2.0": 1.95,
+      "4.0": 2.659
+     },
+     "face_specular_count_30": 262,
+     "face_specular_max": 65.9429,
+     "face_value_p1": 16.1561,
+     "face_value_below20": 0.0582,
+     "skin_band_rms": {
+      "0.125": 1.467,
+      "0.25": 1.177,
+      "0.5": 1.233,
+      "1.0": 2.24,
+      "2.0": 4.601,
+      "4.0": 2.47
+     }
+    }
+   },
+   {
+    "id": "nasa-NHQ202303020038",
+    "source": "https://images.nasa.gov/details/NHQ202303020038",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 8.477,
+    "boxes": {
+     "face": [
+      910,
+      716,
+      1307,
+      1516
+     ],
+     "skin": [
+      1257,
+      1511,
+      211,
+      211
+     ],
+     "hair": [
+      1266,
+      506,
+      521,
+      167
+     ]
+    },
+    "note": "studio portrait (woman); IPD 523 px against a mean of 61.7 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.4755,
+     "value_below30": 0.6342,
+     "value_p1": 1.2674,
+     "value_p5": 3.963,
+     "value_p95": 75.4144,
+     "flat_midtone_share": 0.0263,
+     "edge_p10_mm": 1.0,
+     "sheet_band_rms": {
+      "0.125": 0.826,
+      "0.25": 0.895,
+      "0.5": 0.919,
+      "1.0": 1.179,
+      "2.0": 1.801,
+      "4.0": 2.73
+     },
+     "face_band_rms": {
+      "0.125": 0.993,
+      "0.25": 1.02,
+      "0.5": 1.21,
+      "1.0": 1.698,
+      "2.0": 2.481,
+      "4.0": 3.456
+     },
+     "face_specular_count_30": 15,
+     "face_specular_max": 35.7757,
+     "face_value_p1": 4.1273,
+     "face_value_below20": 0.0549,
+     "skin_band_rms": {
+      "0.125": 0.495,
+      "0.25": 0.623,
+      "0.5": 1.088,
+      "1.0": 2.144,
+      "2.0": 3.85,
+      "4.0": 3.33
+     },
+     "hair_band_rms": {
+      "0.125": 2.117,
+      "0.25": 1.844,
+      "0.5": 1.608,
+      "1.0": 1.964,
+      "2.0": 2.276,
+      "4.0": 2.632
+     },
+     "hair_coherence": 0.7878
+    }
+   },
+   {
+    "id": "nasa-jsc2013e079278",
+    "source": "https://images.nasa.gov/details/jsc2013e079278",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 12.143,
+    "boxes": {
+     "face": [
+      1660,
+      1182,
+      1942,
+      2253
+     ],
+     "skin": [
+      2178,
+      2418,
+      303,
+      303
+     ],
+     "hair": [
+      2272,
+      757,
+      757,
+      297
+     ]
+    },
+    "note": "studio portrait (man); IPD 777 px against a mean of 64.0 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 2,
+     "value_below20": 0.3732,
+     "value_below30": 0.5776,
+     "value_p1": 3.7587,
+     "value_p5": 7.9712,
+     "value_p95": 70.5122,
+     "flat_midtone_share": 0.0254,
+     "edge_p10_mm": 0.7,
+     "sheet_band_rms": {
+      "0.125": 1.294,
+      "0.25": 1.397,
+      "0.5": 1.803,
+      "1.0": 2.2,
+      "2.0": 2.496,
+      "4.0": 2.982
+     },
+     "face_band_rms": {
+      "0.125": 0.831,
+      "0.25": 0.958,
+      "0.5": 1.233,
+      "1.0": 1.759,
+      "2.0": 2.549,
+      "4.0": 3.404
+     },
+     "face_specular_count_30": 22,
+     "face_specular_max": 67.9274,
+     "face_value_p1": 10.358,
+     "face_value_below20": 0.0372,
+     "skin_band_rms": {
+      "0.125": 0.666,
+      "0.25": 0.763,
+      "0.5": 1.124,
+      "1.0": 2.355,
+      "2.0": 4.851,
+      "4.0": 3.351
+     },
+     "hair_band_rms": {
+      "0.125": 1.942,
+      "0.25": 2.347,
+      "0.5": 2.275,
+      "1.0": 2.194,
+      "2.0": 1.946,
+      "4.0": 3.073
+     },
+     "hair_coherence": 0.7758
+    }
+   },
+   {
+    "id": "nasa-jsc2014e037863",
+    "source": "https://images.nasa.gov/details/jsc2014e037863",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 4.862,
+    "boxes": {
+     "face": [
+      1162,
+      790,
+      750,
+      870
+     ],
+     "skin": [
+      1361,
+      1258,
+      121,
+      121
+     ],
+     "hair": [
+      1400,
+      700,
+      350,
+      125
+     ]
+    },
+    "note": "studio portrait (woman); IPD 300 px against a mean of 61.7 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.6157,
+     "value_below30": 0.7799,
+     "value_p1": 1.2345,
+     "value_p5": 2.1415,
+     "value_p95": 60.0107,
+     "flat_midtone_share": 0.0563,
+     "edge_p10_mm": 1.25,
+     "sheet_band_rms": {
+      "0.125": 0.52,
+      "0.25": 0.686,
+      "0.5": 0.858,
+      "1.0": 1.21,
+      "2.0": 1.936,
+      "4.0": 2.798
+     },
+     "face_band_rms": {
+      "0.125": 0.962,
+      "0.25": 1.125,
+      "0.5": 1.424,
+      "1.0": 2.03,
+      "2.0": 3.003,
+      "4.0": 4.288
+     },
+     "face_specular_count_30": 5,
+     "face_specular_max": 56.1507,
+     "face_value_p1": 1.3896,
+     "face_value_below20": 0.2321,
+     "skin_band_rms": {
+      "0.125": 0.174,
+      "0.25": 0.293,
+      "0.5": 0.637,
+      "1.0": 1.356,
+      "2.0": 1.392,
+      "4.0": 1.566
+     },
+     "hair_band_rms": {
+      "0.125": 1.845,
+      "0.25": 1.809,
+      "0.5": 1.561,
+      "1.0": 1.347,
+      "2.0": 1.729,
+      "4.0": 2.756
+     },
+     "hair_coherence": 0.8345
+    }
+   },
+   {
+    "id": "nasa-jsc2025e078605_alt",
+    "source": "https://images.nasa.gov/details/jsc2025e078605_alt",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 7.863,
+    "boxes": {
+     "face": [
+      2903,
+      1408,
+      1212,
+      1406
+     ],
+     "skin": [
+      3225,
+      2181,
+      196,
+      196
+     ],
+     "hair": [
+      3203,
+      1113,
+      771,
+      257
+     ]
+    },
+    "note": "studio portrait (woman); IPD 485 px against a mean of 61.7 mm (Dodgson 2004); a real person: measured, never shown, published or used as a reference",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 2,
+     "value_below20": 0.2507,
+     "value_below30": 0.3949,
+     "value_p1": 0.5484,
+     "value_p5": 1.3716,
+     "value_p95": 92.8727,
+     "flat_midtone_share": 0.0229,
+     "edge_p10_mm": 0.5,
+     "sheet_band_rms": {
+      "0.125": 0.884,
+      "0.25": 1.338,
+      "0.5": 1.893,
+      "1.0": 2.557,
+      "2.0": 3.296,
+      "4.0": 4.135
+     },
+     "face_band_rms": {
+      "0.125": null,
+      "0.25": 1.283,
+      "0.5": 1.764,
+      "1.0": 2.4,
+      "2.0": 3.489,
+      "4.0": 4.919
+     },
+     "face_specular_count_30": 31,
+     "face_specular_max": 81.3098,
+     "face_value_p1": 3.0014,
+     "face_value_below20": 0.1582,
+     "skin_band_rms": {
+      "0.125": null,
+      "0.25": 0.629,
+      "0.5": 1.095,
+      "1.0": 1.986,
+      "2.0": 3.529,
+      "4.0": 3.659
+     },
+     "hair_band_rms": {
+      "0.125": null,
+      "0.25": 1.945,
+      "0.5": 2.005,
+      "1.0": 1.847,
+      "2.0": 1.953,
+      "4.0": 2.188
+     },
+     "hair_coherence": 0.7219
+    }
    }
   ],
   "value_below20": {
-   "mean": 0.1666,
-   "sd": 0.0,
-   "n": 1,
-   "min": 0.1
+   "mean": 0.5373,
+   "sd": 0.2209,
+   "n": 12,
+   "lo": 0.1666,
+   "hi": 0.8314,
+   "p10": 0.2613,
+   "p90": 0.828,
+   "min": 0.3224,
+   "rule": "BOUND_RULES on the mean"
   },
   "value_below30": {
-   "mean": 0.3956,
-   "sd": 0.0,
-   "n": 1,
-   "min": 0.2374
+   "mean": 0.6477,
+   "sd": 0.1769,
+   "n": 12,
+   "lo": 0.3949,
+   "hi": 0.873,
+   "p10": 0.4031,
+   "p90": 0.8714,
+   "min": 0.3886,
+   "rule": "BOUND_RULES on the mean"
   },
   "value_p1": {
-   "mean": 0.8412,
-   "sd": 0.0,
-   "n": 1,
-   "max": 10.8412
+   "mean": 1.6276,
+   "sd": 1.9389,
+   "n": 12,
+   "lo": 0.0,
+   "hi": 6.751,
+   "p10": 0.0005,
+   "p90": 3.7034,
+   "max": 11.6276,
+   "rule": "BOUND_RULES on the mean"
   },
   "value_p5": {
-   "mean": 5.4745,
-   "sd": 0.0,
-   "n": 1,
-   "max": 17.4745
+   "mean": 3.6029,
+   "sd": 3.0139,
+   "n": 12,
+   "lo": 0.0198,
+   "hi": 9.8418,
+   "p10": 0.287,
+   "p90": 7.7887,
+   "max": 15.6029,
+   "rule": "BOUND_RULES on the mean"
   },
   "value_p95": {
-   "mean": 69.5526,
-   "sd": 0.0,
-   "n": 1,
-   "min": 59.5526
+   "mean": 66.9201,
+   "sd": 11.0203,
+   "n": 12,
+   "lo": 47.5603,
+   "hi": 92.8727,
+   "p10": 57.0034,
+   "p90": 76.8197,
+   "min": 56.9201,
+   "rule": "BOUND_RULES on the mean"
   },
   "flat_midtone_share": {
-   "mean": 0.0237,
-   "sd": 0.0,
-   "n": 1,
-   "max": 0.05
+   "mean": 0.0519,
+   "sd": 0.0771,
+   "n": 12,
+   "lo": 0.0,
+   "hi": 0.2774,
+   "p10": 0.0005,
+   "p90": 0.1291,
+   "max": 0.1038,
+   "rule": "BOUND_RULES on the mean"
   },
   "edge_p10_mm": {
-   "mean": 1.1,
-   "sd": 0.0,
-   "n": 1,
-   "max": 1.65
+   "mean": 0.7321,
+   "sd": 0.2742,
+   "n": 12,
+   "lo": 0.3,
+   "hi": 1.25,
+   "p10": 0.5,
+   "p90": 1.09,
+   "max": 1.0981,
+   "rule": "BOUND_RULES on the mean"
   },
   "face_specular_count_30": {
-   "mean": 3.0,
-   "sd": 0.0,
-   "n": 1,
-   "min": 3.0
+   "mean": 61.3333,
+   "sd": 84.7185,
+   "n": 12,
+   "lo": 3.0,
+   "hi": 262.0,
+   "p10": 5.2,
+   "p90": 209.1,
+   "min": 5.2,
+   "rule": "p10-p90 of the photographs"
   },
   "face_value_p1": {
-   "mean": 1.2727,
-   "sd": 0.0,
-   "n": 1,
-   "max": 11.2727
+   "mean": 6.4021,
+   "sd": 7.456,
+   "n": 12,
+   "lo": 0.0,
+   "hi": 25.8792,
+   "p10": 0.9155,
+   "p90": 15.5763,
+   "max": 15.5763,
+   "rule": "p10-p90 of the photographs"
   },
   "face_value_below20": {
-   "mean": 0.0744,
-   "sd": 0.0,
-   "n": 1,
-   "min": 0.0223
+   "mean": 0.1598,
+   "sd": 0.1209,
+   "n": 12,
+   "lo": 0.0062,
+   "hi": 0.3617,
+   "p10": 0.039,
+   "p90": 0.3541,
+   "min": 0.039,
+   "rule": "p10-p90 of the photographs"
   },
   "hair_coherence": {
-   "mean": 0.6786,
-   "sd": 0.0,
-   "n": 1,
-   "min": 0.5
+   "mean": 0.7467,
+   "sd": 0.1396,
+   "n": 9,
+   "lo": 0.387,
+   "hi": 0.8691,
+   "p10": 0.6203,
+   "p90": 0.8545,
+   "min": 0.6203,
+   "rule": "p10-p90 of the photographs"
   },
   "face_band_rms": {
    "0.125": {
-    "mean": 0.323,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.21,
-    "max": 0.4361
+    "mean": 1.0765,
+    "sd": 0.3305,
+    "n": 11,
+    "lo": 0.323,
+    "hi": 1.659,
+    "p10": 0.831,
+    "p90": 1.46,
+    "min": 0.831,
+    "max": 1.46,
+    "rule": "p10-p90 of the photographs"
    },
    "0.25": {
-    "mean": 0.67,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.4355,
-    "max": 0.9045
+    "mean": 1.1304,
+    "sd": 0.2107,
+    "n": 12,
+    "lo": 0.67,
+    "hi": 1.539,
+    "p10": 0.931,
+    "p90": 1.2848,
+    "min": 0.931,
+    "max": 1.2848,
+    "rule": "p10-p90 of the photographs"
    },
    "0.5": {
-    "mean": 1.304,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.8476,
-    "max": 1.7604
+    "mean": 1.3975,
+    "sd": 0.1857,
+    "n": 12,
+    "lo": 1.173,
+    "hi": 1.764,
+    "p10": 1.1929,
+    "p90": 1.6766,
+    "min": 1.1929,
+    "max": 1.6766,
+    "rule": "p10-p90 of the photographs"
    },
    "1.0": {
-    "mean": 2.148,
-    "sd": 0.0,
-    "n": 1,
-    "min": 1.3962,
-    "max": 2.8998
+    "mean": 1.9306,
+    "sd": 0.2831,
+    "n": 12,
+    "lo": 1.498,
+    "hi": 2.4,
+    "p10": 1.5936,
+    "p90": 2.3109,
+    "min": 1.5936,
+    "max": 2.3109,
+    "rule": "p10-p90 of the photographs"
    },
    "2.0": {
-    "mean": 3.124,
-    "sd": 0.0,
-    "n": 1,
-    "min": 2.0306,
-    "max": 4.2174
+    "mean": 2.7743,
+    "sd": 0.4694,
+    "n": 12,
+    "lo": 1.95,
+    "hi": 3.489,
+    "p10": 2.1915,
+    "p90": 3.3774,
+    "min": 2.1915,
+    "max": 3.3774,
+    "rule": "p10-p90 of the photographs"
    },
    "4.0": {
-    "mean": 3.781,
-    "sd": 0.0,
-    "n": 1,
-    "min": 2.4577,
-    "max": 5.1044
+    "mean": 3.8002,
+    "sd": 0.799,
+    "n": 12,
+    "lo": 2.659,
+    "hi": 5.498,
+    "p10": 2.8504,
+    "p90": 4.8586,
+    "min": 2.8504,
+    "max": 4.8586,
+    "rule": "p10-p90 of the photographs"
    }
   },
   "skin_band_rms": {
    "0.125": {
-    "mean": 0.221,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.1436,
-    "max": 0.2984
+    "mean": 1.0015,
+    "sd": 0.6353,
+    "n": 11,
+    "lo": 0.174,
+    "hi": 2.276,
+    "p10": 0.221,
+    "p90": 1.958,
+    "min": 0.221,
+    "max": 1.958,
+    "rule": "p10-p90 of the photographs"
    },
    "0.25": {
-    "mean": 0.376,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.2444,
-    "max": 0.5076
+    "mean": 0.9368,
+    "sd": 0.4538,
+    "n": 12,
+    "lo": 0.293,
+    "hi": 1.867,
+    "p10": 0.4007,
+    "p90": 1.5284,
+    "min": 0.4007,
+    "max": 1.5284,
+    "rule": "p10-p90 of the photographs"
    },
    "0.5": {
-    "mean": 0.616,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.4004,
-    "max": 0.8316
+    "mean": 1.1548,
+    "sd": 0.5093,
+    "n": 12,
+    "lo": 0.616,
+    "hi": 2.569,
+    "p10": 0.6517,
+    "p90": 1.6184,
+    "min": 0.6517,
+    "max": 1.6184,
+    "rule": "p10-p90 of the photographs"
    },
    "1.0": {
-    "mean": 1.031,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.6702,
-    "max": 1.3919
+    "mean": 1.896,
+    "sd": 0.8678,
+    "n": 12,
+    "lo": 0.8,
+    "hi": 4.204,
+    "p10": 1.0456,
+    "p90": 2.3464,
+    "min": 1.0456,
+    "max": 2.3464,
+    "rule": "p10-p90 of the photographs"
    },
    "2.0": {
-    "mean": 1.753,
-    "sd": 0.0,
-    "n": 1,
-    "min": 1.1395,
-    "max": 2.3666
+    "mean": 3.0183,
+    "sd": 1.418,
+    "n": 12,
+    "lo": 1.288,
+    "hi": 5.596,
+    "p10": 1.3713,
+    "p90": 4.826,
+    "min": 1.3713,
+    "max": 4.826,
+    "rule": "p10-p90 of the photographs"
    },
    "4.0": {
-    "mean": 1.706,
-    "sd": 0.0,
-    "n": 1,
-    "min": 1.1089,
-    "max": 2.3031
+    "mean": 2.7439,
+    "sd": 1.0545,
+    "n": 12,
+    "lo": 1.566,
+    "hi": 4.38,
+    "p10": 1.6031,
+    "p90": 4.2296,
+    "min": 1.6031,
+    "max": 4.2296,
+    "rule": "p10-p90 of the photographs"
    }
   },
   "hair_band_rms": {
    "0.125": {
-    "mean": 0.545,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.3815
+    "mean": 2.1233,
+    "sd": 1.3771,
+    "n": 8,
+    "lo": 0.545,
+    "hi": 5.568,
+    "p10": 1.21,
+    "p90": 3.1523,
+    "min": 1.21,
+    "rule": "p10-p90 of the photographs"
    },
    "0.25": {
-    "mean": 0.98,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.686
+    "mean": 2.0472,
+    "sd": 0.9576,
+    "n": 9,
+    "lo": 0.98,
+    "hi": 4.568,
+    "p10": 1.3984,
+    "p90": 2.7912,
+    "min": 1.3984,
+    "rule": "p10-p90 of the photographs"
    },
    "0.5": {
-    "mean": 1.24,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.868
+    "mean": 1.786,
+    "sd": 0.5327,
+    "n": 9,
+    "lo": 1.24,
+    "hi": 3.002,
+    "p10": 1.2792,
+    "p90": 2.4204,
+    "min": 1.2792,
+    "rule": "p10-p90 of the photographs"
    },
    "1.0": {
-    "mean": 1.146,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.8022
+    "mean": 1.5732,
+    "sd": 0.4553,
+    "n": 9,
+    "lo": 1.007,
+    "hi": 2.204,
+    "p10": 1.0454,
+    "p90": 2.196,
+    "min": 1.0454,
+    "rule": "p10-p90 of the photographs"
    },
    "2.0": {
-    "mean": 1.091,
-    "sd": 0.0,
-    "n": 1,
-    "min": 0.7637
+    "mean": 1.4989,
+    "sd": 0.4478,
+    "n": 9,
+    "lo": 1.056,
+    "hi": 2.276,
+    "p10": 1.0784,
+    "p90": 2.0176,
+    "min": 1.0784,
+    "rule": "p10-p90 of the photographs"
    },
    "4.0": {
-    "mean": 2.384,
-    "sd": 0.0,
-    "n": 1,
-    "min": 1.6688
+    "mean": 2.0347,
+    "sd": 0.7071,
+    "n": 9,
+    "lo": 1.026,
+    "hi": 3.073,
+    "p10": 1.1116,
+    "p90": 2.8194,
+    "min": 1.1116,
+    "rule": "p10-p90 of the photographs"
    }
   }
  }

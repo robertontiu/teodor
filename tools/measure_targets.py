@@ -418,9 +418,10 @@ def _box(s):
 
 def closeup_measure(path, ppm_subject, sheet_ppm=5.0, face=None, skin=None, hair=None):
     L, f = eyes.lightness(path)
-    if f != 1:
-        sys.exit("closeup: the photograph is larger than eyes.FINE_MAX_PX; crop it to the subject first")
-    m = {}
+    if f != 1:          # a photograph over eyes.FINE_MAX_PX is reduced by a whole factor: boxes and scale follow
+        ppm_subject = ppm_subject / f
+        face, skin, hair = ([v // f for v in b] if b else None for b in (face, skin, hair))
+    m = {"reduced": f}
     whole = eyes.measure_fine(L, sheet_ppm)
     for k in ("value_below20", "value_below30", "value_p1", "value_p5", "value_p95", "flat_midtone_share", "edge_p10_mm"):
         m[k] = whole.get(k)
@@ -446,13 +447,32 @@ def closeup_measure(path, ppm_subject, sheet_ppm=5.0, face=None, skin=None, hair
     return m
 
 
+# Keys of the subject (face, skin, hair) take their bounds from the photographs' own spread once there are at least
+# SPREAD_N of them: the middle 80% (p10 to p90) of real close-ups, so a render or a drawing is held to the range real
+# skin and hair show, not to one sitter. Whole-frame keys keep BOUND_RULES (they depend on each photograph's
+# background and framing, which the drawing doesn't copy).
+SPREAD_N = 5
+SUBJECT_KEYS = ("face_specular_count_30", "face_value_p1", "face_value_below20", "hair_coherence")
+
+
+def _stats(v):
+    return {"mean": round(float(v.mean()), 4), "sd": round(float(v.std()), 4), "n": int(len(v)), "lo": round(float(v.min()), 4),
+            "hi": round(float(v.max()), 4), "p10": round(float(np.percentile(v, 10)), 4), "p90": round(float(np.percentile(v, 90)), 4)}
+
+
 def closeup_build(photos):
-    """The ruler from every stored photograph: mean, sd, n and the bound per key."""
+    """The ruler from every stored photograph: mean, sd, n, range, p10/p90 and the bound per key."""
     t = {}
     for k, (kind, rule) in BOUND_RULES.items():
         v = np.array([p["measures"][k] for p in photos if p["measures"].get(k) is not None], float)
         if len(v):
-            t[k] = {"mean": round(float(v.mean()), 4), "sd": round(float(v.std()), 4), "n": int(len(v)), kind: round(float(rule(v.mean())), 4)}
+            e = _stats(v)
+            spread = k in SUBJECT_KEYS and len(v) >= SPREAD_N
+            e[kind] = round(float(np.percentile(v, 10 if kind == "min" else 90)) if spread else float(rule(v.mean())), 4)
+            if k == "hair_coherence" and spread:
+                e[kind] = round(max(e[kind], 0.5), 4)          # the gaps doc's floor for strands
+            e["rule"] = "p10-p90 of the photographs" if spread else "BOUND_RULES on the mean"
+            t[k] = e
     for k, (lo, hi) in BAND_RULES.items():
         rows = [p["measures"][k] for p in photos if p["measures"].get(k)]
         if not rows:
@@ -463,9 +483,17 @@ def closeup_build(photos):
             if not len(v):
                 continue
             mu = float(v.mean())
-            e = {"mean": round(mu, 4), "sd": round(float(v.std()), 4), "n": int(len(v)), "min": round(lo * mu, 4)}
-            if hi:
-                e["max"] = round(hi * mu, 4)
+            e = _stats(v)
+            if len(v) >= SPREAD_N:
+                e["min"] = e["p10"]
+                if hi:
+                    e["max"] = e["p90"]
+                e["rule"] = "p10-p90 of the photographs"
+            else:
+                e["min"] = round(lo * mu, 4)
+                if hi:
+                    e["max"] = round(hi * mu, 4)
+                e["rule"] = "the gaps doc's tolerance on the mean"
             t[k][s] = e
     return t
 
@@ -508,8 +536,9 @@ def closeup(argv):
     entry = {"_n": n, "_provisional": n < 10,
              "_about": (f"Close-up ruler for {style}: fine measures (eyes.measure_fine) of openly licensed close-up photographs at "
                         "their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). "
-                        "PROVISIONAL until at least 10 photographs: bounds come from BOUND_RULES in tools/measure_targets.py "
-                        "(judgements from docs/research/hyperrealism-gaps.md), applied to the photographs' mean."),
+                        "PROVISIONAL until at least 10 photographs. Subject keys (face, skin, hair) are bounded by the photographs' p10-p90 "
+                        "once there are 5; whole-frame keys by BOUND_RULES (judgements from docs/research/hyperrealism-gaps.md) on the mean. "
+                        "Every key keeps mean, sd, range and p10/p90: the spread across the photographs."),
              "_measured": time.strftime("%Y-%m-%d"), "_photos": cur["_photos"]}
     entry.update(closeup_build(cur["_photos"]))
     os.makedirs(os.path.dirname(pp), exist_ok=True)
