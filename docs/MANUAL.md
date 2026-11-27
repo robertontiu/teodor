@@ -208,7 +208,7 @@ detail                                            what is open
 | watercolour | [manual/watercolour.md](manual/watercolour.md) | cold_press, hot_press, rough |
 | ink | [manual/ink.md](manual/ink.md) | xuan_raw, xuan_sized, silk, bristol, laid_paper, illustration_board, plate_wove, plate_laid; tools: brush, brush_side, splash, wash, pen, hatch, water, pencil, nib (`nib`: crowquill, mapping, fine, stub), stipple, burin, needle, drypoint; finishes: dots, seal, erase-pencil, scrape, mount, bite, lozenge, wipe, platemark |
 | charcoal | [manual/charcoal.md](manual/charcoal.md) | drawing, toned, ingres |
-| graphite | [manual/graphite.md](manual/graphite.md) | drawing, toned, ingres, bristol, vellum, plate, hot_press (the smooth papers for hyperrealism; mechanical pencils, carbon pencil, blending brush, tortillon, chamois, precision and electric erasers with `"seek"`: see the medium page) |
+| graphite | [manual/graphite.md](manual/graphite.md) | drawing, toned, ingres, bristol, vellum, plate, hot_press (the smooth papers for hyperrealism; mechanical pencils, carbon pencil, compressed charcoal and charcoal powder for the darks (laid first; workable fixative between layers), blending brush, tortillon, chamois, precision and electric erasers with `"seek"`: see the medium page) |
 | pastel | [manual/pastel.md](manual/pastel.md) | toned, sanded, ingres |
 | gouache | [manual/gouache.md](manual/gouache.md) | illustration_board, watercolour_paper, toned_paper |
 | tempera | [manual/tempera.md](manual/tempera.md) | gesso_panel, gold_ground |

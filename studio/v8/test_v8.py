@@ -288,7 +288,48 @@ def fine_measures():
     return ok
 
 
-EXTRA = {"fine": fine_measures}
+def darks_first():
+    """G2: graphite's charcoal darks. Compressed charcoal on bare vellum goes far darker than graphite can; over unfixed,
+    burnished 8B it hardly takes; over the same 8B after a workable fixative it takes again; the carbon is recorded,
+    hides the shine and lifts with an eraser; a canvas saved before the carbon array existed still loads."""
+    ok = True
+    try:
+        with tempfile.TemporaryDirectory() as w:
+            env = dict(os.environ, CANVAS="t")
+            run(HERE, w, "graphite", "vellum", [], [])
+            py = ["python3", os.path.join(w, "studio.py")]
+            sh = lambda *c: subprocess.run(py + [str(x) for x in c], env=env, capture_output=True, text=True, check=True)
+            R = lambda x: {"type": "rect", "x": x, "y": 30, "w": 80, "h": 180}
+            hat = lambda tool, x, ang, size=8, sp=3: {"type": "hatch", "brush": tool, "value": 0.0, "layers": [1.0], "size": size,
+                                                     "spacing": sp, "angle": ang, "colors": ["#000000"], "pressure": 1.0,
+                                                     "region": R(x), "length": 400, "clip": True}
+            sh("new", "#f7f6f2", 360, 240, "--medium", "graphite", "--support", "vellum")
+            g8 = [hat("pencil_8B", x, a) for x in (130, 250) for a in (20, 110)]
+            sh("act", json.dumps({"do": g8[:4]}))
+            sh("finish", "fixative", json.dumps({"kind": "workable", "strength": 1.0, "region": R(250)}))
+            sh("act", json.dumps({"do": [hat("compressed_charcoal", x, a, 12, 4) for x in (10, 130, 250) for a in (60,)] }))
+            sh("act", json.dumps({"do": [hat("compressed_charcoal", x, a, 12, 4) for x in (10, 130, 250) for a in (150,)]}))
+            col = np.load(os.path.join(w, "t_col.npy")).astype(np.float32).mean(-1)
+            med = [float(np.median(col[60:180, x + 15:x + 65])) for x in (10, 130, 250)]
+            bare, over, fixed = med
+            assert bare < fixed < over, med                    # bare paper darkest, unfixed graphite refuses charcoal
+            assert over - bare > 0.06, med
+            carbon = np.load(os.path.join(w, "t_carbon.npy")).astype(np.float32)
+            assert carbon[60:180, 25:75].mean() > 0.2 and carbon[60:180, 145:195].mean() < carbon[60:180, 265:315].mean()
+            sh("act", json.dumps({"do": [{"type": "strokes", "brush": "electric_eraser", "colors": ["#ffffff"],
+                                          "strokes": [{"pts": [[50, 60], [50, 180]], "size": 20, "pressure": 1.0}]}]}))
+            c2 = np.load(os.path.join(w, "t_carbon.npy")).astype(np.float32)
+            assert c2[80:160, 45:55].mean() < 0.5 * carbon[80:160, 45:55].mean(), "the eraser should lift the charcoal"
+            os.remove(os.path.join(w, "t_carbon.npy"))        # a canvas from before the carbon array
+            sh("look", "full")
+        print("darks first (G2): ok")
+    except Exception as e:
+        ok = False
+        print(f"darks first (G2): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures, "darks": darks_first}
 
 
 if __name__ == "__main__":

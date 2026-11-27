@@ -22,7 +22,8 @@ Hyperrealism is "a genre of painting and sculpture resembling a high-resolution 
 
 ## 4. Palette
 - **Monochrome.** Grey from the paper's white to graphite's dark grey, plus carbon black where graphite stops. The grades: "H" for hardness, "B" for blackness, 9H to 9B, HB in the middle; more clay makes a harder, lighter lead ([Met, Graphite](https://www.metmuseum.org/perspectives/materials-and-techniques-drawing-graphite); the engine's ramp is in `docs/calibration/graphite.md`).
-- **Values the media can reach** (measured, `docs/calibration/graphite.md` and `charcoal.md`): dense soft graphite L* 32.5-34.7 at its darkest; a carbon/charcoal pencil about L* 26; white paper about L* 96. A photograph reaches L* 17 at its 5th percentile (section 5), so the deepest photographic blacks cannot be matched in graphite. Hence the carbon pencil, and hence powder (`glaze`).
+- **Values the media reach** (`docs/calibration/graphite.md`, `charcoal.md`, `graphite-hyperrealism.md`): graphite alone stops near L* 40 as an area (it only gets shinier past Munsell value 4) and dense soft graphite lines at L* 32.5-34.7; that is **graphite's** limit, not the drawing's. Charcoal reaches the photograph's darks when it is laid first and built in cycles with workable fixative: about L* 19 on vellum in three cycles (measured, patch test). White paper is about L* 96. A photograph reaches L* 17 at its 5th percentile (section 5) and a close-up portrait L* 5.5 (`graphite-hyperrealism-closeup`).
+- **The rule for the schema:** the schema keeps the reference's values. No value floor is planned in: the darks are laid first, in charcoal, before any blending pass touches them (sections 9 and 12). The old note "graphite stops near L* 40, carbon near 32" described a light-to-dark recipe on a full tooth; used as a planning floor it removed every dark from round 19 (docs/research/hyperrealism-gaps.md, G2).
 - **Avoid:** the shine of over-burnished soft graphite in the darks, which reads as a grey glare in raking light (Vitruvian Studio; Met: graphite "often look[s] shiny in raking or oblique light").
 
 ## 5. Light and value
@@ -50,11 +51,12 @@ Hyperrealism is "a genre of painting and sculpture resembling a high-resolution 
 1. **Photograph** the subject (or choose one); the drawing is made from it (artnet: "I always draw from a photograph"). [the schema: `ref` a photograph or a rendered scene]
 2. **Transfer** the outline by grid, projection or tracing, lightly (Wikipedia; Art is Fun; Creative Bloq). [`transfer` (graphite: a 2H pencil tracing)]
 3. **Indent** the white lines before any tone (Sibley). [`strokes` with `stylus`]
-4. **Lay the tone in layers, dark to light or light to dark** ("there are no rules", though the darks are best decided early: Sibley), hard over soft to fill the tooth (Sibley), powder and brush for broad areas (Creative Bloq). [`hatch` with mechanical pencils per value band, darkest first; `glaze` for powder]
-5. **Blend in stages** (Wildlife Art Store), masking edges. [`hatch` with `brush`, `tortillon`, `chamois`, `clip: true`]
-6. **Correct against the photograph,** layer and blend again, until it "looks like the photograph" (artnet). [rounds of `match` (value-seeking) and blending; `report`]
-7. **Lift the lights** with kneaded, pen and battery erasers (Creative Bloq; Wildlife Art Store). [`match` with `kneaded`, `precision_eraser`, `electric_eraser` and `"seek": true`]
-8. **Last darkest accents** (carbon or the softest graphite), then optional fixative (graphite needs little; spray coatings can darken values: Vitruvian Studio). [`carbon_pencil`, `finish accents`, `finish fixative`]
+4. **The darks first, in charcoal,** built in cycles: powder brushed on as a base, compressed charcoal, matte workable fixative between layers, "the darker you need it the more layers you will build up" (Desdain Art); the fixative gives "an artificial tooth that will accept additional shading" (Sibley). [`charcoal_powder`, `compressed_charcoal`, a soft `brush` inside the passage, `finish fixative {"kind": "workable"}`; repeat]
+5. **Lay the rest of the tone in layers** ("there are no rules", though the darks are best decided early: Sibley), hard over soft to fill the tooth (Sibley), powder and brush for broad areas (Creative Bloq). [`hatch` with mechanical pencils per value band, darkest first, clipped off the charcoal darks; `glaze` for powder]
+6. **Blend in stages** (Wildlife Art Store), masking edges. [`hatch` with `brush`, `tortillon`, `chamois`, `clip: true`]
+7. **Correct against the photograph,** layer and blend again, until it "looks like the photograph" (artnet). [rounds of `match` (value-seeking) and blending; `report`]
+8. **Lift the lights** with kneaded, pen and battery erasers (Creative Bloq; Wildlife Art Store). [`match` with `kneaded`, `precision_eraser`, `electric_eraser` and `"seek": true`]
+9. **Last darkest accents** (charcoal or carbon), then optional fixative (graphite needs little; spray coatings can darken values: Vitruvian Studio). [`compressed_charcoal`, `carbon_pencil`, `finish accents`, `finish fixative`]
 - **Time:** about 200 hours over 25 days for one large drawing (My Modern Met); "two to three weeks to two to three months" per work (artnet).
 
 ## 10. Finishing
@@ -63,17 +65,17 @@ Hyperrealism is "a genre of painting and sculpture resembling a high-resolution 
 
 ## 11. Pitfalls for Teodor
 - **The airbrushed plastic look:** overblended, flattened tone with no texture (Wildlife Art Store warns overblending flattens a drawing). Keep photographic texture where the photo has it (paper fibre, skin).
-- **Graphite glare in the darks** from forcing soft grades (Vitruvian Studio): use carbon past L* 40.
+- **Graphite glare in the darks** from forcing soft grades (Vitruvian Studio): past about L* 40 the darks are charcoal, laid first (charcoal won't take on unfixed soft graphite: Wildlife Art Store; it covers fixed graphite: Desdain Art).
 - **Outline left showing**, or hatching visible at viewing distance: the hand must disappear.
 - **Copying instead of seeing:** the critic's question is not "is it accurate" but whether the photograph's feeling survives (**judgement**). Nearest wrong feelings: clinical coldness, a technical demonstration with no subject.
 - **Engine:** see section 12 and `docs/calibration/graphite-hyperrealism.md`.
 
 ## 12. Engine mapping
 - **Medium** `graphite`, support `vellum` (or `plate`, `hot_press`), ground `#f7f6f2`, size 2400 x 3200 or larger (48 x 64 cm at 5 px/mm). Schema: a photograph or a rendered scene, greyscale.
-- **Tools** (`docs/manual/graphite.md`): `mech_03`, `mech_05`, `mech_07` (fixed width, grade capped by lead), pencils `grade` 2H-8B, `carbon_pencil`, `brush`, `tortillon`, `stump`, `chamois`, `kneaded`, `precision_eraser`, `electric_eraser`, `stylus`.
+- **Tools** (`docs/manual/graphite.md`): `mech_03`, `mech_05`, `mech_07` (fixed width, grade capped by lead), pencils `grade` 2H-8B, `compressed_charcoal`, `charcoal_powder`, `carbon_pencil`, `brush`, `tortillon`, `stump`, `chamois`, `kneaded`, `precision_eraser`, `electric_eraser`, `stylus`.
 - **Intentions:** `transfer`; `hatch` in value bands (one `hatch` per band with `layers: [band]` and the band's value as colour, darkest first, `clip` per part); `hatch` with a blender (`value: 0`, `layers: [1.0]`, spacing a third of the size) as an even blending pass; `match` with a pencil for corrections and with an eraser plus `"seek": true` to lift lights to the schema's value.
 - **Felt bias:** arousal -0.2, tension 0.0, care +0.4 (**judgement**: slow, steady, deliberate).
-- **Gaps:** value bands step at their edges (core `hatch` has no feathering at a layer's boundary); `match` leaves dashes that need blending; per-part masks have to be written as polygons; no movable light for the sheen; graphite cannot reach a photograph's blacks (by nature); a canvas larger than 2400 x 3200 is slow (timings in the calibration note).
+- **Gaps:** value bands step at their edges (core `hatch` has no feathering at a layer's boundary); `match` leaves dashes that need blending; per-part masks have to be written as polygons; no movable light for the sheen; graphite alone cannot reach a photograph's blacks (charcoal laid first reaches about L* 19; a measured modern charcoal sheet is still missing); a canvas larger than 2400 x 3200 is slow (timings in the calibration note).
 
 ## 13. Sources
 - Wikipedia, [Hyperrealism (visual arts)](https://en.wikipedia.org/wiki/Hyperrealism_(visual_arts)) and [Photorealism](https://en.wikipedia.org/wiki/Photorealism)
@@ -81,7 +83,8 @@ Hyperrealism is "a genre of painting and sculpture resembling a high-resolution 
 - Strathmore, [smooth vs vellum bristol](https://strathmoreartist.com/blog-reader/the-difference-between-bristol-smooth-and-bristol-vellum), [what is bristol paper](https://strathmoreartist.com/blog-reader/what-is-bristol-paper), [graphite shading: which paper](https://strathmoreartist.com/blog-reader/tips-for-graphite-shading-which-paper-to-use)
 - Wildlife Art Store, [paper for pencil drawing](https://www.wildlifeartstore.com/paper-for-pencil-drawing/), [mechanical pencils](https://www.wildlifeartstore.com/draw-with-mechanical-pencils/), [blending tools](https://www.wildlifeartstore.com/drawing-tools-for-blending-pencil/), [white lines](https://www.wildlifeartstore.com/white-lines-in-a-pencil-drawing/)
 - Sibley Fine Art, [indenting explained](https://sibleyfineart.com/_blog/?p=780), [indenting tutorial](https://sibleyfineart.com/tutorial--indenting.htm), [layer and burnish](https://sibleyfineart.com/draw-with-mike-videos/ds005-layer-burnish.htm), [soft over hard](https://sibleyfineart.com/_blog/2012/05/)
-- Vitruvian Studio, [3 ways to reduce graphite shine](https://vitruvianstudio.com/blog/3-ways-to-reduce-graphite-shine-in-your-drawings/)
+- Vitruvian Studio, [3 ways to reduce graphite shine](https://vitruvianstudio.com/blog/3-ways-to-reduce-graphite-shine-in-your-drawings/) (with its readers' notes on charcoal over graphite)
+- Darks and charcoal with graphite: Wildlife Art Store, [9 ways to stop pencil shine](https://www.wildlifeartstore.com/9-ways-to-stop-pencil-shine/); Desdain Art, [Charcoal FAQs](https://desdainart.squarespace.com/faqs); Sibley Fine Art, [Graphite v charcoal](https://sibleyfineart.com/_blog/tag/graphite-pencils/) and "Drawing dark values" (sibleyfineart.com/draw-with-mike-videos/dwm102); Jackson's Art, [Difference between graphite and charcoal](https://jacksonsart.com/blog/2018/08/23/difference-between-graphite-and-charcoal/)
 - Creative Bloq, [get more from graphite](https://www.creativebloq.com/how-to/get-more-from-graphite-with-these-tips)
 - Art is Fun, [the grid method](https://www.art-is-fun.com/grid-method)
 - Eclectic Light, [Painting on the edge: depth of field](https://eclecticlight.co/2023/10/13/painting-on-the-edge-depth-of-field/)

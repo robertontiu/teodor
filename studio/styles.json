@@ -2407,7 +2407,7 @@
    "carbon pencil or powder past graphite's darkest"
   ],
   "palette": {
-   "principle": "monochrome: the paper's white to graphite's dark grey, carbon for the darkest darks; the photograph's full value range as far as the media allow",
+   "principle": "monochrome: the paper's white to graphite's dark grey, charcoal for the darkest darks (laid first); the schema keeps the photograph's full value range",
    "colors": [
     "#f7f6f2",
     "#c9c9cb",
@@ -2434,6 +2434,8 @@
     "mech_05",
     "mech_07",
     "pencil",
+    "compressed_charcoal",
+    "charcoal_powder",
     "carbon_pencil",
     "brush",
     "tortillon",
@@ -2460,7 +2462,7 @@
   ],
   "finishing": [
    "finished when it looks like the photograph: no visible strokes at viewing distance, smooth gradients, full value range, photographic edges",
-   "highlights lifted last; darkest accents in carbon or the softest graphite",
+   "highlights lifted last; darkest accents in charcoal or carbon",
    "fixative optional (dulls shine, can darken)"
   ],
   "pitfalls": [
@@ -2478,7 +2480,7 @@
    "value bands step at their edges (core hatch has no feathering at a layer boundary)",
    "match corrections leave dashes that need blending",
    "per-part masks are written by hand as polygons",
-   "graphite and carbon cannot reach a photograph's blacks (by nature)",
+   "graphite alone cannot reach a photograph's blacks; charcoal laid first, with workable fixative between cycles, reaches about L* 19",
    "fixed raking light for the sheen",
    "2400x3200 works but takes about an hour for a full drawing on 2 vCPU"
   ],

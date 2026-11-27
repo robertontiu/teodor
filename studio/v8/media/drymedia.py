@@ -450,6 +450,19 @@ class DryTool:
         catch = catch + smear
         cap = sup["cap"] + cv.xcap[sl]
         left = np.clip((cap - dep) / cap, 0, 1)
+        carb = getattr(cv, "carbon", None) if sp.get("carbon") else None
+        if carb is not None:
+            # charcoal and carbon over graphite: "You cannot apply charcoal or carbon pencils over soft graphite. It
+            # doesn't stick" (Wildlife Art Store); "the charcoal slides over graphite layers", so fix it first (a
+            # reader's note at Vitruvian Studio); over fixed graphite charcoal "layers really well ... and completely
+            # covers it" (Desdain Art, with matte workable fixative between layers). So the take falls with the
+            # UNFIXED graphite's cover and its slickness (burnish, soft grades: the sheen), and a workable fixative,
+            # which locks it (fix) and lays new tooth (xcap), restores it. SLICK is tuned by eye
+            # (docs/calibration/graphite-hyperrealism.md, "Darks first").
+            g = np.clip(dep - carb[sl], 0, None)
+            unf = np.clip((dep - cv.fix[sl]) / np.maximum(dep, 1e-4), 0, 1)
+            slick = _cov(g) * unf * (0.55 + 0.45 * np.clip(cv.sheen[sl] / 0.6, 0, 1))
+            left = left * (1 - M.SLICK * np.clip(slick, 0, 1))
         if sp.get("oily"):
             left = np.maximum(left, 0.45)          # wax rides over full tooth as a film
         elif sp.get("grip"):
@@ -496,6 +509,8 @@ class DryTool:
             fh = (1 - np.exp(-KC * halo))[..., None]
             col = col * (1 - fh) + Pp * fh
         cv.col[sl] = col
+        if carb is not None:
+            carb[sl] = carb[sl] + a + (halo if halo is not None else 0)
         cv.dep[sl] = dep + a + (halo if halo is not None else 0)
         cv.loose[sl] = cv.loose[sl] + a * sp["loose"] + (halo if halo is not None else 0)
         cv.fix[sl] = cv.fix[sl] + a * sp["stain"]
@@ -541,7 +556,8 @@ class DryTool:
         sig = max(0.8 * self.ps, r * sp.get("sig", 0.33))
         # one separable blur of colour, deposit, loose dust and coverage together (same as six calls)
         sh0 = cv.sheen[sl] if hasattr(cv, "sheen") else None
-        extra = [dep, loose, _cov(dep)] + ([sh0] if sh0 is not None else [])
+        cb0 = cv.carbon[sl] if hasattr(cv, "carbon") else None
+        extra = [dep, loose, _cov(dep)] + ([sh0] if sh0 is not None else []) + ([cb0] if cb0 is not None else [])
         stk = np.concatenate([col, np.stack(extra, -1)], -1)
         cm = np.clip(cv.clip[sl], 0, 1) if cv.clip is not None else None
         if ind is not None and ind[sl].max() > 0.01:
@@ -568,6 +584,8 @@ class DryTool:
         loose = loose + (bl - loose) * k
         if sh0 is not None:                         # the blender smears the shiny flakes with the rest of the graphite
             cv.sheen[sl] = sh0 + (st[..., 6] - sh0) * k
+        if cb0 is not None:                         # and the carbon with the rest of the dust
+            cv.carbon[sl] = cb0 + (st[..., 6 + (sh0 is not None)] - cb0) * k
         # drag: the blender carries tone along the stroke (and pulls it out over bare paper)
         mw = m * guard                              # what the blender picks up to carry (not a groove's white)
         ms = mw.sum() + 1e-6
@@ -593,6 +611,8 @@ class DryTool:
             loose = loose * (1 - pk)
             dep = nd
         cv.col[sl], cv.dep[sl], cv.loose[sl] = col, dep, np.minimum(loose, dep)
+        if cb0 is not None:
+            cv.carbon[sl] = np.clip(cv.carbon[sl], 0, dep)
         if hasattr(cv, "sheen") and sp.get("burnish"):
             cv.sheen[sl] = np.clip(cv.sheen[sl] + m * pe * ds * 0.03 * _cov(dep), 0, 1.5)
 
@@ -611,6 +631,8 @@ class DryTool:
         nd = dep - remL - remB
         ratio = np.where(dep > 1e-4, _cov(nd) / np.maximum(_cov(dep), 1e-6), 1.0)
         cv.col[sl] = cv.paper[sl] + (col - cv.paper[sl]) * ratio[..., None]
+        if hasattr(cv, "carbon"):           # (before dep, a view of cv.dep, is overwritten)
+            cv.carbon[sl] = cv.carbon[sl] * np.where(dep > 1e-4, nd / np.maximum(dep, 1e-4), 1.0)
         cv.dep[sl], cv.loose[sl] = nd, loose - remL
         if hasattr(cv, "sheen"):
             cv.sheen[sl] = cv.sheen[sl] * ratio
@@ -889,6 +911,8 @@ class DryMedium(Medium):
                                  "light passages (kneaded or precision eraser with seek) or cover them")
             if drawn.any():
                 sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6 * getattr(cv, "px_scale", 1.0)) * _cov(cv.dep)
+                if getattr(cv, "carbon", None) is not None:
+                    sh = sh * (1 - _cov(cv.carbon))           # charcoal over graphite hides its shine (as in optics)
                 k = np.clip(sh * 0.32, 0, 0.42)
                 over = float((k[drawn] > self.SHINE_K).mean())
                 lines.append(f"graphite sheen: {over:.0%} of the drawn area shines strongly")
@@ -974,6 +998,9 @@ class DryMedium(Medium):
 
     fix_dark, fix_chroma, fix_restore = 0.04, 0.0, 0.2
 
+    def fix_dark_at(self, cv):
+        return self.fix_dark
+
     def fin_fixative(self, cv, p):
         kind = p.get("kind", self.fix_default)
         s = float(p.get("strength", self.fix_strength))
@@ -985,7 +1012,7 @@ class DryMedium(Medium):
         cv.xcap = np.clip(cv.xcap + rest * cap * s * mk, 0, cap)
         cov = _cov(cv.dep)
         L = _lum(cv.col)[..., None]
-        d = (self.fix_dark * s * mk * (0.3 + 0.7 * cov))[..., None]
+        d = (self.fix_dark_at(cv) * s * mk * (0.3 + 0.7 * cov))[..., None]
         if self.fix_chroma:
             d = d * (0.6 + 0.8 * L)                     # lights lose more (powder stops scattering)
             ch = (self.fix_chroma * s * mk * cov)[..., None]
@@ -1023,6 +1050,8 @@ class DryMedium(Medium):
         nd = cv.dep - (np.minimum(cv.loose, free) + 0.7 * np.clip(free - cv.loose, 0, None)) * out
         ratio = np.where(cv.dep > 1e-4, _cov(nd) / np.maximum(_cov(cv.dep), 1e-6), 1.0)
         cv.col = cv.paper + (cv.col - cv.paper) * ratio[..., None]
+        if hasattr(cv, "carbon"):
+            cv.carbon = cv.carbon * np.where(cv.dep > 1e-4, nd / np.maximum(cv.dep, 1e-4), 1.0)
         cv.loose = cv.loose * (1 - out); cv.dep = nd
 
     def fin_accents(self, cv, p):
@@ -1081,6 +1110,14 @@ def _grey(L, tint=(1.0, 1.0, 1.0)):
 VINE = _grey(29.0, (1.0, 0.985, 0.97))
 COMP = _grey(24.0, (1.0, 0.985, 1.02))
 CPENCIL = _grey(26.0)
+# Fresh charcoal on a bright modern sheet, for the graphite medium's darks (docs/calibration/graphite-hyperrealism.md,
+# "Darks first"). No measured modern charcoal drawing exists in the studio; the 19th-century sheets above (L* 22-29 at
+# their darkest) are aged and photographed. The anchor is the pigment: dry films of carbon blacks in a lean binder
+# measure L* 20.0 (lamp black) and 20.6 (vine black, i.e. charcoal) in gum arabic (FORS spectra, studio/pigments.json,
+# PBk6 and PBk8). Compressed charcoal (charcoal or carbon black pressed with a binder) is set at that floor, L* 20;
+# the brushed powder (unbound, so it scatters a little more) at L* 22: the 2 L* step is a judgement.
+FRESH_COMP = _grey(20.0)
+FRESH_POWDER = _grey(22.0)
 
 
 class Charcoal(DryMedium):
@@ -1167,7 +1204,7 @@ def _mech(desc, lead_mm, g, gmax):
 
 class Graphite(DryMedium):
     name = "graphite"
-    arrays = ("col", "paper", "dep", "loose", "fix", "xcap", "sheen", "indent", "guide")
+    arrays = ("col", "paper", "dep", "loose", "fix", "xcap", "sheen", "indent", "guide", "carbon")
     # a graphite veil (powder rubbed in) unifies a passage: the hyperrealist's blending film, mapped to glaze in
     # docs/styles/graphite-hyperrealism.md; graphite has little loose dust [S13], so wipe is the kneaded eraser alone
     glaze_role = "glaze"
@@ -1215,7 +1252,18 @@ class Graphite(DryMedium):
         # past about Munsell value 4 graphite only shines, so the darkest darks are laid with a carbon (charcoal) pencil:
         # matte, darker, less erasable. Its darkness and behaviour are charcoal's measured pencil (L* 26)
         "carbon_pencil": _stick("carbon pencil: matte black-grey for the darkest darks graphite cannot reach (no shine; erases poorly)",
-                                "tip", CPENCIL, 0.85, 0.75, 0.4, 0.25, mono=True, maxsize=8),
+                                "tip", CPENCIL, 0.85, 0.75, 0.4, 0.25, mono=True, maxsize=8, carbon=True),
+        # the darks-first kit (docs/research/hyperrealism-gaps.md, G2): charcoal laid before any graphite, fixed with a
+        # workable fixative, built up in cycles. Behaviour from charcoal's measured tools (compressed: flow, reach,
+        # loose, stain as charcoal's compressed_tip); darkness from FRESH_*; the powder's brush (soft edge, deep reach
+        # into the tooth, little binder) is tuned by eye
+        "compressed_charcoal": _stick("compressed charcoal: the deepest matte black (about L* 20 at full cover); lay it "
+                                      "before graphite or over a workable fixative: it won't take on unfixed soft graphite",
+                                      "tip", FRESH_COMP, 1.05, 0.95, 0.5, 0.22, mono=True, maxsize=26, carbon=True),
+        "charcoal_powder": _stick("charcoal powder on a soft brush: an even, matte dark base (about L* 22) that settles into "
+                                  "the tooth without lines; build it in thin layers, fixed between them",
+                                  "tip", FRESH_POWDER, 0.55, 1.2, 0.75, 0.05, mono=True, maxsize=80, carbon=True,
+                                  edge_mm=1.5, w=1.3, dust=0.2),
     }
     DEFAULT = {"tip": "pencil", "side": "side"}
     MAXSIZE = {"tip": 10, "side": 36}
@@ -1230,7 +1278,20 @@ class Graphite(DryMedium):
     bound_erase = 0.85
     veil = "#4a4b4f"
     fix_default, fix_strength, fix_dull, fix_dark = "final", 0.5, 0.4, 0.015
+    # a workable fixative "dries with a matt finish, which provides an artificial tooth that will accept additional
+    # shading" (Sibley, "Drawing dark values"): the dark-building cycle. How much tooth one full coat lays is tuned by
+    # eye (pastel's 0.3 of the capacity), as is how strongly unfixed graphite refuses charcoal (SLICK)
+    fix_restore = 0.3
+    SLICK = 0.85
     accent_tool = "pencil_8B"
+
+    def fix_dark_at(self, cv):
+        # the fixative darkens charcoal as it does in the charcoal medium (0.04 per full coat, FINISHING.md), graphite
+        # a hair (0.015)
+        cb = getattr(cv, "carbon", None)
+        if cb is None:
+            return self.fix_dark
+        return self.fix_dark + (0.04 - self.fix_dark) * np.clip(_cov(cb) / np.maximum(_cov(cv.dep), 1e-4), 0, 1)
 
     def adjust(self, spec, it):
         if "grade" in it and spec["kind"] == "stick" and spec.get("grade"):
@@ -1276,6 +1337,13 @@ class Graphite(DryMedium):
         # graphite's metallic shine under a raking light: the flattened flakes catch it, strongest on
         # dense soft darks and burnished passages; silvery, cool
         sh = gaussian_filter(np.clip(cv.sheen, 0, 1.5), 0.6 * getattr(cv, "px_scale", 1.0)) * _cov(cv.dep)
+        cb = getattr(cv, "carbon", None)
+        if cb is not None and cb.any():
+            # charcoal over graphite hides its shine and "will stay matted" (Desdain Art), and drinks the light as
+            # charcoal does (the charcoal medium's velvet, tuned by eye)
+            cc = _cov(cb)
+            sh = sh * (1 - cc)
+            img = img * (1 - 0.06 * cc * (1 - _lum(img)))[..., None]
         # the paper's relief modulates the shine (smooth bristol: hardly; relief 1 on drawing paper)
         rk = np.clip(0.55 + light * 7 * self.sup(cv).get("relief", 1.0), 0.15, 1.3)
         k = np.clip(sh * rk * 0.32, 0, 0.42)[..., None]
