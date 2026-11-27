@@ -455,7 +455,41 @@ def fine_marks():
     return ok
 
 
-EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera, "render": photoreal_reference, "marks": fine_marks}
+def tiles_and_relation():
+    """G8, G9: `detail tiles` plans even, overlapping tiles; `detail open --tile K` opens one; closing a detail relates
+    it back (texture against its surroundings and the seam, against the schema) and flags a detail drawn alone."""
+    ok = True
+    try:
+        with tempfile.TemporaryDirectory() as w:
+            env = dict(os.environ, CANVAS="t")
+            run(HERE, w, "graphite", "drawing", [], [])
+            py = ["python3", os.path.join(w, "studio.py")]
+            sh = lambda *c: subprocess.run(py + [str(x) for x in c], env=env, capture_output=True, text=True)
+            assert sh("ref", schema(w)).returncode == 0
+            r = sh("detail", "tiles", 100, 100, 280, 100, "--scale", 4, "--tile", 400)
+            assert r.returncode == 0, r.stderr[-300:]
+            T = json.load(open(os.path.join(w, "t_tiles.json")))["tiles"]
+            assert len(T) == 3 and T[0]["x"] == 100 and T[-1]["x"] + T[-1]["w"] == 380, T
+            steps = {T[i + 1]["x"] - T[i]["x"] for i in range(len(T) - 1)}
+            assert len(steps) == 1, steps                      # evenly spread
+            assert sh("detail", "open", "--tile", 1).returncode == 0
+            r = sh("act", "--detail", json.dumps({"do": [{"type": "hatch", "brush": "pencil", "grade": "6B", "value": 0.0, "layers": [1.0],
+                                                          "spacing": 6, "size": 6, "angle": 30, "colors": ["#202020"],
+                                                          "region": {"type": "canvas"}}]}))
+            assert r.returncode == 0, r.stderr[-300:]
+            r = sh("detail", "close")
+            assert r.returncode == 0 and "relation:" in r.stdout and "RELATE BACK" in r.stdout, r.stdout[-600:]
+            r = sh("report")
+            assert r.returncode == 0 and "details related back" in r.stdout and "shows a seam" in r.stdout, r.stdout[-600:]
+        print("tiles and relation (G8, G9): ok")
+    except Exception as e:
+        ok = False
+        print(f"tiles and relation (G8, G9): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera, "render": photoreal_reference, "marks": fine_marks,
+         "tiles": tiles_and_relation}
 
 
 if __name__ == "__main__":

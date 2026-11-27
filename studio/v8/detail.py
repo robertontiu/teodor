@@ -420,7 +420,78 @@ def close_detail(core, cancel=False, resample="area"):
     print(("detail cancelled" if cancel else "detail closed") + f": region {x},{y} {w}x{h} at {s}x, {len(eps)} episode(s)"
           + ("" if cancel else f", brought back down ({resample}) with a {d['margin']:.0f} px feathered margin")
           + f" ({time.time() - t0:.1f} s). Its frames and log are in {os.path.relpath(ad, core.D)}/.")
+    if not cancel:
+        with as_canvas(core, pn):
+            ll, ff = relation(core, parent, (x, y, w, h))
+        for l_ in ll:
+            print("relation:" + l_[1:])
+        for f_ in ff:
+            print("RELATE BACK: " + f_)
     return parent
+
+
+# ---------------------------------------------------------------- relating a detail back (G8)
+# A detail finished alone looks pasted on: round 19's fist carried 5-6x the texture of the arm beside it, at the same
+# depth and in focus (docs/research/hyperrealism-gaps.md, G5, G8). So every closed detail is related back to its
+# surroundings, against the schema (which says how much the two should differ):
+#   relation  texture energy at 0.4-1.6 sheet-mm inside the region against a ring around it, as a ratio, divided by the
+#             same ratio in the schema; flagged outside 1/1.5..1.5 (the G8 acceptance: within a factor of 1.5)
+#   seam      mean L* and grain in strips just inside and just outside each side of the rectangle, the difference
+#             against the schema's; flagged over 0.5 L* (G8: within 0.5 L*)
+# Thresholds from the gaps doc's acceptance tests (judgements); the strip width is 1.5 mm, the ring as wide as a
+# third of the region's smaller side.
+REL_MAX, SEAM_MAX = 1.5, 0.5
+
+
+def relation(core, cv, region, ref=None):
+    """(lines, flags) for one closed region (x, y, w, h) of the canvas `cv`."""
+    import eyes
+    from scipy.ndimage import gaussian_filter
+    x, y, w, h = (int(v) for v in region)
+    ppm = core.sheet_ppm(cv) or 5.0
+    L = eyes.lightness(np.asarray(cv.render().convert("RGB"), np.float32) / 255, max_px=1e12)[0]
+    R = eyes.lightness(np.clip(cv.ref if ref is None else ref, 0, 1), max_px=1e12)[0] if (ref is not None or cv.ref is not None) else None
+    H, W = L.shape
+    inside = np.zeros((H, W), bool); inside[y:y + h, x:x + w] = True
+    g = max(4, int(min(w, h) / 3))
+    ring = np.zeros((H, W), bool); ring[max(0, y - g):y + h + g, max(0, x - g):x + w + g] = True
+    ring &= ~inside
+    m = max(2, int(0.05 * min(w, h)))
+    core_in = np.zeros((H, W), bool); core_in[y + m:y + h - m, x + m:x + w - m] = True
+
+    def tex(A, M):
+        out = []
+        for smm in (0.4, 0.8):
+            b = gaussian_filter(A, smm * ppm) - gaussian_filter(A, 2 * smm * ppm)
+            out.append(float(np.sqrt((b[M] ** 2).mean())) if M.any() else 0.0)
+        return sum(out)
+    lines, flags = [], []
+    if ring.sum() < 50 or core_in.sum() < 50:
+        return lines, flags
+    rd = tex(L, core_in) / max(tex(L, ring), 1e-3)
+    rr = tex(R, core_in) / max(tex(R, ring), 1e-3) if R is not None else 1.0
+    rel = rd / max(rr, 1e-3)
+    sw = max(2, int(round(1.5 * ppm)))
+    worst = 0.0
+    for name, a_in, a_out in (("top", (slice(y, y + sw), slice(x, x + w)), (slice(max(0, y - sw), y), slice(x, x + w))),
+                              ("bottom", (slice(y + h - sw, y + h), slice(x, x + w)), (slice(y + h, y + h + sw), slice(x, x + w))),
+                              ("left", (slice(y, y + h), slice(x, x + sw)), (slice(y, y + h), slice(max(0, x - sw), x))),
+                              ("right", (slice(y, y + h), slice(x + w - sw, x + w)), (slice(y, y + h), slice(x + w, x + w + sw)))):
+        A, B = L[a_in], L[a_out]
+        if A.size < 10 or B.size < 10:
+            continue
+        dl = float(A.mean() - B.mean())
+        dr = float(R[a_in].mean() - R[a_out].mean()) if R is not None else 0.0
+        worst = max(worst, abs(dl - dr))
+    lines.append(f"  detail {x},{y} {w}x{h}: texture {rd:.2f}x its surroundings' (the schema {rr:.2f}x; relation {rel:.2f}); "
+                 f"seam: the largest step across its edge {worst:.2f} L* beyond the schema's")
+    if rel > REL_MAX or rel < 1 / REL_MAX:
+        flags.append(f"the detail at {x},{y} {w}x{h} holds {rel:.1f}x the texture the schema gives it against its surroundings: "
+                     f"{'carry the detail into the passages around it, or soften it' if rel > 1 else 'it is smoother than its surroundings'} (relate it back)")
+    if worst > SEAM_MAX:
+        flags.append(f"the detail at {x},{y} {w}x{h} shows a seam: {worst:.1f} L* across its edge that the schema doesn't have "
+                     f"(correct the whole passage, not the rectangle)")
+    return lines, flags
 
 
 # ---------------------------------------------------------------- views

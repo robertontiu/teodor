@@ -1826,9 +1826,23 @@ def do_marks(cv, it, felt, rng):
         structure = dict(structure, droplets=[dict(q, x=(q["x"] - d["x"]) * s_, y=(q["y"] - d["y"]) * s_, r=q["r"] * s_)
                                               for q in structure["droplets"]])
 
+    done = np.zeros((cv.H, cv.W), bool)
+    if cv.meta.get("detail"):
+        # a tile: what earlier closed details already drew is not planned again (up to where their feather begins),
+        # or the overlap gets its strands twice and shows as a band (G9)
+        d = cv.meta["detail"]
+        pm_ = os.path.join(D, f"{d['parent']}_meta.json")
+        for q in (json.load(open(pm_)).get("details", []) if os.path.exists(pm_) else []):
+            if q.get("cancelled"):
+                continue
+            s_, k_ = cv.px_scale, q.get("margin", 0)          # to where the earlier tile is still at full weight
+            x0_, y0_ = int((q["x"] + k_ - d["x"]) * s_), int((q["y"] + k_ - d["y"]) * s_)
+            x1_, y1_ = int((q["x"] + q["w"] - k_ - d["x"]) * s_), int((q["y"] + q["h"] - k_ - d["y"]) * s_)
+            done[max(0, y0_):max(0, y1_), max(0, x0_):max(0, x1_)] = True
+
     def mask_of(reg):
         m = region_mask(reg, cv.W, cv.H) if reg else None
-        return np.ones((cv.H, cv.W), bool) if m is None else (m > 0.5)
+        return (np.ones((cv.H, cv.W), bool) if m is None else (m > 0.5)) & ~done
     fams = it.get("families", {})
     planned = mk.plan(cv.ref, mask_of, ppm, fams, rng, structure)
     print("marks planned: " + ", ".join(f"{k} {len(v)}" for k, v in planned.items()))
@@ -2268,6 +2282,39 @@ if __name__ == "__main__":
         core = sys.modules[__name__]
         a = sys.argv[2:]
         sub = a[0] if a else "status"
+        if sub == "tiles":
+            # G9: a large passage (a head at 2x life) as overlapping detail tiles, each opened, drawn and closed in turn
+            # (detail open --tile K); the overlap is drawn twice and feathered back, so tiles meet without a seam
+            opt = {"--scale": 4.0, "--tile": 600.0, "--overlap": 0.1}
+            for key in list(opt):
+                if key in a:
+                    i = a.index(key); opt[key] = float(a[i + 1]); del a[i:i + 2]
+            if len(a) < 5:
+                sys.exit("detail tiles X Y W H [--scale N] [--tile T (detail px, default 600)] [--overlap 0.1]")
+            X, Y, Wt, Ht = map(float, a[1:5])
+            ts = opt["--tile"] / opt["--scale"]                 # tile side in canvas px
+            ov = ts * opt["--overlap"]
+            step = ts - ov
+            nx, ny = max(1, int(np.ceil((Wt - ov) / step))), max(1, int(np.ceil((Ht - ov) / step)))
+            # spread evenly, so every overlap is the same (a last tile pushed back onto its neighbour doubled its marks)
+            sx_ = (Wt - ts) / (nx - 1) if nx > 1 else 0.0
+            sy_ = (Ht - ts) / (ny - 1) if ny > 1 else 0.0
+            tiles = []
+            for j in range(ny):
+                for i in range(nx):
+                    tx, ty = X + i * sx_, Y + j * sy_
+                    tiles.append({"k": len(tiles), "x": round(tx), "y": round(ty), "w": round(min(ts, Wt)), "h": round(min(ts, Ht)),
+                                  "scale": opt["--scale"], "margin": round(ov / 2)})
+            json.dump({"region": [X, Y, Wt, Ht], "tiles": tiles}, open(P("tiles.json"), "w"), indent=1)
+            for t in tiles:
+                print(f"tile {t['k']}: detail open {t['x']} {t['y']} {t['w']} {t['h']} --scale {t['scale']:g} --margin {t['margin']}")
+            print(f"{len(tiles)} tiles ({nx} x {ny}), each {opt['--tile']:.0f} detail px with {opt['--overlap']:.0%} overlap: open one with "
+                  f"`detail open --tile K`, draw it, close it, then the next; `report` relates every closed tile back to its surroundings")
+            sys.exit()
+        if sub == "open" and "--tile" in a:
+            k = int(a[a.index("--tile") + 1])
+            tl = json.load(open(P("tiles.json")))["tiles"][k]
+            a = ["open", str(tl["x"]), str(tl["y"]), str(tl["w"]), str(tl["h"]), "--scale", str(tl["scale"]), "--margin", str(tl["margin"])]
         if sub == "open":
             if NAME.endswith("_detail"):
                 sys.exit("open a detail from its canvas (without --detail).")
@@ -2356,6 +2403,13 @@ if __name__ == "__main__":
             extra += l2; flags += f2
         l3, f3 = clarity_report(cv, img)
         extra += l3; flags += f3
+        if cv.meta.get("details") and not on_ref and not cv.meta.get("detail"):
+            import detail as dt_
+            extra.append("details related back to their surroundings:")
+            for dd in cv.meta["details"]:
+                if not dd.get("cancelled"):
+                    l6, f6 = dt_.relation(sys.modules[__name__], cv, (dd["x"], dd["y"], dd["w"], dd["h"]))
+                    extra += l6; flags += f6
         l5, f5, fine = fine_report(cv, img, targets.get(f"{style}-closeup") if style else None, crop, "schema" if on_ref else "sheet")
         extra += l5; flags += f5
         m["fine"] = fine

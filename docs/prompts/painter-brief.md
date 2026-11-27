@@ -89,6 +89,7 @@ THE STROKE: every stroke has an "articulation": drag (loaded, running out into d
 - {"type":"hatch", "brush", "angle", "spacing", "layers":[0.75,0.55,0.35,0.18], "cross":45, "size", "colors", "region", "follow":"form" (lines wrap the form), "regular":true (ruled engraving lines)}: tone from parallel and crossing lines following the schema's values (drawing, pen, tempera).
 - {"type":"blend", "size", "region", "direction", "count", "length"}: soften (where the medium allows it).
 - {"type":"glaze", "color", "opacity", "region", "feather"}: your medium's thin layer (glaze, wash, veil, flat block).
+- {"type":"marks", "families": {"strands"|"glints"|"pores"|"edges"|"lashes"|"droplets": {"region", "count", "brush", ...}}, "dry": true|false}: designed fine marks planned from YOUR schema's structure; you choose the families, the regions and the counts; every mark is laid by your tools (docs/MANUAL.md).
 Regions: {"type":"canvas"} | {"type":"rect","x","y","w","h"} | {"type":"ellipse","cx","cy","rx","ry"} | {"type":"poly","pts":[[x,y],...]}.
 
 LESSONS FROM EARLIER PAINTINGS (the full log is docs/experiments.md; the habits are in habits.md):
@@ -99,6 +100,7 @@ LESSONS FROM EARLIER PAINTINGS (the full log is docs/experiments.md; the habits 
 (5) Viewers feel the obvious half of a complex feeling first: give the second half its own form and space.
 (6) The same mark everywhere reads as a filter: vary marks by passage, build passages in layers.
 (7) Work the way your medium works: watercolour and ink in big washes first and few, decisive marks after (many small matched strokes dry into a patchwork of hard edges); tempera and drawing media by hatching; prints by flat blocks and a keyline; oil from thin and lean to thick.
+(8) Passage by passage, darks first (round 19: docs/research/hyperrealism-gaps.md, G8). In a drawing medium lay each passage's darks before any blend touches them, finish the passage near to final before the next (the focal passage, then the face, then what touches them, then the background), blend by part only with a brush no larger than the part's own softness (never the whole sheet before the darks are laid), and correct a whole passage, never a rectangle in an even field. Every detail pass is related back: `detail close` and `report` measure each closed detail's texture against its surroundings and the step across its edge, against the schema; fix every "RELATE BACK" flag before the next detail.
 
 A PROFESSIONAL FINISH (in the terms of your current): a strong, simple value structure; one light logic; a focal area with the sharpest edges, the strongest contrast and the finest detail; soft and lost edges elsewhere; temperature shifts; the medium's own beauty (transparency in watercolour, the line in ink, the tooth in pastel, the film in tempera, the body in oil). Then the FINISHING STAGE: the last few accents (few, placed with intent), an edge pass at the focus, the unifying layer your current used, and your medium's finishing steps (finish ...), as your style doc and docs/FINISHING.md describe. Check the mirror and the squint view once more before you sign.
 
