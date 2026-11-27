@@ -37,7 +37,7 @@ Hyperrealism is "a genre of painting and sculpture resembling a high-resolution 
 
 ## 7. Composition
 - **The photograph's composition:** close crops, extreme close-ups, objects and faces filling the frame, shallow focus (Wikipedia, Hyperrealism: depth of field, range of focus). Classic studio tests: an egg or sphere under one light, crumpled paper, an eye, metal or glass (**judgement**, common practice; the test drawing uses an egg and crumpled paper).
-- Perspective is the lens's, not constructed (Wikipedia: "perspective" among the photographic limitations used).
+- Perspective is the lens's, not constructed (Wikipedia: "perspective" among the photographic limitations used). **A face is photographed from portrait distance:** at 12 in a camera magnifies the nose about 30%, at 5 ft "essentially no difference" (Ward et al. 2018, JAMA Facial Plastic Surgery, PMC5876805), so close-ups are taken from about 1.5 m with a long lens (85-135 mm or longer on 35 mm film) and cropped. [`scene`: `camera.frame` on the head; the render warns on a close-up from under 1.2 m]
 
 ## 8. Marks and edges
 - **Marks invisible at viewing distance:** many light layers, crossed in different directions, then blended. Build tone "gradually ... two or three light passes instead of one heavy pass" (Vitruvian Studio); treat blending as a supplement and blend "in stages" (Wildlife Art Store, blending).

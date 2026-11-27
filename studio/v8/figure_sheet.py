@@ -39,13 +39,16 @@ HAND_ORDER = ["open", "relaxed", "rest", "hold", "grip", "push_hair", "throw", "
 
 def head_spec(expr, yaw=28, sex="female", age=30, planes=None, hair="#3a281e", build="average", hair_spec=None):
     a = math.radians(yaw)
-    d = 0.72 * float(os.environ.get("HEADDIST", "1"))
+    # portrait distance (scene.PORTRAIT_DISTANCE_M, Ward et al. 2018) with the field narrowed to keep the old framing
+    # (0.72 m at fov 24 swelled the nose about 7%: docs/research/hyperrealism-gaps.md, G4)
+    d = scene.PORTRAIT_DISTANCE_M * float(os.environ.get("HEADDIST", "1"))
+    fov = math.degrees(2 * math.atan(math.tan(math.radians(12)) * 0.72 / d))
     o = {"type": "person", "id": "p", "sex": sex, "age": age, "build": build, "expression": expr,
          "hair": hair_spec or {"style": ("receding" if age >= 60 else "short") if sex == "male" else "bun", "color": hair}, "color": "#4a4e58",
          "anchor": "head", "pos": [0, 1.6, 0], "masks": False}
     if planes is not None:
         o["planes"] = planes
-    return {"camera": {"pos": [math.sin(a) * d, 1.6, math.cos(a) * d], "look_at": [0, 1.57, 0], "fov": 24},
+    return {"camera": {"pos": [math.sin(a) * d, 1.6, math.cos(a) * d], "look_at": [0, 1.57, 0], "fov": fov},
             "sun": {"azimuth": 42, "elevation": 38, "intensity": 1.8, "softness": 14},
             "sky": {"zenith": "#5a626e", "horizon": "#8a9098"}, "ambient": {"intensity": 0.4, "sky": "#8090a8", "ground": "#6a5a48"},
             "ground": {"enabled": False}, "objects": [o]}
@@ -53,8 +56,9 @@ def head_spec(expr, yaw=28, sex="female", age=30, planes=None, hair="#3a281e", b
 
 def hand_spec(preset, yaw=30, el=15):
     a, b = math.radians(yaw), math.radians(el)
-    d = 0.42
-    return {"camera": {"pos": [math.sin(a) * math.cos(b) * d, 0.93 + math.sin(b) * d, math.cos(a) * math.cos(b) * d], "look_at": [0, 0.93, 0], "fov": 34},
+    d = scene.CLOSE_MIN_M          # was 0.42 m at fov 34; the same framing from 1.2 m (G4)
+    fov = math.degrees(2 * math.atan(math.tan(math.radians(17)) * 0.42 / d))
+    return {"camera": {"pos": [math.sin(a) * math.cos(b) * d, 0.93 + math.sin(b) * d, math.cos(a) * math.cos(b) * d], "look_at": [0, 0.93, 0], "fov": fov},
             "sun": {"azimuth": 40, "elevation": 45, "intensity": 1.8, "softness": 14}, "sky": {"zenith": "#5a626e", "horizon": "#8a9098"},
             "ambient": {"intensity": 0.45}, "ground": {"enabled": False},
             "objects": [{"type": "hand", "pos": [0, 1.02, 0], "preset": preset, "fingers": [0, -1, 0], "palm": [0, 0, 1], "side": "l"}]}

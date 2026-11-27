@@ -520,6 +520,10 @@ def scene_crop(core, cv, scene_json, quality="draft"):
     x, y, w, h, s = d["x"], d["y"], d["w"], d["h"], d["scale"]
     Wp, Hp = d["parent_size"]
     spec = json.load(open(scene_json))
+    if "fov" not in spec.get("camera", {}) or "frame" in spec.get("camera", {}):
+        # a lens or a frame: resolve it as the canvas's render did (at the studio's 3:4 scene aspect)
+        s0 = sc.Scene(spec) if "frame" in spec.get("camera", {}) else None
+        spec = sc.resolve_camera(spec, SCENE_ASPECT, s0.nodes + s0.meshes if s0 else None)
     cam = dict(spec.get("camera", {}))
     ro, fw, rt, up = _basis(cam)
     f = 1 / math.tan(math.radians(cam.get("fov", 40)) / 2)

@@ -329,7 +329,43 @@ def darks_first():
     return ok
 
 
-EXTRA = {"fine": fine_measures, "darks": darks_first}
+def portrait_camera():
+    """G4: lens <-> field conversions; a scene with a person and no fov gets a 100 mm lens; `frame` puts the camera at
+    the portrait distance with the head filling the asked share; the lens report gives distance and perspective, and a
+    wide close-up warns. Acceptance: the framed head at >= 1.2 m and the nose within 5% of orthographic."""
+    sys.path.insert(0, HERE)
+    import scene as sc
+    ok = True
+    try:
+        assert abs(sc.fov_to_lens(sc.lens_to_fov(85, 0.75), 0.75) - 85) < 1e-6
+        assert abs(sc.lens_to_fov(50, 1.5) - 27.0) < 0.1          # 50 mm on a 3:2 landscape frame: 27 deg vertical
+        o = {"type": "person", "id": "man", "age": 40, "sex": "male", "pos": [0, 1.62, 0], "anchor": "head",
+             "hair": {"style": "short", "color": "#3a2e26"}}
+        base = {"sun": {"azimuth": 50, "elevation": 30}, "ground": {"enabled": False}, "fog": {"density": 0}, "objects": [o]}
+        r = sc.resolve_camera(dict(base, camera={"pos": [0, 1.6, 3], "look_at": [0, 1.6, 0]}), 0.75)
+        assert abs(r["camera"]["lens_equiv_mm"] - sc.PORTRAIT_LENS_MM) < 0.5
+        r = sc.resolve_camera({"camera": {}, "objects": [{"type": "box"}]}, 0.75)
+        assert r["camera"]["fov"] == 40.0                          # scenes without people keep the old default
+        S = sc.Scene(dict(base, camera={"frame": {"on": "man.head", "fill": 0.7}}))
+        S.render(90, 120)
+        lines, warn = S.lens_report()
+        cam = S.spec["camera"]
+        d = float(np.linalg.norm(np.asarray(cam["pos"]) - np.asarray(cam["look_at"])))
+        assert abs(d - sc.PORTRAIT_DISTANCE_M) < 1e-6 and not warn, (lines, warn)
+        infl = float(lines[1].split("magnifies the nose ")[1].split("%")[0])
+        assert abs(infl) < 5.0, lines                             # acceptance: within 5% of the orthographic value
+        S2 = sc.Scene(dict(base, camera={"pos": [0, 1.62, 0.42], "look_at": [0, 1.62, 0], "fov": 86}))
+        S2.render(90, 120)
+        lines2, warn2 = S2.lens_report()
+        assert warn2 and "close-up" in warn2[0], (lines2, warn2)
+        print(f"portrait camera (G4): ok ({lines[1]}; wide: {lines2[1]})")
+    except Exception as e:
+        ok = False
+        print(f"portrait camera (G4): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera}
 
 
 if __name__ == "__main__":

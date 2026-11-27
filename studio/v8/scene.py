@@ -86,6 +86,96 @@ def smin(a, b, k):
     return b * (1 - h) + a * h - k * h * (1 - h)
 
 
+# ---------------------------------------------------------------- the lens
+# A camera's field is given as `fov` (vertical, degrees), or as `lens`: the focal length in mm on 35 mm film (the
+# "equivalent focal length", over the frame's 43.27 mm diagonal). Perspective depends only on the distance: at 12 in
+# a camera "increase[s] nasal size by 30% in males and 29% in females", while 5 feet is "a standard portrait
+# distance" with "essentially no difference" (Ward et al. 2018, JAMA Facial Plastic Surgery, PMC5876805). Portrait
+# lenses are about 85-135 mm on 35 mm film (docs/research/hyperrealism-gaps.md, G4). So a scene with people and no
+# fov gets a 100 mm lens, `frame` places the camera at 1.5 m from a head or a hand, and every render with a face in
+# it reports the distance and warns when a close-up is taken from nearer than CLOSE_MIN_M (a judgement from Ward's
+# numbers: under about 1.2 m the nose is magnified more than ~5% against the cheekbones).
+SENSOR_DIAG_MM = 43.27
+PORTRAIT_LENS_MM = 100.0
+PORTRAIT_DISTANCE_M = 1.5
+CLOSE_MIN_M = 1.2
+
+
+def lens_to_fov(lens_mm, aspect=0.75):
+    """Vertical field of view (degrees) of a 35 mm-equivalent focal length on a frame of this aspect (W/H)."""
+    return math.degrees(2 * math.atan(SENSOR_DIAG_MM / (2 * float(lens_mm)) / math.sqrt(1 + aspect * aspect)))
+
+
+def fov_to_lens(fov_deg, aspect=0.75):
+    return SENSOR_DIAG_MM / (2 * math.tan(math.radians(fov_deg) / 2) * math.sqrt(1 + aspect * aspect))
+
+
+def _part_verts(nodes, on):
+    """The vertices of an object's part ("person0.head", "person0.face", "person0.hands", "person0"), and its forward
+    direction (from the head's centre toward the face's, horizontal) when it has a face."""
+    import human
+    owner, _, part = on.partition(".")
+    part = part or "all"
+    ms = [n for n in nodes if getattr(n, "owner", None) == owner and getattr(n, "kind", "") == "mesh" and "elem" in n.mesh]
+    if not ms:
+        raise SystemExit(f"camera frame: no mesh object '{owner}' (people and hands are named by id, or person0, hand0, ...)")
+    v, el = ms[0].mesh["verts"].astype(np.float64), ms[0].mesh["elem"]
+    want = {"head": ("head", "face"), "face": ("face",), "hands": ("hands",), "hand": ("hands",), "torso": ("torso", "neck")}
+    sel = np.isin(el, [human.EL[e] for e in want[part]]) if part in want else np.ones(len(v), bool)
+    if not sel.any():
+        raise SystemExit(f"camera frame: '{on}' has no vertices")
+    fwd = None
+    face = el == human.EL["face"]
+    hd = np.isin(el, [human.EL["head"], human.EL["face"]])
+    if face.any() and hd.any():
+        f_ = v[face].mean(0) - v[hd].mean(0)
+        f_[1] = 0
+        if np.linalg.norm(f_) > 1e-6:
+            fwd = f_ / np.linalg.norm(f_)
+    return v[sel], fwd
+
+
+def resolve_camera(spec, aspect=0.75, nodes=None):
+    """The scene's camera as pos, look_at and a vertical fov: from `lens`, from `frame`, or the defaults (a 100 mm
+    lens when the scene has people or hands, else fov 40 as before). `frame` = {"on": "person0.head", "fill": 0.6,
+    "distance": 1.5, "from": [x, y, z] or "front", "height": 0}: the camera looks at the part's centre from `distance`
+    (default 1.5 m for a head, face or hand, the standard portrait distance) along `from` (default: the direction the
+    face looks), and the lens is chosen so the part fills `fill` of the frame's height; with `lens` or `fov` given and
+    no `distance`, the distance is chosen instead."""
+    cam = dict(spec.get("camera", {}))
+    people = any(o.get("type") in ("person", "hand") for o in spec.get("objects", []))
+    fr = cam.get("frame")
+    if fr:
+        if nodes is None:
+            raise SystemExit("camera frame needs the scene built")
+        if isinstance(fr, str):
+            fr = {"on": fr}
+        v, fwd = _part_verts(nodes, fr["on"])
+        c = (v.min(0) + v.max(0)) / 2
+        size = float(np.ptp(v[:, 1])) or float(np.ptp(v, 0).max())
+        fill = float(fr.get("fill", 0.6))
+        d = fr.get("from", "front")
+        if isinstance(d, str):
+            d = fwd if fwd is not None else np.array([0, 0, 1.0])
+        d = np.asarray(d, np.float64); d = d / (np.linalg.norm(d) + 1e-9)
+        close = fr["on"].partition(".")[2] in ("head", "face", "hands", "hand")
+        if "distance" in fr or ("lens" not in cam and "fov" not in cam):
+            dist = float(fr.get("distance", PORTRAIT_DISTANCE_M if close else 4.0))
+            cam["fov"] = math.degrees(2 * math.atan(size / fill / 2 / dist))
+        else:
+            fov = cam.get("fov") or lens_to_fov(cam["lens"], aspect)
+            cam["fov"] = fov
+            dist = size / fill / 2 / math.tan(math.radians(fov) / 2)
+        c = c + np.array([0, float(fr.get("height", 0.0)), 0])
+        cam["pos"] = [float(x) for x in c + d * dist]
+        cam["look_at"] = [float(x) for x in c]
+    elif "fov" not in cam:
+        cam["fov"] = lens_to_fov(cam["lens"], aspect) if "lens" in cam else (lens_to_fov(PORTRAIT_LENS_MM, aspect) if people else 40.0)
+    cam.pop("frame", None)
+    cam["lens_equiv_mm"] = round(fov_to_lens(cam["fov"], aspect), 1)
+    return dict(spec, camera=cam)
+
+
 # ---------------------------------------------------------------- scene nodes
 class Node:
     """An SDF node with a material. f maps world points (N,3) -> distances (N,)."""
@@ -592,8 +682,9 @@ class Scene:
         return np.clip(1 - 1.8 * occ, 0.15, 1)
 
     def camera(self, W, H):
-        """Ray origins and directions. camera: pos, look_at, fov, roll (degrees, clockwise in the
-        picture), up (a hint; straight-down and straight-up views pick a sensible one)."""
+        """Ray origins and directions. camera: pos, look_at, fov or lens, frame, roll (degrees, clockwise in the
+        picture), up (a hint; straight-down and straight-up views pick a sensible one). See resolve_camera."""
+        self.spec = resolve_camera(self.spec, W / H, self.nodes + self.meshes)
         cam = self.spec.get("camera", {})
         ro = np.asarray(cam.get("pos", [0, 1.6, 12]), np.float32)
         ta = np.asarray(cam.get("look_at", [0, 1.4, 0]), np.float32)
@@ -842,6 +933,66 @@ class Scene:
             out["elem"][sel] = el
         return out
 
+    def lens_report(self):
+        """Lines for the painter: the lens, and for each person whose face is in the picture the camera's distance to
+        the face, how much the nose is magnified against the cheekbones by perspective (1 - the ratio of their
+        distances, the effect Ward et al. measured), and the hand's projected length against the face's. Warnings:
+        a close-up (the face over 15% of the frame's height) taken from nearer than CLOSE_MIN_M, and a hand and a face
+        more than 20% apart in distance (the hand shrinks or swells against the face: G4)."""
+        import human
+        ro, rt, up, fw, f = self.cam
+        W, H = self.size
+        cam = self.spec.get("camera", {})
+        lines = [f"camera: lens {cam.get('lens_equiv_mm', fov_to_lens(cam.get('fov', 40), W / H)):.0f} mm (35 mm equivalent), "
+                 f"vertical field {cam.get('fov', 40):.1f} deg"]
+        warn = []
+        for m in self.meshes:
+            M = m.mesh
+            if "elem" not in M or not (M["elem"] == human.EL["face"]).any():
+                continue
+            v = M["verts"].astype(np.float64)
+            el = M["elem"]
+            D = v - ro
+            z = D @ fw
+            if (z <= 0.05).all():
+                continue
+            xs, ys = (D @ rt) / np.maximum(z, 1e-3) * f, (D @ up) / np.maximum(z, 1e-3) * f     # in half-heights
+            face = el == human.EL["face"]
+            if not ((np.abs(xs[face]) < W / H) & (np.abs(ys[face]) < 1) & (z[face] > 0)).any():
+                continue
+            zf = z[face]
+            tip = float(zf.min())
+            near = face & (z < tip + 0.02)                    # the nose: the face's nearest 2 cm
+            dz = float(np.median(z[face]))
+            hy = float(np.ptp(ys[face])) / 2                   # the face's height as a share of the frame's height
+            yc = float(np.median(v[face][:, 1]))
+            band = face & (np.abs(v[:, 1] - yc) < 0.03)
+            if band.sum() > 10:
+                lat = D[band] @ rt
+                cheek = band.copy(); cheek[band] = (lat < np.percentile(lat, 5)) | (lat > np.percentile(lat, 95))
+                infl = float(np.median(z[cheek]) / np.median(z[near]) - 1)
+            else:
+                infl = float("nan")
+            s_ = f"{m.owner}: {dz:.2f} m from the face, the face {hy:.0%} of the frame's height; perspective magnifies the nose {infl:+.1%} against the cheekbones"
+            hand = el == human.EL["hands"]
+            vis_hand = hand & (z > 0.05) & (np.abs(xs) < W / H) & (np.abs(ys) < 1)
+            if vis_hand.sum() > 50:
+                zh = float(np.median(z[vis_hand]))
+                # projected lengths: the hand's longest extent against the face's, both in the picture
+                ph = np.stack([xs[vis_hand], ys[vis_hand]], 1)
+                hl = float(np.linalg.norm(np.ptp(ph, 0)))
+                fl = float(np.ptp(ys[face]))
+                s_ += f"; a hand {zh:.2f} m away, projected at {hl / max(fl, 1e-6):.2f} face-lengths (canon about 1)"
+                if abs(zh - dz) / dz > 0.2:
+                    warn.append(f"{m.owner}: the hand is {zh / dz:.2f}x the face's distance from the camera: it will read "
+                                f"{'small' if zh > dz else 'large'} against the face (keep them within 20%, or move the camera back)")
+            lines.append(s_)
+            if hy > 0.15 and dz < CLOSE_MIN_M:
+                warn.append(f"{m.owner}: a close-up from {dz:.2f} m with a {cam.get('lens_equiv_mm', 0):.0f} mm lens: the nose swells "
+                            f"({infl:+.0%}) and the face reads distorted (Ward et al. 2018). Move the camera to "
+                            f"{PORTRAIT_DISTANCE_M} m and use a longer lens, or `\"frame\": {{\"on\": \"{m.owner}.head\"}}`")
+        return lines, warn
+
     def element_masks(self, full):
         """Masks per object and element at the canvas size: {key: bool (H,W)}, plus an index."""
         from PIL import Image
@@ -935,6 +1086,12 @@ def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 
     W, H = int(round(W * sc)), int(round(H * sc))
     scene = Scene(spec)
     arr = scene.render(W, H)
+    if scene.meshes:
+        ll, ww = scene.lens_report()
+        for l_ in ll:
+            print("scene: " + l_)
+        for w_ in ww:
+            print("scene WARNING: " + w_)
     im = Image.fromarray(arr).resize(full, Image.LANCZOS if sc > 1 else Image.BICUBIC)
     if overlay_svg:
         tmp = tempfile.mktemp(suffix=".png")
