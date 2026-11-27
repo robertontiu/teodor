@@ -65,6 +65,7 @@
 5. Look and correct, two or three rounds: `match` with `mech_05` (or `compressed_charcoal` / `carbon_pencil` in the darks, after a workable fixative) `faithful: 1`, a falling `threshold` (0.06, 0.04, 0.03), `clip: true`, then the same masked blend, smaller each round. `report` and `look diff` between rounds.
 6. Lights: `match` with `kneaded` and `"seek": true` for soft lights, then `electric_eraser` or `precision_eraser` with `seek` for crisp ones; 2H over soft passages to fill their white flecks ("hard over soft").
 7. The darkest accents last (`compressed_charcoal`, `carbon_pencil`), small and clipped; blend nothing over them.
+8. **Fine marks** (`marks`, docs/MANUAL.md) where the subject needs them, in this order: white strands and glints indented with `stylus` before any tone; the tone (darks first); light strands and soft lights lifted with erasers; `finish fixative {"kind": "workable"}`; then dark strands (`compressed_charcoal` or `mech_03`), pores, edges, lashes and droplet rims. Tested on 30 mm patches at 2× life (10 px/mm): hair at 0.74-1.13× its reference's texture by scale, droplets with darker rims and the reference's glint count (docs/research/hyperrealism-gaps.md, G7).
 
 **Order of work.** Light construction with `pencil_2H`, then the big value shapes with `side` or `glaze`. Build tone with softer grades and hatching, blend with `stump` where you want it smooth, erase the lights, and finish with the darkest accents and crisp edges.
 

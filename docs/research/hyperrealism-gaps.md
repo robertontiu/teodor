@@ -494,18 +494,34 @@ The first portrait was one of the smoothest: real cheeks hold about twice its te
 
 | check | render | bound | result |
 |---|---|---|---|
-| cheek texture 0.25 face-mm | 0.58 | 0.40-1.53 | pass |
+| cheek texture 0.25 face-mm | 0.62 | 0.40-1.53 | pass |
 | 0.5 | 0.74 | 0.65-1.62 | pass |
 | 1 | 0.70 | 1.05-2.35 | **fail** (0.67 of p10) |
-| 2 | 1.00 | 1.37-4.83 | **fail** (0.73 of p10) |
-| face speculars ≥ 30 L* | 23 | ≥ 5 (doc: ≥ 3) | pass |
+| 2 | 1.03 | 1.37-4.83 | **fail** (0.75 of p10) |
+| face speculars ≥ 30 L* | 16 | ≥ 5 (doc: ≥ 3) | pass |
 | face p1 | 1.7 | ≤ 15.6 (doc: ≤ 10) | pass |
 | face below L* 20 | 11% | ≥ 3.9% (doc: ≥ 5%) | pass |
 | hair texture 0.125 / 0.25 / 0.5 | 2.26 / 1.89 / 1.52 | ≥ 1.21 / 1.40 / 1.28 (p10) | pass |
 | hair coherence | 0.91 | ≥ 0.62 (doc ≥ 0.5) | pass |
 
-  Against the first photograph alone the cheek passed at every scale but 2 mm. **What fails, and what was tried:** the 1-2 mm cheek texture. Larger colour mottle and a stronger swell reached 0.76 / 1.24 but read as blotches and plaster; oriented fine lines over the whole cheek read as sand ripples; both were rolled back to what reads as skin. The missing energy is in features the mesh lacks (age folds and creases at the scale of the cheek, stubble, moles, freckles), which is the next part of G1. Not done: the fresh-critic "photo or render?" test (it needs the orchestrator), depth of field, tiled rendering. Catchlights appear only where the light reflects off the cornea toward the camera; under this side light none does.
+  Against the first photograph alone the cheek passed at every scale but 2 mm. **What fails, and what was tried:** the 1-2 mm cheek texture. Larger colour mottle and a stronger swell reached 0.76 / 1.24 but read as blotches and plaster; oriented fine lines over the whole cheek read as sand ripples; both were rolled back to what reads as skin. The missing energy is in features the mesh lacks (age folds and creases at the scale of the cheek, stubble, moles, freckles), which is the next part of G1. Later the same day the furrow network was redrawn as ridged noise (at 20 px/mm the cellular network read as reptile scales); the table holds the numbers after that change. Not done: the fresh-critic "photo or render?" test (it needs the orchestrator), depth of field, tiled rendering. Catchlights appear only where the light reflects off the cornea toward the camera; under this side light none does.
 
 ### Rule 3 tidy (2026-11-27)
 
 The style doc and `studio/styles.json` cited two process interviews by URLs that carry living artists' names; they are now neutral descriptions of the source (outlet, kind of piece, the artist unnamed).
+
+### G7, the fine-mark planner (2026-11-27, after the owner's ruling on rule 2)
+
+- `marks` (`studio/v8/marks.py`, `studio.py` `do_marks`): families `strands`, `glints`, `pores`, `edges`, `lashes`, `droplets`, planned from the schema's structure (structure tensor, blobs, edges, Hessian ridges) and the scene's droplet structure (`<canvas>_structure.json`, now written by `scene`); the painter chooses families, regions and counts; every mark is a `strokes` call with the medium's tools (pencils, charcoal, erasers, stylus). `"dry": true` previews the plan. Documented in MANUAL ("Intentions") and the graphite page (the order: indents, darks, tone, lifts, workable fixative, dark fine marks).
+- **Acceptance** (two 30 × 30 mm patches of an invented head's render, drawn on vellum at 2× life, 10 px per sheet-mm = 20 px per subject-mm, about 1.5 min each; `docs/gallery/graphite_fine_marks.jpg`: reference, drawing, reference, drawing). No public-domain photograph of a hair lock, a droplet field or a skin patch was found, so each is compared with its own reference render (the doc's ±35%) and with the 12-portrait ruler's spread (p10-p90):
+
+| test | measure | drawing | reference | ruler p10-p90 | result |
+|---|---|---|---|---|---|
+| hair lock | texture 0.125 / 0.25 / 0.5 / 1 mm | 1.77 / 1.48 / 1.15 / 1.08 | 2.38 / 1.83 / 1.29 / 0.95 | 1.21-3.15 / 1.40-2.79 / 1.28-2.42 / 1.05-2.20 | against the reference: 0.74-1.13×, **pass** (±35%); against the ruler: 3 of 4 (0.5 mm at 0.90 of p10) |
+| | strand coherence | 0.90 | 0.96 | | within ±0.1: **pass** |
+| droplet field (12 drops) | glints ≥ 20 L* | 5, largest 36 L* | 5, largest 33 L* | | count and prominence within ±30%: **pass** |
+| | rim darker than inside and surround | 12 of 12 (rim L* 57-60, inside 67-73, around 61-68) | | | **pass** |
+| cheek patch | texture 0.125 / 0.25 / 0.5 / 1 mm | 0.55 / 0.73 / 0.76 / 0.58 | 0.99 / 1.16 / 1.14 / 0.92 | 0.22-1.96 / 0.40-1.53 / 0.65-1.62 / 1.05-2.35 | against the reference 0.56-0.67×: **fail** (±35%); against the ruler 3 of 4 |
+| | pores no darker than surround by 12 L* | 11 of 725 dark specks exceed it (deepest 14 L*) | | | **fail** (1.5% of specks) |
+
+  What the runs taught the engine (each a change, not a lowered target): dots are laid as tiny circling touches (one contact laid too little); thin-line planning uses Hessian ridges and skips blobs (PCA chains through droplets scribbled); strands can be indented or lifted, and droplets laid in parts around the fixative, because fixed tone doesn't lift and charcoal won't take on unfixed graphite; `match` was dropped from the skin recipe (its dashes read as hairs). The cheek still lacks the reference's micro-relief as tone (its creases are shading, not lines); hair passes against its reference at 2× life, not at life size, where a 0.3 mm lead is twice a hair's scale (G9).

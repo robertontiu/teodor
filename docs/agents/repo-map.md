@@ -13,6 +13,7 @@ studio/
     scene.py                3D blockouts (figures, camera, light) for schemas
     human.py, raster.py     people from MakeHuman's CC0 mesh (shape, expressions, skeleton), a numpy z-buffer
     figure.py               the primitive rig, hair and cloth simulation
+    marks.py                the fine-mark planner (`marks`: strands, glints, pores, edges, lashes, droplets from the schema)
     detail.py               the detail pass (paint a region at higher resolution)
     gallery.py, test_v8.py  mark sheets; tests including the v7 regression
   v0-by-hand … v7/          earlier studios, kept as records

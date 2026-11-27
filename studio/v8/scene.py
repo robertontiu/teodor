@@ -917,6 +917,7 @@ class Scene:
         rim and lens and lose glint, caustic and cast shadow."""
         ro, rt, up, fw, f = self.cam
         out = img.copy()
+        self.droplets2d = []
         l2 = np.array([ld @ rt, -(ld @ up)], np.float64)
         l2 = l2 / (np.linalg.norm(l2) + 1e-9)
         for m in self.meshes:
@@ -943,6 +944,9 @@ class Scene:
                 cosv = abs(float(nrm @ norm(-rel)))
                 e1 = n2 / (np.linalg.norm(n2) + 1e-9) if np.linalg.norm(n2) > 1e-6 else np.array([1.0, 0.0])
                 e2 = np.array([-e1[1], e1[0]])
+                # the droplet's structure in the picture, for the fine-mark planner (marks.py)
+                self.droplets2d.append(dict(x=float(sx), y=float(sy), r=float(R), squash=float(max(cosv, 0.35)),
+                                            axis=[float(e1[0]), float(e1[1])], light=[float(l2[0]), float(l2[1])], lit=bool(vis > 0.5)))
                 Rx = int(np.ceil(R * 1.8)) + 2
                 y0, y1, x0, x1 = max(0, yi - Rx), min(H, yi + Rx + 1), max(0, xi - Rx), min(W, xi + Rx + 1)
                 yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float64)
@@ -1284,6 +1288,9 @@ def render_file(path_json, out_png, W=450, H=600, overlay_svg=None, full=(1200, 
         m = re.match(r"(.*)_scene_v(\d+)\.png$", out_png)
         stem = m.group(1) if m else os.path.splitext(out_png)[0]
         np.savez_compressed(stem + "_elements.npz", **mk)
+        k_ = full[0] / W
+        drops = [dict(d, x=(d["x"] + 0.5) * k_ - 0.5, y=(d["y"] + 0.5) * k_ - 0.5, r=d["r"] * k_) for d in getattr(scene, "droplets2d", [])]
+        json.dump({"format": "teodor-structure/1", "size": list(full), "droplets": drops}, open(stem + "_structure.json", "w"), indent=1)
         json.dump({"format": "teodor-elements/1", "image": os.path.basename(out_png), "scene": os.path.basename(path_json),
                    "size": list(full), "elements": entries}, open(stem + "_elements.json", "w"), indent=1)
     return out_png

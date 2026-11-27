@@ -1275,8 +1275,8 @@ def cloth_mesh(d):
 #   colour    mottling at 1-6 mm (melanin and blood), pores a little darker (amounts fitted below)
 # Amounts are fitted by measurement: an invented head under one hard light against the public-domain portrait's
 # cheek in studio/targets.json graphite-hyperrealism-closeup (texture energy at 0.25-2 face-mm; G1's acceptance).
-MICRO = dict(pore_cell_mm=1.1, pore_p_face=0.8, pore_p_body=0.35, pore_r_mm=(0.18, 0.42), pore_depth_mm=0.05,
-             furrow_cell_mm=0.9, furrow_depth_mm=0.025, furrow_w=0.09, pore_dark=0.06,
+MICRO = dict(pore_cell_mm=1.1, pore_p_face=0.8, pore_p_body=0.35, pore_r_mm=(0.18, 0.42), pore_depth_mm=0.07,
+             furrow_cell_mm=1.0, furrow_depth_mm=0.02, furrow_w=0.2, pore_dark=0.06,
              mottle=((0.7, 0.04), (1.5, 0.08), (3.0, 0.10), (6.0, 0.08), (12.0, 0.05)),     # (scale mm, amplitude)
              undulation=((1.5, 0.1), (3.5, 0.22), (8.0, 0.2)),
              lines=(3.0, 0.10))       # (scale mm, height mm): the skin's soft swell; lines: (spacing mm, depth mm at 45)
@@ -1341,31 +1341,24 @@ def skin_micro(prest_m, face_w, foot_mm, age=35.0, amount=1.0, seed=7):
                 fade = np.clip((2 * r[inside] / fp[inside] - 0.7) / 1.0, 0, 1)
                 grad[inside] += (4 * pd * t / r[inside] ** 2)[:, None] * d[inside] * fade[:, None]
                 pore_alb[inside] = np.maximum(pore_alb[inside], t * fade)
-    # furrows: the ridges between cells of a cellular (Worley) noise
+    # furrows: the micro-relief's network of shallow creases, as ridged noise (the zero set of a smooth noise is a
+    # web of curving lines that branch and cross, like the skin's primary lines; two octaves). Cell size, depth and
+    # width are judgements: by eye at 20 px/mm, where a cellular network read as reptile scales
     c2 = m["furrow_cell_mm"]
-    q = P / c2
-    base = np.floor(q).astype(np.int64)
-    F1 = np.full(N, 9.0); F2 = np.full(N, 9.0)
-    V1 = np.zeros((N, 3)); V2 = np.zeros((N, 3))
-    for dx in (-1, 0, 1):
-        for dy in (-1, 0, 1):
-            for dz in (-1, 0, 1):
-                cell = base + np.array([dx, dy, dz])
-                ctr = cell + np.stack([_hash3(cell, seed + 10 + k) for k in range(3)], 1)
-                d = q - ctr
-                dist = np.sqrt((d * d).sum(1))
-                b1 = dist < F1
-                b2 = (~b1) & (dist < F2)
-                F2 = np.where(b1, F1, np.where(b2, dist, F2)); V2 = np.where(b1[:, None], V1, np.where(b2[:, None], d, V2))
-                F1 = np.where(b1, dist, F1); V1 = np.where(b1[:, None], d, V1)
-    e = F2 - F1                                     # 0 on a ridge between two cells
     w = m["furrow_w"]
     depth = m["furrow_depth_mm"] * amount * (0.6 + float(np.clip(age, 0, 90)) / 60.0)
-    # h = -depth exp(-(e/w)^2); de/dq = V2/F2 - V1/F1; per mm: / c2
-    ge = (V2 / np.maximum(F2, 1e-6)[:, None] - V1 / np.maximum(F1, 1e-6)[:, None]) / c2
-    k = np.exp(-(e / w) ** 2)
-    fade = np.clip((w * c2 * 2 / fp - 0.5) / 1.0, 0, 1)
-    grad += (depth * 2 * e / (w * w) * k * fade)[:, None] * ge
+
+    def hf(Q):
+        h = np.zeros(len(Q))
+        for o_, (sc_, wt_) in enumerate(((c2, 1.0), (c2 * 0.55, 0.5))):
+            nv = _value_noise(Q / sc_, seed + 10 + o_)
+            h -= wt_ * np.exp(-(nv / w) ** 2)
+        return h
+    e_ = 0.03
+    h0 = hf(P)
+    gfur = np.stack([(hf(P + e_ * np.eye(3)[a]) - h0) / e_ for a in range(3)], 1)
+    fade = np.clip((w * c2 * 4 / fp - 0.5) / 1.0, 0, 1)
+    grad += depth * gfur * fade[:, None]
     # the soft swell of the surface between the pores (orange-peel), by finite differences of a smooth noise
     for j, (sc, hh) in enumerate(m["undulation"]):
         e_ = 0.05 * sc

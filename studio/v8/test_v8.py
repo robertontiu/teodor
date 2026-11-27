@@ -406,7 +406,56 @@ def photoreal_reference():
     return ok
 
 
-EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera, "render": photoreal_reference}
+def fine_marks():
+    """G7: `marks` plans each family from a schema's structure (strands along its lines, glints and pores from its
+    blobs, edges, thin dark lines, droplets from the scene's structure file), `dry` only writes the plan, and the marks
+    are laid by the medium's tools (the canvas changes where they go, nowhere else)."""
+    from PIL import Image, ImageDraw
+    from scipy.ndimage import gaussian_filter
+    ok = True
+    try:
+        with tempfile.TemporaryDirectory() as w:
+            env = dict(os.environ, CANVAS="t")
+            run(HERE, w, "graphite", "vellum", [], [])
+            py = ["python3", os.path.join(w, "studio.py")]
+            sh = lambda *c: subprocess.run(py + [str(x) for x in c], env=env, capture_output=True, text=True)
+            assert sh("new", "#f7f6f2", "400", "400", "--medium", "graphite", "--support", "vellum", "--px-per-mm", "10").returncode == 0
+            im = Image.new("L", (400, 400), 150); d = ImageDraw.Draw(im)
+            for k in range(0, 200, 4):                         # dark threads, top left: strands
+                d.line([(k, 0), (k + 60, 190)], fill=90 if k % 8 else 120, width=1)
+            for x in range(230, 390, 25):                      # bright dots (glints) and dark specks (pores)
+                d.ellipse([x, 30, x + 4, 34], fill=250); d.ellipse([x, 80, x + 3, 83], fill=110)
+            d.rectangle([220, 220, 400, 400], fill=60)          # an edge
+            d.line([(20, 300), (180, 330)], fill=70, width=2)  # a thin dark line
+            Image.fromarray(gaussian_filter(np.asarray(im, np.float32), 0.6).astype(np.uint8)).convert("RGB").save(os.path.join(w, "s.png"))
+            assert sh("ref", os.path.join(w, "s.png")).returncode == 0
+            json.dump({"format": "teodor-structure/1", "droplets": [{"x": 100, "y": 360, "r": 15, "light": [0.7, -0.7], "lit": True}]},
+                      open(os.path.join(w, "t_structure.json"), "w"))
+            fams = {"strands": {"region": {"type": "rect", "x": 0, "y": 0, "w": 200, "h": 200}, "count": 60},
+                    "glints": {"region": {"type": "rect", "x": 220, "y": 0, "w": 180, "h": 60}},
+                    "pores": {"region": {"type": "rect", "x": 220, "y": 60, "w": 180, "h": 60}},
+                    "edges": {"region": {"type": "rect", "x": 200, "y": 200, "w": 200, "h": 200}},
+                    "lashes": {"region": {"type": "rect", "x": 0, "y": 260, "w": 200, "h": 100}, "min_contrast": 5},
+                    "droplets": {}}
+            r = sh("act", json.dumps({"do": [{"type": "marks", "families": fams, "dry": True}]}))
+            assert r.returncode == 0 and os.path.exists(os.path.join(w, "t_marks_plan.png")), r.stderr[-400:]
+            counts = dict(x.split() for x in r.stdout.split("marks planned: ")[1].split("\n")[0].split(", "))
+            assert all(int(v) > 0 for v in counts.values()), counts
+            c0 = np.load(os.path.join(w, "t_col.npy")).astype(np.float32)
+            assert np.abs(c0 - np.load(os.path.join(w, "t_col.npy")).astype(np.float32)).max() == 0
+            r = sh("act", json.dumps({"do": [{"type": "marks", "families": {k: v for k, v in fams.items() if k != "glints"}}]}))
+            assert r.returncode == 0, r.stderr[-400:]
+            c1 = np.load(os.path.join(w, "t_col.npy")).astype(np.float32).mean(-1)
+            dif = np.abs(c1 - c0.mean(-1)) > 0.03
+            assert dif[:200, :200].mean() > 0.05 and dif[350:370, 80:120].any(), "strands and droplet rim not laid"
+        print(f"fine marks (G7): ok (planned {counts})")
+    except Exception as e:
+        ok = False
+        print(f"fine marks (G7): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera, "render": photoreal_reference, "marks": fine_marks}
 
 
 if __name__ == "__main__":

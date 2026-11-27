@@ -1808,8 +1808,56 @@ def do_blend(cv, it, felt, rng):
         do_free(cv, it, felt, rng)
 
 
+def do_marks(cv, it, felt, rng):
+    """Designed fine marks planned from the schema's structure (marks.py): {"type": "marks", "families": {"strands":
+    {"region", "count", "light", "brush", "grade", "length_mm"}, "glints": {...}, "pores": {...}, "edges": {...},
+    "lashes": {...}, "droplets": {...}}, "dry": false}. The painter chooses the families, regions and counts; every
+    mark is laid by the medium's tools through `strokes`. With "dry": true it only writes the plan
+    (<canvas>_marks_plan.png) and prints the counts."""
+    import marks as mk
+    if cv.ref is None:
+        sys.exit("marks needs a schema (ref or scene) first.")
+    ppm = sheet_ppm(cv) or 5.0
+    sp = P("structure.json")
+    structure = json.load(open(sp)) if os.path.exists(sp) else None
+    if structure and getattr(cv, "px_scale", 1.0) != 1.0 and structure.get("droplets"):
+        d = cv.meta["detail"]
+        s_ = cv.px_scale
+        structure = dict(structure, droplets=[dict(q, x=(q["x"] - d["x"]) * s_, y=(q["y"] - d["y"]) * s_, r=q["r"] * s_)
+                                              for q in structure["droplets"]])
+
+    def mask_of(reg):
+        m = region_mask(reg, cv.W, cv.H) if reg else None
+        return np.ones((cv.H, cv.W), bool) if m is None else (m > 0.5)
+    fams = it.get("families", {})
+    planned = mk.plan(cv.ref, mask_of, ppm, fams, rng, structure)
+    print("marks planned: " + ", ".join(f"{k} {len(v)}" for k, v in planned.items()))
+    if it.get("dry"):
+        mk.preview(cv.ref, planned, P("marks_plan.png"))
+        print(P("marks_plan.png"))
+        return
+    for fam, st in planned.items():
+        groups = {}
+        for s in st:
+            groups.setdefault((s["brush"], s.get("grade"), bool(s.get("seek"))), []).append(s)
+        for (brush, grade, seek), ss in groups.items():
+            sub = {"type": "strokes", "brush": brush, "strokes": [{k: v for k, v in s.items() if k in ("pts", "size", "color", "pressure", "articulation")}
+                                                                   for s in ss], "role": "accent" if seek or fam in ("glints", "lashes", "edges") else "body",
+                   "focus_scale": False, "role_scale": False}
+            if grade:
+                sub["grade"] = grade
+            if seek:
+                sub["seek"] = True
+            hd = getattr(cv.medium, "hand_defaults", None)
+            if hd is not None:
+                sub = dict(hd(sub, "strokes") or {}, **sub)
+            do_strokes(cv, sub, felt, rng)
+            if hasattr(cv.medium, "flush"):
+                cv.medium.flush()
+
+
 INTENT = {"free": do_free, "strokes": do_strokes, "match": do_match, "glaze": do_glaze, "blend": do_blend, "hatch": do_hatch,
-          "model": do_model, "scrape": do_scrape, "wipe": do_wipe, "paintout": do_paintout, "element": do_element}
+          "model": do_model, "scrape": do_scrape, "wipe": do_wipe, "paintout": do_paintout, "element": do_element, "marks": do_marks}
 
 
 def intent_kind(it):
