@@ -3864,5 +3864,451 @@
     "rule": "p10-p90 of the photographs"
    }
   }
+ },
+ "graphite-hyperrealism-hand": {
+  "_n": 3,
+  "_provisional": true,
+  "_about": "Close-up ruler for graphite-hyperrealism: fine measures (eyes.measure_fine) of openly licensed close-up photographs at their own resolution, in subject-mm (face, skin, hair) and at the sheet's 5 px/mm (whole frame). PROVISIONAL until at least 10 photographs. Subject keys (face, skin, hair) are bounded by the photographs' p10-p90 once there are 5; whole-frame keys by BOUND_RULES (judgements from docs/research/hyperrealism-gaps.md) on the mean. Every key keeps mean, sd, range and p10/p90: the spread across the photographs.",
+  "_measured": "2026-11-27",
+  "_photos": [
+   {
+    "id": "nasa-200910290011HQ",
+    "source": "https://images.nasa.gov/details/200910290011HQ",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 10.378,
+    "boxes": {
+     "face": [
+      0,
+      308,
+      1774,
+      1494
+     ],
+     "skin": [
+      280,
+      682,
+      373,
+      373
+     ]
+    },
+    "note": "the back of a hand resting on a tactile map, side light; scale from a finger breadth of 187 px against about 18 mm (adult finger breadth at the middle phalanx, judgement, +-20%); measured, never shown or published",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.014,
+     "value_below30": 0.0288,
+     "value_p1": 15.803,
+     "value_p5": 35.4366,
+     "value_p95": 87.99,
+     "flat_midtone_share": 0.2242,
+     "edge_p10_mm": 2.15,
+     "sheet_band_rms": {
+      "0.125": 0.209,
+      "0.25": 0.244,
+      "0.5": 0.423,
+      "1.0": 0.778,
+      "2.0": 1.326,
+      "4.0": 2.061
+     },
+     "hand_band_rms": {
+      "0.125": 0.39,
+      "0.25": 0.668,
+      "0.5": 1.104,
+      "1.0": 1.691,
+      "2.0": 2.341,
+      "4.0": 3.048
+     },
+     "hand_specular_count_30": 0,
+     "hand_specular_max": 20.8338,
+     "hand_value_p1": 8.6452,
+     "hand_value_below20": 0.0485,
+     "hand_skin_band_rms": {
+      "0.125": 0.178,
+      "0.25": 0.199,
+      "0.5": 0.406,
+      "1.0": 0.739,
+      "2.0": 1.136,
+      "4.0": 0.308
+     }
+    }
+   },
+   {
+    "id": "nasa-iss072e069743",
+    "source": "https://images.nasa.gov/details/iss072e069743",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 17.393,
+    "boxes": {
+     "face": [
+      5586,
+      2820,
+      2862,
+      2683
+     ],
+     "skin": [
+      6660,
+      4430,
+      805,
+      805
+     ]
+    },
+    "note": "an open palm under a floating sphere of water, cabin light; scale from a finger breadth of 313 px against about 18 mm (adult finger breadth at the middle phalanx, judgement, +-20%); measured, never shown or published",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 2,
+     "value_below20": 0.4643,
+     "value_below30": 0.639,
+     "value_p1": 1.9834,
+     "value_p5": 2.7981,
+     "value_p95": 100.0,
+     "flat_midtone_share": 0.0007,
+     "edge_p10_mm": 2.0,
+     "sheet_band_rms": {
+      "0.125": 0.686,
+      "0.25": 0.961,
+      "0.5": 1.288,
+      "1.0": 1.76,
+      "2.0": 2.657,
+      "4.0": 3.694
+     },
+     "hand_band_rms": {
+      "0.125": 0.337,
+      "0.25": 0.505,
+      "0.5": 1.016,
+      "1.0": 2.034,
+      "2.0": 3.306,
+      "4.0": 3.53
+     },
+     "hand_specular_count_30": 1,
+     "hand_specular_max": 57.8954,
+     "hand_value_p1": 3.8968,
+     "hand_value_below20": 0.3219,
+     "hand_skin_band_rms": {
+      "0.125": 0.289,
+      "0.25": 0.261,
+      "0.5": 0.647,
+      "1.0": 1.83,
+      "2.0": 3.317,
+      "4.0": 1.845
+     }
+    }
+   },
+   {
+    "id": "nasa-s114e7493",
+    "source": "https://images.nasa.gov/details/s114e7493",
+    "licence": "public domain: a NASA photograph (US government work; NASA media usage guidelines)",
+    "px_per_subject_mm": 6.45,
+    "boxes": {
+     "face": [
+      848,
+      438,
+      774,
+      696
+     ],
+     "skin": [
+      925,
+      515,
+      131,
+      131
+     ]
+    },
+    "note": "hands on a control unit, flash; scale from a finger breadth of 116 px against about 18 mm (adult finger breadth at the middle phalanx, judgement, +-20%); measured, never shown or published",
+    "measured": "2026-11-27",
+    "measures": {
+     "reduced": 1,
+     "value_below20": 0.4108,
+     "value_below30": 0.5583,
+     "value_p1": 0.0,
+     "value_p5": 1.53,
+     "value_p95": 91.0929,
+     "flat_midtone_share": 0.0094,
+     "edge_p10_mm": 0.75,
+     "sheet_band_rms": {
+      "0.125": 1.158,
+      "0.25": 1.676,
+      "0.5": 2.389,
+      "1.0": 3.343,
+      "2.0": 4.279,
+      "4.0": 5.197
+     },
+     "hand_band_rms": {
+      "0.125": 0.755,
+      "0.25": 1.41,
+      "0.5": 2.441,
+      "1.0": 3.99,
+      "2.0": 5.992,
+      "4.0": 9.554
+     },
+     "hand_specular_count_30": 5,
+     "hand_specular_max": 43.1785,
+     "hand_value_p1": 0.1364,
+     "hand_value_below20": 0.3604,
+     "hand_skin_band_rms": {
+      "0.125": 0.858,
+      "0.25": 1.635,
+      "0.5": 2.794,
+      "1.0": 4.211,
+      "2.0": 3.264,
+      "4.0": 9.102
+     }
+    }
+   }
+  ],
+  "value_below20": {
+   "mean": 0.2964,
+   "sd": 0.2009,
+   "n": 3,
+   "lo": 0.014,
+   "hi": 0.4643,
+   "p10": 0.0934,
+   "p90": 0.4536,
+   "min": 0.1778,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "value_below30": {
+   "mean": 0.4087,
+   "sd": 0.2706,
+   "n": 3,
+   "lo": 0.0288,
+   "hi": 0.639,
+   "p10": 0.1347,
+   "p90": 0.6229,
+   "min": 0.2452,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "value_p1": {
+   "mean": 5.9288,
+   "sd": 7.0289,
+   "n": 3,
+   "lo": 0.0,
+   "hi": 15.803,
+   "p10": 0.3967,
+   "p90": 13.0391,
+   "max": 15.9288,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "value_p5": {
+   "mean": 13.2549,
+   "sd": 15.6934,
+   "n": 3,
+   "lo": 1.53,
+   "hi": 35.4366,
+   "p10": 1.7836,
+   "p90": 28.9089,
+   "max": 25.2549,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "value_p95": {
+   "mean": 93.0276,
+   "sd": 5.0903,
+   "n": 3,
+   "lo": 87.99,
+   "hi": 100.0,
+   "p10": 88.6106,
+   "p90": 98.2186,
+   "min": 83.0276,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "flat_midtone_share": {
+   "mean": 0.0781,
+   "sd": 0.1034,
+   "n": 3,
+   "lo": 0.0007,
+   "hi": 0.2242,
+   "p10": 0.0024,
+   "p90": 0.1812,
+   "max": 0.1562,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "edge_p10_mm": {
+   "mean": 1.6333,
+   "sd": 0.6276,
+   "n": 3,
+   "lo": 0.75,
+   "hi": 2.15,
+   "p10": 1.0,
+   "p90": 2.12,
+   "max": 2.45,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "hand_specular_count_30": {
+   "mean": 2.0,
+   "sd": 2.1602,
+   "n": 3,
+   "lo": 0.0,
+   "hi": 5.0,
+   "p10": 0.2,
+   "p90": 4.2,
+   "min": 2.0,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "hand_value_p1": {
+   "mean": 4.2261,
+   "sd": 3.4815,
+   "n": 3,
+   "lo": 0.1364,
+   "hi": 8.6452,
+   "p10": 0.8885,
+   "p90": 7.6955,
+   "max": 14.2261,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "hand_value_below20": {
+   "mean": 0.2436,
+   "sd": 0.1388,
+   "n": 3,
+   "lo": 0.0485,
+   "hi": 0.3604,
+   "p10": 0.1032,
+   "p90": 0.3527,
+   "min": 0.0731,
+   "rule": "BOUND_RULES on the mean"
+  },
+  "hand_band_rms": {
+   "0.125": {
+    "mean": 0.494,
+    "sd": 0.1858,
+    "n": 3,
+    "lo": 0.337,
+    "hi": 0.755,
+    "p10": 0.3476,
+    "p90": 0.682,
+    "min": 0.3211,
+    "max": 0.6669,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "0.25": {
+    "mean": 0.861,
+    "sd": 0.3939,
+    "n": 3,
+    "lo": 0.505,
+    "hi": 1.41,
+    "p10": 0.5376,
+    "p90": 1.2616,
+    "min": 0.5597,
+    "max": 1.1624,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "0.5": {
+    "mean": 1.5203,
+    "sd": 0.652,
+    "n": 3,
+    "lo": 1.016,
+    "hi": 2.441,
+    "p10": 1.0336,
+    "p90": 2.1736,
+    "min": 0.9882,
+    "max": 2.0525,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "1.0": {
+    "mean": 2.5717,
+    "sd": 1.0126,
+    "n": 3,
+    "lo": 1.691,
+    "hi": 3.99,
+    "p10": 1.7596,
+    "p90": 3.5988,
+    "min": 1.6716,
+    "max": 3.4718,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "2.0": {
+    "mean": 3.8797,
+    "sd": 1.5447,
+    "n": 3,
+    "lo": 2.341,
+    "hi": 5.992,
+    "p10": 2.534,
+    "p90": 5.4548,
+    "min": 2.5218,
+    "max": 5.2376,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "4.0": {
+    "mean": 5.3773,
+    "sd": 2.9599,
+    "n": 3,
+    "lo": 3.048,
+    "hi": 9.554,
+    "p10": 3.1444,
+    "p90": 8.3492,
+    "min": 3.4953,
+    "max": 7.2594,
+    "rule": "the gaps doc's tolerance on the mean"
+   }
+  },
+  "hand_skin_band_rms": {
+   "0.125": {
+    "mean": 0.4417,
+    "sd": 0.2979,
+    "n": 3,
+    "lo": 0.178,
+    "hi": 0.858,
+    "p10": 0.2002,
+    "p90": 0.7442,
+    "min": 0.2871,
+    "max": 0.5963,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "0.25": {
+    "mean": 0.6983,
+    "sd": 0.6628,
+    "n": 3,
+    "lo": 0.199,
+    "hi": 1.635,
+    "p10": 0.2114,
+    "p90": 1.3602,
+    "min": 0.4539,
+    "max": 0.9428,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "0.5": {
+    "mean": 1.2823,
+    "sd": 1.0734,
+    "n": 3,
+    "lo": 0.406,
+    "hi": 2.794,
+    "p10": 0.4542,
+    "p90": 2.3646,
+    "min": 0.8335,
+    "max": 1.7312,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "1.0": {
+    "mean": 2.26,
+    "sd": 1.4497,
+    "n": 3,
+    "lo": 0.739,
+    "hi": 4.211,
+    "p10": 0.9572,
+    "p90": 3.7348,
+    "min": 1.469,
+    "max": 3.051,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "2.0": {
+    "mean": 2.5723,
+    "sd": 1.0159,
+    "n": 3,
+    "lo": 1.136,
+    "hi": 3.317,
+    "p10": 1.5616,
+    "p90": 3.3064,
+    "min": 1.672,
+    "max": 3.4727,
+    "rule": "the gaps doc's tolerance on the mean"
+   },
+   "4.0": {
+    "mean": 3.7517,
+    "sd": 3.8349,
+    "n": 3,
+    "lo": 0.308,
+    "hi": 9.102,
+    "p10": 0.6154,
+    "p90": 7.6506,
+    "min": 2.4386,
+    "max": 5.0648,
+    "rule": "the gaps doc's tolerance on the mean"
+   }
+  }
  }
 }

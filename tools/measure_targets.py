@@ -408,7 +408,13 @@ BOUND_RULES = {
     "face_value_below20": ("min", lambda m: 0.3 * m),
     "hair_coherence": ("min", lambda m: min(0.5, m - 0.05)),
 }
-BAND_RULES = {"face_band_rms": (0.65, 1.35), "skin_band_rms": (0.65, 1.35), "hair_band_rms": (0.7, None)}
+BAND_RULES = {"face_band_rms": (0.65, 1.35), "skin_band_rms": (0.65, 1.35), "hair_band_rms": (0.7, None),
+              "hand_band_rms": (0.65, 1.35), "hand_skin_band_rms": (0.65, 1.35)}
+# a hand ruler (`--ruler hand`): the same measures with the hand's box as "face" and a patch of its skin as "skin",
+# stored under hand_ names, in hand-mm (scale from a finger's breadth)
+BOUND_RULES.update({"hand_specular_count_30": ("min", lambda m: max(1, math.ceil(0.75 * m))),
+                    "hand_value_p1": ("max", lambda m: m + 10.0), "hand_value_below20": ("min", lambda m: 0.3 * m)})
+
 import math  # noqa: E402
 
 
@@ -452,7 +458,8 @@ def closeup_measure(path, ppm_subject, sheet_ppm=5.0, face=None, skin=None, hair
 # skin and hair show, not to one sitter. Whole-frame keys keep BOUND_RULES (they depend on each photograph's
 # background and framing, which the drawing doesn't copy).
 SPREAD_N = 5
-SUBJECT_KEYS = ("face_specular_count_30", "face_value_p1", "face_value_below20", "hair_coherence")
+SUBJECT_KEYS = ("face_specular_count_30", "face_value_p1", "face_value_below20", "hair_coherence",
+                "hand_specular_count_30", "hand_value_p1", "hand_value_below20")
 
 
 def _stats(v):
@@ -504,7 +511,8 @@ def closeup(argv):
             i = argv.index(name); v = argv[i + 1]; del argv[i:i + 2]; return v
         return default
     style = opt("--style", "graphite-hyperrealism")
-    key = f"{style}-closeup"
+    ruler = opt("--ruler", "closeup")
+    key = f"{style}-{ruler}"
     pp = os.path.join(ROOT, "studio", "targets.parts", f"{key}.json")
     cur = json.load(open(pp))[key] if os.path.exists(pp) else {"_photos": []}
     sub = argv[0] if argv else "list"
@@ -526,6 +534,8 @@ def closeup(argv):
         ppm = float(ppm) if ppm else float(ipd) / float(opt("--ipd-mm", "64"))
         boxes = {k: _box(opt("--" + k)) for k in ("face", "skin", "hair")}
         meas = closeup_measure(path, ppm, float(opt("--sheet-px-per-mm", "5")), **boxes)
+        if ruler == "hand":
+            meas = {("hand_" + k[5:] if k.startswith("face_") else "hand_skin_band_rms" if k == "skin_band_rms" else k): v for k, v in meas.items()}
         cur["_photos"] = [p for p in cur["_photos"] if p["id"] != pid]
         cur["_photos"].append({"id": pid, "source": src, "licence": lic, "px_per_subject_mm": round(ppm, 3),
                                "boxes": {k: v for k, v in boxes.items() if v}, "note": opt("--note", ""),
