@@ -33,6 +33,10 @@ Written at the end of the long chat session that built most of this (Nov 22–24
 
 ## What to work on next (open threads)
 
+0. **The technical push (from Nov 27, 2026).** The project's motto is *engineering creativity*: the creative side is judged acceptable, so the goal now is paintings as close as possible to what real painters produce.
+   - **First:** fix the gaps in `docs/research/hyperrealism-gaps.md` against their acceptance tests, then redo round 19 ("Man and the Moon", graphite hyperrealism). The owner sets the target, the real style, and does not lower it; where a test fails, improve the engine.
+   - **After the owner approves the redo:** take every recorded style in turn. Compare Teodor's output with public-domain or CC0 representative works, measure the technical gaps, and fix each with an acceptance test, the same way as the hyperrealism analysis.
+
 1. **Staging habits.** Round 14 broke palette, light and mood but kept one central figure in a field with a radial pull. The next brief should target those (several figures, no centre, an off-balance composition, landscape-like crops).
 2. **Craft is now the ceiling,** for both models:
    - Figures still read as mannequins: faces near-identical, hands like tubes or mitts, stiff gestures. Teodor wrote his own helpers for this (`rounds/13-black-noon/tools/p3/facegen.py` for shaded heads; Fable's figure rig in `rounds/14b-…/tools/pose2.py`). Folding a better figure and face builder into the studio would help every painting.
