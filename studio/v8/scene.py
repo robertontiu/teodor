@@ -862,6 +862,11 @@ class Scene:
         exp_ = sp.get("exposure", 1.1)
         img = 1 - np.exp(-np.clip(img, 0, None) * exp_)
         img = img ** (1 / 1.08)
+        if sp.get("background"):
+            # the bare sheet: the empty background shown as this colour after the exposure (a subject isolated on white
+            # paper, the hyperrealist's convention; G3), instead of a lit sky
+            bg = np.full(W * H, True); bg[idx] = False
+            img[bg] = hx(sp["background"])
         if ms and any(m.mesh.get("droplets") for m in self.meshes):
             dep_ = np.full(W * H, np.inf, np.float32); dep_[idx] = tt
             img = self._droplets(img.reshape(H, W, 3), dep_.reshape(H, W), ld, sun, W, H).reshape(-1, 3)

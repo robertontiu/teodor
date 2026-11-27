@@ -299,6 +299,20 @@ def region_mask(reg, W, H, feather=1.0):
         return None
     if t == "segment":
         return gaussian_filter(segment_mask(reg, W, H).astype(np.float32), feather)
+    if t == "element":
+        # a scene element's own mask ({"type": "element", "key": "person0.face", "grow": px}), from the last `scene`
+        ep = P("elements.npz")
+        if not os.path.exists(ep):
+            sys.exit("an element region needs a scene render first (`scene`), which writes the element masks.")
+        npz = np.load(ep)
+        if reg["key"] not in npz.files:
+            sys.exit(f"no element '{reg['key']}'. Elements: {', '.join(npz.files)}")
+        m = np.asarray(Image.fromarray(npz[reg["key"]].astype(np.uint8) * 255).resize((W, H), Image.NEAREST)) > 127
+        g = int(reg.get("grow", 0))
+        if g:
+            from scipy.ndimage import binary_dilation, binary_erosion
+            m = binary_dilation(m, iterations=g) if g > 0 else binary_erosion(m, iterations=-g)
+        return gaussian_filter(m.astype(np.float32), feather)
     m = Image.new("L", (W, H), 0)
     d = ImageDraw.Draw(m)
     if t == "ellipse":
