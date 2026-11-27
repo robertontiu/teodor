@@ -537,3 +537,25 @@ The style doc and `studio/styles.json` cited two process interviews by URLs that
 - **G9 tiles:** `detail tiles X Y W H --scale 4 --tile 600 --overlap 0.1` plans evenly spread tiles; `detail open --tile K`; `marks` in a tile skips what earlier closed tiles drew (up to where their feather begins).
 - **Acceptance (G9),** on a 48 × 64 cm sheet (2400 × 3200, 5 px/mm) with an invented head at 2× life (9.9 px per face-mm), four 4× tiles over the hair (each 600 × 600 detail px, 2,000 strands on the first run; by density afterwards), `docs/gallery/graphite_detail_tiles.jpg`: **time per tile 1.4-2.3 min** (open 5 s, the tile's reference 22 s, marks 47-83 s, close 12 s; ≤ 10 min: **pass**); **peak memory 1.6 GB** (≤ 6 GB: **pass**); **seams between tiles** 0.16 / 0.31 / 0.64 / 0.80 / 0.81 / 1.89 L* beyond the schema's (≤ 0.5 L*: **2 of 6 pass**; on the first run, with a last tile pushed onto its neighbour and a fixed count per tile, 0.08-3.5 L*: the even spread and the skip were the fixes). Against the un-tiled block-in around them the tiles step 4-8 L*, and the check flags it, as it should: the passage around was never worked.
 - **Not run:** G8's own acceptance drawing (a hand emerging from a sleeve); the final test head below exercises the check.
+
+### The final acceptance test: a head at 2× life on white paper (2026-11-27)
+
+An invented man (MakeHuman CC0, 45), framed from 1.42 m (154 mm equivalent), one hard light, on a 48 × 64 cm sheet of vellum (2400 × 3200 at 5 px/mm; 9.9 px per face-mm, the head at about 2× life), drawn by script through the studio's tools in the order the style doc now gives: transfer; stylus indents for the droplets' glints and catchlights; three darks-first charcoal cycles (powder, compressed charcoal, a small soft brush inside the hair and the face, workable fixative); five graphite bands clipped to the person's own element mask; blending by part; `match` corrections and seeking lifts; light strands lifted; workable fixative; `marks` (about 19,000 dark hair strands, 3,000 pores, 400 fine lines, 300 edges, droplet rims, shades and cast shadows); one 4× detail over the lit eye from its own reference (lashes, edges, glints); clean, sign. 37 minutes on 2 vCPU. Not drawn by a fresh painter sub-agent (none could be started from this session), so no critic has read it. `docs/gallery/graphite_test_head_2x.jpg` (schema, drawing).
+
+| test | measure | drawing | target | result |
+|---|---|---|---|---|
+| G3 | flat mid-tone / bare paper | 0.6% / 47% | ≤ 15% / ≥ 15% | pass / pass |
+| G3 | face share of the sheet | 24.9% | ≥ 25% | **fail** by 0.1 (a framing choice) |
+| G4 | camera distance / nose magnification | 1.42 m / +2.9% | ≥ 1.2 m / ≤ 5% | pass |
+| G2 | head p5 against the schema's | 24.5 vs 3.2 L* | within 5 L* | **fail** |
+| G2 | head share below L* 25 against the schema's | 5.7% vs 9.8% | within ×1.5 | **fail** (×0.58) |
+| G6 | face p1 | 23.9 | ≤ 12 | **fail** |
+| G1/G10 | face below L* 20 | 0.0% (schema 4.5%) | ≥ 3.9% (ruler p10) | **fail** |
+| G6, G1/G10 | speculars ≥ 30 L* in the face | 29 | ≥ 2 / ≥ 5 | pass |
+| G1/G10 | face texture at 0.25 / 0.5 / 1 / 2 face-mm | 0.53 / 0.79 / 1.35 / 2.31 (schema 1.33 / 1.49 / 1.92 / 2.87) | ruler p10-p90 | **fail** / **fail** / **fail** / pass |
+| G1/G7 | hair texture at 0.125 / 0.25 / 0.5 mm, coherence | 1.91 / 1.87 / 1.37, 0.86 | ≥ p10 (1.21 / 1.40 / 1.28), ≥ 0.62 | pass |
+| G10 | sharpest face edges (p10 of the rise) | 2.2 mm | ≤ 0.3 mm | **fail** |
+| G8 | the eye's 4× detail related back | texture 2.0× what the schema gives it; seam 1.0 L* | within ×1.5; ≤ 0.5 L* | **fail**, and flagged by the check |
+| G9 | time | 37 min whole drawing | | |
+
+**9 of 18 measured checks pass.** The first run (before this one) passed 8: its schema's white sky came out grey after the exposure and got hatched in a rectangle, and 40 px blends blurred the face; the engine now has a paper `background` for scenes and `element` regions, and the recipe smaller blends. **What still fails, and why:** (1) **the darks**: the schema reaches L* 2-3 in the face's shadow; charcoal's modelled floor is about L* 19-20 (pigment data), so the drawing can't follow it below that, and the blends and graphite layers over the charcoal lift it to 24. Lowering the floor needs a measured modern charcoal sheet, not a tuned number. (2) **fine texture of the face**: pores and lines are laid as marks, but the face's tone under them came out smoother than the schema at 0.25-1 mm (blending by part still evens it). (3) **edges**: no hard-lead pass along the face's crisp edges reached 0.3 mm (the edge family laid 300, mostly in the hair). (4) **the eye detail** carries twice the texture its surroundings do, which the new check flags: the next step is the relation fix itself, carrying the detail into the cheek and brow. The owner's target stands; these are the engine's next iterations.
