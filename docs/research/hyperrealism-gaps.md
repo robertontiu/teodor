@@ -505,3 +505,7 @@ The first portrait was one of the smoothest: real cheeks hold about twice its te
 | hair coherence | 0.91 | ≥ 0.62 (doc ≥ 0.5) | pass |
 
   Against the first photograph alone the cheek passed at every scale but 2 mm. **What fails, and what was tried:** the 1-2 mm cheek texture. Larger colour mottle and a stronger swell reached 0.76 / 1.24 but read as blotches and plaster; oriented fine lines over the whole cheek read as sand ripples; both were rolled back to what reads as skin. The missing energy is in features the mesh lacks (age folds and creases at the scale of the cheek, stubble, moles, freckles), which is the next part of G1. Not done: the fresh-critic "photo or render?" test (it needs the orchestrator), depth of field, tiled rendering. Catchlights appear only where the light reflects off the cornea toward the camera; under this side light none does.
+
+### Rule 3 tidy (2026-11-27)
+
+The style doc and `studio/styles.json` cited two process interviews by URLs that carry living artists' names; they are now neutral descriptions of the source (outlet, kind of piece, the artist unnamed).
