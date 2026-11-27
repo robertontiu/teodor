@@ -1168,7 +1168,12 @@ def finish(o, body, A, Vr, Vp, rig, W1, P1, J, au, O_rest, Hh, eye_rest, scale):
     pl = np.where((elem == EL["head"]) | (elem == EL["face"]), planes, bplanes)
     mesh = dict(verts=Vp.astype(np.float32), tris=rt, color=col.astype(np.float32), gloss=gloss.astype(np.float32),
                 wrap=wrap.astype(np.float32), elem=elem, rest=A.V0.astype(np.float32), look=look, eye=eye_pos, eye_id=eye_id,
-                planes=pl.astype(np.float32), adj=A.adj, sub=list(ELEMENTS), body_tris=Tb)
+                planes=pl.astype(np.float32), adj=A.adj, sub=list(ELEMENTS), body_tris=Tb,
+                # skin micro-structure, sheen and water (skin_micro, scene.py); 0 switches each off
+                micro=dict(amount=float(o.get("skin_detail", 1.0)), oil=float(o.get("skin_oil", 0.5)), age=float(body.age),
+                           seed=int(o.get("skin_seed", 7))),
+                lips_w=np.clip(A.masks["lips"] * 1.4, 0, 1).astype(np.float32))
+    mesh["droplets"] = droplet_sites(mesh, o.get("droplets"))
 
     # ---------- the proxy field (AO, contact, cloth and hair collisions)
     Tall = np.concatenate([Tb, A.tris["eye_l"], A.tris["eye_r"]])
@@ -1206,8 +1211,12 @@ def finish(o, body, A, Vr, Vp, rig, W1, P1, J, au, O_rest, Hh, eye_rest, scale):
             # on the sculpted skull the horseshoe needs to reach the nape, or it floats as a band
             oh = dict(o, hair=dict(hd_, nape=-0.45))
         hp = figure.hair_part(oh, hb_, Of, Mf, wind32, collide, skull=skull, ye=ye, cranium=False)
+        crown_w = (np.array([0, 0.42, -0.12], np.float32) * Hh) @ Mf.T + Of
         for d in hp:
             d["colorf"] = hair_streaks(d["color"], Of, Mf, Hh)
+            # the way the hair grows (away from the crown), for strands and their sheen (scene.py)
+            d["flowf"] = (lambda c_: (lambda p: np.asarray(p, np.float32) - c_))(crown_w.astype(np.float32))
+            d["strands"] = o.get("strands", True)
         parts += hp
     # loose clothes: figure.py's cloth simulation, drawn as meshes (the simulated grids themselves)
     meshes = [mesh]
@@ -1251,6 +1260,172 @@ def cloth_mesh(d):
     return dict(verts=Vc.astype(np.float32), tris=np.concatenate(T_), color=np.tile(col, (n, 1)).astype(np.float32),
                 gloss=np.zeros(n, np.float32), wrap=np.zeros(n, np.float32), elem=np.zeros(n, np.int64), planes=np.zeros(n, np.float32),
                 sub=["drapery"], two_sided=True, name=d["name"])
+
+
+# ---------------------------------------------------------------- skin micro-structure, strands and droplets
+# The reference must hold what a photograph holds (docs/research/hyperrealism-gaps.md, G1): pores, the fine furrows
+# of the skin's micro-relief, a mottled colour, an oily sheen that breaks into glints, hair as strands, water as
+# droplets. All procedural, in the base mesh's own coordinates (the same for every invented person and pose); no
+# photograph of a face or of skin is used.
+#   pores     a 3D jittered lattice of small spherical pits cut by the surface: on the face about 36 per cm^2 and
+#             0.06-0.37 mm^2 each (Flament et al. 2015, Clin Cosmet Investig Dermatol, PMC4337418: 10-90 per cm^2 on
+#             the cheek, 0.06-0.37 mm^2), fewer on the body (judgement)
+#   furrows   the micro-relief's polygonal network (the F2 - F1 ridges of a cellular noise), cells about 0.9 mm,
+#             deeper with age (judgement, by eye against the ruler below)
+#   colour    mottling at 1-6 mm (melanin and blood), pores a little darker (amounts fitted below)
+# Amounts are fitted by measurement: an invented head under one hard light against the public-domain portrait's
+# cheek in studio/targets.json graphite-hyperrealism-closeup (texture energy at 0.25-2 face-mm; G1's acceptance).
+MICRO = dict(pore_cell_mm=1.1, pore_p_face=0.8, pore_p_body=0.35, pore_r_mm=(0.18, 0.42), pore_depth_mm=0.05,
+             furrow_cell_mm=0.9, furrow_depth_mm=0.025, furrow_w=0.09, pore_dark=0.06,
+             mottle=((0.7, 0.04), (1.5, 0.08), (3.0, 0.10), (6.0, 0.08), (12.0, 0.05)),     # (scale mm, amplitude)
+             undulation=((1.5, 0.1), (3.5, 0.22), (8.0, 0.2)),
+             lines=(3.0, 0.10))       # (scale mm, height mm): the skin's soft swell; lines: (spacing mm, depth mm at 45)
+
+
+def _hash3(c, k):
+    """A reproducible pseudo-random number in [0, 1) per integer lattice cell (N,3) and stream k."""
+    h = (c[:, 0] * 73856093) ^ (c[:, 1] * 19349663) ^ (c[:, 2] * 83492791) ^ (k * 2654435761)
+    h = (h ^ (h >> 13)) * 1274126177
+    h = h ^ (h >> 16)
+    return (h & 0xFFFFFF).astype(np.float64) / float(0x1000000)
+
+
+def _value_noise(q, k):
+    """Smooth value noise on a unit lattice at points q (N,3), in [-1, 1] (trilinear with smoothstep)."""
+    i = np.floor(q).astype(np.int64)
+    f = q - i
+    u = f * f * (3 - 2 * f)
+    out = np.zeros(len(q))
+    for dx in (0, 1):
+        for dy in (0, 1):
+            for dz in (0, 1):
+                w = (u[:, 0] if dx else 1 - u[:, 0]) * (u[:, 1] if dy else 1 - u[:, 1]) * (u[:, 2] if dz else 1 - u[:, 2])
+                out += w * _hash3(i + np.array([dx, dy, dz]), k)
+    return 2 * out - 1
+
+
+def skin_micro(prest_m, face_w, foot_mm, age=35.0, amount=1.0, seed=7):
+    """The skin's micro-relief at points of the base mesh (meters), for pixels whose footprint is foot_mm wide.
+    Returns (grad, albedo): the gradient of the relief's height (mm per mm, a 3D vector in base-mesh coordinates:
+    tilt the normal against it) and a multiplier for the skin's colour. face_w (0-1) is how much the point is face
+    skin (pores denser there). Features smaller than about a pixel fade out (no aliasing sparkle)."""
+    P = np.asarray(prest_m, np.float64) * 1000.0
+    N = len(P)
+    grad = np.zeros((N, 3))
+    alb = np.ones(N)
+    if N == 0 or amount <= 0:
+        return grad, alb
+    m = MICRO
+    fp = np.asarray(foot_mm, np.float64)
+    # pores
+    c = m["pore_cell_mm"]
+    q = P / c
+    base = np.floor(q).astype(np.int64)
+    pd = m["pore_depth_mm"] * amount
+    p_here = m["pore_p_body"] + (m["pore_p_face"] - m["pore_p_body"]) * np.clip(face_w, 0, 1)
+    pore_alb = np.zeros(N)
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                cell = base + np.array([dx, dy, dz])
+                ex = _hash3(cell, seed) < p_here
+                ctr = (cell + np.stack([_hash3(cell, seed + k) for k in (1, 2, 3)], 1)) * c
+                r = m["pore_r_mm"][0] + (m["pore_r_mm"][1] - m["pore_r_mm"][0]) * _hash3(cell, seed + 4)
+                d = P - ctr
+                d2 = (d * d).sum(1)
+                inside = ex & (d2 < r * r)
+                if not inside.any():
+                    continue
+                t = 1 - d2[inside] / (r[inside] ** 2)
+                # h = -pd t^2; grad h = -pd 2 t (-2 d / r^2) = 4 pd t d / r^2, faded where the pore is under ~a pixel
+                fade = np.clip((2 * r[inside] / fp[inside] - 0.7) / 1.0, 0, 1)
+                grad[inside] += (4 * pd * t / r[inside] ** 2)[:, None] * d[inside] * fade[:, None]
+                pore_alb[inside] = np.maximum(pore_alb[inside], t * fade)
+    # furrows: the ridges between cells of a cellular (Worley) noise
+    c2 = m["furrow_cell_mm"]
+    q = P / c2
+    base = np.floor(q).astype(np.int64)
+    F1 = np.full(N, 9.0); F2 = np.full(N, 9.0)
+    V1 = np.zeros((N, 3)); V2 = np.zeros((N, 3))
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                cell = base + np.array([dx, dy, dz])
+                ctr = cell + np.stack([_hash3(cell, seed + 10 + k) for k in range(3)], 1)
+                d = q - ctr
+                dist = np.sqrt((d * d).sum(1))
+                b1 = dist < F1
+                b2 = (~b1) & (dist < F2)
+                F2 = np.where(b1, F1, np.where(b2, dist, F2)); V2 = np.where(b1[:, None], V1, np.where(b2[:, None], d, V2))
+                F1 = np.where(b1, dist, F1); V1 = np.where(b1[:, None], d, V1)
+    e = F2 - F1                                     # 0 on a ridge between two cells
+    w = m["furrow_w"]
+    depth = m["furrow_depth_mm"] * amount * (0.6 + float(np.clip(age, 0, 90)) / 60.0)
+    # h = -depth exp(-(e/w)^2); de/dq = V2/F2 - V1/F1; per mm: / c2
+    ge = (V2 / np.maximum(F2, 1e-6)[:, None] - V1 / np.maximum(F1, 1e-6)[:, None]) / c2
+    k = np.exp(-(e / w) ** 2)
+    fade = np.clip((w * c2 * 2 / fp - 0.5) / 1.0, 0, 1)
+    grad += (depth * 2 * e / (w * w) * k * fade)[:, None] * ge
+    # the soft swell of the surface between the pores (orange-peel), by finite differences of a smooth noise
+    for j, (sc, hh) in enumerate(m["undulation"]):
+        e_ = 0.05 * sc
+        h0 = _value_noise(P / sc, seed + 40 + j)
+        gu = np.stack([(_value_noise((P + e_ * np.eye(3)[a]) / sc, seed + 40 + j) - h0) / e_ for a in range(3)], 1)
+        grad += hh * amount * gu * np.clip((sc / fp - 0.5), 0, 1)[:, None]
+    # fine lines: shallow creases about LINES mm apart that run one way over a patch and turn slowly across the face
+    # (the skin's tension lines; a warped stripe field, in patches, deeper with age). Spacing, depth and patchiness
+    # are judgements fitted to the ruler (G1)
+    sp_, dl_ = m["lines"]
+    if dl_ > 0:
+        def hl(Q):
+            # stripes across one direction (mostly horizontal lines, as on the forehead and under the eyes), bent by
+            # a smooth warp; a direction that varies with position would turn the far-off origin into fine stripes
+            a = np.array([0.0, 0.96, 0.29])
+            w_ = (Q @ a) / sp_ + 0.7 * _value_noise(Q / 9.0, seed + 64) + 0.4 * _value_noise(Q / 4.0, seed + 66)
+            patch = np.clip(2.2 * _value_noise(Q / 9.0, seed + 65) - 0.5, 0, 1)        # in scattered patches only
+            return -np.maximum(np.cos(2 * np.pi * w_), 0) ** 2 * patch
+        e_ = 0.08
+        h0 = hl(P)
+        gl = np.stack([(hl(P + e_ * np.eye(3)[a]) - h0) / e_ for a in range(3)], 1)
+        dep_l = dl_ * amount * (0.3 + float(np.clip(age, 0, 90)) / 45.0)
+        grad += dep_l * gl * np.clip((sp_ / 3 / fp - 0.4), 0, 1)[:, None]
+    # colour: mottling at several scales (melanin and blood spots), pores a touch darker
+    for j, (sc, amp) in enumerate(m["mottle"]):
+        alb *= 1 + amp * amount * _value_noise(P / sc, seed + 20 + j)
+    alb *= 1 - m["pore_dark"] * amount * pore_alb
+    return grad, alb
+
+
+def rotate_min(a, b, x):
+    """Rotate vectors x (N,3) by the smallest rotation taking unit a onto unit b (per row)."""
+    v = np.cross(a, b)
+    c = (a * b).sum(1, keepdims=True)
+    return x * c + np.cross(v, x) + v * (v * x).sum(1, keepdims=True) / np.maximum(1 + c, 1e-6)
+
+
+def droplet_sites(mesh, spec, seed=3):
+    """Water droplets on the skin: centres (M,3) on the posed mesh, their normals and radii (m). spec: {"count", "size_mm"
+    [min, max], "on": ["face", ...], "seed"}. Sizes are drawn log-uniformly (judgement)."""
+    if not spec:
+        return None
+    if spec is True:
+        spec = {}
+    rng = np.random.default_rng(spec.get("seed", seed))
+    on = spec.get("on", ["face"])
+    el = mesh["elem"]
+    ok = np.isin(el, [EL[e] for e in on if e in EL]) & (mesh["wrap"] > 0)
+    idx = np.nonzero(ok)[0]
+    if not len(idx):
+        return None
+    n = int(spec.get("count", 40))
+    pick = rng.choice(idx, size=min(n, len(idx)), replace=False)
+    v = mesh["verts"][pick].astype(np.float64)
+    if "_vn" not in mesh:
+        mesh["_vn"] = vertex_normals(mesh["verts"].astype(np.float64), mesh["tris"]).astype(np.float32)
+    nr = mesh["_vn"][pick].astype(np.float64)
+    lo, hi = spec.get("size_mm", [1.0, 4.0])
+    r = np.exp(rng.uniform(np.log(lo), np.log(hi), len(pick))) / 2000.0
+    return dict(c=v + nr * r[:, None] * 0.3, n=nr, r=r)
 
 
 def hair_streaks(col, O, M, H):

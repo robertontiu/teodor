@@ -185,6 +185,7 @@ class Node:
         self.owner, self.element, self.colorf, self.gloss, self.planes, self.frame, self.scale = None, "object", None, 0.0, 0.0, None, 1.0
         self.wrap = 0.0
         self.subf, self.sub, self.glossf, self.plane, self.nsmooth = None, None, None, False, 0.0
+        self.flowf, self.strands = None, False
 
 
 def from_part(d):
@@ -197,6 +198,7 @@ def from_part(d):
     n.plane = d.get("plane", False)
     n.subf, n.sub, n.glossf = d.get("subf"), d.get("sub"), d.get("glossf")
     n.nsmooth = d.get("nsmooth", 0.0)
+    n.flowf, n.strands = d.get("flowf"), d.get("strands", False)        # hair: the growth direction, strands on
     if d.get("proxy"):
         n.kind = "proxy"       # a stand-in field for a mesh: ambient occlusion and contact only, never seen
     return n
@@ -756,6 +758,9 @@ class Scene:
         gloss = np.zeros(len(idx), np.float32)
         pl = np.zeros(len(idx), np.float32)
         wr = np.zeros(len(idx), np.float32)
+        skin = np.zeros(len(idx), np.float32)
+        oil = np.zeros(len(idx), np.float32)
+        shin = np.full(len(idx), 40.0, np.float32)
         sublab = np.zeros(len(idx), np.int32)
         off = 1 if self.has_ground else 0
         if self.has_ground:
@@ -788,6 +793,7 @@ class Scene:
             a = self.shade_meshes(ms, idx_m)
             p[sl] = a["p"]; n[sl] = a["n"]; base[sl] = a["base"]; gloss[sl] = a["gloss"]; wr[sl] = a["wrap"]
             pl[sl] = a["planes"]; sublab[sl] = a["elem"]
+            skin[sl], oil[sl], shin[sl] = a["skin"], a["oil"], a["shin"]
         pe = p + n * 0.01 if not fine else p + n * np.maximum(0.002, 2 * self.pix * tt)[:, None]
         # skin scatters light under its surface, so the light wraps a little past the terminator
         # ("wrap" diffuse; 0 for everything but skin parts that ask for it)
@@ -819,8 +825,28 @@ class Scene:
         col = base * (scol * light[:, None] + ambient * ao[:, None])
         if gloss.any():
             hv = norm(ld[None, :] - rd[idx])
-            spec = np.clip((n * hv).sum(1), 0, 1) ** 40 * gloss * sh * (dif > 0)
+            spec = np.clip((n * hv).sum(1), 0, 1) ** shin * gloss * sh * (dif > 0)
             col += scol[None, :] * spec[:, None] * 0.6
+        if skin.any():
+            # skin's sheen: two normalised Blinn-Phong lobes with Schlick's Fresnel. F0 0.0255 from the skin-air index
+            # 1.38 (Weyrich et al. 2006, after Tuchin); the broad lobe is a Beckmann roughness of about 0.3 (exponent
+            # 2/m^2 - 2 = 20), the value real-time skin models take from Weyrich's fits; the sharp lobe (exponent 250)
+            # is the oily film that breaks into glints over the pores and furrows, weighted by the oil map. The sharp
+            # exponent and the mix are judgements, checked against the ruler's speculars (G1)
+            ks = np.nonzero(skin > 0)[0]
+            hv = norm(ld[None, :] - rd[idx[ks]])
+            ndh = np.clip((n[ks] * hv).sum(1), 0, 1)
+            ndl = np.clip(n[ks] @ ld, 0, 1)
+            vdh = np.clip((-rd[idx[ks]] * hv).sum(1), 0, 1)
+            F = 0.0255 + (1 - 0.0255) * (1 - vdh) ** 5
+            lobe = (1 - 0.5 * oil[ks]) * (28 / (8 * math.pi)) * ndh ** 20 + oil[ks] * (258 / (8 * math.pi)) * ndh ** 250
+            col[ks] += scol[None, :] * (F * lobe * ndl * sh[ks] * skin[ks])[:, None]
+        hair_ix = np.zeros(0, np.int64)
+        for i, nd in enumerate(self.nodes):
+            if getattr(nd, "strands", False) and nd.flowf is not None:
+                hair_ix = np.concatenate([hair_ix, np.nonzero(np.concatenate([mat == i + off, np.zeros(len(idx) - ns, bool)]))[0]])
+        if len(hair_ix) > 30:
+            col[hair_ix] = self._strands(idx, hair_ix, p, n, rd, ld, sh, scol, col, tt, W, H)
         for L in sp.get("lights", []):
             lp = np.asarray(L["pos"], np.float32)
             lv = lp - p
@@ -836,6 +862,9 @@ class Scene:
         exp_ = sp.get("exposure", 1.1)
         img = 1 - np.exp(-np.clip(img, 0, None) * exp_)
         img = img ** (1 / 1.08)
+        if ms and any(m.mesh.get("droplets") for m in self.meshes):
+            dep_ = np.full(W * H, np.inf, np.float32); dep_[idx] = tt
+            img = self._droplets(img.reshape(H, W, 3), dep_.reshape(H, W), ld, sun, W, H).reshape(-1, 3)
         # what each pixel shows: node index (-1 sky, -2 ground), and depth
         lab = np.full(W * H, -1, np.int32)
         lab[idx_s] = mat - off
@@ -848,6 +877,101 @@ class Scene:
         dep[idx] = tt
         self.labels, self.depth, self.size = lab.reshape(H, W), dep.reshape(H, W), (W, H)
         return (np.clip(img, 0, 1).reshape(H, W, 3) * 255).astype(np.uint8)
+
+    def _strands(self, idx, hix, p, n, rd, ld, sh, scol, col, tt, W, H):
+        """Hair drawn as strands (raster.strands) over the hair's shading: the growth direction from the hair's flow
+        (away from the crown, in the surface), projected into the picture; the gaps between strands darker, each strand
+        and lock its own brightness, and a Kajiya-Kay highlight (the sheen of a cylinder, strongest where the half
+        vector is across the strand) that breaks along strands by each strand's tilt. Amounts: judgements fitted to
+        the ruler's hair texture (G1)."""
+        import raster
+        ro, rt, up, fw, f = self.cam
+        pp, nn = p[hix], n[hix]
+        fl = np.zeros_like(pp)
+        for nd in self.nodes:
+            if getattr(nd, "strands", False) and nd.flowf is not None:
+                fl = nd.flowf(pp)
+                break
+        T = fl - (fl * nn).sum(1, keepdims=True) * nn
+        T = norm(T)
+        d2 = np.stack([T @ rt, -(T @ up)], 1)
+        d2 = d2 / (np.linalg.norm(d2, axis=1, keepdims=True) + 1e-6)
+        pix = idx[hix]
+        mask = np.zeros(H * W, bool); mask[pix] = True
+        dirf = np.zeros((H * W, 2), np.float32); dirf[pix] = d2
+        ppm = float(np.median(f * (H / 2) / (tt[hix] * 1000.0)))
+        st = raster.strands(mask.reshape(H, W), dirf.reshape(H, W, 2), ppm, seed=11)
+        cov, br, shf = (st[k].reshape(-1)[pix] for k in ("cov", "bright", "shift"))
+        hv = norm(ld[None, :] - rd[pix])
+        Ts = norm(T + nn * (0.25 * shf)[:, None])           # each strand's highlight shifted along it
+        th = np.clip((Ts * hv).sum(1), -1, 1)
+        kk = np.sqrt(np.clip(1 - th * th, 0, 1)) ** 60 * 0.22 * sh[hix] * cov
+        out = col[hix] * ((0.5 + 0.5 * cov) * br)[:, None] + scol[None, :] * kk[:, None]
+        return out
+
+    def _droplets(self, img, dep, ld, sun, W, H):
+        """Water droplets on the skin, drawn in the picture over the finished render: each a small lens (the skin
+        behind it seen minified and inverted), a dark rim, shaded on the side toward the light and bright on the far
+        side (the light focused through it), a white glint toward the light and a crescent of cast shadow away from it
+        (Plaid, "How to draw realistic water droplets"; sizes and amounts judgements). Droplets in shadow keep their
+        rim and lens and lose glint, caustic and cast shadow."""
+        ro, rt, up, fw, f = self.cam
+        out = img.copy()
+        l2 = np.array([ld @ rt, -(ld @ up)], np.float64)
+        l2 = l2 / (np.linalg.norm(l2) + 1e-9)
+        for m in self.meshes:
+            D = m.mesh.get("droplets")
+            if not D:
+                continue
+            for c, nrm, r in zip(D["c"], D["n"], D["r"]):
+                rel = c - ro
+                z = float(rel @ fw)
+                if z <= 0.05:
+                    continue
+                sx = f * float(rel @ rt) / z * (H / 2) + W / 2 - 0.5
+                sy = -f * float(rel @ up) / z * (H / 2) + H / 2 - 0.5
+                R = r * f * (H / 2) / z
+                if R < 1.2 or not (0 <= sx < W and 0 <= sy < H):
+                    continue
+                yi, xi = int(round(sy)), int(round(sx))
+                if abs(float(dep[yi, xi]) - float(np.linalg.norm(rel))) > max(0.01, 4 * r):
+                    continue                                   # hidden behind something
+                vis = float(self.shadow(np.asarray(c + nrm * 0.004, np.float32)[None], ld, k=sun.get("softness", 10))[0])
+                vis *= float(np.clip(nrm @ ld, 0, 1) > 0)
+                # the circle on the surface, foreshortened: its minor axis along the normal's direction in the picture
+                n2 = np.array([nrm @ rt, -(nrm @ up)], np.float64)
+                cosv = abs(float(nrm @ norm(-rel)))
+                e1 = n2 / (np.linalg.norm(n2) + 1e-9) if np.linalg.norm(n2) > 1e-6 else np.array([1.0, 0.0])
+                e2 = np.array([-e1[1], e1[0]])
+                Rx = int(np.ceil(R * 1.8)) + 2
+                y0, y1, x0, x1 = max(0, yi - Rx), min(H, yi + Rx + 1), max(0, xi - Rx), min(W, xi + Rx + 1)
+                yy, xx = np.mgrid[y0:y1, x0:x1].astype(np.float64)
+                dx, dy = xx - sx, yy - sy
+                a = (dx * e1[0] + dy * e1[1]) / (R * max(cosv, 0.35))
+                b = (dx * e2[0] + dy * e2[1]) / R
+                rho = np.sqrt(a * a + b * b)
+                patch = out[y0:y1, x0:x1].copy()
+                # cast shadow: the droplet's disc moved away from the light, outside the droplet
+                sxs, sys_ = dx + l2[0] * 0.45 * R, dy + l2[1] * 0.45 * R
+                rs = np.sqrt(((sxs * e1[0] + sys_ * e1[1]) / (R * max(cosv, 0.35))) ** 2 + ((sxs * e2[0] + sys_ * e2[1]) / R) ** 2)
+                shadow = np.clip((1.05 - rs) / 0.15, 0, 1) * (rho > 1) * vis
+                patch *= (1 - 0.35 * shadow)[..., None]
+                inside = np.clip((1 - rho) / (0.6 / R + 0.05), 0, 1)
+                if inside.max() <= 0:
+                    continue
+                # the lens: the skin behind seen minified and inverted
+                from scipy.ndimage import map_coordinates
+                qx, qy = sx - dx * 0.45, sy - dy * 0.45
+                lens = np.stack([map_coordinates(img[..., k], [qy, qx], order=1, mode="nearest") for k in range(3)], -1)
+                toward = np.clip((dx * l2[0] + dy * l2[1]) / R, -1, 1)
+                rim = np.clip((rho - 0.62) / 0.38, 0, 1) ** 1.5
+                val = lens * (1 - 0.55 * rim * (0.65 + 0.35 * np.clip(toward, 0, 1)))[..., None]
+                caus = np.exp(-(((dx + l2[0] * 0.5 * R) ** 2 + (dy + l2[1] * 0.5 * R) ** 2) / (0.3 * R) ** 2)) * vis
+                val = val + (1 - val) * (0.45 * caus)[..., None]
+                gl = np.exp(-(((dx - l2[0] * 0.42 * R) ** 2 + (dy - l2[1] * 0.42 * R) ** 2) / max(0.12 * R, 0.7) ** 2)) * vis
+                val = val + (1 - val) * np.clip(1.6 * gl, 0, 1)[..., None]
+                out[y0:y1, x0:x1] = patch * (1 - inside[..., None]) + val * inside[..., None]
+        return np.clip(out, 0, 1)
 
     def raster_meshes(self, W, H, rd):
         """Every mesh into one z-buffer from the camera: per pixel the distance along the ray `t`
@@ -880,7 +1004,8 @@ class Scene:
         N = len(idx)
         out = dict(p=np.zeros((N, 3), np.float32), n=np.zeros((N, 3), np.float32), base=np.zeros((N, 3), np.float32),
                    gloss=np.zeros(N, np.float32), wrap=np.zeros(N, np.float32), planes=np.zeros(N, np.float32),
-                   elem=np.zeros(N, np.int32))
+                   elem=np.zeros(N, np.int32), skin=np.zeros(N, np.float32), oil=np.zeros(N, np.float32),
+                   shin=np.full(N, 40.0, np.float32))
         mk = ms["mesh"][idx]
         for k, m in enumerate(self.meshes):
             sel = np.nonzero(mk == k)[0]
@@ -909,11 +1034,28 @@ class Scene:
                 eye = eid >= 0
                 if eye.any():
                     col[eye] = look.eye(prest[eye].astype(np.float64), eid[eye] == 0)
+                    if "_gaze" not in M:
+                        # each eye's gaze: from its centre to its frontmost vertex in the base mesh, as posed
+                        M["_gaze"] = {}
+                        for e in (0, 1):
+                            vs = np.nonzero(M["eye_id"] == e)[0]
+                            g_ = M["verts"][vs[np.argmax(M["rest"][vs, 2])]] - M["eye"][e][0]
+                            M["_gaze"][e] = (g_ / (np.linalg.norm(g_) + 1e-9)).astype(np.float32)
                     for e in (0, 1):
                         se = eid == e
                         if se.any():
                             c, r = M["eye"][e]
                             nn[se] = norm(P_[se] - c[None].astype(np.float32))
+                            # the cornea bulges over the iris: a sphere of radius 7.8 mm on a 12 mm eyeball (adult
+                            # averages), so its normals turn faster and a light's catchlight sits on it, not out on the
+                            # white; blended over its rim (judgement)
+                            gz = M["_gaze"][e]
+                            cs_ = nn[se] @ gz
+                            rc = 0.65 * r
+                            cc = c + gz * (r - rc) * 0.95
+                            ncor = norm(P_[se] - cc[None].astype(np.float32))
+                            wc = np.clip((cs_ - 0.84) / 0.05, 0, 1)[:, None]
+                            nn[se] = norm(nn[se] * (1 - wc) + ncor * wc)
                 hd = ((el == human.EL["face"]) | (el == human.EL["head"])) & ~eye
                 if hd.any():
                     ph = prest[hd].astype(np.float64)
@@ -924,6 +1066,43 @@ class Scene:
                 nc = m.coarse_normals(vn)
                 ncp = norm(interp(nc))
                 nn = norm(nn * (1 - pl[:, None]) + ncp * pl[:, None])
+            wr_ = interp(M["wrap"][:, None])[:, 0]
+            mic = M.get("micro")
+            if mic is not None and look is not None:
+                # the skin's micro-relief and colour (human.skin_micro), evaluated in the base mesh's coordinates and
+                # turned into the posed surface's frame; eyes get a sharp corneal highlight
+                skin = np.clip(wr_ / 0.25, 0, 1) * (pl < 0.5)
+                sk = skin > 0.05
+                if sk.any() and mic["amount"] > 0:
+                    if "_vnr" not in M:
+                        M["_vnr"] = human.vertex_normals(M["rest"].astype(np.float64), M["tris"]).astype(np.float32)
+                    nr = norm(interp(M["_vnr"])[sk]).astype(np.float64)
+                    foot = ms["t"][idx[sel]][sk].astype(np.float64) * max(self.pix, 1e-6) * 1000.0
+                    facew = (el[sk] == human.EL["face"]).astype(np.float64)
+                    g, alb = human.skin_micro(prest[sk], facew, foot, mic["age"], mic["amount"], mic["seed"])
+                    g = g - (g * nr).sum(1, keepdims=True) * nr
+                    gp = human.rotate_min(nr, nn[sk].astype(np.float64), g)
+                    nn[sk] = norm((nn[sk] - gp * skin[sk, None]).astype(np.float32))
+                    col[sk] = col[sk] * (1 + (alb[:, None] - 1) * skin[sk, None])
+                # the oily sheen (Weyrich et al. 2006: the highest specular on the nose, forehead and lips, the nose the
+                # smoothest): the T-zone and the lips carry the sharp lobe; the map's shape is a judgement
+                fm = el == human.EL["face"]
+                if fm.any():
+                    if "_facebox" not in M:
+                        rf = M["rest"][M["elem"] == human.EL["face"]]
+                        M["_facebox"] = (rf.min(0), rf.max(0))
+                    lo_, hi_ = M["_facebox"]
+                    u = (prest[:, 0] - (lo_[0] + hi_[0]) / 2) / max(hi_[0] - lo_[0], 1e-6)
+                    vv = (prest[:, 1] - lo_[1]) / max(hi_[1] - lo_[1], 1e-6)
+                    tz = np.clip(1 - np.abs(u) / 0.16, 0, 1) * (vv > 0.3) + np.clip((vv - 0.62) / 0.1, 0, 1)
+                    lipw = interp(M["lips_w"][:, None])[:, 0] if "lips_w" in M else 0.0
+                    oilmap = np.clip(0.35 + 0.65 * np.clip(tz, 0, 1) + lipw, 0, 1.2) * fm + 0.25 * (~fm)
+                else:
+                    oilmap = np.full(len(sel), 0.25)
+                out["skin"][sel] = skin
+                out["oil"][sel] = mic["oil"] * oilmap * skin
+                if look is not None and eye.any():
+                    out["shin"][sel[eye]] = 300.0      # the cornea: a mirror, so a small sharp catchlight (judgement)
             out["p"][sel] = P_
             out["n"][sel] = nn
             out["base"][sel] = np.clip(col, 0, 1)

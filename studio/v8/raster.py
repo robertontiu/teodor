@@ -151,3 +151,74 @@ class ShadowMap:
         zz = self._look(u[has, None] + self.disk[None, :, 0] * rad[:, None], v[has, None] + self.disk[None, :, 1] * rad[:, None])
         vis[has] = (zz >= d[has, None] - bias).mean(1)
         return vis.astype(np.float32)
+
+
+# ---------------------------------------------------------------- hair strands (screen space)
+def _splat(acc, xs, ys, w):
+    """Bilinear splat of weights w at sub-pixel positions into acc (H, W), in place."""
+    H, W = acc.shape
+    x0, y0 = np.floor(xs).astype(np.int64), np.floor(ys).astype(np.int64)
+    fx, fy = xs - x0, ys - y0
+    flat = acc.reshape(-1)
+    for dx, dy, ww in ((0, 0, (1 - fx) * (1 - fy)), (1, 0, fx * (1 - fy)), (0, 1, (1 - fx) * fy), (1, 1, fx * fy)):
+        xi, yi = x0 + dx, y0 + dy
+        ok = (xi >= 0) & (xi < W) & (yi >= 0) & (yi < H)
+        flat += np.bincount((yi[ok] * W + xi[ok]), weights=(w * ww)[ok], minlength=H * W)
+
+
+def strands(mask, dirf, px_per_mm, seed=11, length_mm=(2.5, 8.0), spacing_mm=0.09, clump_mm=0.6, max_strands=120000):
+    """Hair as strands in screen space: streamlines of the hair's growth direction (dirf, (H, W, 2) unit vectors in
+    the picture) seeded over the hair (mask), each traced both ways for its length and splatted as a thin line, in
+    two families: fine strands (one hair about every spacing_mm across the flow) and clumps (locks about clump_mm
+    wide that share a brightness). Returns per pixel: cov (0-1, how much of the pixel is covered by strands: the
+    gaps between them read as the deeper, darker hair), bright (each strand's and clump's own brightness, mean 1) and
+    shift (each strand's tilt of its highlight, -1..1: the sheen breaks along strands instead of one band).
+    Lengths, spacing and spreads are judgements (hair is 0.02-0.18 mm across; drawn hair is a 0.3-0.5 mm line)."""
+    H, W = mask.shape
+    rng = np.random.default_rng(seed)
+    ys, xs = np.nonzero(mask)
+    out = dict(cov=np.zeros((H, W), np.float32), bright=np.ones((H, W), np.float32), shift=np.zeros((H, W), np.float32))
+    if len(ys) < 20:
+        return out
+    ppm = max(float(px_per_mm), 0.3)
+    step = 0.6
+    res = {}
+    for fam, (sp_mm, bsd, w_mul) in (("fine", (spacing_mm, 0.22, 1.0)), ("clump", (clump_mm, 0.16, 1.0))):
+        Lpx = np.array(length_mm) * ppm
+        n = int(min(max_strands, len(ys) / max(sp_mm * ppm * Lpx.mean(), 1e-3)))
+        n = max(n, 50)
+        k = rng.integers(0, len(ys), n)
+        sx0 = xs[k] + rng.random(n); sy0 = ys[k] + rng.random(n)
+        L = rng.uniform(Lpx[0], Lpx[1], n)
+        b = np.exp(rng.normal(0, bsd, n))
+        s_ = rng.uniform(-1, 1, n)
+        acc = np.zeros((H, W), np.float64); accb = np.zeros((H, W), np.float64); accs = np.zeros((H, W), np.float64)
+        for sgn in (1.0, -1.0):
+            x, y = sx0.copy(), sy0.copy()
+            px_, py_ = None, None
+            alive = np.ones(n, bool)
+            nsteps = int(np.ceil(Lpx[1] / 2 / step))
+            for t in range(nsteps):
+                xi = np.clip(x.astype(np.int64), 0, W - 1); yi = np.clip(y.astype(np.int64), 0, H - 1)
+                alive &= mask[yi, xi] & (t * step < L / 2)
+                if not alive.any():
+                    break
+                d = dirf[yi, xi] * sgn
+                if px_ is not None:                        # keep the direction continuous along the strand
+                    flip = (d[:, 0] * px_ + d[:, 1] * py_) < 0
+                    d[flip] *= -1
+                # a strand tapers toward its ends: weight falls over its last third
+                tw = np.clip((L / 2 - t * step) / (L / 6), 0, 1)
+                w = np.where(alive, step * tw, 0.0)
+                _splat(acc, x, y, w); _splat(accb, x, y, w * b); _splat(accs, x, y, w * s_)
+                px_, py_ = d[:, 0], d[:, 1]
+                x = x + d[:, 0] * step; y = y + d[:, 1] * step
+        res[fam] = (acc, accb / np.maximum(acc, 1e-9), accs / np.maximum(acc, 1e-9))
+    fine, clump = res["fine"], res["clump"]
+    # coverage: a strand about a hair's width (0.07 mm) wide; the expected density per pixel normalises it so an even
+    # head of hair is mostly covered, with gaps where the strands part
+    dens = fine[0] / max(float(np.median(fine[0][mask])) if mask.any() else 1.0, 1e-6)
+    out["cov"] = (1 - np.exp(-1.3 * dens)).astype(np.float32)
+    out["bright"] = (np.where(fine[0] > 0, fine[1], 1.0) * np.where(clump[0] > 0, clump[1], 1.0)).astype(np.float32)
+    out["shift"] = np.where(fine[0] > 0, fine[2], 0.0).astype(np.float32)
+    return out

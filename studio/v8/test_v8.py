@@ -365,7 +365,48 @@ def portrait_camera():
     return ok
 
 
-EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera}
+def photoreal_reference():
+    """G1: the human render's skin micro-structure, sheen, strands and droplets. A head at portrait distance under a
+    hard light: with skin_detail the cheek holds several times the fine texture it holds without, the face has glints,
+    the hair is coherent strands, and droplets add bright glints with darker rims. Deterministic (seeded)."""
+    sys.path.insert(0, HERE)
+    import scene as sc, eyes
+    ok = True
+    try:
+        def head(extra):
+            o = dict({"type": "person", "id": "man", "age": 45, "sex": "male", "pos": [0, 1.62, 0], "anchor": "head",
+                      "hair": {"style": "short", "color": "#4a3a2e"}}, **extra)
+            S = sc.Scene({"camera": {"frame": {"on": "man.head", "fill": 0.82, "from": [0.35, 0.05, 1]}},
+                          "sun": {"azimuth": 62, "elevation": 22, "intensity": 2.0, "softness": 60}, "ambient": {"intensity": 0.1},
+                          "ground": {"enabled": False}, "fog": {"density": 0}, "objects": [o]})
+            a = S.render(450, 600)
+            mk, ent = S.element_masks((450, 600))
+            return eyes.lightness(a.astype(np.float32) / 255)[0], mk, next(e for e in ent if e["key"] == "man.face")["px_per_subject_mm"]
+        L0, mk, ppm = head({"skin_detail": 0, "strands": False})
+        L1, _, _ = head({})
+        face = mk["man.face"]
+        b0 = eyes.band_energy(L0, ppm, face)[0.5]
+        b1 = eyes.band_energy(L1, ppm, face)[0.5]
+        assert b1 > 1.25 * b0, (b0, b1)
+        hair = mk["man.hair"]
+        from scipy.ndimage import binary_erosion
+        hm = binary_erosion(hair, iterations=4)
+        c1 = eyes.coherence(L1, ppm, hm)
+        h0, h1 = eyes.band_energy(L0, ppm, hm)[0.5], eyes.band_energy(L1, ppm, hm)[0.5]
+        assert c1 >= 0.5 and h1 > 1.5 * h0, (c1, h0, h1)          # strands: coherent, with strand-scale texture
+        L2, _, _ = head({"droplets": {"count": 40, "size_mm": [2, 4], "on": ["face"]}})
+        s1 = eyes.specular_blobs(L1, ppm, face)["specular_count"]
+        s2 = eyes.specular_blobs(L2, ppm, face)["specular_count"]
+        assert s2 > s1, (s1, s2)
+        print(f"photoreal reference (G1): ok (face texture at 0.5 mm {b0:.2f} -> {b1:.2f} L*, hair texture at 0.5 mm {h0:.2f} -> {h1:.2f} L* (coherence {c1:.2f}), "
+              f"glints {s1} -> {s2} with droplets)")
+    except Exception as e:
+        ok = False
+        print(f"photoreal reference (G1): FAILED {e!r}")
+    return ok
+
+
+EXTRA = {"fine": fine_measures, "darks": darks_first, "camera": portrait_camera, "render": photoreal_reference}
 
 
 if __name__ == "__main__":

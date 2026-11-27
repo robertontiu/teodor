@@ -469,3 +469,39 @@ Whichever he chooses, the schema has to pass G3's and G4's acceptance tests, and
 
 - `scene.py`: `camera.lens` (35 mm-equivalent focal length) beside `fov`; a scene with people and no field gets a **100 mm** lens (scenes without people keep fov 40); `camera.frame` places the camera 1.5 m from a head, face or hand (Ward et al.'s standard portrait distance) and picks the lens to fill the frame. Every render with a face prints the lens, the distance to each face, the nose's perspective magnification against the cheekbones and the hand's distance and projected length in face-lengths; it warns on a close-up from under 1.2 m and on a hand and a face more than 20% apart in distance. `detail.py` resolves `lens` and `frame` the same way; `figure_sheet.py` shoots heads from 1.5 m and hands from 1.2 m with the old framing.
 - **Acceptance** (an invented man, 40, `frame` on the head, fill 0.7): camera 1.41 m from the face (≥ 1.2 m: **pass**), lens 139 mm; the nose magnified **+3.2%** against the cheekbones, i.e. within 5% of the orthographic value (**pass**; the round-19 set-up, 0.32 m at fov 86, gives +14.6% and the warning). With the head and an open hand raised beside it (fill 0.4, 79 mm): the hand 1.38 m against the face's 1.41 m, projected at **1.14 face-lengths** (0.8-1.2: **pass**); a fist measures 0.69 (a fist is shorter than a hand: the ratio is for an open hand). The nose figure is the ratio of distances (cheekbones over the nose's nearest 2 cm), not a measured alar width: the mesh has no alar landmarks.
+
+### The close-up ruler, from one photograph to twelve (2026-11-27)
+
+`graphite-hyperrealism-closeup` now holds **12 public-domain NASA studio portraits** (`_photos`: ids, sources, licence, scale, boxes; four women and eight men, several ages and skin tones; each measured at its own resolution and deleted; real people, so measured only, never shown, published or used as a reference). The scale of each comes from its pupil distance against Dodgson's mean IPD by sex (64.0 mm men, 61.7 mm women); the cheek patch is placed as in section 0 (25 face-mm, 7 mm toward the nose from the lit pupil, 41 mm below it); hair boxes on the 9 sitters with hair. **Subject keys are now bounded by the photographs' p10-p90**, and every key stores mean, sd, range and p10/p90. The spread, mean ± sd (range):
+
+| key | value |
+|---|---|
+| cheek texture at 0.25 / 0.5 / 1 / 2 face-mm, RMS L* | 0.94 ± 0.45 (0.29-1.87) / 1.15 ± 0.51 (0.62-2.57) / 1.90 ± 0.87 (0.80-4.20) / 3.02 ± 1.42 (1.29-5.60) |
+| whole face at 0.25 / 0.5 / 1 / 2 | 1.13 ± 0.21 / 1.40 ± 0.19 / 1.93 ± 0.28 / 2.77 ± 0.47 |
+| hair at 0.125 / 0.25 / 0.5 (n 9) | 2.12 ± 1.38 / 2.05 ± 0.96 / 1.79 ± 0.53 |
+| hair strand coherence (n 9) | 0.75 ± 0.14 (0.39-0.87) |
+| face speculars ≥ 30 L* | 61 ± 85 (3-262; p10 5) |
+| face p1, L* / share below L* 20 | 6.4 ± 7.5 (0-26) / 0.16 ± 0.12 |
+| sharpest edges, p10 of the rise at 5 px/mm | 0.73 ± 0.27 mm (0.30-1.25) |
+
+The first portrait was one of the smoothest: real cheeks hold about twice its texture at 1-2 mm. **Limits:** all twelve are studio portraits under soft, similar light (no hard light, no outdoor or water close-ups among the public-domain sources found); no hand, skin-patch or droplet photograph yet (see the hand ruler).
+
+### G1, the reference renderer, first part (2026-11-27)
+
+- `human.py` `skin_micro`: pores (a jittered 3D lattice of pits cut by the surface, about 36 per cm² on the face, 0.06-0.37 mm² each: Flament et al. 2015), the micro-relief's furrow network, scattered fine lines deeper with age, a soft swell, and colour mottling at 0.7-12 mm, all in the base mesh's coordinates; the relief tilts the normals (analytic gradients turned into the posed frame), features under a pixel fade out. Amounts fitted against the ruler and by eye.
+- `scene.py`: skin's sheen as two normalised Blinn-Phong lobes with Schlick Fresnel (F0 0.0255 from Weyrich et al. 2006's skin-air index 1.38; a broad lobe of roughness about 0.3 and a sharp oily lobe on the T-zone and lips, where Weyrich found the highest specular); the cornea as a 7.8 mm bulge on the eyeball for catchlights; **strand hair** (`raster.strands`: streamlines of the hair's growth splatted as fine strands and locks, gaps darker, a Kajiya-Kay highlight broken per strand); **droplets** on the skin (lens, dark rim, glint, bright far side, cast shadow).
+- **Acceptance** (an invented man, 45, `frame` on the head from 1.42 m, one hard light, 1200 × 1600 at 5.3 px per face-mm, 57 s; `docs/gallery/human_photoreal_test.jpg`), against the 12-photograph ruler (p10-p90) and the doc's own thresholds:
+
+| check | render | bound | result |
+|---|---|---|---|
+| cheek texture 0.25 face-mm | 0.58 | 0.40-1.53 | pass |
+| 0.5 | 0.74 | 0.65-1.62 | pass |
+| 1 | 0.70 | 1.05-2.35 | **fail** (0.67 of p10) |
+| 2 | 1.00 | 1.37-4.83 | **fail** (0.73 of p10) |
+| face speculars ≥ 30 L* | 23 | ≥ 5 (doc: ≥ 3) | pass |
+| face p1 | 1.7 | ≤ 15.6 (doc: ≤ 10) | pass |
+| face below L* 20 | 11% | ≥ 3.9% (doc: ≥ 5%) | pass |
+| hair texture 0.125 / 0.25 / 0.5 | 2.26 / 1.89 / 1.52 | ≥ 1.21 / 1.40 / 1.28 (p10) | pass |
+| hair coherence | 0.91 | ≥ 0.62 (doc ≥ 0.5) | pass |
+
+  Against the first photograph alone the cheek passed at every scale but 2 mm. **What fails, and what was tried:** the 1-2 mm cheek texture. Larger colour mottle and a stronger swell reached 0.76 / 1.24 but read as blotches and plaster; oriented fine lines over the whole cheek read as sand ripples; both were rolled back to what reads as skin. The missing energy is in features the mesh lacks (age folds and creases at the scale of the cheek, stubble, moles, freckles), which is the next part of G1. Not done: the fresh-critic "photo or render?" test (it needs the orchestrator), depth of field, tiled rendering. Catchlights appear only where the light reflects off the cornea toward the camera; under this side light none does.
